@@ -9,7 +9,7 @@ The implementation targets the single-component procedures and interchange forma
 | Sample storage | Core uses unsigned values in MoonBit `Int` slots. Raw and JS adapters use 8-bit or 16-bit containers. A 16-bit container can hold 12-bit samples. |
 | NEAR | 0, 1, 2, 3, measured in coded sample units |
 | Entropy | Regular mode, run mode, run interruption and JPEG-LS one-bit stuffing |
-| Markers | SOI, SOF55, SOS and EOI. APPn and COM skipped under a cumulative budget. |
+| Markers | SOI, SOF55, SOS and EOI. APPn and COM before SOF55 or SOS are skipped under a cumulative budget. |
 | Preset | LSE ID 1 with absent, zero or explicit default values. Valid custom settings return `UnsupportedFeature`. |
 | Beyond scope | Other precisions, custom presets, mapping tables, restart intervals, DNL, extended dimensions, additional scans, multiple components, Part 2, DICOM container parsing |
 | Targets | Native, Wasm GC and JS. See `VALIDATION.md` for executed checks. |
