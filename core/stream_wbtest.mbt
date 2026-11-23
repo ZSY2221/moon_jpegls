@@ -252,3 +252,48 @@ test "metadata and frame dimensions are checked before scan allocation" {
   )
   assert_eq(stream.workspace_bytes(), workspace)
 }
+
+///|
+test "legal fill and unsupported features remain distinct from malformed markers" {
+  let frame : Frame = { width: 1, height: 1, bits: 8, near: 0, }
+  let coded = encode(frame, [255])
+  let fill = b"\xff" + coded[:coded.length() - 1].to_owned() + b"\xff\xd9"
+  decode_chunks(fill, [1, 2, fill.length() - 1, fill.length()], frame, [255])
+  let malformed_sampling = Bytes::makei(coded.length(), i => {
+    if i == 13 {
+      0x51
+    } else {
+      coded[i]
+    }
+  })
+  assert_true(
+    (Ok(decode(malformed_sampling)) catch { e => Err(e) })
+    is Err(InvalidData(_)),
+  )
+  let transformed = Bytes::makei(coded.length(), i => {
+    if i == 24 {
+      15
+    } else {
+      coded[i]
+    }
+  })
+  assert_true(
+    (Ok(decode(transformed)) catch { e => Err(e) })
+    is Err(UnsupportedFeature(_)),
+  )
+  let transform_and_mapping = Bytes::makei(coded.length(), i => {
+    if i == 21 {
+      1
+    } else {
+      transformed[i]
+    }
+  })
+  assert_true(
+    (Ok(decode(transform_and_mapping)) catch { e => Err(e) })
+    is Err(InvalidData(_)),
+  )
+  let sof57 = b"\xff\xd8\xff\xf9"
+  assert_true(
+    (Ok(decode(sof57)) catch { e => Err(e) }) is Err(UnsupportedFeature(_)),
+  )
+}

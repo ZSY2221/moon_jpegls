@@ -47,7 +47,7 @@ pub fn Decoder::frame(self : Decoder) -> Frame? {
 }
 
 ///|
-/// A borrowed row. Copy any samples needed beyond the next `step` call.
+/// A read-only borrow by contract. Do not modify it. Copy samples needed beyond `step`.
 pub fn Decoder::row(self : Decoder) -> FixedArray[Int32] {
   match self.scan {
     Some(scan) if scan.rows > 0 => scan.previous

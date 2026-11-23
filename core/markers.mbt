@@ -68,18 +68,20 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
   guard count > 0 && self.length == 6 + 3 * count && bits >= 2 && bits <= 16 else {
     raise InvalidData("SOF55 fields or length")
   }
-  let identifiers = FixedArray::make(256, false)
   for index in 0..<count {
     let pos = 6 + 3 * index
     let id = self.at(pos)
     let sampling = self.at(pos + 1)
-    guard !identifiers[id] &&
-      sampling >> 4 > 0 &&
-      (sampling & 15) > 0 &&
-      self.at(pos + 2) == 0 else {
+    let h = sampling >> 4
+    let v = sampling & 15
+    guard h >= 1 && h <= 4 && v >= 1 && v <= 4 && self.at(pos + 2) == 0 else {
       raise InvalidData("SOF55 component fields")
     }
-    identifiers[id] = true
+    for earlier in 0..<index {
+      guard id != self.at(6 + 3 * earlier) else {
+        raise InvalidData("duplicate SOF55 component identifier")
+      }
+    }
   }
   guard count == 1 else {
     raise UnsupportedFeature("multiple frame components")
@@ -110,8 +112,29 @@ fn HeaderParser::preset_segment(self : HeaderParser) -> Unit raise CodecError {
       }
       self.has_preset = true
     }
-    2 | 3 => raise UnsupportedFeature("mapping table")
-    4 => raise UnsupportedFeature("extended dimensions")
+    0 => raise InvalidData("LSE identifier zero")
+    2 => {
+      guard self.length >= 4 &&
+        self.at(1) > 0 &&
+        self.at(2) > 0 &&
+        (self.length - 3) % self.at(2) == 0 else {
+        raise InvalidData("mapping table fields or length")
+      }
+      raise UnsupportedFeature("mapping table")
+    }
+    3 => raise InvalidData("mapping table continuation without a specification")
+    4 => {
+      let bytes = self.at(1)
+      guard bytes >= 2 && bytes <= 4 && self.length == 2 + 2 * bytes else {
+        raise InvalidData("extended dimensions length")
+      }
+      let mut has_width = false
+      for index in (2 + bytes)..<self.length {
+        has_width = has_width || self.at(index) != 0
+      }
+      guard has_width else { raise InvalidData("extended width is zero") }
+      raise UnsupportedFeature("extended dimensions")
+    }
     _ => raise UnsupportedFeature("LSE identifier")
   }
 }
@@ -131,7 +154,8 @@ fn HeaderParser::scan_segment(
   let near = self.at(3)
   let ilv = self.at(4)
   let transform = self.at(5)
-  guard ilv == 0 && transform >> 4 == 0 && (transform & 15) < self.bits else {
+  let mapping = self.at(2)
+  guard ilv == 0 && transform >> 4 == 0 && (transform == 0 || mapping == 0) else {
     raise InvalidData("single-component SOS fields")
   }
   let full_range = (1 << self.bits) - 1
@@ -165,7 +189,7 @@ fn HeaderParser::scan_segment(
     }
   }
   validate_profile(self.bits, near, maxval)
-  guard self.at(2) == 0 && transform == 0 else {
+  guard mapping == 0 && transform == 0 else {
     raise UnsupportedFeature("mapping selector or point transform")
   }
   ({ width: self.width, height: self.height, bits: self.bits, near, }, defaults)
@@ -203,6 +227,9 @@ fn HeaderParser::accept(
       self.phase = StartCode
     }
     StartCode => {
+      if byte == 0xFF {
+        return None
+      }
       guard byte == 0xD8 else { raise InvalidData("missing SOI") }
       self.phase = MarkerPrefix
     }
@@ -217,8 +244,10 @@ fn HeaderParser::accept(
       if !is_metadata(byte) {
         match byte {
           0xF7 | 0xF8 | 0xDA | 0xDD => ()
-          0xDC | 0xC0..<=0xCF =>
+          0xDC | 0xF9 =>
             raise UnsupportedFeature("marker outside JPEG-LS baseline subset")
+          0xC0..<=0xCF if self.bits == 0 =>
+            raise UnsupportedFeature("JPEG stream uses a different frame type")
           _ => raise InvalidData("unexpected marker before scan")
         }
       }
