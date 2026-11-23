@@ -149,7 +149,7 @@ def main():
     summary["python"] = sys.version.split()[0]
     summary["nativeOracle"] = "imagecodecs 2026.11.11 / CharLS 2.4.5"
     summary["runtime"] = {"platform": sys.platform, "cpuCount": os.cpu_count()}
-    (directory / "report.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf8")
+    (directory / "report.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf8", newline="\n")
     print(json.dumps(summary, indent=2))
 
 

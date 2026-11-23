@@ -155,7 +155,7 @@ def main():
     if args.mode in ("all", "resource"):
         report["resource"] = resources(output)
     report_path = output / "benchmark.json"
-    report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf8")
+    report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf8", newline="\n")
     print(f"Benchmark evidence written to {report_path}")
 
 

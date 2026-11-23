@@ -5,7 +5,7 @@
 | 项目 | 实际状态 |
 | --- | --- |
 | 工作目录 | `D:\Program Files\GPT_project\moon_jpegls` |
-| 分支与精确提交 | `main`。`git rev-parse v0.1.0-rc.1^{commit}` 获取首版候选 SHA，`git rev-parse HEAD` 获取工作目录 SHA。 |
+| 分支与精确提交 | `main`。`git rev-parse 'v0.1.0-rc.1^{commit}'` 获取首版候选 SHA，`git rev-parse HEAD` 获取工作目录 SHA。 |
 | 发布 | 本地 Git、打包与静态构建。GitHub、Mooncakes 和公开网页尚未发布。 |
 | A–C | 支持范围和预构建外部裁判已固定。8、12、16 位及 NEAR 0–3 双向对拍通过。 |
 | D | 核心任意分块、EOI、背压、取消与资源实验已运行。单图整图入口另测。 |

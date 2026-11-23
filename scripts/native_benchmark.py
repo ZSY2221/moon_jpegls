@@ -81,7 +81,7 @@ def main():
               "charls": codecs.jpegls_version(), "png": codecs.png_version(), "wheelImportMs": cold_ms,
               "nativeBinarySha256": hashlib.sha256(binary.read_bytes()).hexdigest(), "repeats": args.repeats,
               "records": result}
-    (directory / "native-wsl.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf8")
+    (directory / "native-wsl.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf8", newline="\n")
     print(json.dumps({"cases": len(result), "charls": report["charls"], "python": report["python"]}))
 
 
