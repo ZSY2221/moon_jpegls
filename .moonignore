@@ -1,6 +1,8 @@
 .tools/
 .venv/
 node_modules/
+**/__pycache__/
+**/*.pyc
 sdk/generated/
 reports/
 .evidence/
