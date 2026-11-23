@@ -1,0 +1,10 @@
+{
+  "name": "moonjls-workbench-checks",
+  "private": true,
+  "devDependencies": {
+    "playwright-core": "1.65.1"
+  },
+  "scripts": {
+    "smoke": "node smoke.mjs"
+  }
+}
