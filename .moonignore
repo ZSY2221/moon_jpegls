@@ -2,7 +2,7 @@
 .venv/
 node_modules/
 sdk/generated/
-reports/local/
+reports/
 .evidence/
 web/dist/
 _build/
