@@ -1,6 +1,10 @@
 .tools/
 .venv/
 node_modules/
+sdk/generated/
 reports/local/
+.evidence/
 web/dist/
 _build/
+examples/consumer/.mooncakes/
+examples/consumer/_build/
