@@ -14,6 +14,6 @@ reconstructed=$4
 # noclobber protects the output opened by shell redirection; the CLI uses CreateNew.
 set -o noclobber
 "$cli" encode-pgm 0 "$input" - 257 |
-  tee >("$cli" decode - "$reconstructed" pgm 127) > "$compressed"
-wait "$!"
+  tee /dev/fd/3 3> "$compressed" |
+  "$cli" decode - "$reconstructed" pgm 127
 "$cli" verify "$compressed" 17
