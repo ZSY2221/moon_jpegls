@@ -1,0 +1,404 @@
+{
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+  "python": "3.12.16",
+  "wheel": "2026.11.11",
+  "charls": "charls 2.4.5",
+  "png": "libpng 1.6.59",
+  "wheelImportMs": 1792.134079,
+  "nativeBinarySha256": "ec9239a16916da98a0ee428c1fb6bbef5a34af89f6df9f98ccce505d0af76967",
+  "repeats": 3,
+  "records": [
+    {
+      "name": "smooth",
+      "width": 768,
+      "height": 512,
+      "bits": 16,
+      "group": "synthetic",
+      "minSample": 0,
+      "maxSample": 49320,
+      "near": 0,
+      "pngNativeApi": {
+        "bytes": 9144,
+        "maxError": 0,
+        "encodeFirstMs": 24.841342,
+        "decodeFirstMs": 2.199676,
+        "encodeMedianMs": 4.040072,
+        "decodeMedianMs": 0.843588
+      },
+      "moonjlsNativeCli": {
+        "bytes": 52942,
+        "maxError": 0,
+        "encodeFirstMs": 175.645882,
+        "decodeFirstMs": 86.292841,
+        "encodeMedianMs": 157.262799,
+        "decodeMedianMs": 92.801792
+      },
+      "charlsNativeApi": {
+        "bytes": 52942,
+        "maxError": 0,
+        "encodeFirstMs": 5.846652,
+        "decodeFirstMs": 4.230823,
+        "encodeMedianMs": 4.408834,
+        "decodeMedianMs": 4.318109
+      }
+    },
+    {
+      "name": "smooth",
+      "width": 768,
+      "height": 512,
+      "bits": 16,
+      "group": "synthetic",
+      "minSample": 0,
+      "maxSample": 49320,
+      "near": 3,
+      "pngNativeApi": {
+        "bytes": 9144,
+        "maxError": 0,
+        "encodeFirstMs": 24.841342,
+        "decodeFirstMs": 2.199676,
+        "encodeMedianMs": 4.040072,
+        "decodeMedianMs": 0.843588
+      },
+      "moonjlsNativeCli": {
+        "bytes": 52650,
+        "maxError": 3,
+        "encodeFirstMs": 155.640854,
+        "decodeFirstMs": 104.565006,
+        "encodeMedianMs": 157.291362,
+        "decodeMedianMs": 101.987529
+      },
+      "charlsNativeApi": {
+        "bytes": 52650,
+        "maxError": 3,
+        "encodeFirstMs": 6.73214,
+        "decodeFirstMs": 4.373943,
+        "encodeMedianMs": 7.080871,
+        "decodeMedianMs": 4.402418
+      }
+    },
+    {
+      "name": "edges",
+      "width": 768,
+      "height": 512,
+      "bits": 16,
+      "group": "synthetic",
+      "minSample": 0,
+      "maxSample": 65535,
+      "near": 0,
+      "pngNativeApi": {
+        "bytes": 2250,
+        "maxError": 0,
+        "encodeFirstMs": 3.687464,
+        "decodeFirstMs": 0.256246,
+        "encodeMedianMs": 3.575702,
+        "decodeMedianMs": 0.215278
+      },
+      "moonjlsNativeCli": {
+        "bytes": 20117,
+        "maxError": 0,
+        "encodeFirstMs": 136.35655,
+        "decodeFirstMs": 54.61178,
+        "encodeMedianMs": 141.149263,
+        "decodeMedianMs": 60.204622
+      },
+      "charlsNativeApi": {
+        "bytes": 20117,
+        "maxError": 0,
+        "encodeFirstMs": 0.540404,
+        "decodeFirstMs": 0.434483,
+        "encodeMedianMs": 0.506088,
+        "decodeMedianMs": 0.457376
+      }
+    },
+    {
+      "name": "edges",
+      "width": 768,
+      "height": 512,
+      "bits": 16,
+      "group": "synthetic",
+      "minSample": 0,
+      "maxSample": 65535,
+      "near": 3,
+      "pngNativeApi": {
+        "bytes": 2250,
+        "maxError": 0,
+        "encodeFirstMs": 3.687464,
+        "decodeFirstMs": 0.256246,
+        "encodeMedianMs": 3.575702,
+        "decodeMedianMs": 0.215278
+      },
+      "moonjlsNativeCli": {
+        "bytes": 19980,
+        "maxError": 1,
+        "encodeFirstMs": 130.842083,
+        "decodeFirstMs": 68.635749,
+        "encodeMedianMs": 138.044978,
+        "decodeMedianMs": 67.396797
+      },
+      "charlsNativeApi": {
+        "bytes": 19980,
+        "maxError": 1,
+        "encodeFirstMs": 0.992279,
+        "decodeFirstMs": 0.671632,
+        "encodeMedianMs": 0.965909,
+        "decodeMedianMs": 0.671602
+      }
+    },
+    {
+      "name": "texture",
+      "width": 768,
+      "height": 512,
+      "bits": 16,
+      "group": "synthetic",
+      "minSample": 16730,
+      "maxSample": 48805,
+      "near": 0,
+      "pngNativeApi": {
+        "bytes": 631270,
+        "maxError": 0,
+        "encodeFirstMs": 19.531051,
+        "decodeFirstMs": 5.320056,
+        "encodeMedianMs": 21.663889,
+        "decodeMedianMs": 5.083828
+      },
+      "moonjlsNativeCli": {
+        "bytes": 457797,
+        "maxError": 0,
+        "encodeFirstMs": 154.702431,
+        "decodeFirstMs": 95.199157,
+        "encodeMedianMs": 159.934571,
+        "decodeMedianMs": 93.846612
+      },
+      "charlsNativeApi": {
+        "bytes": 457797,
+        "maxError": 0,
+        "encodeFirstMs": 7.468464,
+        "decodeFirstMs": 6.877525,
+        "encodeMedianMs": 7.660048,
+        "decodeMedianMs": 6.83247
+      }
+    },
+    {
+      "name": "texture",
+      "width": 768,
+      "height": 512,
+      "bits": 16,
+      "group": "synthetic",
+      "minSample": 16730,
+      "maxSample": 48805,
+      "near": 3,
+      "pngNativeApi": {
+        "bytes": 631270,
+        "maxError": 0,
+        "encodeFirstMs": 19.531051,
+        "decodeFirstMs": 5.320056,
+        "encodeMedianMs": 21.663889,
+        "decodeMedianMs": 5.083828
+      },
+      "moonjlsNativeCli": {
+        "bytes": 320220,
+        "maxError": 3,
+        "encodeFirstMs": 156.768768,
+        "decodeFirstMs": 91.099275,
+        "encodeMedianMs": 155.933094,
+        "decodeMedianMs": 89.603099
+      },
+      "charlsNativeApi": {
+        "bytes": 320220,
+        "maxError": 3,
+        "encodeFirstMs": 10.632256,
+        "decodeFirstMs": 7.611225,
+        "encodeMedianMs": 11.105012,
+        "decodeMedianMs": 8.018496
+      }
+    },
+    {
+      "name": "noise",
+      "width": 768,
+      "height": 512,
+      "bits": 16,
+      "group": "synthetic",
+      "minSample": 0,
+      "maxSample": 65535,
+      "near": 0,
+      "pngNativeApi": {
+        "bytes": 788404,
+        "maxError": 0,
+        "encodeFirstMs": 22.754083,
+        "decodeFirstMs": 1.052623,
+        "encodeMedianMs": 19.857456,
+        "decodeMedianMs": 0.985486
+      },
+      "moonjlsNativeCli": {
+        "bytes": 811643,
+        "maxError": 0,
+        "encodeFirstMs": 155.348022,
+        "decodeFirstMs": 89.211182,
+        "encodeMedianMs": 152.177092,
+        "decodeMedianMs": 94.807729
+      },
+      "charlsNativeApi": {
+        "bytes": 811643,
+        "maxError": 0,
+        "encodeFirstMs": 10.994673,
+        "decodeFirstMs": 9.612314,
+        "encodeMedianMs": 10.545812,
+        "decodeMedianMs": 9.608648
+      }
+    },
+    {
+      "name": "noise",
+      "width": 768,
+      "height": 512,
+      "bits": 16,
+      "group": "synthetic",
+      "minSample": 0,
+      "maxSample": 65535,
+      "near": 3,
+      "pngNativeApi": {
+        "bytes": 788404,
+        "maxError": 0,
+        "encodeFirstMs": 22.754083,
+        "decodeFirstMs": 1.052623,
+        "encodeMedianMs": 19.857456,
+        "decodeMedianMs": 0.985486
+      },
+      "moonjlsNativeCli": {
+        "bytes": 673516,
+        "maxError": 3,
+        "encodeFirstMs": 146.542474,
+        "decodeFirstMs": 87.607312,
+        "encodeMedianMs": 156.963003,
+        "decodeMedianMs": 96.209834
+      },
+      "charlsNativeApi": {
+        "bytes": 673516,
+        "maxError": 3,
+        "encodeFirstMs": 12.173135,
+        "decodeFirstMs": 9.749003,
+        "encodeMedianMs": 12.401968,
+        "decodeMedianMs": 10.045946
+      }
+    },
+    {
+      "name": "lily-channel-1-center",
+      "width": 512,
+      "height": 512,
+      "bits": 12,
+      "group": "public-cc0-microscopy",
+      "minSample": 60,
+      "maxSample": 4095,
+      "near": 0,
+      "pngNativeApi": {
+        "bytes": 374355,
+        "maxError": 0,
+        "encodeFirstMs": 12.606885,
+        "decodeFirstMs": 2.303853,
+        "encodeMedianMs": 12.921231,
+        "decodeMedianMs": 2.224904
+      },
+      "moonjlsNativeCli": {
+        "bytes": 294041,
+        "maxError": 0,
+        "encodeFirstMs": 113.72558,
+        "decodeFirstMs": 74.777749,
+        "encodeMedianMs": 113.555345,
+        "decodeMedianMs": 78.008749
+      }
+    },
+    {
+      "name": "lily-channel-1-center",
+      "width": 512,
+      "height": 512,
+      "bits": 12,
+      "group": "public-cc0-microscopy",
+      "minSample": 60,
+      "maxSample": 4095,
+      "near": 3,
+      "pngNativeApi": {
+        "bytes": 374355,
+        "maxError": 0,
+        "encodeFirstMs": 12.606885,
+        "decodeFirstMs": 2.303853,
+        "encodeMedianMs": 12.921231,
+        "decodeMedianMs": 2.224904
+      },
+      "moonjlsNativeCli": {
+        "bytes": 207347,
+        "maxError": 3,
+        "encodeFirstMs": 110.231484,
+        "decodeFirstMs": 74.903969,
+        "encodeMedianMs": 111.318224,
+        "decodeMedianMs": 78.85951
+      }
+    },
+    {
+      "name": "lola-moon",
+      "width": 1440,
+      "height": 720,
+      "bits": 16,
+      "group": "public-domain-lunar-altimetry",
+      "minSample": 2243,
+      "maxSample": 41008,
+      "near": 0,
+      "pngNativeApi": {
+        "bytes": 1649661,
+        "maxError": 0,
+        "encodeFirstMs": 53.291608,
+        "decodeFirstMs": 11.989186,
+        "encodeMedianMs": 48.542633,
+        "decodeMedianMs": 11.573538
+      },
+      "moonjlsNativeCli": {
+        "bytes": 1363687,
+        "maxError": 0,
+        "encodeFirstMs": 347.429688,
+        "decodeFirstMs": 180.110049,
+        "encodeMedianMs": 354.296114,
+        "decodeMedianMs": 178.323012
+      },
+      "charlsNativeApi": {
+        "bytes": 1363687,
+        "maxError": 0,
+        "encodeFirstMs": 26.810896,
+        "decodeFirstMs": 23.970808,
+        "encodeMedianMs": 26.569789,
+        "decodeMedianMs": 23.04486
+      }
+    },
+    {
+      "name": "lola-moon",
+      "width": 1440,
+      "height": 720,
+      "bits": 16,
+      "group": "public-domain-lunar-altimetry",
+      "minSample": 2243,
+      "maxSample": 41008,
+      "near": 3,
+      "pngNativeApi": {
+        "bytes": 1649661,
+        "maxError": 0,
+        "encodeFirstMs": 53.291608,
+        "decodeFirstMs": 11.989186,
+        "encodeMedianMs": 48.542633,
+        "decodeMedianMs": 11.573538
+      },
+      "moonjlsNativeCli": {
+        "bytes": 999459,
+        "maxError": 3,
+        "encodeFirstMs": 320.223887,
+        "decodeFirstMs": 147.061146,
+        "encodeMedianMs": 324.007409,
+        "decodeMedianMs": 163.747373
+      },
+      "charlsNativeApi": {
+        "bytes": 999459,
+        "maxError": 3,
+        "encodeFirstMs": 31.149439,
+        "decodeFirstMs": 23.826641,
+        "encodeMedianMs": 28.349331,
+        "decodeMedianMs": 25.540983
+      }
+    }
+  ]
+}
