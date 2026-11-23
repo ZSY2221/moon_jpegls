@@ -1,0 +1,62 @@
+{
+  "images": 100,
+  "encodes": 400,
+  "sameStreamComparisons": 736,
+  "backendByteMatches": 100,
+  "outputQuantumByteMatches": 200,
+  "allSingleCuts": 160,
+  "wholeImageMatches": 400,
+  "truncationPrefixes": 162,
+  "supportedOfficial": 4,
+  "unsupportedOfficial": 10,
+  "explicitPresetVariants": 8,
+  "pauseResume": 4,
+  "cancellation": 4,
+  "negativeStructures": 26,
+  "trailingAllow": 2,
+  "entropyMutationAccepted": 6,
+  "entropyMutationRejected": 90,
+  "mostStuffed": {
+    "name": "b16-n1-all-values",
+    "entropyFF": 4329,
+    "entropyBytes": 9117
+  },
+  "node": "v24.20.0",
+  "wasmOracle": "@team-charls/charls-wasm 0.10.0",
+  "nativeCLIImages": 100,
+  "nativeCLIEncodeQuantumMatches": 100,
+  "nativeCrossBackendBytes": 200,
+  "nativeCLISameStreamComparisons": 468,
+  "nativeCLIPgmPipeChecks": 4,
+  "nativeCLIOfficialPass": 2,
+  "nativeCLIOfficialUnsupported": 5,
+  "nativeOracleSameStreamComparisons": 1204,
+  "maxAbsoluteErrorByBitsAndNear": {
+    "8/0": 0,
+    "8/1": 1,
+    "8/2": 2,
+    "8/3": 3,
+    "12/0": 0,
+    "12/1": 1,
+    "12/2": 2,
+    "12/3": 3,
+    "16/0": 0,
+    "16/1": 1,
+    "16/2": 2,
+    "16/3": 3
+  },
+  "sourceRevision": "27ebbb798f488870d264e364db21617ef91621ff",
+  "trackedDiff": [],
+  "seed": 141648163,
+  "backends": [
+    "js",
+    "wasm-gc",
+    "native"
+  ],
+  "python": "3.12.10",
+  "nativeOracle": "imagecodecs 2026.11.11 / CharLS 2.4.5",
+  "runtime": {
+    "platform": "win32",
+    "cpuCount": 32
+  }
+}
