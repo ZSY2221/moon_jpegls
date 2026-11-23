@@ -1,0 +1,7 @@
+import {
+  "ZSY2221/moon_jpegls/core" @jls,
+  "ZSY2221/moon_jpegls_consumer/gray16",
+  "moonbitstack/moonimage/raster",
+}
+
+pkgtype(kind: "executable")
