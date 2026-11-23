@@ -1,0 +1,10 @@
+/.tools/
+/_build/
+/.mooncakes/
+/target/
+/.venv/
+/node_modules/
+**/__pycache__/
+**/pkg.generated.mbti
+/web/dist/
+/reports/local/

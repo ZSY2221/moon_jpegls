@@ -1,0 +1,6 @@
+.tools/
+.venv/
+node_modules/
+reports/local/
+web/dist/
+_build/
