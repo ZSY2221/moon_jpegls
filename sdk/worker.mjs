@@ -1,12 +1,23 @@
 import { CodecError, decodeStream, encodeStream, loadCore } from './index.mjs';
 
 let active = false;
+let terminal = false;
 let paused = false;
 let sequence = 0;
 let pending;
 let releasePause;
 const abort = new AbortController();
 const cancelled = () => new CodecError('Cancelled', 'Operation cancelled');
+
+function finish(type, data) {
+  if (terminal) return;
+  terminal = true;
+  self.postMessage({ type, ...data });
+}
+
+function reportError(error) {
+  finish('error', { code: typeof error.code === 'string' ? error.code : 'RuntimeError', message: error.message });
+}
 
 async function request(type, data, transfer = []) {
   while (paused && !abort.signal.aborted) {
@@ -40,7 +51,7 @@ async function run(message) {
     onRow: (row, index, info, stats) => request('row', { row, index, frame: info, stats }, [row.buffer]),
   };
   const result = await (mode === 'encode' ? encodeStream(core, settings) : decodeStream(core, settings));
-  self.postMessage({ type: 'done', ...result, backend: core.backend, loadMs: core.loadMs });
+  finish('done', { ...result, backend: core.backend, loadMs: core.loadMs });
 }
 
 self.onmessage = ({ data }) => {
@@ -48,9 +59,7 @@ self.onmessage = ({ data }) => {
     case 'start':
       if (active) return;
       active = true;
-      run(data).catch((error) => self.postMessage({
-        type: 'error', code: error.code ?? 'RuntimeError', message: error.message,
-      }));
+      run(data).catch(reportError);
       break;
     case 'pause':
       paused = true;
@@ -65,6 +74,7 @@ self.onmessage = ({ data }) => {
       releasePause?.();
       pending?.reject(cancelled());
       pending = undefined;
+      reportError(cancelled());
       break;
     case 'input':
     case 'ack':

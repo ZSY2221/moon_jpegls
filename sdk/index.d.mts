@@ -1,7 +1,7 @@
 export type Backend = 'js' | 'wasm-gc';
 export type Status = 'NeedInput' | 'NeedOutput' | 'RowReady' | 'Done';
 export type ErrorCode = 'InvalidData' | 'UnsupportedFeature' | 'ResourceLimit' | 'Truncated'
-  | 'InvalidArgument' | 'Cancelled' | 'TrailingData';
+  | 'InvalidArgument' | 'Cancelled' | 'TrailingData' | 'RuntimeError';
 
 export interface Frame {
   readonly width: number;
