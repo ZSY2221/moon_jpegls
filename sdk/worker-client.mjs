@@ -19,10 +19,15 @@ export function startWorker(options) {
   const cancel = () => {
     if (!stopped) worker.postMessage({ type: 'cancel' });
   };
-  const reject = (error) => { stop(); fail(error); };
+  const reject = (error) => {
+    if (stopped) return;
+    stop();
+    fail(error);
+  };
   signal?.addEventListener('abort', cancel, { once: true });
 
   worker.onmessage = async ({ data }) => {
+    if (stopped) return;
     try {
       switch (data.type) {
         case 'needInput': {
