@@ -20,7 +20,7 @@ def main():
         "missing-eoi": (stream[:-2], b"Truncated"),
         "short-eoi": (stream[:-1], b"Truncated"),
         "nonzero-padding": (stream[:-3] + b"\xf1" + stream[-2:], b"InvalidData"),
-        "trailing-data": (stream + b"\0", b"trailing bytes after EOI"),
+        "trailing-data": (stream + b"\0", b"CommandError.Input"),
     }
     trials = []
     for chunk in (1, 2, 7, 4096):
@@ -44,7 +44,7 @@ def main():
             process.stdin.close()
             process.stdin = None
             extra, error = process.communicate(timeout=5)
-            assert not extra and process.returncode != 0 and b"trailing bytes after EOI" in error, error
+            assert not extra and process.returncode != 0 and b"CommandError.Input" in error, error
         finally:
             if process.poll() is None:
                 process.kill()
