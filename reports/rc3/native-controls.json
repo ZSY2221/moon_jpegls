@@ -1,0 +1,3921 @@
+{
+  "recordedUtc": "2026-11-24T04:46:04.141723+00:00",
+  "sourceCommit": "a146998f31675769fb6c3bc9055ef7798f254b1d",
+  "binarySha256": "267837ca5c3015adf1637a322bf27a8ab96699ff9c9e2ee9b3e1166539a7ed6c",
+  "fixtureSha256": "3b13b43e944157a11a2fe3561011ee6780a207eb654e890ffa8b50d8b855ecab",
+  "referenceSha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89",
+  "width": 512,
+  "height": 4096,
+  "bits": 16,
+  "near": 0,
+  "direction": "decode",
+  "compressedBytes": 1249961,
+  "expectedRawBytes": 4194304,
+  "caseSchedule": [
+    "A - 4096 fast",
+    "B - 7 fast",
+    "C - 7 once-held"
+  ],
+  "results": [
+    {
+      "case": "A",
+      "command": [
+        ".tools/rc2-final-verified-build/targets/native/release/build/cmd/moonjls/moonjls.exe",
+        "decode",
+        ".evidence/rc2/worker-fixtures/resource-512x4096.jls",
+        "-",
+        "raw-le",
+        "4096"
+      ],
+      "cliChunkBytes": 4096,
+      "deadlineSecondsFromSpawnAttempt": 20,
+      "budgetBasis": "Initial known-fast control budget, not the historical seven-byte drain limit",
+      "stdoutPipeCapacityBytes": 65536,
+      "hostStdoutReadLimitBytes": 65536,
+      "hostStderrReadLimitBytes": 65536,
+      "parentInputMode": "direct child file input; stdin is /dev/null",
+      "parentStdinWriteBytes": 0,
+      "parentStdinWriteGranularityBytes": null,
+      "plannedPauseSeconds": 0,
+      "actualFullPipeHoldSeconds": 0,
+      "elapsedSeconds": 0.6412591779999985,
+      "eventsSecondsFromSpawnAttempt": {
+        "parentStdinClosedBeforeSpawn": 0.0,
+        "spawned": 0.006951918999998696,
+        "firstOutputByte": 0.014105487000000139,
+        "firstCompleteRow": 0.01430488099999927,
+        "allExpectedOutputReceived": 0.5390997599999992,
+        "stderrEof": 0.5409038679999991,
+        "stdoutEof": 0.5409616769999985,
+        "exitObserved": 0.6412591779999985
+      },
+      "stdoutBytes": 4194304,
+      "completeRows": 4096,
+      "hostStdoutReadCalls": 3203,
+      "hostStdoutReadSizeMin": 1024,
+      "hostStdoutReadSizeMax": 14336,
+      "stderrBytes": 196,
+      "stderr": "decoded width=512 height=4096 bits=16 maxval=65535 near=0 rows=4096 input_bytes=1249961 output_bytes=4194304 first_row_at=573 core_payload_bytes=10751 input_high_water=4096 output_high_water=1024\n",
+      "reconstructionSha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89",
+      "matchesReferenceByteForByte": true,
+      "firstDifferenceByte": null,
+      "exitCode": 0,
+      "timedOut": false,
+      "completed": true,
+      "processIoNote": "Linux /proc counters are diagnostic totals, not a parser's input/EOI milestones.",
+      "progressAtMostOncePerSecond": [
+        {
+          "elapsedSeconds": 0.007106881999998649,
+          "stdoutBytes": 0,
+          "completeRows": 0,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": null,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4264,
+            "wchar": 0,
+            "syscr": 10,
+            "syscw": 0,
+            "read_bytes": 1068,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        }
+      ]
+    },
+    {
+      "case": "B",
+      "command": [
+        ".tools/rc2-final-verified-build/targets/native/release/build/cmd/moonjls/moonjls.exe",
+        "decode",
+        ".evidence/rc2/worker-fixtures/resource-512x4096.jls",
+        "-",
+        "raw-le",
+        "7"
+      ],
+      "cliChunkBytes": 7,
+      "deadlineSecondsFromSpawnAttempt": 261.0905382993161,
+      "budgetBasis": {
+        "fastControlSeconds": 0.6412591779999985,
+        "estimatedIoCallRatio": 199.67787369377555,
+        "estimatedFastForSmallChunksSeconds": 128.04526914965805,
+        "doubleEstimatePlusMarginSeconds": 261.0905382993161,
+        "note": "Deliberately conservative management estimate, not an attribution model"
+      },
+      "stdoutPipeCapacityBytes": 65536,
+      "hostStdoutReadLimitBytes": 65536,
+      "hostStderrReadLimitBytes": 65536,
+      "parentInputMode": "direct child file input; stdin is /dev/null",
+      "parentStdinWriteBytes": 0,
+      "parentStdinWriteGranularityBytes": null,
+      "plannedPauseSeconds": 0,
+      "actualFullPipeHoldSeconds": 0,
+      "elapsedSeconds": 93.03479063099999,
+      "eventsSecondsFromSpawnAttempt": {
+        "parentStdinClosedBeforeSpawn": 0.0,
+        "spawned": 0.006356719999999427,
+        "firstOutputByte": 0.03417587800000099,
+        "firstCompleteRow": 0.04810179400000081,
+        "allExpectedOutputReceived": 92.929643837,
+        "stderrEof": 92.93395262199999,
+        "stdoutEof": 92.934127453,
+        "exitObserved": 93.03479063099999
+      },
+      "stdoutBytes": 4194304,
+      "completeRows": 4096,
+      "hostStdoutReadCalls": 693052,
+      "hostStdoutReadSizeMin": 4,
+      "hostStdoutReadSizeMax": 1336,
+      "stderrBytes": 190,
+      "stderr": "decoded width=512 height=4096 bits=16 maxval=65535 near=0 rows=4096 input_bytes=1249961 output_bytes=4194304 first_row_at=573 core_payload_bytes=10751 input_high_water=7 output_high_water=6\n",
+      "reconstructionSha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89",
+      "matchesReferenceByteForByte": true,
+      "firstDifferenceByte": null,
+      "exitCode": 0,
+      "timedOut": false,
+      "completed": true,
+      "processIoNote": "Linux /proc counters are diagnostic totals, not a parser's input/EOI milestones.",
+      "progressAtMostOncePerSecond": [
+        {
+          "elapsedSeconds": 0.006434095999999556,
+          "stdoutBytes": 0,
+          "completeRows": 0,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": null,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4264,
+            "wchar": 0,
+            "syscr": 10,
+            "syscw": 0,
+            "read_bytes": 1068,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 1.0064956719999998,
+          "stdoutBytes": 36972,
+          "completeRows": 36,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 1.0064916739999994,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 47593,
+            "wchar": 68464,
+            "syscr": 9573,
+            "syscw": 14046,
+            "read_bytes": 12919,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 2.006593898,
+          "stdoutBytes": 72722,
+          "completeRows": 71,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 2.0065905310000005,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 88234,
+            "wchar": 134202,
+            "syscr": 18591,
+            "syscw": 27512,
+            "read_bytes": 23580,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 3.006668207999999,
+          "stdoutBytes": 110222,
+          "completeRows": 107,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 3.0066668950000004,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 130683,
+            "wchar": 203244,
+            "syscr": 28022,
+            "syscw": 41650,
+            "read_bytes": 34605,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 4.016944369999999,
+          "stdoutBytes": 143366,
+          "completeRows": 140,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 4.016933809999999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 168739,
+            "wchar": 264192,
+            "syscr": 36447,
+            "syscw": 54143,
+            "read_bytes": 44769,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 5.017032916,
+          "stdoutBytes": 182608,
+          "completeRows": 178,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 5.017031062999999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 213062,
+            "wchar": 336166,
+            "syscr": 46291,
+            "syscw": 68883,
+            "read_bytes": 56312,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 6.017072085000001,
+          "stdoutBytes": 219904,
+          "completeRows": 214,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 6.017070141,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 255251,
+            "wchar": 404658,
+            "syscr": 55660,
+            "syscw": 82910,
+            "read_bytes": 67309,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 7.028494381,
+          "stdoutBytes": 258054,
+          "completeRows": 252,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 7.028490584000002,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 299068,
+            "wchar": 475034,
+            "syscr": 65367,
+            "syscw": 97333,
+            "read_bytes": 78950,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 8.028537268,
+          "stdoutBytes": 301068,
+          "completeRows": 294,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 8.028536076,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 347817,
+            "wchar": 553982,
+            "syscr": 76187,
+            "syscw": 113504,
+            "read_bytes": 91711,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 9.036508135,
+          "stdoutBytes": 345094,
+          "completeRows": 337,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 9.036504368000001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 397773,
+            "wchar": 634894,
+            "syscr": 87275,
+            "syscw": 130077,
+            "read_bytes": 104787,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 10.036519989,
+          "stdoutBytes": 389062,
+          "completeRows": 379,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 10.036518717000002,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 447271,
+            "wchar": 715550,
+            "syscr": 98277,
+            "syscw": 146591,
+            "read_bytes": 117597,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 11.036577207999999,
+          "stdoutBytes": 432776,
+          "completeRows": 422,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 11.036575865000001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 497129,
+            "wchar": 795970,
+            "syscr": 109333,
+            "syscw": 163068,
+            "read_bytes": 130743,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 12.036624687000002,
+          "stdoutBytes": 477144,
+          "completeRows": 465,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 12.036623465,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 547313,
+            "wchar": 877446,
+            "syscr": 120478,
+            "syscw": 179754,
+            "read_bytes": 143819,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 13.036643608,
+          "stdoutBytes": 523732,
+          "completeRows": 511,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 13.036641845,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 600477,
+            "wchar": 963170,
+            "syscr": 132266,
+            "syscw": 197318,
+            "read_bytes": 157847,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 14.038633756000001,
+          "stdoutBytes": 570374,
+          "completeRows": 557,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 14.038630871,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 653732,
+            "wchar": 1049010,
+            "syscr": 144073,
+            "syscw": 214906,
+            "read_bytes": 171910,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 15.045811407,
+          "stdoutBytes": 618502,
+          "completeRows": 604,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 15.045808672000001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 708491,
+            "wchar": 1137572,
+            "syscr": 156223,
+            "syscw": 233048,
+            "read_bytes": 186281,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 16.045878539,
+          "stdoutBytes": 666476,
+          "completeRows": 650,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 16.045877136,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 762496,
+            "wchar": 1225506,
+            "syscr": 168225,
+            "syscw": 251053,
+            "read_bytes": 200274,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 17.045937553999998,
+          "stdoutBytes": 713112,
+          "completeRows": 696,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 17.045936311,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 815736,
+            "wchar": 1311332,
+            "syscr": 180029,
+            "syscw": 268638,
+            "read_bytes": 214330,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 18.046004889000002,
+          "stdoutBytes": 760132,
+          "completeRows": 742,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 18.046003667,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 869133,
+            "wchar": 1397750,
+            "syscr": 191879,
+            "syscw": 286340,
+            "read_bytes": 228323,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 19.046077398,
+          "stdoutBytes": 805806,
+          "completeRows": 786,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 19.046073690999997,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 920688,
+            "wchar": 1481594,
+            "syscr": 203333,
+            "syscw": 303509,
+            "read_bytes": 241714,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 20.052678678,
+          "stdoutBytes": 852998,
+          "completeRows": 833,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 20.052677044999996,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 974714,
+            "wchar": 1568490,
+            "syscr": 215305,
+            "syscw": 321316,
+            "read_bytes": 256036,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 21.052717674,
+          "stdoutBytes": 900408,
+          "completeRows": 879,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 21.052716492000002,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1028415,
+            "wchar": 1655574,
+            "syscr": 227228,
+            "syscw": 339152,
+            "read_bytes": 270057,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 22.06676659,
+          "stdoutBytes": 946182,
+          "completeRows": 924,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 22.066758985999996,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1080737,
+            "wchar": 1739900,
+            "syscr": 238828,
+            "syscw": 356430,
+            "read_bytes": 283875,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 23.072514462999997,
+          "stdoutBytes": 987142,
+          "completeRows": 964,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 23.072504023,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1127248,
+            "wchar": 1815190,
+            "syscr": 249150,
+            "syscw": 371852,
+            "read_bytes": 296062,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 24.07914856,
+          "stdoutBytes": 1028102,
+          "completeRows": 1004,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 24.079142689,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1173817,
+            "wchar": 1890472,
+            "syscr": 259482,
+            "syscw": 387274,
+            "read_bytes": 308291,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 25.079215026,
+          "stdoutBytes": 1073434,
+          "completeRows": 1048,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 25.079213804,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1225149,
+            "wchar": 1973688,
+            "syscr": 270878,
+            "syscw": 404318,
+            "read_bytes": 321703,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 26.081601419000002,
+          "stdoutBytes": 1119238,
+          "completeRows": 1093,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 26.081598342999996,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1277250,
+            "wchar": 2057908,
+            "syscr": 282437,
+            "syscw": 421571,
+            "read_bytes": 335388,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 27.085449190999995,
+          "stdoutBytes": 1163270,
+          "completeRows": 1136,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 27.085441615999997,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1327363,
+            "wchar": 2138948,
+            "syscr": 293556,
+            "syscw": 438172,
+            "read_bytes": 348541,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 28.085526412999997,
+          "stdoutBytes": 1205458,
+          "completeRows": 1177,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 28.08552497,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1375146,
+            "wchar": 2216376,
+            "syscr": 304163,
+            "syscw": 454031,
+            "read_bytes": 361036,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 29.085550155,
+          "stdoutBytes": 1247180,
+          "completeRows": 1217,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 29.085548842,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1422165,
+            "wchar": 2292930,
+            "syscr": 314612,
+            "syscw": 469706,
+            "read_bytes": 373223,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 30.085571758,
+          "stdoutBytes": 1292134,
+          "completeRows": 1261,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 30.085569954,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1473357,
+            "wchar": 2375608,
+            "syscr": 325967,
+            "syscw": 486644,
+            "read_bytes": 386691,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 31.085620978,
+          "stdoutBytes": 1338172,
+          "completeRows": 1306,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 31.085619195,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1525702,
+            "wchar": 2460256,
+            "syscr": 337581,
+            "syscw": 503984,
+            "read_bytes": 400432,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 32.096678523,
+          "stdoutBytes": 1384454,
+          "completeRows": 1352,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 32.096674195,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1578767,
+            "wchar": 2545572,
+            "syscr": 349339,
+            "syscw": 521468,
+            "read_bytes": 414509,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 33.096727762,
+          "stdoutBytes": 1430308,
+          "completeRows": 1396,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 33.09672655,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1630440,
+            "wchar": 2629654,
+            "syscr": 360821,
+            "syscw": 538685,
+            "read_bytes": 427914,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 34.096766927,
+          "stdoutBytes": 1475986,
+          "completeRows": 1441,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 34.096765685,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1682446,
+            "wchar": 2713660,
+            "syscr": 372357,
+            "syscw": 555895,
+            "read_bytes": 441592,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 35.096809101,
+          "stdoutBytes": 1522672,
+          "completeRows": 1486,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 35.096807817999995,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1735248,
+            "wchar": 2799374,
+            "syscr": 384083,
+            "syscw": 573449,
+            "read_bytes": 455354,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 36.096856707,
+          "stdoutBytes": 1568608,
+          "completeRows": 1531,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 36.096855485,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1787404,
+            "wchar": 2883802,
+            "syscr": 395658,
+            "syscw": 590743,
+            "read_bytes": 469018,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 37.101054864,
+          "stdoutBytes": 1614854,
+          "completeRows": 1577,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 37.101051608,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1840395,
+            "wchar": 2968982,
+            "syscr": 407399,
+            "syscw": 608199,
+            "read_bytes": 483081,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 38.10105984,
+          "stdoutBytes": 1661834,
+          "completeRows": 1622,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 38.101058597,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1893335,
+            "wchar": 3055182,
+            "syscr": 419164,
+            "syscw": 625849,
+            "read_bytes": 496801,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 39.101095426,
+          "stdoutBytes": 1708098,
+          "completeRows": 1668,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 39.101093612999996,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1946331,
+            "wchar": 3140386,
+            "syscr": 430907,
+            "syscw": 643310,
+            "read_bytes": 510857,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 40.101153126999996,
+          "stdoutBytes": 1752706,
+          "completeRows": 1711,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 40.101151854,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1996638,
+            "wchar": 3222240,
+            "syscr": 442085,
+            "syscw": 660071,
+            "read_bytes": 523912,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 41.109890953,
+          "stdoutBytes": 1798150,
+          "completeRows": 1756,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 41.109885372,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2048692,
+            "wchar": 3305996,
+            "syscr": 453621,
+            "syscw": 677234,
+            "read_bytes": 537702,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 42.109957699,
+          "stdoutBytes": 1842872,
+          "completeRows": 1799,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 42.109956366,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2098985,
+            "wchar": 3387956,
+            "syscr": 464800,
+            "syscw": 694015,
+            "read_bytes": 550715,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 43.109996119,
+          "stdoutBytes": 1886012,
+          "completeRows": 1841,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 43.109993954,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2147931,
+            "wchar": 3467226,
+            "syscr": 475664,
+            "syscw": 710252,
+            "read_bytes": 563525,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 44.110001628,
+          "stdoutBytes": 1928942,
+          "completeRows": 1883,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 44.109998592,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2196715,
+            "wchar": 3546150,
+            "syscr": 486489,
+            "syscw": 726419,
+            "read_bytes": 576321,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 45.113570267,
+          "stdoutBytes": 1971206,
+          "completeRows": 1925,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 45.11356696,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2245088,
+            "wchar": 3623974,
+            "syscr": 497209,
+            "syscw": 742367,
+            "read_bytes": 589138,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 46.117006464,
+          "stdoutBytes": 2015238,
+          "completeRows": 1968,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 46.117003759,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2295175,
+            "wchar": 3704986,
+            "syscr": 508323,
+            "syscw": 758962,
+            "read_bytes": 602277,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 47.117061367,
+          "stdoutBytes": 2059834,
+          "completeRows": 2011,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 47.117060134,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2345450,
+            "wchar": 3786766,
+            "syscr": 519493,
+            "syscw": 775708,
+            "read_bytes": 615332,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 48.117098114,
+          "stdoutBytes": 2102872,
+          "completeRows": 2053,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 48.117096862,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2394357,
+            "wchar": 3865878,
+            "syscr": 530345,
+            "syscw": 791914,
+            "read_bytes": 628163,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 49.122260571,
+          "stdoutBytes": 2146310,
+          "completeRows": 2096,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 49.122257886,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2444037,
+            "wchar": 3945896,
+            "syscr": 541358,
+            "syscw": 808310,
+            "read_bytes": 641295,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 50.124760892,
+          "stdoutBytes": 2190342,
+          "completeRows": 2139,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 50.124758807999996,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2493940,
+            "wchar": 4026740,
+            "syscr": 552435,
+            "syscw": 824869,
+            "read_bytes": 654350,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 51.124780933,
+          "stdoutBytes": 2234770,
+          "completeRows": 2182,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 51.124779630999996,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2544285,
+            "wchar": 4108360,
+            "syscr": 563612,
+            "syscw": 841586,
+            "read_bytes": 667503,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 52.124824167,
+          "stdoutBytes": 2279000,
+          "completeRows": 2225,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 52.124822564,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2594366,
+            "wchar": 4189602,
+            "syscr": 574732,
+            "syscw": 858225,
+            "read_bytes": 680572,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 53.124857938000005,
+          "stdoutBytes": 2322708,
+          "completeRows": 2268,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 53.124856625999996,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2644286,
+            "wchar": 4270048,
+            "syscr": 585799,
+            "syscw": 874708,
+            "read_bytes": 693760,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 54.124871789,
+          "stdoutBytes": 2368238,
+          "completeRows": 2312,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 54.124870437,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2695800,
+            "wchar": 4353666,
+            "syscr": 597239,
+            "syscw": 891833,
+            "read_bytes": 707186,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 55.124941398999994,
+          "stdoutBytes": 2415892,
+          "completeRows": 2359,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 55.124940206999995,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2750024,
+            "wchar": 4441292,
+            "syscr": 609268,
+            "syscw": 909784,
+            "read_bytes": 721438,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 56.126500066999995,
+          "stdoutBytes": 2463750,
+          "completeRows": 2406,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 56.126496921,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2804634,
+            "wchar": 4529354,
+            "syscr": 621377,
+            "syscw": 927827,
+            "read_bytes": 735844,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 57.126523881,
+          "stdoutBytes": 2507706,
+          "completeRows": 2448,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 57.126522187999996,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2854164,
+            "wchar": 4610002,
+            "syscr": 632384,
+            "syscw": 944340,
+            "read_bytes": 748682,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 58.12659476499999,
+          "stdoutBytes": 2552012,
+          "completeRows": 2492,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 58.12659343199999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2904917,
+            "wchar": 4691600,
+            "syscr": 643630,
+            "syscw": 961062,
+            "read_bytes": 762143,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 59.126652819,
+          "stdoutBytes": 2597314,
+          "completeRows": 2536,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 59.126651596,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2956282,
+            "wchar": 4774828,
+            "syscr": 655032,
+            "syscw": 978109,
+            "read_bytes": 775576,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 60.127891020999996,
+          "stdoutBytes": 2644998,
+          "completeRows": 2583,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 60.127889338,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3010530,
+            "wchar": 4862514,
+            "syscr": 667067,
+            "syscw": 996072,
+            "read_bytes": 789828,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 61.13242922799999,
+          "stdoutBytes": 2690054,
+          "completeRows": 2627,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 61.132427445000005,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3061724,
+            "wchar": 4945338,
+            "syscr": 678427,
+            "syscw": 1013038,
+            "read_bytes": 803254,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 62.138250193999994,
+          "stdoutBytes": 2738182,
+          "completeRows": 2674,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 62.138248311,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3116477,
+            "wchar": 5033838,
+            "syscr": 690574,
+            "syscw": 1031168,
+            "read_bytes": 817639,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 63.13825890299999,
+          "stdoutBytes": 2786526,
+          "completeRows": 2721,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 63.138257681,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3171297,
+            "wchar": 5122662,
+            "syscr": 702743,
+            "syscw": 1049361,
+            "read_bytes": 831975,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 64.138297255,
+          "stdoutBytes": 2831086,
+          "completeRows": 2764,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 64.13829595199999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3221807,
+            "wchar": 5204524,
+            "syscr": 713956,
+            "syscw": 1066128,
+            "read_bytes": 845177,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 65.138406054,
+          "stdoutBytes": 2876878,
+          "completeRows": 2809,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 65.138403168,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3273889,
+            "wchar": 5288720,
+            "syscr": 725511,
+            "syscw": 1083376,
+            "read_bytes": 858855,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 66.138494098,
+          "stdoutBytes": 2922814,
+          "completeRows": 2854,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 66.138492925,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3326118,
+            "wchar": 5373176,
+            "syscr": 737099,
+            "syscw": 1100677,
+            "read_bytes": 872568,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 67.144606832,
+          "stdoutBytes": 2970630,
+          "completeRows": 2901,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 67.144604437,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3380546,
+            "wchar": 5461114,
+            "syscr": 749173,
+            "syscw": 1118692,
+            "read_bytes": 886876,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 68.144625429,
+          "stdoutBytes": 3019226,
+          "completeRows": 2948,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 68.144621712,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3435611,
+            "wchar": 5550390,
+            "syscr": 761398,
+            "syscw": 1136977,
+            "read_bytes": 901261,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 69.144644099,
+          "stdoutBytes": 3067384,
+          "completeRows": 2995,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 69.14464116399999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3490142,
+            "wchar": 5638842,
+            "syscr": 773506,
+            "syscw": 1155093,
+            "read_bytes": 915492,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 70.144683982,
+          "stdoutBytes": 3115938,
+          "completeRows": 3042,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 70.14468267,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3545168,
+            "wchar": 5728050,
+            "syscr": 785722,
+            "syscw": 1173364,
+            "read_bytes": 929870,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 71.144730626,
+          "stdoutBytes": 3164916,
+          "completeRows": 3090,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 71.144729484,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3600874,
+            "wchar": 5818098,
+            "syscr": 798081,
+            "syscw": 1191811,
+            "read_bytes": 944500,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 72.144735306,
+          "stdoutBytes": 3214206,
+          "completeRows": 3138,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 72.14473408399999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3656799,
+            "wchar": 5908682,
+            "syscr": 810494,
+            "syscw": 1210365,
+            "read_bytes": 959137,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 73.144747547,
+          "stdoutBytes": 3263436,
+          "completeRows": 3186,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 73.144746374,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3712673,
+            "wchar": 5999150,
+            "syscr": 822895,
+            "syscw": 1228896,
+            "read_bytes": 973767,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 74.14481725,
+          "stdoutBytes": 3308640,
+          "completeRows": 3231,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 74.144814725,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3764407,
+            "wchar": 6082382,
+            "syscr": 834360,
+            "syscw": 1245952,
+            "read_bytes": 987473,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 75.14483682299999,
+          "stdoutBytes": 3353458,
+          "completeRows": 3274,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 75.144835621,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3815023,
+            "wchar": 6164656,
+            "syscr": 845604,
+            "syscw": 1262800,
+            "read_bytes": 1000633,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 76.144860263,
+          "stdoutBytes": 3400172,
+          "completeRows": 3320,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 76.14485892,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3868304,
+            "wchar": 6250602,
+            "syscr": 857419,
+            "syscw": 1280409,
+            "read_bytes": 1014682,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 77.149911279,
+          "stdoutBytes": 3447814,
+          "completeRows": 3367,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 77.149909456,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3922502,
+            "wchar": 6338210,
+            "syscr": 869443,
+            "syscw": 1298356,
+            "read_bytes": 1028920,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 78.14992454,
+          "stdoutBytes": 3494242,
+          "completeRows": 3412,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 78.149923358,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3975180,
+            "wchar": 6423520,
+            "syscr": 881135,
+            "syscw": 1315830,
+            "read_bytes": 1042710,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 79.149933688,
+          "stdoutBytes": 3543040,
+          "completeRows": 3460,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 79.149932446,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4030161,
+            "wchar": 6513048,
+            "syscr": 893354,
+            "syscw": 1334162,
+            "read_bytes": 1056955,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 80.151863712,
+          "stdoutBytes": 3591174,
+          "completeRows": 3507,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 80.151861888,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4085307,
+            "wchar": 6601710,
+            "syscr": 905573,
+            "syscw": 1352331,
+            "read_bytes": 1071585,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 81.151895112,
+          "stdoutBytes": 3640320,
+          "completeRows": 3555,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 81.15189396,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4140725,
+            "wchar": 6691884,
+            "syscr": 917887,
+            "syscw": 1370796,
+            "read_bytes": 1085963,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 82.15196270599999,
+          "stdoutBytes": 3689306,
+          "completeRows": 3602,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 82.151961464,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4196439,
+            "wchar": 6781960,
+            "syscr": 930248,
+            "syscw": 1389248,
+            "read_bytes": 1100593,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 83.15200152999999,
+          "stdoutBytes": 3737822,
+          "completeRows": 3650,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 83.15200031799999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4251848,
+            "wchar": 6871254,
+            "syscr": 942532,
+            "syscw": 1407544,
+            "read_bytes": 1115230,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 84.152061315,
+          "stdoutBytes": 3784046,
+          "completeRows": 3695,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 84.152060033,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4304240,
+            "wchar": 6956172,
+            "syscr": 954163,
+            "syscw": 1424937,
+            "read_bytes": 1128922,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 85.152092145,
+          "stdoutBytes": 3832582,
+          "completeRows": 3742,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 85.152090973,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4359298,
+            "wchar": 7045360,
+            "syscr": 966384,
+            "syscw": 1443205,
+            "read_bytes": 1143328,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 86.152131439,
+          "stdoutBytes": 3880188,
+          "completeRows": 3789,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 86.152130277,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4413626,
+            "wchar": 7132958,
+            "syscr": 978430,
+            "syscw": 1461153,
+            "read_bytes": 1157664,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 87.15214831,
+          "stdoutBytes": 3929172,
+          "completeRows": 3837,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 87.15214717799999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4469358,
+            "wchar": 7223036,
+            "syscr": 990794,
+            "syscw": 1479606,
+            "read_bytes": 1172308,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 88.152199061,
+          "stdoutBytes": 3974570,
+          "completeRows": 3881,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 88.152196055,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4520791,
+            "wchar": 7306434,
+            "syscr": 1002213,
+            "syscw": 1496687,
+            "read_bytes": 1185741,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 89.152260582,
+          "stdoutBytes": 4018932,
+          "completeRows": 3924,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 89.15225937,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4571092,
+            "wchar": 7387944,
+            "syscr": 1013379,
+            "syscw": 1513382,
+            "read_bytes": 1198894,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 90.158579357,
+          "stdoutBytes": 4063238,
+          "completeRows": 3968,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 90.158572935,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4621787,
+            "wchar": 7469544,
+            "syscr": 1024615,
+            "syscw": 1530103,
+            "read_bytes": 1212313,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 91.158606887,
+          "stdoutBytes": 4111062,
+          "completeRows": 4014,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 91.158605665,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4675796,
+            "wchar": 7557304,
+            "syscr": 1036612,
+            "syscw": 1548075,
+            "read_bytes": 1226362,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 92.158618401,
+          "stdoutBytes": 4158470,
+          "completeRows": 4061,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 92.158615225,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4729970,
+            "wchar": 7644570,
+            "syscr": 1048621,
+            "syscw": 1565956,
+            "read_bytes": 1240684,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        }
+      ]
+    },
+    {
+      "case": "C",
+      "command": [
+        ".tools/rc2-final-verified-build/targets/native/release/build/cmd/moonjls/moonjls.exe",
+        "decode",
+        ".evidence/rc2/worker-fixtures/resource-512x4096.jls",
+        "-",
+        "raw-le",
+        "7"
+      ],
+      "cliChunkBytes": 7,
+      "deadlineSecondsFromSpawnAttempt": 191.16958126199998,
+      "budgetBasis": {
+        "fastControlSeconds": 93.03479063099999,
+        "inputPlannedWaitSeconds": 0,
+        "outputPlannedWaitSeconds": 0.1,
+        "startupAndTeardownMarginSeconds": 5.0
+      },
+      "stdoutPipeCapacityBytes": 65536,
+      "hostStdoutReadLimitBytes": 65536,
+      "hostStderrReadLimitBytes": 65536,
+      "parentInputMode": "direct child file input; stdin is /dev/null",
+      "parentStdinWriteBytes": 0,
+      "parentStdinWriteGranularityBytes": null,
+      "plannedPauseSeconds": 0.1,
+      "actualFullPipeHoldSeconds": 0.1011233370000042,
+      "elapsedSeconds": 92.69942799699999,
+      "eventsSecondsFromSpawnAttempt": {
+        "parentStdinClosedBeforeSpawn": 0.0,
+        "spawned": 0.00885753100000386,
+        "fullPipeObserved": 1.375934491999999,
+        "drainStartedAfterHold": 1.4770578290000032,
+        "firstOutputByte": 1.477143170000005,
+        "firstCompleteRow": 1.477940841000006,
+        "allExpectedOutputReceived": 92.596988498,
+        "stderrEof": 92.59904308,
+        "stdoutEof": 92.59910372499999,
+        "exitObserved": 92.69942799699999
+      },
+      "stdoutBytes": 4194304,
+      "completeRows": 4096,
+      "hostStdoutReadCalls": 685999,
+      "hostStdoutReadSizeMin": 4,
+      "hostStdoutReadSizeMax": 65536,
+      "stderrBytes": 190,
+      "stderr": "decoded width=512 height=4096 bits=16 maxval=65535 near=0 rows=4096 input_bytes=1249961 output_bytes=4194304 first_row_at=573 core_payload_bytes=10751 input_high_water=7 output_high_water=6\n",
+      "reconstructionSha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89",
+      "matchesReferenceByteForByte": true,
+      "firstDifferenceByte": null,
+      "exitCode": 0,
+      "timedOut": false,
+      "completed": true,
+      "processIoNote": "Linux /proc counters are diagnostic totals, not a parser's input/EOI milestones.",
+      "progressAtMostOncePerSecond": [
+        {
+          "elapsedSeconds": 0.00919560100000183,
+          "stdoutBytes": 0,
+          "completeRows": 0,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": null,
+          "pauseState": "waiting-for-full-pipe",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4266,
+            "wchar": 0,
+            "syscr": 11,
+            "syscw": 0,
+            "read_bytes": 1068,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 1.0106847680000044,
+          "stdoutBytes": 0,
+          "completeRows": 0,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": null,
+          "pauseState": "waiting-for-full-pipe",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 59781,
+            "wchar": 88658,
+            "syscr": 12293,
+            "syscw": 18176,
+            "read_bytes": 15971,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 2.0106977930000056,
+          "stdoutBytes": 89808,
+          "completeRows": 87,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 2.010695948999995,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 107343,
+            "wchar": 165516,
+            "syscr": 22844,
+            "syscw": 33921,
+            "read_bytes": 28473,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 3.0107591759999934,
+          "stdoutBytes": 135366,
+          "completeRows": 132,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 3.010757944000005,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 159495,
+            "wchar": 249364,
+            "syscr": 34400,
+            "syscw": 51104,
+            "read_bytes": 42305,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 4.010839298999997,
+          "stdoutBytes": 182196,
+          "completeRows": 177,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 4.010836573999995,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 212280,
+            "wchar": 335294,
+            "syscr": 46130,
+            "syscw": 68699,
+            "read_bytes": 55990,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 5.0171418430000045,
+          "stdoutBytes": 222214,
+          "completeRows": 217,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 5.017139779000004,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 258240,
+            "wchar": 409036,
+            "syscr": 56309,
+            "syscw": 83813,
+            "read_bytes": 68226,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 6.019591215999995,
+          "stdoutBytes": 267270,
+          "completeRows": 261,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 6.019588802000001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 309401,
+            "wchar": 491848,
+            "syscr": 67663,
+            "syscw": 100776,
+            "read_bytes": 81631,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 7.019633877000004,
+          "stdoutBytes": 311626,
+          "completeRows": 304,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 7.019632665000003,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 359676,
+            "wchar": 573350,
+            "syscr": 78824,
+            "syscw": 117469,
+            "read_bytes": 94770,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 8.019677813000001,
+          "stdoutBytes": 357354,
+          "completeRows": 348,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 8.019676570000001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 411351,
+            "wchar": 657296,
+            "syscr": 90302,
+            "syscw": 134660,
+            "read_bytes": 108217,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 9.019680919999999,
+          "stdoutBytes": 405834,
+          "completeRows": 396,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 9.019679686999993,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 466747,
+            "wchar": 746534,
+            "syscr": 102582,
+            "syscw": 152945,
+            "read_bytes": 122861,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 10.019681538,
+          "stdoutBytes": 454860,
+          "completeRows": 444,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 10.019680374999993,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 522485,
+            "wchar": 836662,
+            "syscr": 114949,
+            "syscw": 171408,
+            "read_bytes": 137491,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 11.021296227999997,
+          "stdoutBytes": 502790,
+          "completeRows": 491,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 11.021294405000006,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 576908,
+            "wchar": 924756,
+            "syscr": 127027,
+            "syscw": 189453,
+            "read_bytes": 151750,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 12.021309243999994,
+          "stdoutBytes": 548434,
+          "completeRows": 535,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 12.02130742,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 628450,
+            "wchar": 1008544,
+            "syscr": 138477,
+            "syscw": 206611,
+            "read_bytes": 165148,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 13.028698320000004,
+          "stdoutBytes": 596998,
+          "completeRows": 583,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 13.028695665,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 683979,
+            "wchar": 1098132,
+            "syscr": 150791,
+            "syscw": 224966,
+            "read_bytes": 179785,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 14.028765226999994,
+          "stdoutBytes": 642702,
+          "completeRows": 627,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 14.028763944000005,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 735473,
+            "wchar": 1181800,
+            "syscr": 162229,
+            "syscw": 242100,
+            "read_bytes": 193183,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 15.028795954000003,
+          "stdoutBytes": 688488,
+          "completeRows": 672,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 15.028794750999992,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 787749,
+            "wchar": 1266064,
+            "syscr": 173819,
+            "syscw": 259365,
+            "read_bytes": 206987,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 16.028898311000006,
+          "stdoutBytes": 732024,
+          "completeRows": 714,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 16.028896447999998,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 836959,
+            "wchar": 1345994,
+            "syscr": 184749,
+            "syscw": 275734,
+            "read_bytes": 219797,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 17.028974488999992,
+          "stdoutBytes": 775558,
+          "completeRows": 757,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 17.028970932999997,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 886587,
+            "wchar": 1426080,
+            "syscr": 195755,
+            "syscw": 292142,
+            "read_bytes": 232873,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 18.029034486,
+          "stdoutBytes": 819974,
+          "completeRows": 800,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 18.029032952999998,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 936913,
+            "wchar": 1507676,
+            "syscr": 206928,
+            "syscw": 308854,
+            "read_bytes": 246019,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 19.029073068000002,
+          "stdoutBytes": 865694,
+          "completeRows": 845,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 19.029071865999995,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 989006,
+            "wchar": 1591782,
+            "syscr": 218482,
+            "syscw": 326085,
+            "read_bytes": 259732,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 20.029165858,
+          "stdoutBytes": 912654,
+          "completeRows": 891,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 20.029164064,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1042337,
+            "wchar": 1678088,
+            "syscr": 230317,
+            "syscw": 343764,
+            "read_bytes": 273711,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 21.029227002,
+          "stdoutBytes": 956980,
+          "completeRows": 934,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 21.029225698999994,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1092636,
+            "wchar": 1759546,
+            "syscr": 241481,
+            "syscw": 360449,
+            "read_bytes": 286878,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 22.02928114400001,
+          "stdoutBytes": 1004126,
+          "completeRows": 980,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 22.029279601000013,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1146227,
+            "wchar": 1846226,
+            "syscr": 253372,
+            "syscw": 378205,
+            "read_bytes": 300941,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 23.02932512999999,
+          "stdoutBytes": 1051056,
+          "completeRows": 1026,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 23.029323866999988,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1199575,
+            "wchar": 1932498,
+            "syscr": 265209,
+            "syscw": 395878,
+            "read_bytes": 314941,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 24.029371392,
+          "stdoutBytes": 1095526,
+          "completeRows": 1069,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 24.02936812600001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1249915,
+            "wchar": 2014182,
+            "syscr": 276387,
+            "syscw": 412607,
+            "read_bytes": 328073,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 25.02943682899999,
+          "stdoutBytes": 1132616,
+          "completeRows": 1106,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 25.029434745000003,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1292427,
+            "wchar": 2082500,
+            "syscr": 285806,
+            "syscw": 426608,
+            "read_bytes": 339357,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 26.036302578999994,
+          "stdoutBytes": 1173510,
+          "completeRows": 1146,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 26.036298670999997,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1338960,
+            "wchar": 2157698,
+            "syscr": 296129,
+            "syscw": 442013,
+            "read_bytes": 351586,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 27.046201214999996,
+          "stdoutBytes": 1214470,
+          "completeRows": 1186,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 27.046199051000002,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1385467,
+            "wchar": 2232978,
+            "syscr": 306450,
+            "syscw": 457433,
+            "read_bytes": 363773,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 28.04622595699999,
+          "stdoutBytes": 1256000,
+          "completeRows": 1226,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 28.046224633999998,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1432446,
+            "wchar": 2309238,
+            "syscr": 316883,
+            "syscw": 473051,
+            "read_bytes": 376016,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 29.051221551999987,
+          "stdoutBytes": 1300486,
+          "completeRows": 1270,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 29.05121896700001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1483246,
+            "wchar": 2391134,
+            "syscr": 328146,
+            "syscw": 489831,
+            "read_bytes": 389428,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 30.051242841999994,
+          "stdoutBytes": 1349628,
+          "completeRows": 1317,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 30.051241620000013,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1538590,
+            "wchar": 2481260,
+            "syscr": 340446,
+            "syscw": 508285,
+            "read_bytes": 403764,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 31.051246736999985,
+          "stdoutBytes": 1394252,
+          "completeRows": 1361,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 31.051244884,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1589474,
+            "wchar": 2563358,
+            "syscr": 351730,
+            "syscw": 525105,
+            "read_bytes": 417176,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 32.051262038999994,
+          "stdoutBytes": 1441296,
+          "completeRows": 1407,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 32.05126065600001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1642960,
+            "wchar": 2649850,
+            "syscr": 363597,
+            "syscw": 542823,
+            "read_bytes": 431218,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 33.05128516299999,
+          "stdoutBytes": 1487914,
+          "completeRows": 1453,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 33.051283428999994,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1696203,
+            "wchar": 2735644,
+            "syscr": 375401,
+            "syscw": 560402,
+            "read_bytes": 445281,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 34.05836585200001,
+          "stdoutBytes": 1534982,
+          "completeRows": 1499,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 34.058363047,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1749610,
+            "wchar": 2822150,
+            "syscr": 387255,
+            "syscw": 578121,
+            "read_bytes": 459260,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 35.05841212300001,
+          "stdoutBytes": 1582034,
+          "completeRows": 1544,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 35.05841040999999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1802726,
+            "wchar": 2908508,
+            "syscr": 399055,
+            "syscw": 595805,
+            "read_bytes": 473064,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 36.05848503600001,
+          "stdoutBytes": 1627214,
+          "completeRows": 1589,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 36.05848186,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1854371,
+            "wchar": 2991672,
+            "syscr": 410503,
+            "syscw": 612846,
+            "read_bytes": 486721,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 37.06523573800001,
+          "stdoutBytes": 1674246,
+          "completeRows": 1635,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 37.065232732,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1907754,
+            "wchar": 3078118,
+            "syscr": 422351,
+            "syscw": 630553,
+            "read_bytes": 500700,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 38.06530955299999,
+          "stdoutBytes": 1721178,
+          "completeRows": 1680,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 38.065308321,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 1960779,
+            "wchar": 3164272,
+            "syscr": 434129,
+            "syscw": 648196,
+            "read_bytes": 514497,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 39.06535042300001,
+          "stdoutBytes": 1767288,
+          "completeRows": 1725,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 39.06534894000001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2013121,
+            "wchar": 3249014,
+            "syscr": 445746,
+            "syscw": 665554,
+            "read_bytes": 528203,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 40.065407432,
+          "stdoutBytes": 1813266,
+          "completeRows": 1770,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 40.06540589900001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2065404,
+            "wchar": 3333548,
+            "syscr": 457346,
+            "syscw": 682871,
+            "read_bytes": 541930,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 41.073789842,
+          "stdoutBytes": 1859590,
+          "completeRows": 1816,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 41.073787237000005,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2118448,
+            "wchar": 3418878,
+            "syscr": 469101,
+            "syscw": 700357,
+            "read_bytes": 555986,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 42.07911901599999,
+          "stdoutBytes": 1901574,
+          "completeRows": 1857,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 42.07911598000001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2165994,
+            "wchar": 3495978,
+            "syscr": 479657,
+            "syscw": 716148,
+            "read_bytes": 568404,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 43.079240717000005,
+          "stdoutBytes": 1945542,
+          "completeRows": 1899,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 43.07923708999999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2215459,
+            "wchar": 3576622,
+            "syscr": 490653,
+            "syscw": 732659,
+            "read_bytes": 581193,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 44.079242967,
+          "stdoutBytes": 1987460,
+          "completeRows": 1940,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 44.079241634,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2263197,
+            "wchar": 3653720,
+            "syscr": 501242,
+            "syscw": 748454,
+            "read_bytes": 593751,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 45.079279119999995,
+          "stdoutBytes": 2031856,
+          "completeRows": 1984,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 45.07927722599999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2313914,
+            "wchar": 3735422,
+            "syscr": 512485,
+            "syscw": 765195,
+            "read_bytes": 607156,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 46.08753245,
+          "stdoutBytes": 2076678,
+          "completeRows": 2028,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 46.087523231999995,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2364997,
+            "wchar": 3817908,
+            "syscr": 523815,
+            "syscw": 782094,
+            "read_bytes": 620603,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 47.088547680000005,
+          "stdoutBytes": 2121734,
+          "completeRows": 2072,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 47.088541959,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2416162,
+            "wchar": 3900720,
+            "syscr": 535170,
+            "syscw": 799057,
+            "read_bytes": 634008,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 48.09211810100001,
+          "stdoutBytes": 2162712,
+          "completeRows": 2112,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 48.092109214999994,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2462652,
+            "wchar": 3976022,
+            "syscr": 545489,
+            "syscw": 814481,
+            "read_bytes": 646174,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 49.092140903,
+          "stdoutBytes": 2207056,
+          "completeRows": 2155,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 49.092139720000006,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2512771,
+            "wchar": 4057412,
+            "syscr": 556620,
+            "syscw": 831149,
+            "read_bytes": 659229,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 50.09216324900001,
+          "stdoutBytes": 2254808,
+          "completeRows": 2201,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 50.09216207700001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2566755,
+            "wchar": 4145086,
+            "syscr": 568610,
+            "syscw": 849104,
+            "read_bytes": 673285,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 51.09436438200001,
+          "stdoutBytes": 2299910,
+          "completeRows": 2246,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 51.09436011400001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2618443,
+            "wchar": 4228166,
+            "syscr": 580062,
+            "syscw": 866130,
+            "read_bytes": 687005,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 52.10292078399999,
+          "stdoutBytes": 2342918,
+          "completeRows": 2288,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 52.102917227999995,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2667335,
+            "wchar": 4307250,
+            "syscr": 590911,
+            "syscw": 882330,
+            "read_bytes": 699829,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 53.10604798700001,
+          "stdoutBytes": 2386950,
+          "completeRows": 2331,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 53.10604576200001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2717287,
+            "wchar": 4388152,
+            "syscr": 601998,
+            "syscw": 898901,
+            "read_bytes": 712905,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 54.106097758999994,
+          "stdoutBytes": 2433840,
+          "completeRows": 2376,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 54.10609658600001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2770328,
+            "wchar": 4474252,
+            "syscr": 613777,
+            "syscw": 916534,
+            "read_bytes": 726730,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 55.10827852700001,
+          "stdoutBytes": 2482182,
+          "completeRows": 2424,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 55.10827622299999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2825655,
+            "wchar": 4563288,
+            "syscr": 626039,
+            "syscw": 934779,
+            "read_bytes": 741381,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 56.108339946,
+          "stdoutBytes": 2530604,
+          "completeRows": 2471,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 56.10833812300001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2880394,
+            "wchar": 4652166,
+            "syscr": 638196,
+            "syscw": 952981,
+            "read_bytes": 755640,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 57.108421109000005,
+          "stdoutBytes": 2578170,
+          "completeRows": 2517,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 57.10841954599999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2934276,
+            "wchar": 4739544,
+            "syscr": 650159,
+            "syscw": 970877,
+            "read_bytes": 769710,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 58.10843700199999,
+          "stdoutBytes": 2625526,
+          "completeRows": 2563,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 58.10843578999999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 2987908,
+            "wchar": 4826532,
+            "syscr": 662067,
+            "syscw": 988693,
+            "read_bytes": 783710,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 59.108492874999996,
+          "stdoutBytes": 2673970,
+          "completeRows": 2611,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 59.10849164199999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3043291,
+            "wchar": 4915708,
+            "syscr": 674343,
+            "syscw": 1006966,
+            "read_bytes": 798361,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 60.108540954999995,
+          "stdoutBytes": 2722470,
+          "completeRows": 2658,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 60.10853981299999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3098314,
+            "wchar": 5004838,
+            "syscr": 686556,
+            "syscw": 1025222,
+            "read_bytes": 812760,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 61.108594259,
+          "stdoutBytes": 2771346,
+          "completeRows": 2706,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 61.108593017000004,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3153985,
+            "wchar": 5094734,
+            "syscr": 698904,
+            "syscw": 1043639,
+            "read_bytes": 827411,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 62.108635994999986,
+          "stdoutBytes": 2819588,
+          "completeRows": 2753,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 62.108634803,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3208726,
+            "wchar": 5183388,
+            "syscr": 711054,
+            "syscw": 1061798,
+            "read_bytes": 841740,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 63.11492578299999,
+          "stdoutBytes": 2868230,
+          "completeRows": 2801,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 63.114923377999986,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3264234,
+            "wchar": 5272894,
+            "syscr": 723362,
+            "syscw": 1080137,
+            "read_bytes": 856384,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 64.11495964599999,
+          "stdoutBytes": 2917376,
+          "completeRows": 2849,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 64.114958403,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3319637,
+            "wchar": 5363060,
+            "syscr": 735673,
+            "syscw": 1098600,
+            "read_bytes": 870755,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 65.11499046399999,
+          "stdoutBytes": 2965768,
+          "completeRows": 2896,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 65.11498878,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3374955,
+            "wchar": 5452156,
+            "syscr": 747935,
+            "syscw": 1116856,
+            "read_bytes": 885385,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 66.114996614,
+          "stdoutBytes": 3011980,
+          "completeRows": 2941,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 66.114995421,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3427372,
+            "wchar": 5537062,
+            "syscr": 759570,
+            "syscw": 1134247,
+            "read_bytes": 899098,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 67.11623234000001,
+          "stdoutBytes": 3059718,
+          "completeRows": 2988,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 67.11622980499999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3481855,
+            "wchar": 5624930,
+            "syscr": 771651,
+            "syscw": 1152250,
+            "read_bytes": 913469,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 68.11627578599999,
+          "stdoutBytes": 3108026,
+          "completeRows": 3035,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 68.11627405300001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3536496,
+            "wchar": 5713626,
+            "syscr": 783785,
+            "syscw": 1170415,
+            "read_bytes": 927714,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 69.11907092999999,
+          "stdoutBytes": 3154950,
+          "completeRows": 3081,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 69.11906863499999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3589939,
+            "wchar": 5799920,
+            "syscr": 795639,
+            "syscw": 1188094,
+            "read_bytes": 941777,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 70.126234531,
+          "stdoutBytes": 3203078,
+          "completeRows": 3128,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 70.12622537300001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3644675,
+            "wchar": 5888444,
+            "syscr": 807784,
+            "syscw": 1206228,
+            "read_bytes": 956141,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 71.13201111800001,
+          "stdoutBytes": 3249158,
+          "completeRows": 3173,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 71.13200824200001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3696911,
+            "wchar": 5973078,
+            "syscr": 819379,
+            "syscw": 1223563,
+            "read_bytes": 969805,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 72.132027427,
+          "stdoutBytes": 3296222,
+          "completeRows": 3218,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 72.132026255,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3749907,
+            "wchar": 6059412,
+            "syscr": 831158,
+            "syscw": 1241240,
+            "read_bytes": 983525,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 73.13605991399999,
+          "stdoutBytes": 3345414,
+          "completeRows": 3267,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 73.136058201,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3806175,
+            "wchar": 6149982,
+            "syscr": 843629,
+            "syscw": 1259799,
+            "read_bytes": 998421,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 74.14214366499999,
+          "stdoutBytes": 3394566,
+          "completeRows": 3315,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 74.14214085,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3861997,
+            "wchar": 6240326,
+            "syscr": 856017,
+            "syscw": 1278305,
+            "read_bytes": 1013051,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 75.14217744300001,
+          "stdoutBytes": 3442636,
+          "completeRows": 3361,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 75.14217575,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3916193,
+            "wchar": 6328540,
+            "syscr": 868060,
+            "syscw": 1296368,
+            "read_bytes": 1027107,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 76.14727583800001,
+          "stdoutBytes": 3489804,
+          "completeRows": 3408,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 76.14727264199999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 3970296,
+            "wchar": 6415454,
+            "syscr": 880046,
+            "syscw": 1314180,
+            "read_bytes": 1041478,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 77.15357071899999,
+          "stdoutBytes": 3534854,
+          "completeRows": 3452,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 77.15356741299999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4021523,
+            "wchar": 6498290,
+            "syscr": 891412,
+            "syscw": 1331149,
+            "read_bytes": 1054925,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 78.153643902,
+          "stdoutBytes": 3576432,
+          "completeRows": 3492,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 78.15364267999999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4068419,
+            "wchar": 6574560,
+            "syscr": 901831,
+            "syscw": 1346767,
+            "read_bytes": 1067105,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 79.1536735,
+          "stdoutBytes": 3618218,
+          "completeRows": 3533,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 79.15367151699999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4115933,
+            "wchar": 6651386,
+            "syscr": 912373,
+            "syscw": 1362505,
+            "read_bytes": 1079579,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 80.15369834500001,
+          "stdoutBytes": 3660166,
+          "completeRows": 3574,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 80.15369688199999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4163588,
+            "wchar": 6728488,
+            "syscr": 922948,
+            "syscw": 1378299,
+            "read_bytes": 1092074,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 81.153761266,
+          "stdoutBytes": 3702006,
+          "completeRows": 3615,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 81.153760084,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4211127,
+            "wchar": 6805400,
+            "syscr": 933497,
+            "syscw": 1394054,
+            "read_bytes": 1104541,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 82.15382904500001,
+          "stdoutBytes": 3746614,
+          "completeRows": 3658,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 82.153827401,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4261592,
+            "wchar": 6887320,
+            "syscr": 944704,
+            "syscw": 1410831,
+            "read_bytes": 1117694,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 83.15385532299999,
+          "stdoutBytes": 3788154,
+          "completeRows": 3699,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 83.15385414100001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4308865,
+            "wchar": 6963708,
+            "syscr": 955191,
+            "syscw": 1426480,
+            "read_bytes": 1130119,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 84.153879598,
+          "stdoutBytes": 3834528,
+          "completeRows": 3744,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 84.15387834500001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4361555,
+            "wchar": 7048960,
+            "syscr": 966883,
+            "syscw": 1443943,
+            "read_bytes": 1143937,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 85.15755424700001,
+          "stdoutBytes": 3878918,
+          "completeRows": 3788,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 85.157548736,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4412383,
+            "wchar": 7130732,
+            "syscr": 978147,
+            "syscw": 1460700,
+            "read_bytes": 1157405,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 86.15762167099999,
+          "stdoutBytes": 3922622,
+          "completeRows": 3830,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 86.15761994799999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4461627,
+            "wchar": 7210884,
+            "syscr": 989090,
+            "syscw": 1477112,
+            "read_bytes": 1170173,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 87.157659448,
+          "stdoutBytes": 3965066,
+          "completeRows": 3872,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 87.157656022,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4510153,
+            "wchar": 7289022,
+            "syscr": 999846,
+            "syscw": 1493123,
+            "read_bytes": 1183011,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 88.15767766299999,
+          "stdoutBytes": 4006746,
+          "completeRows": 3912,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 88.15767620099999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4557217,
+            "wchar": 7365524,
+            "syscr": 1010301,
+            "syscw": 1508789,
+            "read_bytes": 1195247,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 89.15771337499999,
+          "stdoutBytes": 4047490,
+          "completeRows": 3952,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 89.157711412,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4603577,
+            "wchar": 7440454,
+            "syscr": 1020586,
+            "syscw": 1524139,
+            "read_bytes": 1207427,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 90.16729473699999,
+          "stdoutBytes": 4089862,
+          "completeRows": 3994,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 90.167291261,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4652018,
+            "wchar": 7518448,
+            "syscr": 1031323,
+            "syscw": 1540121,
+            "read_bytes": 1220244,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 91.167328005,
+          "stdoutBytes": 4132924,
+          "completeRows": 4036,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 91.16732658199999,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4700960,
+            "wchar": 7597616,
+            "syscr": 1042183,
+            "syscw": 1556338,
+            "read_bytes": 1233082,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        },
+        {
+          "elapsedSeconds": 92.167407801,
+          "stdoutBytes": 4174736,
+          "completeRows": 4076,
+          "stderrBytes": 0,
+          "lastOutputProgressSeconds": 92.16740642900001,
+          "pauseState": "draining",
+          "stdinWriteBytes": 0,
+          "stdinFeedBlocked": false,
+          "processExitCode": null,
+          "procIo": {
+            "rchar": 4748109,
+            "wchar": 7674354,
+            "syscr": 1052660,
+            "syscw": 1572051,
+            "read_bytes": 1245311,
+            "write_bytes": 0,
+            "cancelled_write_bytes": 0
+          }
+        }
+      ]
+    }
+  ]
+}

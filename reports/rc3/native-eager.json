@@ -1,0 +1,14 @@
+{
+  "nativeBinarySha256": "267837ca5c3015adf1637a322bf27a8ab96699ff9c9e2ee9b3e1166539a7ed6c",
+  "width": 1,
+  "height": 4,
+  "bits": 8,
+  "near": 0,
+  "nativeChunkBytes": 1,
+  "encodedBytesHex": "ffd8fff7000b080004000101011100ffda0008010100000000f0ffd9",
+  "withheldEoiBytes": 2,
+  "observationSecondsBeforeEoi": 1.0,
+  "rowsBeforeEoi": 4,
+  "rowsAfterEoi": 0,
+  "finalSamplesMatch": true
+}

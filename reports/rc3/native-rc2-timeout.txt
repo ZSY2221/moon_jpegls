@@ -1,0 +1,12 @@
+RC2 original traceback copied from its terminal result. The archived script is reconstructed from the original patch in the RC2 session. It should not be run as-is because its success path writes into the RC2 historical report.
+
+Traceback (most recent call last):
+  File "/mnt/d/Program Files/GPT_project/moon_jpegls/.tools/rc2-native-slow-sink.py", line 31, in <module>
+    raw, error = process.communicate(timeout=20)
+  File "/usr/lib/python3.10/subprocess.py", line 1154, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+  File "/usr/lib/python3.10/subprocess.py", line 2022, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/usr/lib/python3.10/subprocess.py", line 1198, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '[PosixPath('/mnt/d/Program Files/GPT_project/moon_jpegls/.tools/rc2-final-verified-build/targets/native/release/build/cmd/moonjls/moonjls.exe'), 'decode', PosixPath('/mnt/d/Program Files/GPT_project/moon_jpegls/.evidence/rc2/worker-fixtures/resource-512x4096.jls'), '-', 'raw-le', '7']' timed out after 20 seconds
