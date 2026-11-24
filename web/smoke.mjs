@@ -12,6 +12,7 @@ const pageErrors = [];
 page.on('pageerror', (error) => pageErrors.push(error));
 const loaded = new Map();
 const receiptPath = process.env.MOONJLS_SMOKE_RECEIPT;
+const expectReferenceWindow = process.env.MOONJLS_EXPECT_REFERENCE_WINDOW === '1';
 if (receiptPath) {
   page.context().on('response', (response) => {
     const url = new URL(response.url());
@@ -67,15 +68,20 @@ async function cancelRestart(kind, oldStream) {
     const old = barrier();
     const next = barrier();
     const writes = { called: 0, aborted: 0, closed: 0 };
+    const reads = { old: [], next: [] };
     const slice = File.prototype.slice;
     File.prototype.slice = function (start, end, ...rest) {
       const part = slice.call(this, start, end, ...rest);
-      if (end !== start + 4) return part;
-      const gate = this.name === nextName && start === nextStart ? next
-        : kind === 'read' && this.name === oldName && start === oldStart ? old : null;
+      const length = end - start;
+      const owner = this.name === nextName && start === nextStart && length === 4 ? 'next'
+        : kind === 'read' && this.name === oldName && start === oldStart && (length === 4 || length === 8) ? 'old' : null;
+      const gate = owner === 'next' ? next : owner === 'old' ? old : null;
       if (gate) {
         const read = part.arrayBuffer.bind(part);
-        part.arrayBuffer = () => gate.hold(read);
+        part.arrayBuffer = () => {
+          reads[owner].push({ start, end, bytes: length });
+          return gate.hold(read);
+        };
       }
       return part;
     };
@@ -92,7 +98,7 @@ async function cancelRestart(kind, oldStream) {
       });
       document.querySelector('#sink option[value="file"]').disabled = false;
     }
-    globalThis.cancelRegression = { old, next, writes };
+    globalThis.cancelRegression = { old, next, reads, writes };
   }, { kind, oldName, nextName, oldStart: oldPgm.headerLength + 4, nextStart: nextPgm.headerLength + nextRow * 4 });
 
   const waitForBarrier = (name) => page.waitForFunction((key) => globalThis.cancelRegression[key].started, name);
@@ -123,8 +129,14 @@ async function cancelRestart(kind, oldStream) {
   assert.match(before.text[0], /2 × 2 · 16-bit · NEAR 0/);
   await release('old');
   assert.deepEqual(await snapshot(), before, `Old ${kind} changed the active job`);
+  const reads = await page.evaluate(() => globalThis.cancelRegression.reads);
+  assert.deepEqual(reads.next, [{ start: nextPgm.headerLength + nextRow * 4, end: nextPgm.headerLength + (nextRow + 1) * 4, bytes: 4 }]);
   if (kind === 'write') {
     assert.deepEqual(await page.evaluate(() => globalThis.cancelRegression.writes), { called: 1, aborted: 1, closed: 0 });
+  } else {
+    assert.equal(reads.old.length, 1);
+    assert.equal(reads.old[0].start, oldPgm.headerLength + 4);
+    if (expectReferenceWindow) assert.equal(reads.old[0].bytes, 8, 'Expected a two-row reference window pending at cancel');
   }
   await release('next');
   await status('Complete');
@@ -148,7 +160,7 @@ async function cancelRestart(kind, oldStream) {
     return [...(await decodeImage(core, Uint8Array.from(bytes))).samples];
   }, [...downloaded]);
   assert.deepEqual(reconstructed, expected);
-  console.log(JSON.stringify({ test: 'browser cancel/restart with pending host operation', blocked: kind, newPixel: 4000, reconstructed, download: download.suggestedFilename() }));
+  console.log(JSON.stringify({ test: 'browser cancel/restart with pending host operation', blocked: kind, reads, newPixel: 4000, reconstructed, download: download.suggestedFilename() }));
 }
 
 try {

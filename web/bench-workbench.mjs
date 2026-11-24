@@ -12,6 +12,7 @@ const HELP = `Usage: node web/bench-workbench.mjs --baseline DIR [--candidate DI
   --baseline / --candidate   Static workbench trees built by node web/build.mjs.
   --baseline-source / --candidate-source   Git revisions for the trees (recorded in report).
   --profile                 Diagnostic only. Defaults to a single Wasm GC NEAR=0 run.
+  --height 4096             Synthetic fixture height for diagnostic profiles only.
   --backends wasm-gc,js       Selected backends. Default both for paired timing.
   --nears 0,3                Selected NEAR values. Default both for paired timing.
   --chunk 4096               Encoder source elements and decoder input bytes.
@@ -27,7 +28,7 @@ reconstruction Canvas putImageData completion, without a browser presentation mi
 
 const { values: options } = parseArgs({ options: Object.fromEntries([
   ...['baseline', 'candidate', 'baseline-source', 'candidate-source', 'output', 'backends', 'nears', 'chunk', 'warmup', 'repeats',
-    'check-download', 'timeout-ms'].map((key) => [key, { type: 'string' }]),
+    'check-download', 'timeout-ms', 'height'].map((key) => [key, { type: 'string' }]),
   ...['profile', 'help'].map((key) => [key, { type: 'boolean' }]),
 ]) });
 if (options.help) {
@@ -36,6 +37,7 @@ if (options.help) {
 }
 if (!options.baseline || !options.output) throw new Error(HELP);
 if (options['check-download'] && options.profile) throw new Error('Download check and profile are separate runs');
+if (options.height !== undefined && !options.profile) throw new Error('--height requires --profile');
 
 const hash = (content) => createHash('sha256').update(content).digest('hex');
 const integer = (name, fallback, min, max) => {
@@ -56,13 +58,13 @@ const chunk = integer('chunk', 4096, 1, 1024 * 1024);
 const warmup = integer('warmup', single ? 0 : 2, 0, 10);
 const repeats = integer('repeats', single ? 1 : 5, 1, 10);
 const timeout = integer('timeout-ms', 120000, 1000, 900000);
+const height = integer('height', 4096, 1, 65535);
 const variants = options.candidate ? ['baseline', 'candidate'] : ['baseline'];
 const output = resolve(options.output);
 await mkdir(dirname(output), { recursive: true });
 await writeFile(output, '{}\n', { flag: 'wx' });
 
-function pgmFixture() {
-  const width = 512, height = 4096;
+function pgmFixture(width, height) {
   const header = Buffer.from(`P5\n${width} ${height}\n65535\n`);
   const bytes = Buffer.allocUnsafe(header.length + width * height * 2);
   header.copy(bytes);
@@ -85,8 +87,8 @@ function parsePgm(buffer) {
   return { width: Number(width), height: Number(height), bits, samples, raster };
 }
 
-const bytes = options['check-download'] ? await readFile(resolve(options['check-download'])) : pgmFixture();
-const fixture = options['check-download'] ? resolve(options['check-download']) : join(dirname(output), 'resource-512x4096-16.pgm');
+const bytes = options['check-download'] ? await readFile(resolve(options['check-download'])) : pgmFixture(512, height);
+const fixture = options['check-download'] ? resolve(options['check-download']) : join(dirname(output), `resource-512x${height}-16.pgm`);
 if (!options['check-download']) await writeFile(fixture, bytes);
 const source = parsePgm(bytes);
 const fixtureInfo = { file: basename(fixture), bytes: bytes.length, sha256: hash(bytes), width: source.width, height: source.height, bits: source.bits,
