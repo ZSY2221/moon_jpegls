@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { mkdir, readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { chromium } from 'playwright-core';
 
@@ -9,6 +10,18 @@ const browser = await chromium.launch(executablePath ? { executablePath } : { ch
 const page = await browser.newPage({ viewport: { width: 1440, height: 1080 }, acceptDownloads: true });
 const pageErrors = [];
 page.on('pageerror', (error) => pageErrors.push(error));
+const loaded = new Map();
+const receiptPath = process.env.MOONJLS_SMOKE_RECEIPT;
+if (receiptPath) {
+  page.context().on('response', (response) => {
+    const url = new URL(response.url());
+    if (url.origin !== origin || !/\.(mjs|wasm)$/.test(url.pathname) || !response.ok() || loaded.has(url.pathname)) return;
+    loaded.set(url.pathname, response.body().then(
+      (body) => ({ sha256: createHash('sha256').update(body).digest('hex'), bytes: body.byteLength }),
+      (error) => ({ error: error.message }),
+    ));
+  });
+}
 
 const status = (message) => page.waitForFunction((text) => document.querySelector('#status').textContent.includes(text), message);
 const select = (id, value) => page.locator(`#${id}`).selectOption(value);
@@ -256,6 +269,15 @@ try {
   console.log(JSON.stringify({ test: 'worker ACK, manual resume and one-byte reads', ...flow }));
 
   assert.deepEqual(pageErrors, []);
+  if (receiptPath) {
+    const responses = Object.fromEntries(await Promise.all([...loaded].map(async ([path, receipt]) => [path, await receipt])));
+    for (const path of ['/web/app.mjs', '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs',
+      '/sdk/generated/core.mjs', '/sdk/generated/core.wasm']) {
+      assert.ok(responses[path]?.sha256, `No browser body hash for ${path}`);
+    }
+    await mkdir(dirname(receiptPath), { recursive: true });
+    await writeFile(receiptPath, `${JSON.stringify({ browser: browser.version(), node: process.version, responses }, null, 2)}\n`);
+  }
   console.log(JSON.stringify({ status: 'passed', browser: browser.version(), node: process.version }));
 } finally {
   await browser.close();

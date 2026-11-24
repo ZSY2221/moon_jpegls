@@ -6,6 +6,7 @@ from hashlib import file_digest
 import json
 from pathlib import Path
 import platform
+from shlex import join
 import shutil
 import subprocess
 import sys
@@ -54,8 +55,13 @@ def build(directory, distro):
         raise SystemExit("Use a clean checkout for candidate builds. Commit the participating source before measuring.")
     directory.mkdir(parents=True, exist_ok=False)
     targets = directory / "targets"
-    native_prefix = ["wsl", "-d", distro, "--exec", "env", "CC=clang", "/root/.moon/bin/moon"] if distro else ["moon"]
     commands = []
+
+    def native_command(*args):
+        if distro:
+            return ["wsl", "-d", distro, "--exec", "bash", "-lc",
+                    join(["env", "CC=clang", "/root/.moon/bin/moon", *args])]
+        return ["moon", *args]
 
     def run(args):
         subprocess.run(args, cwd=ROOT, check=True)
@@ -66,7 +72,7 @@ def build(directory, distro):
     for target, extension, output in (("js", "js", "core.mjs"), ("wasm-gc", "wasm", "core.wasm")):
         run(["moon", "build", "cmd/bridge", "--release", "--target", target, "--target-dir", path_label(targets)])
         shutil.copyfile(targets / target / "release" / "build" / "cmd" / "bridge" / f"bridge.{extension}", generated / output)
-    run([*native_prefix, "build", "cmd/moonjls", "--release", "--target", "native", "--target-dir", path_label(targets)])
+    run(native_command("build", "cmd/moonjls", "--release", "--target", "native", "--target-dir", path_label(targets)))
     native = targets / "native" / "release" / "build" / "cmd" / "moonjls" / "moonjls.exe"
     run(["node", "web/build.mjs"])
     static = directory / "static"
@@ -85,7 +91,7 @@ def build(directory, distro):
         "host": platform.platform(),
         "tools": {
             "moon": capture(["moon", "version", "--all"]),
-            "nativeMoon": capture([*native_prefix, "version", "--all"]),
+            "nativeMoon": capture(native_command("version", "--all")),
             "nativeCompiler": capture(["wsl", "-d", distro, "--exec", "clang", "--version"] if distro else ["cc", "--version"]),
             "nativeOs": capture(["wsl", "-d", distro, "--exec", "uname", "-a"]) if distro else platform.platform(),
             "node": capture(["node", "--version"]),
@@ -108,13 +114,21 @@ def verify(manifest):
             raise RuntimeError(f"Artifact changed: {relative}")
 
 
-def record(manifest_path, output, files):
+def record(manifest_path, output, files, browser_receipt):
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     verify(manifest)
     wheel = Path(capture([sys.executable, "-c", "import imagecodecs._jpegls as m; print(m.__file__)"]))
     package = ROOT / ".tools" / "oracle-npm" / "node_modules" / "@team-charls" / "charls-wasm"
     wrapper = [package / name for name in ("package.json", "charlsjs.js", "charlsjs.wasm", "index.js",
                                           "jpegls-encoder.js", "jpegls-decoder.js", "jpegls-error.js")]
+    browser = None
+    if browser_receipt:
+        browser = json.loads(browser_receipt.read_text(encoding="utf-8"))
+        for url, receipt in browser["responses"].items():
+            expected = manifest["artifacts"].get(manifest["staticDirectory"] + url)
+            if expected is None or receipt.get("sha256") != expected:
+                raise RuntimeError(f"The browser loaded a different artifact: {url}")
+        files.append(browser_receipt)
     output.parent.mkdir(parents=True, exist_ok=True)
     write_json(output, {
         "buildManifest": {"path": path_label(manifest_path), "sha256": sha256(manifest_path)},
@@ -127,6 +141,7 @@ def record(manifest_path, output, files):
             "wasmFiles": inventory(wrapper),
         },
         "evidenceFiles": inventory(file.resolve() for file in files),
+        "browser": browser,
     })
     return manifest
 
@@ -143,6 +158,7 @@ def main():
     record_args.add_argument("manifest", type=Path)
     record_args.add_argument("--output", type=Path, required=True)
     record_args.add_argument("--file", type=Path, action="append", required=True)
+    record_args.add_argument("--browser-receipt", type=Path)
     args = parser.parse_args()
     if args.mode == "build":
         manifest = build(args.directory.resolve(), args.native_wsl)
@@ -150,7 +166,7 @@ def main():
         manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
         verify(manifest)
     else:
-        manifest = record(args.manifest.resolve(), args.output.resolve(), args.file)
+        manifest = record(args.manifest.resolve(), args.output.resolve(), args.file, args.browser_receipt)
     print(json.dumps({"sourceCommit": manifest["source"]["commit"], "nativeBinary": manifest["nativeBinary"],
                       "staticDirectory": manifest["staticDirectory"], "hashedArtifacts": len(manifest["artifacts"])}))
 
