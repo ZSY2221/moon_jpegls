@@ -77,3 +77,5 @@ node web/bench-workbench.mjs --baseline $after --baseline-source $candidate --ou
 ```
 
 用 [产物清单](manifest.json) 将两个静态快照、Chrome 实际取回的响应与 Git 被测源相互对应。正式对照候选快照最初由 `6542292` 构建；`2feb00b` 只追加测试与复核工具。后者重建的全部 12 个无注入资产与候选快照逐文件 SHA-256 相同。首轮筛选 probe 的哈希与后续内存 probe 不同，均保留在各自原始报告中。
+
+原始脚本文本、各试验的脚本和源码对应关系以及原包 SHA-256 见 [脚本溯源补档](harness/README.md)。
