@@ -10,6 +10,8 @@ const browser = await chromium.launch(executablePath ? { executablePath } : { ch
 const page = await browser.newPage({ viewport: { width: 1440, height: 1080 }, acceptDownloads: true });
 const pageErrors = [];
 page.on('pageerror', (error) => pageErrors.push(error));
+const consoleErrors = [];
+page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
 const loaded = new Map();
 const receiptPath = process.env.MOONJLS_SMOKE_RECEIPT;
 const expectReferenceWindow = process.env.MOONJLS_EXPECT_REFERENCE_WINDOW === '1';
@@ -25,9 +27,22 @@ if (receiptPath) {
 }
 
 const status = (message) => page.waitForFunction((text) => document.querySelector('#status').textContent.includes(text), message);
+const phase = (name) => page.waitForFunction((value) => document.querySelector('#status').dataset.state === value, name);
 const select = (id, value) => page.locator(`#${id}`).selectOption(value);
 const click = (id) => page.locator(`#${id}`).click();
 const upload = (name, buffer) => page.locator('#file').setInputFiles({ name, mimeType: 'application/octet-stream', buffer });
+const text = (id) => page.locator(`#${id}`).textContent();
+async function chunkSize(value) {
+  await page.locator('#advanced').evaluate((details) => { details.open = true; });
+  await page.locator('#chunk').fill(value);
+}
+
+async function capture(name) {
+  const directory = process.env.MOONJLS_PRESENTATION_SCREENSHOTS;
+  if (!directory) return;
+  await mkdir(directory, { recursive: true });
+  await page.screenshot({ path: `${directory}/${name}.png` });
+}
 
 function smallPgm(samples) {
   const header = Buffer.from(`P5\n2 ${samples.length / 2}\n65535\n`);
@@ -85,15 +100,18 @@ async function cancelRestart(kind, oldStream) {
       }
       return part;
     };
-    if (kind === 'write') {
+    if (kind !== 'read') {
       globalThis.showSaveFilePicker = async () => ({
         createWritable: async () => ({
           async write() {
             writes.called++;
-            if (writes.called === 1) await old.hold(() => {});
+            if (kind === 'write' && writes.called === 1) await old.hold(() => {});
           },
           async abort() { writes.aborted++; },
-          async close() { writes.closed++; },
+          async close() {
+            writes.closed++;
+            if (kind === 'close') await old.hold(() => {});
+          },
         }),
       });
       document.querySelector('#sink option[value="file"]').disabled = false;
@@ -104,20 +122,21 @@ async function cancelRestart(kind, oldStream) {
   const waitForBarrier = (name) => page.waitForFunction((key) => globalThis.cancelRegression[key].started, name);
   const release = (name) => page.evaluate((key) => globalThis.cancelRegression[key].release(), name);
   const snapshot = () => page.evaluate(() => ({
-    text: ['frame', 'encoded', 'ratio', 'error', 'latency', 'workspace', 'queues', 'status'].map((id) => document.getElementById(id).textContent),
+    text: ['frame', 'encoded', 'ratio', 'error', 'latency', 'workspace', 'queues', 'status', 'task-id', 'preview-state'].map((id) => document.getElementById(id).textContent),
     progress: document.getElementById('progress').value,
     downloadHidden: document.getElementById('download').hidden,
     reconstruction: document.getElementById('reconstruction').toDataURL(),
   }));
 
   await upload(oldName, kind === 'read' ? oldPgm.bytes : oldStream);
-  await page.locator('#chunk').fill('4096');
+  await chunkSize('4096');
   if (kind === 'read') await select('near', '0');
   await select('sink', kind === 'read' ? 'bounded' : 'file');
   await click('run');
   await waitForBarrier('old');
   await click('cancel');
-  await status('Cancelled');
+  await phase('cancelled');
+  assert.equal(await text('preview-state'), 'Incomplete');
   assert.equal(await page.locator('#download').isVisible(), false);
 
   await upload(nextName, nextPgm.bytes);
@@ -125,6 +144,7 @@ async function cancelRestart(kind, oldStream) {
   await select('sink', 'buffered');
   await click('run');
   await waitForBarrier('next');
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   const before = await snapshot();
   assert.match(before.text[0], /2 × 2 · 16-bit · NEAR 0/);
   await release('old');
@@ -133,19 +153,26 @@ async function cancelRestart(kind, oldStream) {
   assert.deepEqual(reads.next, [{ start: nextPgm.headerLength + nextRow * 4, end: nextPgm.headerLength + (nextRow + 1) * 4, bytes: 4 }]);
   if (kind === 'write') {
     assert.deepEqual(await page.evaluate(() => globalThis.cancelRegression.writes), { called: 1, aborted: 1, closed: 0 });
+  } else if (kind === 'close') {
+    const writes = await page.evaluate(() => globalThis.cancelRegression.writes);
+    assert.ok(writes.called > 1);
+    assert.equal(writes.aborted, 1);
+    assert.equal(writes.closed, 1);
   } else {
     assert.equal(reads.old.length, 1);
     assert.equal(reads.old[0].start, oldPgm.headerLength + 4);
     if (expectReferenceWindow) assert.equal(reads.old[0].bytes, 8, 'Expected a two-row reference window pending at cancel');
   }
   await release('next');
-  await status('Complete');
+  await phase('complete');
   assert.equal(await page.locator('#progress').evaluate((element) => element.value), 2);
   assert.equal(await page.locator('#error').textContent(), '0');
   const canvas = page.locator('#reconstruction');
-  const point = await canvas.evaluate((element) => ({
-    x: element.clientWidth / 4, y: element.clientHeight * 3 / 4,
-  }));
+  const point = await canvas.evaluate((element) => {
+    const scale = Math.min(element.clientWidth / element.width, element.clientHeight / element.height);
+    const width = element.width * scale, height = element.height * scale;
+    return { x: (element.clientWidth - width) / 2 + width / 4, y: (element.clientHeight - height) / 2 + 3 * height / 4 };
+  });
   await canvas.click({ position: point });
   assert.match(await page.locator('#pixel').textContent(), /original 4000 · reconstructed 4000 · error 0/);
 
@@ -163,12 +190,150 @@ async function cancelRestart(kind, oldStream) {
   console.log(JSON.stringify({ test: 'browser cancel/restart with pending host operation', blocked: kind, reads, newPixel: 4000, reconstructed, download: download.suggestedFilename() }));
 }
 
+async function gatedEnding() {
+  await page.goto(`${origin}/web/`);
+  const stream = Buffer.from(await page.evaluate(async () => {
+    const { loadCore, encodeImage } = await import('/sdk/index.mjs');
+    const core = await loadCore({ backend: 'wasm-gc' });
+    return [...(await encodeImage(core, { width: 1, height: 4, near: 0, bits: 16 }, new Uint16Array(4))).bytes];
+  }));
+  assert.equal(stream.readUInt16BE(stream.length - 2), 0xffd9);
+  await page.evaluate(() => {
+    let release;
+    const held = new Promise((resolve) => { release = resolve; });
+    globalThis.endingGate = { pending: false, release };
+    const slice = File.prototype.slice;
+    File.prototype.slice = function (start, end, ...rest) {
+      const bytes = slice.call(this, start, end, ...rest);
+      if (this.name === 'eoi-held.jls' && start === this.size - 2) {
+        const read = bytes.arrayBuffer.bind(bytes);
+        bytes.arrayBuffer = async () => { endingGate.pending = true; await held; return read(); };
+      }
+      return bytes;
+    };
+  });
+  await upload('eoi-held.jls', stream);
+  await chunkSize('1');
+  await click('run');
+  await page.waitForFunction(() => endingGate.pending);
+  await phase('finalizing');
+  assert.deepEqual(await page.locator('#progress').evaluate((element) => [element.value, element.max]), [4, 4]);
+  assert.match(await text('progress-copy'), /4 \/ 4 rows received · provisional/);
+  assert.equal(await text('preview-state'), 'Provisional');
+  assert.equal(await text('error'), 'Not compared');
+  assert.equal(await page.locator('#download').isVisible(), false);
+  const alpha = await page.locator('#reconstruction').evaluate((canvas) => canvas.getContext('2d').getImageData(0, 3, 1, 1).data[3]);
+  assert.equal(alpha, 255, 'Last provisional row should have rendered while EOI is still missing');
+  await page.evaluate(() => endingGate.release());
+  await phase('complete');
+  assert.equal(await text('preview-state'), 'Stream verified');
+  assert.equal(await page.locator('#download').isVisible(), true);
+  console.log(JSON.stringify({ test: 'four preview rows provisional before withheld EOI', before: 4, afterRelease: 'complete' }));
+}
+
+async function gatedClose(fail) {
+  await page.goto(`${origin}/web/`);
+  await page.evaluate(() => {
+    let resolveClose;
+    const held = new Promise((resolve) => { resolveClose = resolve; });
+    globalThis.outputGate = { bytes: 0, closeAt: null, release: resolveClose };
+    globalThis.showSaveFilePicker = async () => ({ createWritable: async () => ({
+      write(bytes) { outputGate.bytes += bytes.length; },
+      async close() {
+        outputGate.closeAt = performance.now();
+        if (await held) throw new DOMException('Controlled output-close failure', 'NotAllowedError');
+      },
+      abort() {},
+    }) });
+    document.querySelector('#sink option[value="file"]').disabled = false;
+  });
+  await click('example');
+  await select('sink', 'file');
+  await click('run');
+  await page.waitForFunction(() => outputGate.closeAt !== null);
+  await phase('finalizing');
+  assert.match(await text('status'), /Finalizing output/);
+  assert.equal(await text('latency'), '—');
+  assert.equal(await text('preview-state'), 'Provisional');
+  assert.equal(await page.locator('#download').isVisible(), false);
+  if (!fail) await capture('finalizing');
+  await page.waitForTimeout(80);
+  const closeHeldMs = await page.evaluate((shouldFail) => {
+    const elapsed = performance.now() - outputGate.closeAt;
+    outputGate.release(shouldFail);
+    return elapsed;
+  }, fail);
+  await phase(fail ? 'failed' : 'complete');
+  assert.equal(await page.locator('#download').isVisible(), false);
+  const elapsed = await text('latency');
+  if (fail) {
+    assert.match(await text('status'), /NotAllowedError.*Controlled output-close failure/);
+    assert.equal(await text('preview-state'), 'Incomplete');
+    assert.equal(elapsed, '—');
+    await capture('failed');
+  } else {
+    assert.ok(Number.parseFloat(elapsed) + 0.05 >= closeHeldMs, 'In-page latency should include pending close');
+  }
+  console.log(JSON.stringify({ test: 'pending sink close gates success and page timer', fail, closeHeldMs, elapsed,
+    bytesWritten: await page.evaluate(() => outputGate.bytes) }));
+}
+
+async function verifyLunarDownload(sourcePath) {
+  const source = await readFile(sourcePath);
+  const fingerprint = (value) => createHash('sha256').update(value).digest('hex');
+  const fixtureSha256 = fingerprint(source);
+  assert.equal(fixtureSha256, '1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6');
+  const header = Buffer.from('P5\n1440 720\n65535\n');
+  assert.deepEqual(source.subarray(0, header.length), header);
+  const download = async (name) => {
+    const pending = page.waitForEvent('download');
+    await click('download');
+    const file = await pending;
+    assert.equal(file.suggestedFilename(), name);
+    return readFile(await file.path());
+  };
+  await page.goto(`${origin}/web/`);
+  await upload('lola.pgm', source);
+  await select('near', '3');
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('error'), '3');
+  const jls = await download('lola.jls');
+  await upload('lola.jls', jls);
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('error'), 'Not compared');
+  const pgm = await download('lola.pgm');
+  assert.deepEqual(pgm.subarray(0, header.length), header);
+  assert.equal(pgm.length, source.length);
+  const { createOracle } = await import('../scripts/oracle.mjs');
+  const oracle = await createOracle();
+  let maxError = 0;
+  let samples = 0;
+  try {
+    const { pixels, frame } = oracle.decode(jls);
+    assert.equal(frame.near, 3);
+    assert.equal(pixels.length, 1440 * 720);
+    for (let offset = header.length; offset < source.length; offset += 2) {
+      const sample = pgm.readUInt16BE(offset);
+      assert.equal(sample, pixels[samples]);
+      samples++;
+      maxError = Math.max(maxError, Math.abs(sample - source.readUInt16BE(offset)));
+    }
+    assert.equal(maxError, 3);
+  } finally {
+    oracle.close();
+  }
+  console.log(JSON.stringify({ test: 'NASA LOLA real browser downloads agree with CharLS', near: 3, maxError, samples,
+    fixtureSha256, jlsBytes: jls.length, jlsSha256: fingerprint(jls), pgmBytes: pgm.length, pgmSha256: fingerprint(pgm) }));
+}
+
 try {
   await page.goto(`${origin}/web/`);
   await click('example');
   await select('near', '3');
   await click('run');
-  await status('Complete');
+  await phase('complete');
   assert.match(await page.locator('#frame').textContent(), /400 × 260 · 16-bit · NEAR 3/);
   assert.equal(Number(await page.locator('#error').textContent()), 3);
   await page.locator('#original').click();
@@ -190,7 +355,9 @@ try {
   await upload('round-trip.jls', byteStream);
   await select('backend', 'js');
   await click('run');
-  await status('Reconstruction complete');
+  await phase('complete');
+  assert.match(await text('status'), /stream termination verified\. No original comparison/);
+  assert.equal(await text('error'), 'Not compared');
   const pgmDownload = page.waitForEvent('download');
   await click('download');
   const pgm = await readFile(await (await pgmDownload).path());
@@ -211,9 +378,9 @@ try {
   console.log(JSON.stringify({ test: 'browser malformed/unsupported status', cases: 2 }));
 
   await click('example');
-  await page.locator('#chunk').fill('1024');
+  await chunkSize('1024');
   await click('run');
-  await status('Complete');
+  await phase('complete');
   assert.equal(await page.locator('#download').isVisible(), false);
   assert.equal(await page.locator('#error').textContent(), '3');
   await select('language', 'zh');
@@ -222,16 +389,30 @@ try {
   console.log(JSON.stringify({ test: 'browser bounded verification and locale switch', inputChunkSize: 1024 }));
 
   await click('example');
-  await page.locator('#chunk').fill('1');
+  await select('near', '0');
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('error'), '0');
+  const zero = await page.locator('#reconstruction').evaluate((canvas) => [...canvas.getContext('2d').getImageData(0, 0, 2, 1).data]);
+  assert.deepEqual(zero, [0, 0, 0, 255, 255, 255, 255, 255]);
+  console.log(JSON.stringify({ test: 'browser sample lossless full-range endpoints', backend: 'js', maxError: 0, displayEndpoints: zero }));
+
+  await chunkSize('1');
   await click('run');
   await click('pause');
-  await status('Paused');
+  await phase('paused');
+  await click('pause');
+  await phase('running');
   await click('cancel');
   await status('Cancelled');
-  console.log(JSON.stringify({ test: 'browser UI pause and cancel', inputChunkSize: 1 }));
+  console.log(JSON.stringify({ test: 'browser UI pause, resume and cancel', inputChunkSize: 1 }));
 
   await cancelRestart('read', byteStream);
   await cancelRestart('write', byteStream);
+  await cancelRestart('close', byteStream);
+  await gatedEnding();
+  await gatedClose(false);
+  await gatedClose(true);
 
   const flow = await page.evaluate(async () => {
     const { loadCore, encodeImage } = await import('/sdk/index.mjs');
@@ -280,7 +461,10 @@ try {
   assert.equal(flow.stats.outputPeakBytes, 8);
   console.log(JSON.stringify({ test: 'worker ACK, manual resume and one-byte reads', ...flow }));
 
+  if (process.env.MOONJLS_LOLA) await verifyLunarDownload(process.env.MOONJLS_LOLA);
+
   assert.deepEqual(pageErrors, []);
+  assert.deepEqual(consoleErrors, []);
   if (receiptPath) {
     const responses = Object.fromEntries(await Promise.all([...loaded].map(async ([path, receipt]) => [path, await receipt])));
     for (const path of ['/web/app.mjs', '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs',

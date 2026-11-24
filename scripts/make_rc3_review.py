@@ -71,7 +71,7 @@ def validate_links(contents):
                 raise ValueError(f"Unresolved archive link: {file} -> {value}")
 
 
-def make_zip(output, tested):
+def make_zip(output, tested, *, required=REQUIRED, note=entry_note):
     head = git("rev-parse", "HEAD").decode().strip()
     tested = git("rev-parse", f"{tested}^{{commit}}").decode().strip()
     subprocess.run(["git", "merge-base", "--is-ancestor", tested, head], cwd=ROOT, check=True)
@@ -91,10 +91,10 @@ def make_zip(output, tested):
             if EXCLUDED.intersection(parts) or name.startswith(("sdk/generated/", "web/dist/")):
                 raise ValueError(f"Generated file tracked in project: {name}")
             tracked[name] = (copy(info), source.read(name))
-    if missing := REQUIRED - tracked.keys():
+    if missing := required - tracked.keys():
         raise ValueError(f"Missing required material: {sorted(missing)}")
 
-    contents = {"00_READ_FIRST.md": entry_note(head, tested, changed)}
+    contents = {"00_READ_FIRST.md": note(head, tested, changed)}
     contents.update({name: data for name, (_, data) in tracked.items()})
     validate_links(contents)
     sums = "".join(f"{sha256(data).hexdigest()}  {name}\n" for name, data in sorted(contents.items()))
