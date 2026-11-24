@@ -1,11 +1,12 @@
 import { CodecError } from '../sdk/index.mjs';
 
 const maxHeader = 64 * 1024;
+const maxReferenceBytes = 64 * 1024;
 const whitespace = (byte) => byte === 32 || (byte >= 9 && byte <= 13);
 const invalid = (message) => new CodecError('InvalidData', message);
 const maxvals = new Map([[255, 8], [4095, 12], [65535, 16]]);
 
-export async function openPgm(file, near) {
+export async function openPgm(file, near, signal) {
   const prefix = new Uint8Array(await file.slice(0, maxHeader + 1).arrayBuffer());
   let position = 0;
   const token = () => {
@@ -53,6 +54,21 @@ export async function openPgm(file, near) {
     return output;
   };
   let cursor = 0;
+  const rowBytes = width * sampleBytes;
+  const rowsPerWindow = Math.floor(maxReferenceBytes / rowBytes);
+  let referenceWindow;
+  let loading;
+  let referenceClosed = false;
+  const releaseReference = () => {
+    referenceClosed = true;
+    referenceWindow = undefined;
+  };
+  const assertReferenceOpen = () => {
+    signal?.throwIfAborted();
+    if (referenceClosed) throw new CodecError('Cancelled', 'Reference reader is closed');
+  };
+  signal?.addEventListener('abort', releaseReference, { once: true });
+
   return {
     frame: { width, height, bits, near },
     async read(capacity) {
@@ -62,7 +78,44 @@ export async function openPgm(file, near) {
       cursor += size;
       return result;
     },
-    row(index) { return readRange(index * width, width); },
+    async row(index) {
+      assertReferenceOpen();
+      // Keep the first preview row small, and preserve the direct path for rows wider than the window.
+      if (rowsPerWindow === 0 || !Number.isInteger(index) || index < 1 || index >= height) {
+        const pixels = await readRange(index * width, width);
+        assertReferenceOpen();
+        return pixels;
+      }
+      while (!referenceWindow || index < referenceWindow.firstRow || index >= referenceWindow.firstRow + referenceWindow.count) {
+        if (!loading) {
+          // Release the old byte buffer before starting its replacement. Concurrent callers share this load.
+          referenceWindow = undefined;
+          loading = (async () => {
+            const count = Math.min(rowsPerWindow, height - index);
+            const first = position + index * rowBytes;
+            const end = first + count * rowBytes;
+            const buffer = await file.slice(first, end).arrayBuffer();
+            assertReferenceOpen();
+            referenceWindow = { firstRow: index, count, bytes: new Uint8Array(buffer) };
+          })().finally(() => { loading = undefined; });
+        }
+        await loading;
+        assertReferenceOpen();
+      }
+      const offset = (index - referenceWindow.firstRow) * rowBytes;
+      const bytes = referenceWindow.bytes;
+      const pixels = new Uint16Array(width);
+      if (sampleBytes === 1) pixels.set(bytes.subarray(offset, offset + rowBytes));
+      else {
+        const view = new DataView(bytes.buffer, offset, rowBytes);
+        for (let i = 0; i < width; i++) pixels[i] = view.getUint16(i * 2, false);
+      }
+      return pixels;
+    },
+    closeReference() {
+      releaseReference();
+      signal?.removeEventListener('abort', releaseReference);
+    },
   };
 }
 

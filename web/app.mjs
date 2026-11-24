@@ -120,7 +120,7 @@ async function decodeFile(job, file, settings, sink) {
 }
 
 async function roundTrip(job, file, near, settings, sink) {
-  const input = await openPgm(file, near);
+  const input = await openPgm(file, near, job.abort.signal);
   requireActive(job);
   const pipe = createPipe();
   let maxError = 0;
@@ -163,6 +163,8 @@ async function roundTrip(job, file, near, settings, sink) {
   } catch (error) {
     pipe.fail(error);
     throw error;
+  } finally {
+    input.closeReference();
   }
 }
 
