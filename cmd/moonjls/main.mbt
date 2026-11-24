@@ -159,8 +159,12 @@ async fn decode_stream(
   let mut input = b""
   let mut position = 0
   let mut eof = false
+  let mut can_refill = true
   while true {
-    if position == input.length() && !eof {
+    // A row event may leave enough entropy state inside the decoder to emit
+    // another row without reading from the source. Refill only after the
+    // decoder explicitly reports NeedInput.
+    if position == input.length() && !eof && can_refill {
       eof = !source.fill()
       input = Bytes::from_array(source.buffer[:source.length])
       source.position = source.length
@@ -169,6 +173,7 @@ async fn decode_stream(
     let step = decoder.step(input, position, input.length() - position, eof)
     position += step.consumed
     consumed += step.consumed.to_int64()
+    can_refill = step.status is NeedInput
     match step.status {
       RowReady => {
         guard decoder.frame() is Some(frame) else {
