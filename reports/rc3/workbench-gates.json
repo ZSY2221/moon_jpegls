@@ -1,0 +1,84 @@
+{
+  "rc2WorkerCases": 8,
+  "nativeControls": 3,
+  "referenceIoAndMaterializationShare": 0.560716960069111,
+  "changedProductAssets": [
+    "web/app.mjs",
+    "web/pgm.mjs"
+  ],
+  "timingPass": true,
+  "cases": [
+    {
+      "backend": "wasm-gc",
+      "near": 0,
+      "wallMs": [
+        2768.899999976158,
+        1315
+      ],
+      "reductionPercent": 52.50821625875536,
+      "firstDisplayMs": [
+        14.300000071525574,
+        14.600000023841858
+      ],
+      "wallPass": true,
+      "firstDisplayPass": true
+    },
+    {
+      "backend": "wasm-gc",
+      "near": 3,
+      "wallMs": [
+        2902.2000000476837,
+        1273.5
+      ],
+      "reductionPercent": 56.1194955558171,
+      "firstDisplayMs": [
+        15.299999952316284,
+        14.799999952316284
+      ],
+      "wallPass": true,
+      "firstDisplayPass": true
+    },
+    {
+      "backend": "js",
+      "near": 0,
+      "wallMs": [
+        2975.2000000476837,
+        1314.1000000238419
+      ],
+      "reductionPercent": 55.83154073666373,
+      "firstDisplayMs": [
+        16.800000071525574,
+        16.799999952316284
+      ],
+      "wallPass": true,
+      "firstDisplayPass": true
+    },
+    {
+      "backend": "js",
+      "near": 3,
+      "wallMs": [
+        4117,
+        1725.7000000476837
+      ],
+      "reductionPercent": 58.08355598621122,
+      "firstDisplayMs": [
+        20.899999976158142,
+        20.600000023841858
+      ],
+      "wallPass": true,
+      "firstDisplayPass": true
+    }
+  ],
+  "workbenchChecks": {
+    "rowsPerTrial": 4096,
+    "samplesPerTrial": 2097152,
+    "referenceBlobReads": [
+      4096,
+      65
+    ],
+    "referenceCachePeakBytes": 65536,
+    "downloadSamples": 1036800,
+    "pendingWindowAndSinkCancellation": true,
+    "stablePauseAndAck": true
+  }
+}

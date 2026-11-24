@@ -1,0 +1,32 @@
+{
+  "seed": 141648163,
+  "charlsNativeCommit": "14b654dff1efed4d04e278ff3e99f0a486cf20cc",
+  "revision": "2feb00b8ef657b7259ba70bccf1ff0ceaf08765b",
+  "trackedDiff": [],
+  "fixtureSha256": {
+    "b16-n3-all-values.raw": "68e419472d25e0b85e9917ccf692fd58245c5e95e9a46f07d1df81d2e9da246b",
+    "b16-n3-all-values.native.jls": "d78400ed52e5aefff11f1b6c0be95177e39970ceb69926de5115d559ada537e5"
+  },
+  "command": [
+    "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+    "scripts/validate.py",
+    "--match",
+    "b16-n3-all-values",
+    "--native-wsl",
+    "Ubuntu-22.04",
+    "--native-exe",
+    ".tools/rc2-final-verified-build/targets/native/release/build/cmd/moonjls/moonjls.exe",
+    "--directory",
+    ".evidence/rc3/interop-near3"
+  ],
+  "cases": [
+    {
+      "name": "b16-n3-all-values",
+      "width": 256,
+      "height": 256,
+      "bits": 16,
+      "near": 3
+    }
+  ],
+  "conformance": []
+}

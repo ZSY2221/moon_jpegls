@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "sealedReportCommit": "d7c01785b26672f89c41b253e172bc02bd0a09c0",
+  "sealedArchive": {
+    "file": "MoonJLS-RC3-Review.zip",
+    "bytes": 594455,
+    "members": 153,
+    "sha256": "ecec2598a3ac1227a17458826af0513efd86e992c1c942cd8c72390ae4efd176"
+  },
+  "archived": [
+    {
+      "sha256": "3dafe62d3039d56331ddb298667ae81b93b9fa7264b1507a3b189d2814f824b1",
+      "file": "bench-workbench-3dafe62d.mjs",
+      "bytes": 20456,
+      "kind": "runner",
+      "gitCommit": "8562cd4c2a57eb60bc3ca66f2140b84f2bcb74e2",
+      "gitPath": "web/bench-workbench.mjs",
+      "gitBlob": "4d703779a283b95ae888daf2e555eb243b0c5256"
+    },
+    {
+      "sha256": "d9a510cb24a75f22fe1aabbf9e7c3316229f75cd3bb9ad3e5d34e089d10d5d15",
+      "file": "bench-workbench-d9a510cb.mjs",
+      "bytes": 20694,
+      "kind": "runner",
+      "gitCommit": "2feb00b8ef657b7259ba70bccf1ff0ceaf08765b",
+      "gitPath": "web/bench-workbench.mjs",
+      "gitBlob": "69ccef68d58d560e7b441bccd13c6015a623b307"
+    },
+    {
+      "sha256": "554dff0c5ff612eb4d7182af879842ff5bdcaed665a47ccefcd7758098c66405",
+      "file": "bench-workbench-probe.mjs",
+      "bytes": 11522,
+      "kind": "probe",
+      "gitCommit": "8562cd4c2a57eb60bc3ca66f2140b84f2bcb74e2",
+      "gitPath": "web/bench-workbench-probe.mjs",
+      "gitBlob": "cbb0ffc5bcc85d099e10e1588765ea7946155fc9"
+    }
+  ],
+  "notArchived": [
+    {
+      "sha256": "248c4195fdc8691c3d00efaf769eeb14fdfce585033e3c104947061d7c0cf935",
+      "kind": "probe",
+      "status": "not archived",
+      "reason": "No byte-identical text in the existing Git object store or named local copies checked."
+    }
+  ],
+  "reports": {
+    "workbench-profile.json": {
+      "runnerSha256": "3dafe62d3039d56331ddb298667ae81b93b9fa7264b1507a3b189d2814f824b1",
+      "probeSha256": "248c4195fdc8691c3d00efaf769eeb14fdfce585033e3c104947061d7c0cf935",
+      "sourceCommit": {
+        "baseline": "299fd9afcbaac67d8d65b42545fb632a429ef202"
+      }
+    },
+    "workbench-paired.json": {
+      "runnerSha256": "3dafe62d3039d56331ddb298667ae81b93b9fa7264b1507a3b189d2814f824b1",
+      "probeSha256": "554dff0c5ff612eb4d7182af879842ff5bdcaed665a47ccefcd7758098c66405",
+      "sourceCommit": {
+        "baseline": "299fd9afcbaac67d8d65b42545fb632a429ef202",
+        "candidate": "65422925136b9035e5762ab314631e5c6b667506"
+      }
+    },
+    "workbench-memory.json": {
+      "runnerSha256": "3dafe62d3039d56331ddb298667ae81b93b9fa7264b1507a3b189d2814f824b1",
+      "probeSha256": "554dff0c5ff612eb4d7182af879842ff5bdcaed665a47ccefcd7758098c66405",
+      "sourceCommit": {
+        "baseline": "299fd9afcbaac67d8d65b42545fb632a429ef202",
+        "candidate": "65422925136b9035e5762ab314631e5c6b667506"
+      }
+    },
+    "workbench-memory-short.json": {
+      "runnerSha256": "d9a510cb24a75f22fe1aabbf9e7c3316229f75cd3bb9ad3e5d34e089d10d5d15",
+      "probeSha256": "554dff0c5ff612eb4d7182af879842ff5bdcaed665a47ccefcd7758098c66405",
+      "sourceCommit": {
+        "baseline": "65422925136b9035e5762ab314631e5c6b667506"
+      }
+    },
+    "workbench-real-download.json": {
+      "runnerSha256": "3dafe62d3039d56331ddb298667ae81b93b9fa7264b1507a3b189d2814f824b1",
+      "probeSha256": "554dff0c5ff612eb4d7182af879842ff5bdcaed665a47ccefcd7758098c66405",
+      "sourceCommit": {
+        "baseline": "65422925136b9035e5762ab314631e5c6b667506"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+✔ PGM P5 retains 8-, 12- and 16-bit samples including CRLF and big-endian boundaries (5.1882ms)
+✔ Reference windows hit, replace and clip by whole row without moving the encoding cursor (5.0378ms)
+✔ A row wider than 64 KiB uses the existing uncached read (4.0192ms)
+✔ Concurrent reference requests share at most one physical window load (1.7582ms)
+✔ A released old window cannot trigger another read after cancellation and restart (2.0981ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 90.4726

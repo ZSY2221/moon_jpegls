@@ -1,0 +1,9 @@
+{"test":"browser sample round-trip","backend":"wasm-gc","encodedBytes":105655,"maxError":3}
+{"test":"browser decoded PGM download","backend":"js","pgmBytes":208017}
+{"test":"browser malformed/unsupported status","cases":2}
+{"test":"browser bounded verification and locale switch","inputChunkSize":1024}
+{"test":"browser UI pause and cancel","inputChunkSize":1}
+{"test":"browser cancel/restart with pending host operation","blocked":"read","reads":{"old":[{"start":17,"end":25,"bytes":8}],"next":[{"start":17,"end":21,"bytes":4}]},"newPixel":4000,"reconstructed":[3000,3000,4000,4000],"download":"cancel-read-new.jls"}
+{"test":"browser cancel/restart with pending host operation","blocked":"write","reads":{"old":[],"next":[{"start":13,"end":17,"bytes":4}]},"newPixel":4000,"reconstructed":[3000,3000,4000,4000],"download":"cancel-write-new.jls"}
+{"test":"worker ACK, manual resume and one-byte reads","before":59,"whileHeld":59,"whilePaused":59,"queue":8,"reads":81,"rows":[0,32767,65535,32768,42,7,32,0],"expected":[0,32767,65535,32768,42,7,32,0],"stats":{"inputUnit":"bytes","outputUnit":"samples","inputConsumed":80,"outputProduced":8,"rows":2,"coreWorkspaceBytes":6687,"bridgeBufferPeakBytes":2,"inputQueueBytes":0,"outputQueueBytes":0,"inputPeakBytes":1,"outputPeakBytes":8,"firstRowInputConsumed":59,"firstRowMs":4.600000023841858,"elapsedMs":99.39999997615814}}
+{"status":"passed","browser":"158.0.8127.37","node":"v24.20.0"}

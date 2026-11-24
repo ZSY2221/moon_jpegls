@@ -1,0 +1,5139 @@
+{
+  "startedUtc": "2026-11-24T04:56:09.535Z",
+  "schema": 1,
+  "diagnostic": false,
+  "options": [
+    "--baseline",
+    ".tools/rc2-final-verified-build/static",
+    "--baseline-source",
+    "299fd9afcbaac67d8d65b42545fb632a429ef202",
+    "--candidate",
+    ".evidence/rc3/workbench-candidate",
+    "--candidate-source",
+    "65422925136b9035e5762ab314631e5c6b667506",
+    "--output",
+    ".evidence/rc3/workbench-paired.json",
+    "--warmup",
+    "2",
+    "--repeats",
+    "5",
+    "--backends",
+    "wasm-gc,js",
+    "--nears",
+    "0,3",
+    "--chunk",
+    "4096"
+  ],
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "win32",
+    "release": "10.0.26200",
+    "cpu": "AMD Ryzen 9 8945HX with Radeon Graphics        ",
+    "browser": "158.0.8127.37"
+  },
+  "settings": {
+    "warmup": 2,
+    "repeats": 5,
+    "chunk": 4096,
+    "backends": [
+      "wasm-gc",
+      "js"
+    ],
+    "nears": [
+      0,
+      3
+    ],
+    "timeout": 120000
+  },
+  "fixture": {
+    "file": "resource-512x4096-16.pgm",
+    "bytes": 4194322,
+    "sha256": "57eb64cc0a21aacea581734284ccbead417bff17c89794535f7d3f9a442e7da8",
+    "width": 512,
+    "height": 4096,
+    "bits": 16,
+    "rasterSha256": "3edc48759d57ba5ba5c0605fc293cf9576ade2a865c00c8c76ca339c184627e4",
+    "formula": "(x*173+y*47+((x^y)&31)*3)&65535"
+  },
+  "assets": {
+    "baseline": {
+      "web/index.html": {
+        "originalSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "sha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "bytes": 4968,
+        "instrumented": false
+      },
+      "web/style.css": {
+        "originalSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "sha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "bytes": 4552,
+        "instrumented": false
+      },
+      "web/app.mjs": {
+        "originalSha256": "cfcf79227aea7bf7feaa3267d3ab10912abecdc14f336ca921b31ac27da08f4c",
+        "sha256": "567a83b37b9e303f8bda0655b2af7cc6c4346cd77b736f2ee810a452240f907e",
+        "bytes": 9601,
+        "instrumented": true
+      },
+      "web/labels.mjs": {
+        "originalSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "sha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "bytes": 3490,
+        "instrumented": false
+      },
+      "web/pgm.mjs": {
+        "originalSha256": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f",
+        "sha256": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f",
+        "bytes": 4407,
+        "instrumented": false
+      },
+      "web/preview.mjs": {
+        "originalSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "sha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "bytes": 3512,
+        "instrumented": false
+      },
+      "web/transport.mjs": {
+        "originalSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "bytes": 3288,
+        "instrumented": false
+      },
+      "sdk/index.mjs": {
+        "originalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "bytes": 11627,
+        "instrumented": false
+      },
+      "sdk/worker-client.mjs": {
+        "originalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "bytes": 3055,
+        "instrumented": false
+      },
+      "sdk/worker.mjs": {
+        "originalSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "bytes": 3087,
+        "instrumented": false
+      },
+      "sdk/generated/core.mjs": {
+        "originalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "bytes": 100050,
+        "instrumented": false
+      },
+      "sdk/generated/core.wasm": {
+        "originalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "bytes": 17158,
+        "instrumented": false
+      }
+    },
+    "candidate": {
+      "web/index.html": {
+        "originalSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "sha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "bytes": 4968,
+        "instrumented": false
+      },
+      "web/style.css": {
+        "originalSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "sha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "bytes": 4552,
+        "instrumented": false
+      },
+      "web/app.mjs": {
+        "originalSha256": "abf4da7aba31d150df56d064c6e802465d332b9acac36b65823cd6838d3a1fae",
+        "sha256": "e2d2566769aca0c7ef0fde5f7dbb87f49a98234fbafbcad34ca8952a329c8d81",
+        "bytes": 9661,
+        "instrumented": true
+      },
+      "web/labels.mjs": {
+        "originalSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "sha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "bytes": 3490,
+        "instrumented": false
+      },
+      "web/pgm.mjs": {
+        "originalSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+        "sha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+        "bytes": 6665,
+        "instrumented": false
+      },
+      "web/preview.mjs": {
+        "originalSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "sha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "bytes": 3512,
+        "instrumented": false
+      },
+      "web/transport.mjs": {
+        "originalSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "bytes": 3288,
+        "instrumented": false
+      },
+      "sdk/index.mjs": {
+        "originalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "bytes": 11627,
+        "instrumented": false
+      },
+      "sdk/worker-client.mjs": {
+        "originalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "bytes": 3055,
+        "instrumented": false
+      },
+      "sdk/worker.mjs": {
+        "originalSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "bytes": 3087,
+        "instrumented": false
+      },
+      "sdk/generated/core.mjs": {
+        "originalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "bytes": 100050,
+        "instrumented": false
+      },
+      "sdk/generated/core.wasm": {
+        "originalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "bytes": 17158,
+        "instrumented": false
+      }
+    }
+  },
+  "sourceCommit": {
+    "baseline": "299fd9afcbaac67d8d65b42545fb632a429ef202",
+    "candidate": "65422925136b9035e5762ab314631e5c6b667506"
+  },
+  "timing": "Browser performance.now from capture of the real Run click until task finalization. The original file, app, workers, preview and sink are active. Fixture creation and file selection are excluded. First display is the return from the first reconstruction Canvas putImageData, not the painted next frame. Profile enables operation counters; ordinary trials use job/sink clocks, first-row/canvas clock and terminal statistics only.",
+  "profileLimit": "Reference request durations are serial pre-row-ACK spans for this task. They include materialization and scheduling, and may overlap encoder and pipe work. The summed spans divided by wall time are a screening metric, not predicted savings. Cache/row/queue sizes are logical owned payloads, not renderer RSS.",
+  "trials": [
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "warmup",
+      "index": 1,
+      "order": 1,
+      "jobId": 1,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 527.5,
+      "startedAtMs": 527.7999999523163,
+      "finishedAtMs": 3620.899999976158,
+      "wallMs": 3093.399999976158,
+      "firstRowArrivalMs": 79.70000004768372,
+      "firstDisplayMs": 91.20000004768372,
+      "sinkOpenMs": 0.10000002384185791,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 62.200000047683716,
+          "mode": "decode",
+          "loadMs": 3.600000023841858,
+          "doneMs": 3093,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 3.8000000715255737,
+            "elapsedMs": 3017.2000000476837
+          }
+        },
+        {
+          "createdMs": 62.39999997615814,
+          "mode": "encode",
+          "loadMs": 3.200000047683716,
+          "doneMs": 3092.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.5,
+            "elapsedMs": 3016.6999999284744
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3092.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "warmup",
+      "index": 1,
+      "order": 2,
+      "jobId": 1,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 3669.5,
+      "startedAtMs": 3669.6999999284744,
+      "finishedAtMs": 4932.100000023842,
+      "wallMs": 1262.6000000238419,
+      "firstRowArrivalMs": 15.600000023841858,
+      "firstDisplayMs": 17.299999952316284,
+      "sinkOpenMs": 0.10000002384185791,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.5,
+          "mode": "decode",
+          "loadMs": 2,
+          "doneMs": 1262.1000000238419,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 3,
+            "elapsedMs": 1249.7000000476837
+          }
+        },
+        {
+          "createdMs": 2.5,
+          "mode": "encode",
+          "loadMs": 2,
+          "doneMs": 1261.8999999761581,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.600000023841858,
+            "elapsedMs": 1249.5
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1261.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "warmup",
+      "index": 2,
+      "order": 3,
+      "jobId": 2,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 4966.199999928474,
+      "startedAtMs": 4966.199999928474,
+      "finishedAtMs": 6214.899999976158,
+      "wallMs": 1248.7000000476837,
+      "firstRowArrivalMs": 13.5,
+      "firstDisplayMs": 14.800000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.9000000953674316,
+          "mode": "decode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1248.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.600000023841858,
+            "elapsedMs": 1237.1000000238419
+          }
+        },
+        {
+          "createdMs": 2,
+          "mode": "encode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1247.8000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.1999999284744263,
+            "elapsedMs": 1236.8999999761581
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1248.3 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "warmup",
+      "index": 2,
+      "order": 4,
+      "jobId": 2,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 6250.399999976158,
+      "startedAtMs": 6250.5,
+      "finishedAtMs": 9602.700000047684,
+      "wallMs": 3352.3000000715256,
+      "firstRowArrivalMs": 13.200000047683716,
+      "firstDisplayMs": 14.399999976158142,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.200000047683716,
+          "mode": "decode",
+          "loadMs": 1.6999999284744263,
+          "doneMs": 3352,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.600000023841858,
+            "elapsedMs": 3340.600000023842
+          }
+        },
+        {
+          "createdMs": 2.200000047683716,
+          "mode": "encode",
+          "loadMs": 1.6999999284744263,
+          "doneMs": 3350.399999976158,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.100000023841858,
+            "elapsedMs": 3339.600000023842
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3351.7 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 1,
+      "order": 5,
+      "jobId": 3,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 9645.600000023842,
+      "startedAtMs": 9645.700000047684,
+      "finishedAtMs": 12779.200000047684,
+      "wallMs": 3133.600000023842,
+      "firstRowArrivalMs": 16.399999976158142,
+      "firstDisplayMs": 17.600000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3.600000023841858,
+          "mode": "decode",
+          "loadMs": 2.299999952316284,
+          "doneMs": 3133.2999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.799999952316284,
+            "elapsedMs": 3119.7999999523163
+          }
+        },
+        {
+          "createdMs": 3.6999999284744263,
+          "mode": "encode",
+          "loadMs": 2,
+          "doneMs": 3132.399999976158,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.600000023841858,
+            "elapsedMs": 3119.100000023842
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3133.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 1,
+      "order": 6,
+      "jobId": 3,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 12812.600000023842,
+      "startedAtMs": 12812.699999928474,
+      "finishedAtMs": 14204,
+      "wallMs": 1391.3999999761581,
+      "firstRowArrivalMs": 13.699999928474426,
+      "firstDisplayMs": 14.199999928474426,
+      "sinkOpenMs": 0.10000002384185791,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.5,
+          "mode": "decode",
+          "loadMs": 2.0999999046325684,
+          "doneMs": 1391,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.5,
+            "elapsedMs": 1379.8000000715256
+          }
+        },
+        {
+          "createdMs": 2.5999999046325684,
+          "mode": "encode",
+          "loadMs": 2.0999999046325684,
+          "doneMs": 1390.8999999761581,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.100000023841858,
+            "elapsedMs": 1379.6000000238419
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1390.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 2,
+      "order": 7,
+      "jobId": 4,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 14238.899999976158,
+      "startedAtMs": 14239.100000023842,
+      "finishedAtMs": 15553.899999976158,
+      "wallMs": 1315,
+      "firstRowArrivalMs": 17.700000047683716,
+      "firstDisplayMs": 19.399999976158142,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3.399999976158142,
+          "mode": "decode",
+          "loadMs": 2.5999999046325684,
+          "doneMs": 1314.8999999761581,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 3.200000047683716,
+            "elapsedMs": 1300.2999999523163
+          }
+        },
+        {
+          "createdMs": 3.5,
+          "mode": "encode",
+          "loadMs": 2.5999999046325684,
+          "doneMs": 1314.7999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.799999952316284,
+            "elapsedMs": 1300.2000000476837
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1314.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 2,
+      "order": 8,
+      "jobId": 4,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 15586.5,
+      "startedAtMs": 15586.5,
+      "finishedAtMs": 18567.200000047684,
+      "wallMs": 2980.7000000476837,
+      "firstRowArrivalMs": 12.100000023841858,
+      "firstDisplayMs": 13.700000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "decode",
+          "loadMs": 2,
+          "doneMs": 2980.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.299999952316284,
+            "elapsedMs": 2970.7999999523163
+          }
+        },
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "encode",
+          "loadMs": 1.899999976158142,
+          "doneMs": 2980,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.100000023841858,
+            "elapsedMs": 2970.2999999523163
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2980.4 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 3,
+      "order": 9,
+      "jobId": 5,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 18596.600000023842,
+      "startedAtMs": 18596.600000023842,
+      "finishedAtMs": 21340,
+      "wallMs": 2743.399999976158,
+      "firstRowArrivalMs": 12.799999952316284,
+      "firstDisplayMs": 14,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.600000023841858,
+          "mode": "decode",
+          "loadMs": 1.600000023841858,
+          "doneMs": 2743.1999999284744,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.799999952316284,
+            "elapsedMs": 2733.2999999523163
+          }
+        },
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "encode",
+          "loadMs": 1.5999999046325684,
+          "doneMs": 2742.600000023842,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.100000023841858,
+            "elapsedMs": 2731.8000000715256
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2743.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 3,
+      "order": 10,
+      "jobId": 5,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 21372.899999976158,
+      "startedAtMs": 21372.899999976158,
+      "finishedAtMs": 22617.5,
+      "wallMs": 1244.6000000238419,
+      "firstRowArrivalMs": 14.100000023841858,
+      "firstDisplayMs": 15.399999976158142,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "decode",
+          "loadMs": 2,
+          "doneMs": 1244.3999999761581,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.5,
+            "elapsedMs": 1232.7999999523163
+          }
+        },
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "encode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1244.2999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.100000023841858,
+            "elapsedMs": 1232.6999999284744
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1244.2 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 4,
+      "order": 11,
+      "jobId": 6,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 22653.600000023842,
+      "startedAtMs": 22653.600000023842,
+      "finishedAtMs": 23979.399999976158,
+      "wallMs": 1325.7999999523163,
+      "firstRowArrivalMs": 13.199999928474426,
+      "firstDisplayMs": 14.299999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2,
+          "mode": "decode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1325.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.1999999284744263,
+            "elapsedMs": 1314.5
+          }
+        },
+        {
+          "createdMs": 2,
+          "mode": "encode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1325.1999999284744,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 1.7999999523162842,
+            "elapsedMs": 1313.6999999284744
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1325.2 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 4,
+      "order": 12,
+      "jobId": 6,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 24017.700000047684,
+      "startedAtMs": 24017.799999952316,
+      "finishedAtMs": 26786.600000023842,
+      "wallMs": 2768.899999976158,
+      "firstRowArrivalMs": 15.699999928474426,
+      "firstDisplayMs": 17.199999928474426,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.5,
+          "mode": "decode",
+          "loadMs": 2.5,
+          "doneMs": 2768.6999999284744,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.6999999284744263,
+            "elapsedMs": 2755.6999999284744
+          }
+        },
+        {
+          "createdMs": 2.5999999046325684,
+          "mode": "encode",
+          "loadMs": 2.5,
+          "doneMs": 2767.6999999284744,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.299999952316284,
+            "elapsedMs": 2754.6999999284744
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2768.4 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 5,
+      "order": 13,
+      "jobId": 7,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 26816.899999976158,
+      "startedAtMs": 26816.899999976158,
+      "finishedAtMs": 29559.100000023842,
+      "wallMs": 2742.2000000476837,
+      "firstRowArrivalMs": 13.100000023841858,
+      "firstDisplayMs": 14.300000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.5,
+          "mode": "decode",
+          "loadMs": 1.8000000715255737,
+          "doneMs": 2742.100000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.200000047683716,
+            "elapsedMs": 2731.100000023842
+          }
+        },
+        {
+          "createdMs": 1.600000023841858,
+          "mode": "encode",
+          "loadMs": 1.7000000476837158,
+          "doneMs": 2741.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.600000023841858,
+            "elapsedMs": 2731.2000000476837
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2741.9 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 5,
+      "order": 14,
+      "jobId": 7,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 29593.299999952316,
+      "startedAtMs": 29593.299999952316,
+      "finishedAtMs": 30779.199999928474,
+      "wallMs": 1185.8999999761581,
+      "firstRowArrivalMs": 13.399999976158142,
+      "firstDisplayMs": 14.600000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "decode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1185.7000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.6999999284744263,
+            "elapsedMs": 1175
+          }
+        },
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "encode",
+          "loadMs": 1.8000000715255737,
+          "doneMs": 1185.6000000238419,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.5,
+            "elapsedMs": 1174.5
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1185.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "warmup",
+      "index": 1,
+      "order": 15,
+      "jobId": 8,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 30813.299999952316,
+      "startedAtMs": 30813.299999952316,
+      "finishedAtMs": 33542.5,
+      "wallMs": 2729.2000000476837,
+      "firstRowArrivalMs": 15.600000023841858,
+      "firstDisplayMs": 16.90000009536743,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7000000476837158,
+          "mode": "decode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 2729,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.799999952316284,
+            "elapsedMs": 2718.100000023842
+          }
+        },
+        {
+          "createdMs": 1.8000000715255737,
+          "mode": "encode",
+          "loadMs": 2.299999952316284,
+          "doneMs": 2728.4000000953674,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.399999976158142,
+            "elapsedMs": 2717.399999976158
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2728.9 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "phase": "warmup",
+      "index": 1,
+      "order": 16,
+      "jobId": 8,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 33573.799999952316,
+      "startedAtMs": 33573.799999952316,
+      "finishedAtMs": 34776.60000002384,
+      "wallMs": 1202.8000000715256,
+      "firstRowArrivalMs": 16,
+      "firstDisplayMs": 17.200000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "decode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 1202.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.799999952316284,
+            "elapsedMs": 1191.2999999523163
+          }
+        },
+        {
+          "createdMs": 2,
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 1202.3000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.399999976158142,
+            "elapsedMs": 1191
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1202.4 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "phase": "warmup",
+      "index": 2,
+      "order": 17,
+      "jobId": 9,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 34807.10000002384,
+      "startedAtMs": 34807.10000002384,
+      "finishedAtMs": 36121.799999952316,
+      "wallMs": 1314.6999999284744,
+      "firstRowArrivalMs": 15.199999928474426,
+      "firstDisplayMs": 16.399999976158142,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "decode",
+          "loadMs": 2.4000000953674316,
+          "doneMs": 1314.3999999761581,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.100000023841858,
+            "elapsedMs": 1303.3000000715256
+          }
+        },
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "encode",
+          "loadMs": 2.3000000715255737,
+          "doneMs": 1314.1999999284744,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.9000000953674316,
+            "elapsedMs": 1303
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1314.2 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "warmup",
+      "index": 2,
+      "order": 18,
+      "jobId": 9,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 36157.799999952316,
+      "startedAtMs": 36157.799999952316,
+      "finishedAtMs": 39327.700000047684,
+      "wallMs": 3169.9000000953674,
+      "firstRowArrivalMs": 16.700000047683716,
+      "firstDisplayMs": 18.100000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2,
+          "mode": "decode",
+          "loadMs": 2.399999976158142,
+          "doneMs": 3169.600000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.799999952316284,
+            "elapsedMs": 3157.7999999523163
+          }
+        },
+        {
+          "createdMs": 2.200000047683716,
+          "mode": "encode",
+          "loadMs": 2.3000000715255737,
+          "doneMs": 3167.8000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3,
+            "elapsedMs": 3155.5999999046326
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3169.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 1,
+      "order": 19,
+      "jobId": 10,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 39361.10000002384,
+      "startedAtMs": 39361.10000002384,
+      "finishedAtMs": 42370.60000002384,
+      "wallMs": 3009.5,
+      "firstRowArrivalMs": 17.399999976158142,
+      "firstDisplayMs": 19,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.1999999284744263,
+          "mode": "decode",
+          "loadMs": 2.600000023841858,
+          "doneMs": 3009.2999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.5,
+            "elapsedMs": 2996.5
+          }
+        },
+        {
+          "createdMs": 2.299999952316284,
+          "mode": "encode",
+          "loadMs": 2.3000000715255737,
+          "doneMs": 3008.399999976158,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.200000047683716,
+            "elapsedMs": 2995.399999976158
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3009.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 1,
+      "order": 20,
+      "jobId": 10,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 42407,
+      "startedAtMs": 42407,
+      "finishedAtMs": 43717.299999952316,
+      "wallMs": 1310.2999999523163,
+      "firstRowArrivalMs": 15.399999976158142,
+      "firstDisplayMs": 16.799999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "decode",
+          "loadMs": 2.5999999046325684,
+          "doneMs": 1310,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.100000023841858,
+            "elapsedMs": 1298.7000000476837
+          }
+        },
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "encode",
+          "loadMs": 2.299999952316284,
+          "doneMs": 1309.7999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.799999952316284,
+            "elapsedMs": 1298.5999999046326
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1309.9 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 2,
+      "order": 21,
+      "jobId": 11,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 43746.89999997616,
+      "startedAtMs": 43746.89999997616,
+      "finishedAtMs": 44943.799999952316,
+      "wallMs": 1196.8999999761581,
+      "firstRowArrivalMs": 15.299999952316284,
+      "firstDisplayMs": 16.5,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7000000476837158,
+          "mode": "decode",
+          "loadMs": 2.700000047683716,
+          "doneMs": 1196.6000000238419,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.5,
+            "elapsedMs": 1185.8999999761581
+          }
+        },
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "encode",
+          "loadMs": 2.3000000715255737,
+          "doneMs": 1196.3999999761581,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.0999999046325684,
+            "elapsedMs": 1185.5999999046326
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1196.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 2,
+      "order": 22,
+      "jobId": 11,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 44977.5,
+      "startedAtMs": 44977.5,
+      "finishedAtMs": 47879.10000002384,
+      "wallMs": 2901.600000023842,
+      "firstRowArrivalMs": 15.5,
+      "firstDisplayMs": 16.700000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.700000047683716,
+          "mode": "decode",
+          "loadMs": 2.299999952316284,
+          "doneMs": 2901.399999976158,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4,
+            "elapsedMs": 2889.7999999523163
+          }
+        },
+        {
+          "createdMs": 2.799999952316284,
+          "mode": "encode",
+          "loadMs": 2.299999952316284,
+          "doneMs": 2900.7999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.700000047683716,
+            "elapsedMs": 2889.2000000476837
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2901.2 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 3,
+      "order": 23,
+      "jobId": 12,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 47911.299999952316,
+      "startedAtMs": 47911.299999952316,
+      "finishedAtMs": 50886.5,
+      "wallMs": 2975.2000000476837,
+      "firstRowArrivalMs": 14.400000095367432,
+      "firstDisplayMs": 15.700000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.600000023841858,
+          "mode": "decode",
+          "loadMs": 2.299999952316284,
+          "doneMs": 2975.100000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.100000023841858,
+            "elapsedMs": 2964.7999999523163
+          }
+        },
+        {
+          "createdMs": 1.7000000476837158,
+          "mode": "encode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 2974.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.899999976158142,
+            "elapsedMs": 2964.100000023842
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2975.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 3,
+      "order": 24,
+      "jobId": 12,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 50927.60000002384,
+      "startedAtMs": 50927.699999928474,
+      "finishedAtMs": 52307.5,
+      "wallMs": 1379.8999999761581,
+      "firstRowArrivalMs": 17.899999976158142,
+      "firstDisplayMs": 19.59999990463257,
+      "sinkOpenMs": 0.10000002384185791,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3,
+          "mode": "decode",
+          "loadMs": 2.4000000953674316,
+          "doneMs": 1379.5999999046326,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.700000047683716,
+            "elapsedMs": 1366.5
+          }
+        },
+        {
+          "createdMs": 3.0999999046325684,
+          "mode": "encode",
+          "loadMs": 2.4000000953674316,
+          "doneMs": 1379.2999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.3000000715255737,
+            "elapsedMs": 1366
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1379.3 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 4,
+      "order": 25,
+      "jobId": 13,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 52345.60000002384,
+      "startedAtMs": 52345.60000002384,
+      "finishedAtMs": 53675.5,
+      "wallMs": 1329.8999999761581,
+      "firstRowArrivalMs": 18.199999928474426,
+      "firstDisplayMs": 19.799999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2,
+          "mode": "decode",
+          "loadMs": 2.799999952316284,
+          "doneMs": 1329.6999999284744,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.799999952316284,
+            "elapsedMs": 1316.2000000476837
+          }
+        },
+        {
+          "createdMs": 2.0999999046325684,
+          "mode": "encode",
+          "loadMs": 2.799999952316284,
+          "doneMs": 1329.3999999761581,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.3000000715255737,
+            "elapsedMs": 1316.1000000238419
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1329.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 4,
+      "order": 26,
+      "jobId": 13,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 53711.799999952316,
+      "startedAtMs": 53711.89999997616,
+      "finishedAtMs": 56647.700000047684,
+      "wallMs": 2935.9000000953674,
+      "firstRowArrivalMs": 15.5,
+      "firstDisplayMs": 16.800000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.100000023841858,
+          "mode": "decode",
+          "loadMs": 2.3000000715255737,
+          "doneMs": 2935.7000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.900000095367432,
+            "elapsedMs": 2925.100000023842
+          }
+        },
+        {
+          "createdMs": 2.200000047683716,
+          "mode": "encode",
+          "loadMs": 2.399999976158142,
+          "doneMs": 2934.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.1999999284744263,
+            "elapsedMs": 2923.5
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2935.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 5,
+      "order": 27,
+      "jobId": 14,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 56678.200000047684,
+      "startedAtMs": 56678.200000047684,
+      "finishedAtMs": 59667.700000047684,
+      "wallMs": 2989.5,
+      "firstRowArrivalMs": 16.899999976158142,
+      "firstDisplayMs": 18.09999990463257,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.5999999046325684,
+          "mode": "decode",
+          "loadMs": 3.299999952316284,
+          "doneMs": 2989.399999976158,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.200000047683716,
+            "elapsedMs": 2976.600000023842
+          }
+        },
+        {
+          "createdMs": 2.6999999284744263,
+          "mode": "encode",
+          "loadMs": 3.3000000715255737,
+          "doneMs": 2988.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.9000000953674316,
+            "elapsedMs": 2975.7000000476837
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "2989.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 5,
+      "order": 28,
+      "jobId": 14,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 59697.199999928474,
+      "startedAtMs": 59697.199999928474,
+      "finishedAtMs": 61011.299999952316,
+      "wallMs": 1314.1000000238419,
+      "firstRowArrivalMs": 14.5,
+      "firstDisplayMs": 15.800000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.9000000953674316,
+          "mode": "decode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1313.9000000953674,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.400000095367432,
+            "elapsedMs": 1303.8000000715256
+          }
+        },
+        {
+          "createdMs": 2,
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 1313.4000000953674,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.100000023841858,
+            "elapsedMs": 1303.4000000953674
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "1313.7 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "warmup",
+      "index": 1,
+      "order": 29,
+      "jobId": 15,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 61041.5,
+      "startedAtMs": 61041.5,
+      "finishedAtMs": 63705.60000002384,
+      "wallMs": 2664.100000023842,
+      "firstRowArrivalMs": 14.200000047683716,
+      "firstDisplayMs": 16,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "decode",
+          "loadMs": 2.399999976158142,
+          "doneMs": 2664,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 3,
+            "elapsedMs": 2652.7999999523163
+          }
+        },
+        {
+          "createdMs": 2,
+          "mode": "encode",
+          "loadMs": 2.399999976158142,
+          "doneMs": 2663.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.399999976158142,
+            "elapsedMs": 2652.1999999284744
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "2663.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "warmup",
+      "index": 1,
+      "order": 30,
+      "jobId": 15,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 63737.10000002384,
+      "startedAtMs": 63737.10000002384,
+      "finishedAtMs": 64975.5,
+      "wallMs": 1238.3999999761581,
+      "firstRowArrivalMs": 12.5,
+      "firstDisplayMs": 13.799999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.5999999046325684,
+          "mode": "decode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1238.1999999284744,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.4000000953674316,
+            "elapsedMs": 1228.1000000238419
+          }
+        },
+        {
+          "createdMs": 1.6999999284744263,
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 1238.0999999046326,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 1.9000000953674316,
+            "elapsedMs": 1227.9000000953674
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1238.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "warmup",
+      "index": 2,
+      "order": 31,
+      "jobId": 16,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 65004.39999997616,
+      "startedAtMs": 65004.5,
+      "finishedAtMs": 66300.10000002384,
+      "wallMs": 1295.7000000476837,
+      "firstRowArrivalMs": 12.399999976158142,
+      "firstDisplayMs": 13.600000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.600000023841858,
+          "mode": "decode",
+          "loadMs": 2.1999999284744263,
+          "doneMs": 1295.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.5,
+            "elapsedMs": 1285.3999999761581
+          }
+        },
+        {
+          "createdMs": 1.7000000476837158,
+          "mode": "encode",
+          "loadMs": 2,
+          "doneMs": 1295.2999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 1.899999976158142,
+            "elapsedMs": 1285.1000000238419
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1295.3 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "warmup",
+      "index": 2,
+      "order": 32,
+      "jobId": 16,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 66331.5,
+      "startedAtMs": 66331.5,
+      "finishedAtMs": 69415.10000002384,
+      "wallMs": 3083.600000023842,
+      "firstRowArrivalMs": 12.700000047683716,
+      "firstDisplayMs": 13.799999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "decode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 3083.399999976158,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.399999976158142,
+            "elapsedMs": 3073.1999999284744
+          }
+        },
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 3082.399999976158,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2,
+            "elapsedMs": 3072.0999999046326
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3083.4 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 1,
+      "order": 33,
+      "jobId": 17,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 69444.89999997616,
+      "startedAtMs": 69444.89999997616,
+      "finishedAtMs": 72609.29999995232,
+      "wallMs": 3164.399999976158,
+      "firstRowArrivalMs": 14.399999976158142,
+      "firstDisplayMs": 15.100000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3,
+          "mode": "decode",
+          "loadMs": 1.8000000715255737,
+          "doneMs": 3164.2000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.5,
+            "elapsedMs": 3152.3000000715256
+          }
+        },
+        {
+          "createdMs": 3.200000047683716,
+          "mode": "encode",
+          "loadMs": 1.8000000715255737,
+          "doneMs": 3163.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2,
+            "elapsedMs": 3151.3000000715256
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3164.2 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 1,
+      "order": 34,
+      "jobId": 17,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 72649.60000002384,
+      "startedAtMs": 72649.60000002384,
+      "finishedAtMs": 74138.89999997616,
+      "wallMs": 1489.2999999523163,
+      "firstRowArrivalMs": 15.699999928474426,
+      "firstDisplayMs": 17.199999928474426,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.1999999284744263,
+          "mode": "decode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 1489.0999999046326,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 3.100000023841858,
+            "elapsedMs": 1476.3000000715256
+          }
+        },
+        {
+          "createdMs": 2.299999952316284,
+          "mode": "encode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 1488.7999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.5,
+            "elapsedMs": 1476.1000000238419
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1488.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 2,
+      "order": 35,
+      "jobId": 18,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 74172,
+      "startedAtMs": 74172,
+      "finishedAtMs": 75419.29999995232,
+      "wallMs": 1247.2999999523163,
+      "firstRowArrivalMs": 13.699999928474426,
+      "firstDisplayMs": 15,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "decode",
+          "loadMs": 2.5,
+          "doneMs": 1247.1000000238419,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.5999999046325684,
+            "elapsedMs": 1236
+          }
+        },
+        {
+          "createdMs": 1.899999976158142,
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 1247,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2,
+            "elapsedMs": 1235.7999999523163
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1247.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 2,
+      "order": 36,
+      "jobId": 18,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 75452.29999995232,
+      "startedAtMs": 75452.29999995232,
+      "finishedAtMs": 78354.5,
+      "wallMs": 2902.2000000476837,
+      "firstRowArrivalMs": 12.300000071525574,
+      "firstDisplayMs": 13.900000095367432,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7000000476837158,
+          "mode": "decode",
+          "loadMs": 1.6999999284744263,
+          "doneMs": 2902,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.600000023841858,
+            "elapsedMs": 2892.3000000715256
+          }
+        },
+        {
+          "createdMs": 1.8000000715255737,
+          "mode": "encode",
+          "loadMs": 1.6999999284744263,
+          "doneMs": 2901,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.200000047683716,
+            "elapsedMs": 2891.2000000476837
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "2901.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 3,
+      "order": 37,
+      "jobId": 19,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 78389,
+      "startedAtMs": 78389.10000002384,
+      "finishedAtMs": 81504.39999997616,
+      "wallMs": 3115.399999976158,
+      "firstRowArrivalMs": 15.299999952316284,
+      "firstDisplayMs": 16.600000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "decode",
+          "loadMs": 2.5,
+          "doneMs": 3115.2999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.8000000715255737,
+            "elapsedMs": 3102.7000000476837
+          }
+        },
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 3114.600000023842,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.399999976158142,
+            "elapsedMs": 3102.2000000476837
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3115.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 3,
+      "order": 38,
+      "jobId": 19,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 81538.89999997616,
+      "startedAtMs": 81538.89999997616,
+      "finishedAtMs": 82941.89999997616,
+      "wallMs": 1403,
+      "firstRowArrivalMs": 14.100000023841858,
+      "firstDisplayMs": 14.799999952316284,
+      "sinkOpenMs": 0.09999990463256836,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.700000047683716,
+          "mode": "decode",
+          "loadMs": 2,
+          "doneMs": 1402.7000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.899999976158142,
+            "elapsedMs": 1391.5
+          }
+        },
+        {
+          "createdMs": 2.799999952316284,
+          "mode": "encode",
+          "loadMs": 1.8000000715255737,
+          "doneMs": 1402.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.200000047683716,
+            "elapsedMs": 1391
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1402.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 4,
+      "order": 39,
+      "jobId": 20,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 82981.79999995232,
+      "startedAtMs": 82981.79999995232,
+      "finishedAtMs": 84255.29999995232,
+      "wallMs": 1273.5,
+      "firstRowArrivalMs": 12.5,
+      "firstDisplayMs": 13.300000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.600000023841858,
+          "mode": "decode",
+          "loadMs": 1.6999999284744263,
+          "doneMs": 1273.2000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.299999952316284,
+            "elapsedMs": 1263.1000000238419
+          }
+        },
+        {
+          "createdMs": 1.7000000476837158,
+          "mode": "encode",
+          "loadMs": 1.7999999523162842,
+          "doneMs": 1272.2000000476837,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 1.899999976158142,
+            "elapsedMs": 1262
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1273.2 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 4,
+      "order": 40,
+      "jobId": 20,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 84293.89999997616,
+      "startedAtMs": 84293.89999997616,
+      "finishedAtMs": 87036.39999997616,
+      "wallMs": 2742.5,
+      "firstRowArrivalMs": 15.399999976158142,
+      "firstDisplayMs": 17.100000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.600000023841858,
+          "mode": "decode",
+          "loadMs": 2.5,
+          "doneMs": 2742.2000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.9000000953674316,
+            "elapsedMs": 2729.8000000715256
+          }
+        },
+        {
+          "createdMs": 2.700000047683716,
+          "mode": "encode",
+          "loadMs": 2.5,
+          "doneMs": 2741.600000023842,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.200000047683716,
+            "elapsedMs": 2729.100000023842
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "2742.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 5,
+      "order": 41,
+      "jobId": 21,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 87065.70000004768,
+      "startedAtMs": 87065.70000004768,
+      "finishedAtMs": 89940.89999997616,
+      "wallMs": 2875.1999999284744,
+      "firstRowArrivalMs": 14.099999904632568,
+      "firstDisplayMs": 15.299999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.5999999046325684,
+          "mode": "decode",
+          "loadMs": 2.3000000715255737,
+          "doneMs": 2875,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.4000000953674316,
+            "elapsedMs": 2863.2000000476837
+          }
+        },
+        {
+          "createdMs": 1.5999999046325684,
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 2874.1999999284744,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2,
+            "elapsedMs": 2862.4000000953674
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "2874.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 5,
+      "order": 42,
+      "jobId": 21,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 89971.69999992847,
+      "startedAtMs": 89971.69999992847,
+      "finishedAtMs": 91167.19999992847,
+      "wallMs": 1195.5,
+      "firstRowArrivalMs": 12.900000095367432,
+      "firstDisplayMs": 14.300000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.8000000715255737,
+          "mode": "decode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1195.2000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.399999976158142,
+            "elapsedMs": 1184.7999999523163
+          }
+        },
+        {
+          "createdMs": 1.9000000953674316,
+          "mode": "encode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 1195.1000000238419,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2,
+            "elapsedMs": 1184.6999999284744
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1195.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "warmup",
+      "index": 1,
+      "order": 43,
+      "jobId": 22,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 91202.39999997616,
+      "startedAtMs": 91202.5,
+      "finishedAtMs": 94169.29999995232,
+      "wallMs": 2966.899999976158,
+      "firstRowArrivalMs": 14.399999976158142,
+      "firstDisplayMs": 15.800000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.7000000476837158,
+          "mode": "decode",
+          "loadMs": 2.0999999046325684,
+          "doneMs": 2966.7000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 4.200000047683716,
+            "elapsedMs": 2956.600000023842
+          }
+        },
+        {
+          "createdMs": 1.8000000715255737,
+          "mode": "encode",
+          "loadMs": 2.0999999046325684,
+          "doneMs": 2965.8000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.799999952316284,
+            "elapsedMs": 2955.5
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "2966.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "phase": "warmup",
+      "index": 1,
+      "order": 44,
+      "jobId": 22,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 94204.10000002384,
+      "startedAtMs": 94204.10000002384,
+      "finishedAtMs": 95452.89999997616,
+      "wallMs": 1248.7999999523163,
+      "firstRowArrivalMs": 15.799999952316284,
+      "firstDisplayMs": 17.199999928474426,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.1999999284744263,
+          "mode": "decode",
+          "loadMs": 2.1999999284744263,
+          "doneMs": 1248.5999999046326,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 4.5,
+            "elapsedMs": 1237.2999999523163
+          }
+        },
+        {
+          "createdMs": 2.1999999284744263,
+          "mode": "encode",
+          "loadMs": 2.1999999284744263,
+          "doneMs": 1248.2999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.899999976158142,
+            "elapsedMs": 1236.8999999761581
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1248.4 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "phase": "warmup",
+      "index": 2,
+      "order": 45,
+      "jobId": 23,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 95486.39999997616,
+      "startedAtMs": 95486.39999997616,
+      "finishedAtMs": 96814.19999992847,
+      "wallMs": 1327.7999999523163,
+      "firstRowArrivalMs": 19.899999976158142,
+      "firstDisplayMs": 21.700000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.5,
+          "mode": "decode",
+          "loadMs": 3.1999999284744263,
+          "doneMs": 1327.6000000238419,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 4.399999976158142,
+            "elapsedMs": 1312.1000000238419
+          }
+        },
+        {
+          "createdMs": 2.600000023841858,
+          "mode": "encode",
+          "loadMs": 2.600000023841858,
+          "doneMs": 1327.3999999761581,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.600000023841858,
+            "elapsedMs": 1312.7999999523163
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1327.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "warmup",
+      "index": 2,
+      "order": 46,
+      "jobId": 23,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 96846,
+      "startedAtMs": 96846,
+      "finishedAtMs": 100070.70000004768,
+      "wallMs": 3224.7000000476837,
+      "firstRowArrivalMs": 16.399999976158142,
+      "firstDisplayMs": 17.700000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.600000023841858,
+          "mode": "decode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 3224.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 5,
+            "elapsedMs": 3213.2000000476837
+          }
+        },
+        {
+          "createdMs": 1.7999999523162842,
+          "mode": "encode",
+          "loadMs": 2.899999976158142,
+          "doneMs": 3223.7000000476837,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.100000023841858,
+            "elapsedMs": 3212.100000023842
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3224.4 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 1,
+      "order": 47,
+      "jobId": 24,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 100118.20000004768,
+      "startedAtMs": 100118.29999995232,
+      "finishedAtMs": 104522.29999995232,
+      "wallMs": 4404.099999904633,
+      "firstRowArrivalMs": 38.09999990463257,
+      "firstDisplayMs": 41,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 5.5,
+          "mode": "decode",
+          "loadMs": 5.199999928474426,
+          "doneMs": 4403.799999952316,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 6.600000023841858,
+            "elapsedMs": 4372.399999976158
+          }
+        },
+        {
+          "createdMs": 5.699999928474426,
+          "mode": "encode",
+          "loadMs": 5.399999976158142,
+          "doneMs": 4402.899999976158,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 4.199999928474426,
+            "elapsedMs": 4371.099999904633
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "4403.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 1,
+      "order": 48,
+      "jobId": 24,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 104575.69999992847,
+      "startedAtMs": 104575.79999995232,
+      "finishedAtMs": 106247,
+      "wallMs": 1671.3000000715256,
+      "firstRowArrivalMs": 30.600000023841858,
+      "firstDisplayMs": 32.800000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 4.100000023841858,
+          "mode": "decode",
+          "loadMs": 5.100000023841858,
+          "doneMs": 1671.1000000238419,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 6.699999928474426,
+            "elapsedMs": 1647.1999999284744
+          }
+        },
+        {
+          "createdMs": 4.200000047683716,
+          "mode": "encode",
+          "loadMs": 4.600000023841858,
+          "doneMs": 1670.8000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 4.100000023841858,
+            "elapsedMs": 1647.2000000476837
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1670.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 2,
+      "order": 49,
+      "jobId": 25,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 106283.89999997616,
+      "startedAtMs": 106283.89999997616,
+      "finishedAtMs": 108157.79999995232,
+      "wallMs": 1873.8999999761581,
+      "firstRowArrivalMs": 19.600000023841858,
+      "firstDisplayMs": 21.200000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.100000023841858,
+          "mode": "decode",
+          "loadMs": 3.8000000715255737,
+          "doneMs": 1873.7000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 5.100000023841858,
+            "elapsedMs": 1859.3000000715256
+          }
+        },
+        {
+          "createdMs": 2.200000047683716,
+          "mode": "encode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 1873.3999999761581,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.3000000715255737,
+            "elapsedMs": 1858.8999999761581
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1873.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 2,
+      "order": 50,
+      "jobId": 25,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 108198.5,
+      "startedAtMs": 108198.5,
+      "finishedAtMs": 113188.60000002384,
+      "wallMs": 4990.100000023842,
+      "firstRowArrivalMs": 18.5,
+      "firstDisplayMs": 20.200000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.200000047683716,
+          "mode": "decode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 4989.700000047684,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 5,
+            "elapsedMs": 4976.400000095367
+          }
+        },
+        {
+          "createdMs": 2.299999952316284,
+          "mode": "encode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 4988.399999976158,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.3000000715255737,
+            "elapsedMs": 4974.900000095367
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "4989.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 3,
+      "order": 51,
+      "jobId": 26,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 113237,
+      "startedAtMs": 113237,
+      "finishedAtMs": 117354,
+      "wallMs": 4117,
+      "firstRowArrivalMs": 25.600000023841858,
+      "firstDisplayMs": 27.700000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3.200000047683716,
+          "mode": "decode",
+          "loadMs": 4.300000071525574,
+          "doneMs": 4116.799999952316,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 8.700000047683716,
+            "elapsedMs": 4100
+          }
+        },
+        {
+          "createdMs": 3.299999952316284,
+          "mode": "encode",
+          "loadMs": 4.399999976158142,
+          "doneMs": 4115.700000047684,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 4.800000071525574,
+            "elapsedMs": 4098.5
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "4116.7 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 3,
+      "order": 52,
+      "jobId": 26,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 117395.39999997616,
+      "startedAtMs": 117395.39999997616,
+      "finishedAtMs": 119121.10000002384,
+      "wallMs": 1725.7000000476837,
+      "firstRowArrivalMs": 18.5,
+      "firstDisplayMs": 20.200000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.299999952316284,
+          "mode": "decode",
+          "loadMs": 2.799999952316284,
+          "doneMs": 1725.3999999761581,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 5.899999976158142,
+            "elapsedMs": 1712.8999999761581
+          }
+        },
+        {
+          "createdMs": 2.399999976158142,
+          "mode": "encode",
+          "loadMs": 2.799999952316284,
+          "doneMs": 1725,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 4.100000023841858,
+            "elapsedMs": 1712.3999999761581
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1725.3 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 4,
+      "order": 53,
+      "jobId": 27,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 119158.69999992847,
+      "startedAtMs": 119158.69999992847,
+      "finishedAtMs": 121067.10000002384,
+      "wallMs": 1908.4000000953674,
+      "firstRowArrivalMs": 19.700000047683716,
+      "firstDisplayMs": 20.600000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.3000000715255737,
+          "mode": "decode",
+          "loadMs": 3.100000023841858,
+          "doneMs": 1908.1000000238419,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 5.199999928474426,
+            "elapsedMs": 1893.6999999284744
+          }
+        },
+        {
+          "createdMs": 2.4000000953674316,
+          "mode": "encode",
+          "loadMs": 3.100000023841858,
+          "doneMs": 1907.8000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.5999999046325684,
+            "elapsedMs": 1893.2999999523163
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1907.9 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 4,
+      "order": 54,
+      "jobId": 27,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 121108.89999997616,
+      "startedAtMs": 121108.89999997616,
+      "finishedAtMs": 125045.89999997616,
+      "wallMs": 3937,
+      "firstRowArrivalMs": 19.200000047683716,
+      "firstDisplayMs": 20.899999976158142,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.3000000715255737,
+          "mode": "decode",
+          "loadMs": 2.700000047683716,
+          "doneMs": 3936.8000000715256,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 5.399999976158142,
+            "elapsedMs": 3923
+          }
+        },
+        {
+          "createdMs": 2.3000000715255737,
+          "mode": "encode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 3936,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.399999976158142,
+            "elapsedMs": 3922
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3936.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 5,
+      "order": 55,
+      "jobId": 28,
+      "timeOriginMs": 1795496170081.3,
+      "clickAtMs": 125082,
+      "startedAtMs": 125082,
+      "finishedAtMs": 128721.60000002384,
+      "wallMs": 3639.600000023842,
+      "firstRowArrivalMs": 17.600000023841858,
+      "firstDisplayMs": 19.299999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.100000023841858,
+          "mode": "decode",
+          "loadMs": 2.700000047683716,
+          "doneMs": 3639.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 5.399999976158142,
+            "elapsedMs": 3627.0999999046326
+          }
+        },
+        {
+          "createdMs": 2.200000047683716,
+          "mode": "encode",
+          "loadMs": 2.600000023841858,
+          "doneMs": 3638.7000000476837,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.3000000715255737,
+            "elapsedMs": 3626.100000023842
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3639.3 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 5,
+      "order": 56,
+      "jobId": 28,
+      "timeOriginMs": 1795496170081.9,
+      "clickAtMs": 128762.60000002384,
+      "startedAtMs": 128762.60000002384,
+      "finishedAtMs": 130257.79999995232,
+      "wallMs": 1495.1999999284744,
+      "firstRowArrivalMs": 18.5,
+      "firstDisplayMs": 20.09999990463257,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.299999952316284,
+          "mode": "decode",
+          "loadMs": 2.6999999284744263,
+          "doneMs": 1494.8999999761581,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 4.700000047683716,
+            "elapsedMs": 1481
+          }
+        },
+        {
+          "createdMs": 2.399999976158142,
+          "mode": "encode",
+          "loadMs": 2.5999999046325684,
+          "doneMs": 1494.6999999284744,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.200000047683716,
+            "elapsedMs": 1480.8999999761581
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "1494.7 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    }
+  ],
+  "failures": [],
+  "actualBrowserResponses": {
+    "/": {
+      "status": 200,
+      "deliveredSha256": "19410da15bddb500b813e6836215b166167fa4fbc8e7ad11baa910d30804fc18",
+      "browserBodySha256": "19410da15bddb500b813e6836215b166167fa4fbc8e7ad11baa910d30804fc18"
+    },
+    "/baseline/web/": {
+      "status": 200,
+      "deliveredSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "browserBodySha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2"
+    },
+    "/candidate/web/": {
+      "status": 200,
+      "deliveredSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "browserBodySha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2"
+    },
+    "/baseline/web/style.css": {
+      "status": 200,
+      "deliveredSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "browserBodySha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b"
+    },
+    "/candidate/web/style.css": {
+      "status": 200,
+      "deliveredSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "browserBodySha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b"
+    },
+    "/baseline/web/app.mjs": {
+      "status": 200,
+      "deliveredSha256": "567a83b37b9e303f8bda0655b2af7cc6c4346cd77b736f2ee810a452240f907e",
+      "browserBodySha256": "567a83b37b9e303f8bda0655b2af7cc6c4346cd77b736f2ee810a452240f907e"
+    },
+    "/candidate/web/app.mjs": {
+      "status": 200,
+      "deliveredSha256": "e2d2566769aca0c7ef0fde5f7dbb87f49a98234fbafbcad34ca8952a329c8d81",
+      "browserBodySha256": "e2d2566769aca0c7ef0fde5f7dbb87f49a98234fbafbcad34ca8952a329c8d81"
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "status": 200,
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/baseline/sdk/index.mjs": {
+      "status": 200,
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/baseline/web/labels.mjs": {
+      "status": 200,
+      "deliveredSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "browserBodySha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67"
+    },
+    "/baseline/web/transport.mjs": {
+      "status": 200,
+      "deliveredSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "browserBodySha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+    },
+    "/baseline/web/pgm.mjs": {
+      "status": 200,
+      "deliveredSha256": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f",
+      "browserBodySha256": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f"
+    },
+    "/baseline/web/preview.mjs": {
+      "status": 200,
+      "deliveredSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "browserBodySha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0"
+    },
+    "/candidate/sdk/worker-client.mjs": {
+      "status": 200,
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/candidate/web/labels.mjs": {
+      "status": 200,
+      "deliveredSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "browserBodySha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67"
+    },
+    "/candidate/sdk/index.mjs": {
+      "status": 200,
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/candidate/web/preview.mjs": {
+      "status": 200,
+      "deliveredSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "browserBodySha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0"
+    },
+    "/candidate/web/transport.mjs": {
+      "status": 200,
+      "deliveredSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "browserBodySha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+    },
+    "/candidate/web/pgm.mjs": {
+      "status": 200,
+      "deliveredSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+      "browserBodySha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106"
+    },
+    "/baseline/sdk/worker.mjs": {
+      "status": 200,
+      "deliveredSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "browserBodySha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "status": 200,
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    },
+    "/candidate/sdk/worker.mjs": {
+      "status": 200,
+      "deliveredSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "browserBodySha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "/candidate/sdk/generated/core.wasm": {
+      "status": 200,
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    },
+    "/baseline/sdk/generated/core.mjs": {
+      "status": 200,
+      "deliveredSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "browserBodySha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93"
+    },
+    "/candidate/sdk/generated/core.mjs": {
+      "status": 200,
+      "deliveredSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "browserBodySha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93"
+    }
+  },
+  "serverDelivered": {
+    "/": {
+      "document ← ": 1
+    },
+    "/baseline/web/": {
+      "iframe ← /": 1
+    },
+    "/candidate/web/": {
+      "iframe ← /": 1
+    },
+    "/baseline/web/style.css": {
+      "style ← /baseline/web/": 1
+    },
+    "/candidate/web/style.css": {
+      "style ← /candidate/web/": 1
+    },
+    "/baseline/web/app.mjs": {
+      "script ← /baseline/web/": 1
+    },
+    "/candidate/web/app.mjs": {
+      "script ← /candidate/web/": 1
+    },
+    "/baseline/sdk/index.mjs": {
+      "script ← /baseline/web/app.mjs": 1,
+      "worker ← /baseline/sdk/worker.mjs": 56
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/labels.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/pgm.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/preview.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/candidate/sdk/index.mjs": {
+      "script ← /candidate/web/app.mjs": 1,
+      "worker ← /candidate/sdk/worker.mjs": 56
+    },
+    "/baseline/web/transport.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/candidate/sdk/worker-client.mjs": {
+      "script ← /candidate/web/app.mjs": 1
+    },
+    "/candidate/web/labels.mjs": {
+      "script ← /candidate/web/app.mjs": 1
+    },
+    "/candidate/web/pgm.mjs": {
+      "script ← /candidate/web/app.mjs": 1
+    },
+    "/candidate/web/preview.mjs": {
+      "script ← /candidate/web/app.mjs": 1
+    },
+    "/candidate/web/transport.mjs": {
+      "script ← /candidate/web/app.mjs": 1
+    },
+    "/baseline/sdk/worker.mjs": {
+      "worker ← /baseline/web/": 56
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "empty ← /baseline/sdk/worker.mjs": 28
+    },
+    "/candidate/sdk/worker.mjs": {
+      "worker ← /candidate/web/": 56
+    },
+    "/candidate/sdk/generated/core.wasm": {
+      "empty ← /candidate/sdk/worker.mjs": 28
+    },
+    "/baseline/sdk/generated/core.mjs": {
+      "script ← /baseline/sdk/index.mjs": 28
+    },
+    "/candidate/sdk/generated/core.mjs": {
+      "script ← /candidate/sdk/index.mjs": 28
+    }
+  },
+  "harness": {
+    "runnerSha256": "3dafe62d3039d56331ddb298667ae81b93b9fa7264b1507a3b189d2814f824b1",
+    "probeSha256": "554dff0c5ff612eb4d7182af879842ff5bdcaed665a47ccefcd7758098c66405"
+  },
+  "finishedUtc": "2026-11-24T04:58:20.344Z",
+  "summary": [
+    {
+      "backend": "wasm-gc",
+      "near": 0,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            3133.600000023842,
+            2980.7000000476837,
+            2743.399999976158,
+            2768.899999976158,
+            2742.2000000476837
+          ],
+          "median": 2768.899999976158,
+          "min": 2742.2000000476837,
+          "max": 3133.600000023842,
+          "mad": 26.699999928474426
+        },
+        "firstDisplayMs": {
+          "samples": [
+            17.600000023841858,
+            13.700000047683716,
+            14,
+            17.199999928474426,
+            14.300000071525574
+          ],
+          "median": 14.300000071525574,
+          "min": 13.700000047683716,
+          "max": 17.600000023841858,
+          "mad": 0.6000000238418579
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            16.399999976158142,
+            12.100000023841858,
+            12.799999952316284,
+            15.699999928474426,
+            13.100000023841858
+          ],
+          "median": 13.100000023841858,
+          "min": 12.100000023841858,
+          "max": 16.399999976158142,
+          "mad": 1
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      },
+      "candidate": {
+        "wallMs": {
+          "samples": [
+            1391.3999999761581,
+            1315,
+            1244.6000000238419,
+            1325.7999999523163,
+            1185.8999999761581
+          ],
+          "median": 1315,
+          "min": 1185.8999999761581,
+          "max": 1391.3999999761581,
+          "mad": 70.39999997615814
+        },
+        "firstDisplayMs": {
+          "samples": [
+            14.199999928474426,
+            19.399999976158142,
+            15.399999976158142,
+            14.299999952316284,
+            14.600000023841858
+          ],
+          "median": 14.600000023841858,
+          "min": 14.199999928474426,
+          "max": 19.399999976158142,
+          "mad": 0.40000009536743164
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            13.699999928474426,
+            17.700000047683716,
+            14.100000023841858,
+            13.199999928474426,
+            13.399999976158142
+          ],
+          "median": 13.699999928474426,
+          "min": 13.199999928474426,
+          "max": 17.700000047683716,
+          "mad": 0.40000009536743164
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0.10000002384185791,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0.10000002384185791,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      },
+      "gate": {
+        "primary": true,
+        "reductionPercent": 52.50821625875536,
+        "pairedRegression": [
+          -55.59739596739942,
+          -55.88284631197493,
+          -54.63293722990967,
+          -52.118169671576,
+          -56.753701409250354
+        ],
+        "stableRegression": false,
+        "wallPass": true,
+        "firstDisplayDeltaMs": 0.2999999523162842,
+        "firstDisplayAllowanceMs": 2,
+        "firstDisplayPass": true
+      }
+    },
+    {
+      "backend": "wasm-gc",
+      "near": 3,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            3164.399999976158,
+            2902.2000000476837,
+            3115.399999976158,
+            2742.5,
+            2875.1999999284744
+          ],
+          "median": 2902.2000000476837,
+          "min": 2742.5,
+          "max": 3164.399999976158,
+          "mad": 159.70000004768372
+        },
+        "firstDisplayMs": {
+          "samples": [
+            15.100000023841858,
+            13.900000095367432,
+            16.600000023841858,
+            17.100000023841858,
+            15.299999952316284
+          ],
+          "median": 15.299999952316284,
+          "min": 13.900000095367432,
+          "max": 17.100000023841858,
+          "mad": 1.3000000715255737
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            14.399999976158142,
+            12.300000071525574,
+            15.299999952316284,
+            15.399999976158142,
+            14.099999904632568
+          ],
+          "median": 14.399999976158142,
+          "min": 12.300000071525574,
+          "max": 15.399999976158142,
+          "mad": 0.8999999761581421
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      },
+      "candidate": {
+        "wallMs": {
+          "samples": [
+            1489.2999999523163,
+            1247.2999999523163,
+            1403,
+            1273.5,
+            1195.5
+          ],
+          "median": 1273.5,
+          "min": 1195.5,
+          "max": 1489.2999999523163,
+          "mad": 78
+        },
+        "firstDisplayMs": {
+          "samples": [
+            17.199999928474426,
+            15,
+            14.799999952316284,
+            13.300000071525574,
+            14.300000071525574
+          ],
+          "median": 14.799999952316284,
+          "min": 13.300000071525574,
+          "max": 17.199999928474426,
+          "mad": 0.49999988079071045
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            15.699999928474426,
+            13.699999928474426,
+            14.100000023841858,
+            12.5,
+            12.900000095367432
+          ],
+          "median": 13.699999928474426,
+          "min": 12.5,
+          "max": 15.699999928474426,
+          "mad": 0.7999998331069946
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0.09999990463256836,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0.09999990463256836,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      },
+      "gate": {
+        "primary": false,
+        "reductionPercent": 56.1194955558171,
+        "pairedRegression": [
+          -52.93578561611878,
+          -57.02225897829843,
+          -54.96565449025046,
+          -53.56426618049226,
+          -58.420283805309545
+        ],
+        "stableRegression": false,
+        "wallPass": true,
+        "firstDisplayDeltaMs": -0.5,
+        "firstDisplayAllowanceMs": 2,
+        "firstDisplayPass": true
+      }
+    },
+    {
+      "backend": "js",
+      "near": 0,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            3009.5,
+            2901.600000023842,
+            2975.2000000476837,
+            2935.9000000953674,
+            2989.5
+          ],
+          "median": 2975.2000000476837,
+          "min": 2901.600000023842,
+          "max": 3009.5,
+          "mad": 34.299999952316284
+        },
+        "firstDisplayMs": {
+          "samples": [
+            19,
+            16.700000047683716,
+            15.700000047683716,
+            16.800000071525574,
+            18.09999990463257
+          ],
+          "median": 16.800000071525574,
+          "min": 15.700000047683716,
+          "max": 19,
+          "mad": 1.100000023841858
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            17.399999976158142,
+            15.5,
+            14.400000095367432,
+            15.5,
+            16.899999976158142
+          ],
+          "median": 15.5,
+          "min": 14.400000095367432,
+          "max": 17.399999976158142,
+          "mad": 1.0999999046325684
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      },
+      "candidate": {
+        "wallMs": {
+          "samples": [
+            1310.2999999523163,
+            1196.8999999761581,
+            1379.8999999761581,
+            1329.8999999761581,
+            1314.1000000238419
+          ],
+          "median": 1314.1000000238419,
+          "min": 1196.8999999761581,
+          "max": 1379.8999999761581,
+          "mad": 15.799999952316284
+        },
+        "firstDisplayMs": {
+          "samples": [
+            16.799999952316284,
+            16.5,
+            19.59999990463257,
+            19.799999952316284,
+            15.800000071525574
+          ],
+          "median": 16.799999952316284,
+          "min": 15.800000071525574,
+          "max": 19.799999952316284,
+          "mad": 0.9999998807907104
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            15.399999976158142,
+            15.299999952316284,
+            17.899999976158142,
+            18.199999928474426,
+            14.5
+          ],
+          "median": 15.399999976158142,
+          "min": 14.5,
+          "max": 18.199999928474426,
+          "mad": 0.8999999761581421
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0.10000002384185791,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0.10000002384185791,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      },
+      "gate": {
+        "primary": false,
+        "reductionPercent": 55.83154073666373,
+        "pairedRegression": [
+          -56.46120618201309,
+          -58.75034463860202,
+          -53.61992471248848,
+          -54.70213563360608,
+          -56.04281652370491
+        ],
+        "stableRegression": false,
+        "wallPass": true,
+        "firstDisplayDeltaMs": -1.1920928955078125e-7,
+        "firstDisplayAllowanceMs": 2,
+        "firstDisplayPass": true
+      }
+    },
+    {
+      "backend": "js",
+      "near": 3,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            4404.099999904633,
+            4990.100000023842,
+            4117,
+            3937,
+            3639.600000023842
+          ],
+          "median": 4117,
+          "min": 3639.600000023842,
+          "max": 4990.100000023842,
+          "mad": 287.09999990463257
+        },
+        "firstDisplayMs": {
+          "samples": [
+            41,
+            20.200000047683716,
+            27.700000047683716,
+            20.899999976158142,
+            19.299999952316284
+          ],
+          "median": 20.899999976158142,
+          "min": 19.299999952316284,
+          "max": 41,
+          "mad": 1.600000023841858
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            38.09999990463257,
+            18.5,
+            25.600000023841858,
+            19.200000047683716,
+            17.600000023841858
+          ],
+          "median": 19.200000047683716,
+          "min": 17.600000023841858,
+          "max": 38.09999990463257,
+          "mad": 1.600000023841858
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      },
+      "candidate": {
+        "wallMs": {
+          "samples": [
+            1671.3000000715256,
+            1873.8999999761581,
+            1725.7000000476837,
+            1908.4000000953674,
+            1495.1999999284744
+          ],
+          "median": 1725.7000000476837,
+          "min": 1495.1999999284744,
+          "max": 1908.4000000953674,
+          "mad": 148.19999992847443
+        },
+        "firstDisplayMs": {
+          "samples": [
+            32.800000071525574,
+            21.200000047683716,
+            20.200000047683716,
+            20.600000023841858,
+            20.09999990463257
+          ],
+          "median": 20.600000023841858,
+          "min": 20.09999990463257,
+          "max": 32.800000071525574,
+          "mad": 0.5000001192092896
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            30.600000023841858,
+            19.600000023841858,
+            18.5,
+            19.700000047683716,
+            18.5
+          ],
+          "median": 19.600000023841858,
+          "min": 18.5,
+          "max": 30.600000023841858,
+          "mad": 1.100000023841858
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      },
+      "gate": {
+        "primary": false,
+        "reductionPercent": 58.08355598621122,
+        "pairedRegression": [
+          -62.05127040467482,
+          -62.44764634040991,
+          -58.08355598621122,
+          -51.526543050663776,
+          -58.91856248162766
+        ],
+        "stableRegression": false,
+        "wallPass": true,
+        "firstDisplayDeltaMs": -0.2999999523162842,
+        "firstDisplayAllowanceMs": 2.089999997615814,
+        "firstDisplayPass": true
+      }
+    }
+  ],
+  "gate": {
+    "timingPass": true,
+    "notes": "Separate correctness, targeted cancellation and memory evidence is required before retaining a product change."
+  },
+  "recordedUtc": "2026-11-24T04:58:20.344Z"
+}

@@ -2,7 +2,9 @@
 
 ## 当前本地候选版
 
-2026-11-24 完成 RC2 复验。洁净受测源码为 `a146998f31675769fb6c3bc9055ef7798f254b1d`。本轮保留两项宿主正确性修复、证据工具和通过门槛的解码 Worker 调度改动。 [RC2 实测证据](reports/rc2/README.md) · [Antigravity 固定版本交接](docs/RC2_HANDOFF.md)
+2026-11-24（新加坡时间）完成 RC3。固定受测源码为 `2feb00b8ef657b7259ba70bccf1ff0ceaf08765b`，本地交接分支 `antigravity/rc3-20261124`。真实工作台保留 64 KiB 参考行窗口。原 Native 极小块慢消费在 20 秒预算内仍为历史超时，同一二进制的正常和受控暂停对照已通过。保持本地，未对外发布。 [RC3 实测证据](reports/rc3/README.md) · [Antigravity 固定版本交接](docs/RC3_HANDOFF.md)
+
+RC2 洁净受测源码为 `a146998f31675769fb6c3bc9055ef7798f254b1d`。RC2 的两项宿主正确性修复与通过门槛的解码 Worker 调度改动继续适用。 [RC2 实测证据](reports/rc2/README.md) · [RC2 交接](docs/RC2_HANDOFF.md)
 
 ## rc.1 历史记录
 

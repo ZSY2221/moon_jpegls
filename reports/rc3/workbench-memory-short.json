@@ -1,0 +1,439 @@
+{
+  "startedUtc": "2026-11-24T05:02:49.836Z",
+  "schema": 1,
+  "diagnostic": true,
+  "options": [
+    "--baseline",
+    ".evidence/rc3/workbench-candidate",
+    "--baseline-source",
+    "65422925136b9035e5762ab314631e5c6b667506",
+    "--output",
+    ".evidence/rc3/workbench-memory-short.json",
+    "--profile",
+    "--height",
+    "128"
+  ],
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "win32",
+    "release": "10.0.26200",
+    "cpu": "AMD Ryzen 9 8945HX with Radeon Graphics        ",
+    "browser": "158.0.8127.37"
+  },
+  "settings": {
+    "warmup": 0,
+    "repeats": 1,
+    "chunk": 4096,
+    "backends": [
+      "wasm-gc"
+    ],
+    "nears": [
+      0
+    ],
+    "timeout": 120000
+  },
+  "fixture": {
+    "file": "resource-512x128-16.pgm",
+    "bytes": 131089,
+    "sha256": "d97a2da591bed24f938e1c8c7ad356d246f4702e8f9376a0a29cec4088c38105",
+    "width": 512,
+    "height": 128,
+    "bits": 16,
+    "rasterSha256": "d28c1b13c1f84a23932143105e30ceb382b0ff70dcedec8cd6589ae92e12e5e8",
+    "formula": "(x*173+y*47+((x^y)&31)*3)&65535"
+  },
+  "assets": {
+    "baseline": {
+      "web/index.html": {
+        "originalSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "sha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "bytes": 4968,
+        "instrumented": false
+      },
+      "web/style.css": {
+        "originalSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "sha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "bytes": 4552,
+        "instrumented": false
+      },
+      "web/app.mjs": {
+        "originalSha256": "abf4da7aba31d150df56d064c6e802465d332b9acac36b65823cd6838d3a1fae",
+        "sha256": "d86b2323bf131f7601f86866cc0cb58ed00931d31aa79ebde5d28fdcd70d1c1b",
+        "bytes": 10272,
+        "instrumented": true
+      },
+      "web/labels.mjs": {
+        "originalSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "sha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "bytes": 3490,
+        "instrumented": false
+      },
+      "web/pgm.mjs": {
+        "originalSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+        "sha256": "b7f4b10e4a6d875c11f2ec099d28888b915f37ee8bf37ad0af74e103968a0434",
+        "bytes": 7180,
+        "instrumented": true
+      },
+      "web/preview.mjs": {
+        "originalSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "sha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "bytes": 3512,
+        "instrumented": false
+      },
+      "web/transport.mjs": {
+        "originalSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "bytes": 3288,
+        "instrumented": false
+      },
+      "sdk/index.mjs": {
+        "originalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "bytes": 11627,
+        "instrumented": false
+      },
+      "sdk/worker-client.mjs": {
+        "originalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "bytes": 3055,
+        "instrumented": false
+      },
+      "sdk/worker.mjs": {
+        "originalSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "bytes": 3087,
+        "instrumented": false
+      },
+      "sdk/generated/core.mjs": {
+        "originalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "bytes": 100050,
+        "instrumented": false
+      },
+      "sdk/generated/core.wasm": {
+        "originalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "bytes": 17158,
+        "instrumented": false
+      }
+    }
+  },
+  "sourceCommit": {
+    "baseline": "65422925136b9035e5762ab314631e5c6b667506"
+  },
+  "timing": "Browser performance.now from capture of the real Run click until task finalization. The original file, app, workers, preview and sink are active. Fixture creation and file selection are excluded. First display is the return from the first reconstruction Canvas putImageData, not the painted next frame. Profile enables operation counters; ordinary trials use job/sink clocks, first-row/canvas clock and terminal statistics only.",
+  "profileLimit": "Reference request durations are serial pre-row-ACK spans for this task. They include materialization and scheduling, and may overlap encoder and pipe work. The summed spans divided by wall time are a screening metric, not predicted savings. Cache/row/queue sizes are logical owned payloads, not renderer RSS.",
+  "trials": [
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 1,
+      "order": 1,
+      "jobId": 1,
+      "timeOriginMs": 1795496570345.3,
+      "clickAtMs": 435,
+      "startedAtMs": 435.2999999523163,
+      "finishedAtMs": 634.6000000238419,
+      "wallMs": 199.60000002384186,
+      "firstRowArrivalMs": 77.89999997615814,
+      "firstDisplayMs": 86.79999995231628,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 59.5,
+          "protocol": {
+            "requests": 259,
+            "replies": 259,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 199.20000004768372,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 39655,
+            "outputProduced": 65536,
+            "rows": 128,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4,
+            "elapsedMs": 125.5
+          }
+        },
+        {
+          "createdMs": 59.700000047683716,
+          "protocol": {
+            "requests": 275,
+            "replies": 275,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.6999999284744263,
+          "doneMs": 198.79999995231628,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 65536,
+            "outputProduced": 39655,
+            "rows": 128,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.600000023841858,
+            "elapsedMs": 125.10000002384186
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 58,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0,
+          "peakRawAndMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 17,
+          "requestMs": 11.100000262260437,
+          "blobReads": 16,
+          "blobBytes": 131072,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 10.000000238418579,
+          "materializeCalls": 16,
+          "materializeMs": 0.2999999523162842,
+          "peakMaterializedBytes": 8192,
+          "peakRawAndMaterializedBytes": 16384
+        },
+        "reference": {
+          "requests": 128,
+          "requestMs": 4.999999523162842,
+          "blobReads": 3,
+          "blobBytes": 131072,
+          "peakBlobBytes": 65536,
+          "arrayBufferMs": 3.2999998331069946,
+          "materializeCalls": 128,
+          "materializeMs": 1,
+          "peakMaterializedBytes": 1024,
+          "peakRawAndMaterializedBytes": 66560
+        },
+        "comparison": {
+          "calls": 128,
+          "ms": 0.6999999284744263
+        },
+        "preview": {
+          "calls": 128,
+          "ms": 4.40000057220459
+        },
+        "sinkWrite": {
+          "calls": 130,
+          "ms": 0.10000002384185791
+        },
+        "pipeWrite": {
+          "calls": 130,
+          "ms": 58.29999876022339
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 65536,
+        "referenceWindowLoads": 2,
+        "referencePreAckShare": 0.025050097808444895,
+        "referenceIoAndMaterializationMs": 4.299999833106995,
+        "referenceIoAndMaterializationShare": 0.021543085333634106,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 128 · 16-bit · NEAR 0",
+      "encoded": "39,655 B",
+      "maxError": "0",
+      "appLatency": "198.9 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 128,
+      "downloadVisible": false
+    }
+  ],
+  "failures": [],
+  "actualBrowserResponses": {
+    "/": {
+      "status": 200,
+      "deliveredSha256": "8369915b3cd9d1afdb13b62cca67c3867bd56b7eefb8c541ee3e38f83da8fade",
+      "browserBodySha256": "8369915b3cd9d1afdb13b62cca67c3867bd56b7eefb8c541ee3e38f83da8fade"
+    },
+    "/baseline/web/": {
+      "status": 200,
+      "deliveredSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "browserBodySha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2"
+    },
+    "/baseline/web/style.css": {
+      "status": 200,
+      "deliveredSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "browserBodySha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b"
+    },
+    "/baseline/web/app.mjs": {
+      "status": 200,
+      "deliveredSha256": "d86b2323bf131f7601f86866cc0cb58ed00931d31aa79ebde5d28fdcd70d1c1b",
+      "browserBodySha256": "d86b2323bf131f7601f86866cc0cb58ed00931d31aa79ebde5d28fdcd70d1c1b"
+    },
+    "/baseline/sdk/index.mjs": {
+      "status": 200,
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "status": 200,
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/baseline/web/labels.mjs": {
+      "status": 200,
+      "deliveredSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "browserBodySha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67"
+    },
+    "/baseline/web/preview.mjs": {
+      "status": 200,
+      "deliveredSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "browserBodySha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0"
+    },
+    "/baseline/web/pgm.mjs": {
+      "status": 200,
+      "deliveredSha256": "b7f4b10e4a6d875c11f2ec099d28888b915f37ee8bf37ad0af74e103968a0434",
+      "browserBodySha256": "b7f4b10e4a6d875c11f2ec099d28888b915f37ee8bf37ad0af74e103968a0434"
+    },
+    "/baseline/web/transport.mjs": {
+      "status": 200,
+      "deliveredSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "browserBodySha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+    },
+    "/baseline/sdk/worker.mjs": {
+      "status": 200,
+      "deliveredSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "browserBodySha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "status": 200,
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    }
+  },
+  "serverDelivered": {
+    "/": {
+      "document ← ": 1
+    },
+    "/baseline/web/": {
+      "iframe ← /": 1
+    },
+    "/baseline/web/style.css": {
+      "style ← /baseline/web/": 1
+    },
+    "/baseline/web/app.mjs": {
+      "script ← /baseline/web/": 1
+    },
+    "/baseline/sdk/index.mjs": {
+      "script ← /baseline/web/app.mjs": 1,
+      "worker ← /baseline/sdk/worker.mjs": 2
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/labels.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/pgm.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/preview.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/transport.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/sdk/worker.mjs": {
+      "worker ← /baseline/web/": 2
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "empty ← /baseline/sdk/worker.mjs": 2
+    }
+  },
+  "harness": {
+    "runnerSha256": "d9a510cb24a75f22fe1aabbf9e7c3316229f75cd3bb9ad3e5d34e089d10d5d15",
+    "probeSha256": "554dff0c5ff612eb4d7182af879842ff5bdcaed665a47ccefcd7758098c66405"
+  },
+  "finishedUtc": "2026-11-24T05:02:50.984Z",
+  "summary": [
+    {
+      "backend": "wasm-gc",
+      "near": 0,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            199.60000002384186
+          ],
+          "median": 199.60000002384186,
+          "min": 199.60000002384186,
+          "max": 199.60000002384186,
+          "mad": 0
+        },
+        "firstDisplayMs": {
+          "samples": [
+            86.79999995231628
+          ],
+          "median": 86.79999995231628,
+          "min": 86.79999995231628,
+          "max": 86.79999995231628,
+          "mad": 0
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            77.89999997615814
+          ],
+          "median": 77.89999997615814,
+          "min": 77.89999997615814,
+          "max": 77.89999997615814,
+          "mad": 0
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      }
+    }
+  ],
+  "gate": null,
+  "recordedUtc": "2026-11-24T05:02:50.984Z"
+}
