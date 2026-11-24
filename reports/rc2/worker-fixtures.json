@@ -1,0 +1,54 @@
+{
+  "sampleFormula": "(x*173 + y*47 + ((x^y)&31)*3) & 65535",
+  "sampleRepresentation": "row-major uint16 little endian",
+  "oracle": {
+    "wheel": "2026.11.11",
+    "jpegls": "charls 2.4.5"
+  },
+  "fixtures": [
+    {
+      "width": 512,
+      "height": 4096,
+      "bits": 16,
+      "near": 0,
+      "sourceSamples": {
+        "path": "resource-512x4096.raw",
+        "bytes": 4194304,
+        "sha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89"
+      },
+      "encoded": {
+        "path": "resource-512x4096.jls",
+        "bytes": 1249961,
+        "sha256": "3b13b43e944157a11a2fe3561011ee6780a207eb654e890ffa8b50d8b855ecab"
+      },
+      "reconstructedSamples": {
+        "path": "resource-512x4096-near0.reconstructed.raw",
+        "bytes": 4194304,
+        "sha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89"
+      },
+      "maxError": 0
+    },
+    {
+      "width": 512,
+      "height": 4096,
+      "bits": 16,
+      "near": 3,
+      "sourceSamples": {
+        "path": "resource-512x4096.raw",
+        "bytes": 4194304,
+        "sha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89"
+      },
+      "encoded": {
+        "path": "resource-512x4096-near3.jls",
+        "bytes": 594831,
+        "sha256": "33944793d7e3acb372917283471954f5210a4d0a95d1254ef1303046175ce5b9"
+      },
+      "reconstructedSamples": {
+        "path": "resource-512x4096-near3.reconstructed.raw",
+        "bytes": 4194304,
+        "sha256": "527faa32cb1e7218413c37e63abe87ee9a9281c4aca28a3b0414e11df9b53766"
+      },
+      "maxError": 3
+    }
+  ]
+}

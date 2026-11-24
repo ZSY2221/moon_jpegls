@@ -1,5 +1,7 @@
 # Antigravity 交接
 
+接续当前候选版请使用 [RC2 固定版本交接](RC2_HANDOFF.md)。以下为原 rc.1 的交接记录。
+
 工程唯一目录 `D:\Program Files\GPT_project\moon_jpegls`，分支 `main`，本地首版候选标签 `v0.1.0-rc.1`。在 PowerShell 用 `git rev-parse 'v0.1.0-rc.1^{commit}'` 取得完整 commit，以标签检出可复现的交接版本。后续在独立分支修改，先记录 `git status --short` 以保留用户已有改动。
 
 ## 已运行的命令

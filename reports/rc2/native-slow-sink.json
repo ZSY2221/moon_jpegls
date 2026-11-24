@@ -1,0 +1,19 @@
+{
+  "width": 512,
+  "height": 512,
+  "inputChunkBytes": 4096,
+  "heldAtLeastMsAfterFullPipe": 100,
+  "pipeCapacityBytes": 65536,
+  "queuedBytesWhileHeld": 65536,
+  "runningWhileHeld": true,
+  "finalBytes": 524288,
+  "reconstructionSha256": "5ec42307ba332245f7a25dcea90c3026ccd46dc3e7bca65a4c87bed607a5f395",
+  "nativeBinarySha256": "267837ca5c3015adf1637a322bf27a8ab96699ff9c9e2ee9b3e1166539a7ed6c",
+  "extraLargeTrial": {
+    "width": 512,
+    "height": 4096,
+    "inputChunkBytes": 7,
+    "drainTimeoutSeconds": 20,
+    "outcome": "Timed out after the pipe hold; no correctness conclusion for this extra trial."
+  }
+}

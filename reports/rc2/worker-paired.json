@@ -1,0 +1,7476 @@
+{
+  "schemaVersion": 1,
+  "commandArgs": [
+    "--baseline",
+    ".tools/rc2-baseline-source/web/dist",
+    "--candidate",
+    "web/dist",
+    "--fixtures",
+    ".evidence/rc2/worker-fixtures",
+    "--output",
+    ".evidence/rc2/worker-paired.json",
+    "--warmup",
+    "2",
+    "--repeats",
+    "5",
+    "--backends",
+    "wasm-gc,js",
+    "--nears",
+    "0,3",
+    "--chunks",
+    "4096,1",
+    "--timeout-ms",
+    "900000"
+  ],
+  "environment": {
+    "browser": "158.0.8127.37",
+    "node": "v24.20.0",
+    "platform": "win32",
+    "release": "10.0.26200",
+    "cpu": "AMD Ryzen 9 8945HX with Radeon Graphics        ",
+    "logicalCpus": 32
+  },
+  "profile": false,
+  "warmup": 2,
+  "repeats": 5,
+  "timeoutMs": 900000,
+  "backends": [
+    "wasm-gc",
+    "js"
+  ],
+  "nears": [
+    0,
+    3
+  ],
+  "chunks": [
+    4096,
+    1
+  ],
+  "fixtures": {
+    "manifestSha256": "09a289b4c214b108cab9420df59e009bacf587d7825b28600457a33d95ea1c19",
+    "oracle": {
+      "wheel": "2026.11.11",
+      "jpegls": "charls 2.4.5"
+    },
+    "records": [
+      {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0,
+        "sourceSamples": {
+          "path": "resource-512x4096.raw",
+          "bytes": 4194304,
+          "sha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89"
+        },
+        "encoded": {
+          "path": "resource-512x4096.jls",
+          "bytes": 1249961,
+          "sha256": "3b13b43e944157a11a2fe3561011ee6780a207eb654e890ffa8b50d8b855ecab"
+        },
+        "reconstructedSamples": {
+          "path": "resource-512x4096-near0.reconstructed.raw",
+          "bytes": 4194304,
+          "sha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89"
+        },
+        "maxError": 0
+      },
+      {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3,
+        "sourceSamples": {
+          "path": "resource-512x4096.raw",
+          "bytes": 4194304,
+          "sha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89"
+        },
+        "encoded": {
+          "path": "resource-512x4096-near3.jls",
+          "bytes": 594831,
+          "sha256": "33944793d7e3acb372917283471954f5210a4d0a95d1254ef1303046175ce5b9"
+        },
+        "reconstructedSamples": {
+          "path": "resource-512x4096-near3.reconstructed.raw",
+          "bytes": 4194304,
+          "sha256": "527faa32cb1e7218413c37e63abe87ee9a9281c4aca28a3b0414e11df9b53766"
+        },
+        "maxError": 3
+      }
+    ]
+  },
+  "assetRecords": {
+    "baseline": {
+      "worker.mjs": {
+        "bytes": 2859,
+        "sha256": "dd3efcc5fbc9168a9d5a01733b5ce2b1c9b4bd0f13ba5af2f7a7a0f60ba6406f",
+        "type": "text/javascript",
+        "originalSha256": "dd3efcc5fbc9168a9d5a01733b5ce2b1c9b4bd0f13ba5af2f7a7a0f60ba6406f",
+        "instrumented": false
+      },
+      "worker-client.mjs": {
+        "bytes": 3055,
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "type": "text/javascript",
+        "originalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "instrumented": false
+      },
+      "index.mjs": {
+        "bytes": 11627,
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "type": "text/javascript",
+        "originalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "instrumented": false
+      },
+      "generated/core.mjs": {
+        "bytes": 100050,
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "type": "text/javascript",
+        "originalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "instrumented": false
+      },
+      "generated/core.wasm": {
+        "bytes": 17158,
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "type": "application/wasm",
+        "originalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "instrumented": false
+      }
+    },
+    "candidate": {
+      "worker.mjs": {
+        "bytes": 3087,
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "type": "text/javascript",
+        "originalSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "instrumented": false
+      },
+      "worker-client.mjs": {
+        "bytes": 3055,
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "type": "text/javascript",
+        "originalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "instrumented": false
+      },
+      "index.mjs": {
+        "bytes": 11627,
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "type": "text/javascript",
+        "originalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "instrumented": false
+      },
+      "generated/core.mjs": {
+        "bytes": 100050,
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "type": "text/javascript",
+        "originalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "instrumented": false
+      },
+      "generated/core.wasm": {
+        "bytes": 17158,
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "type": "application/wasm",
+        "originalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "instrumented": false
+      }
+    }
+  },
+  "harness": {
+    "driver": "fd0e1977e48b0bd2ab5f927f16ac302eab2ce1dae30c1392782a506a6467e5b5",
+    "runner": "aa6f4e3228b0b6c6b1424bac0db3a1c809b118df8cd4229c94802aa6d7f3dff3"
+  },
+  "timing": "Wall time from just before Worker creation through done after final acknowledgement. New Worker per sample. Fixture buffers and main module setup are outside timing. Timed samples include bounded source copying, MessagePort transport, output comparison and lightweight message counters. Profile adds per-step/callback timers. Worker waits include host source/sink and transport time and may overlap other recorded timing.",
+  "signature": "966ea72e23186b3d22c9b7c523bc4bbc36b088028cabe536e88bcaded18df6c9",
+  "savedAt": "2026-11-24T03:03:19.739Z",
+  "trials": [
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 570.2000000476837,
+      "firstRowWallMs": 49,
+      "firstRowBytes": 573,
+      "loadMs": 25.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 2.700000047683716,
+        "elapsedMs": 524.1000000238419
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 343.7999999523163,
+      "firstRowWallMs": 9.299999952316284,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 336.10000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 346.39999997615814,
+      "firstRowWallMs": 9.200000047683716,
+      "firstRowBytes": 573,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.5,
+        "elapsedMs": 338.7000000476837
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 515.3999999761581,
+      "firstRowWallMs": 9.700000047683716,
+      "firstRowBytes": 573,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 507.3000000715256
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 520.5,
+      "firstRowWallMs": 9.5,
+      "firstRowBytes": 573,
+      "loadMs": 1.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.5,
+        "elapsedMs": 512.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 416.2999999523163,
+      "firstRowWallMs": 10.100000023841858,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 407.7999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 396.10000002384186,
+      "firstRowWallMs": 10.300000071525574,
+      "firstRowBytes": 573,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 387.39999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 452,
+      "firstRowWallMs": 9.399999976158142,
+      "firstRowBytes": 573,
+      "loadMs": 1.600000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.5,
+        "elapsedMs": 444.09999990463257
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 470.1999999284744,
+      "firstRowWallMs": 10.299999952316284,
+      "firstRowBytes": 573,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.5,
+        "elapsedMs": 461.39999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 337.1999999284744,
+      "firstRowWallMs": 10.199999928474426,
+      "firstRowBytes": 573,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.5,
+        "elapsedMs": 328.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 330.7000000476837,
+      "firstRowWallMs": 8.700000047683716,
+      "firstRowBytes": 573,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 323.60000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 438.1999999284744,
+      "firstRowWallMs": 9.5,
+      "firstRowBytes": 573,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.5,
+        "elapsedMs": 430.2999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 450,
+      "firstRowWallMs": 10.100000023841858,
+      "firstRowBytes": 573,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 441.39999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 352,
+      "firstRowWallMs": 10.5,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 1.7999999523162842,
+        "elapsedMs": 343.2999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 427.5,
+      "firstRowWallMs": 12.100000023841858,
+      "firstRowBytes": 573,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3.5,
+        "elapsedMs": 418.7999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 359.89999997615814,
+      "firstRowWallMs": 12.100000023841858,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3.5,
+        "elapsedMs": 351.2999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 338.7000000476837,
+      "firstRowWallMs": 10.5,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 2.899999976158142,
+        "elapsedMs": 331.10000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 450.39999997615814,
+      "firstRowWallMs": 10.599999904632568,
+      "firstRowBytes": 573,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3,
+        "elapsedMs": 442.7000000476837
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 543.7000000476837,
+      "firstRowWallMs": 13,
+      "firstRowBytes": 573,
+      "loadMs": 2.600000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3.1999999284744263,
+        "elapsedMs": 534
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 373.39999997615814,
+      "firstRowWallMs": 11,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3,
+        "elapsedMs": 365.39999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 369.3000000715256,
+      "firstRowWallMs": 11.700000047683716,
+      "firstRowBytes": 573,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3.299999952316284,
+        "elapsedMs": 361.10000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 490.5,
+      "firstRowWallMs": 11.200000047683716,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3,
+        "elapsedMs": 482.40000009536743
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 508.39999997615814,
+      "firstRowWallMs": 12.300000071525574,
+      "firstRowBytes": 573,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3.200000047683716,
+        "elapsedMs": 499.3000000715256
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 400,
+      "firstRowWallMs": 11.5,
+      "firstRowBytes": 573,
+      "loadMs": 2.200000047683716,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3.100000023841858,
+        "elapsedMs": 391.60000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 388.5,
+      "firstRowWallMs": 11.399999976158142,
+      "firstRowBytes": 573,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3.1999999284744263,
+        "elapsedMs": 380.2999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 430.39999997615814,
+      "firstRowWallMs": 10.5,
+      "firstRowBytes": 573,
+      "loadMs": 1.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 2.899999976158142,
+        "elapsedMs": 422.7999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 503,
+      "firstRowWallMs": 11.300000071525574,
+      "firstRowBytes": 573,
+      "loadMs": 2.600000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3,
+        "elapsedMs": 494.6999999284744
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 412.3000000715256,
+      "firstRowWallMs": 13.200000047683716,
+      "firstRowBytes": 573,
+      "loadMs": 2.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 3.600000023841858,
+        "elapsedMs": 402.60000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 307,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 307,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 307,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 579.6999999284744,
+      "firstRowWallMs": 53.299999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.7999999523162842,
+        "elapsedMs": 528.1999999284744
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 353.7000000476837,
+      "firstRowWallMs": 9.100000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 346.3000000715256
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 333.89999997615814,
+      "firstRowWallMs": 9.799999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.5,
+        "elapsedMs": 325.7999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 485.39999997615814,
+      "firstRowWallMs": 10.799999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.6999999284744263,
+        "elapsedMs": 476.1999999284744
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 457.7999999523163,
+      "firstRowWallMs": 9,
+      "firstRowBytes": 385,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 450.40000009536743
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 363.2000000476837,
+      "firstRowWallMs": 9.700000047683716,
+      "firstRowBytes": 385,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 355
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 368.5,
+      "firstRowWallMs": 9.699999928474426,
+      "firstRowBytes": 385,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.5,
+        "elapsedMs": 360.2000000476837
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 495.39999997615814,
+      "firstRowWallMs": 9.299999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 487.7000000476837
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 479.60000002384186,
+      "firstRowWallMs": 8.799999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.5999999046325684,
+        "elapsedMs": 472.39999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 345.60000002384186,
+      "firstRowWallMs": 10,
+      "firstRowBytes": 385,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.5,
+        "elapsedMs": 337.2000000476837
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 357.7000000476837,
+      "firstRowWallMs": 9.899999976158142,
+      "firstRowBytes": 385,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 349.39999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 512.7999999523163,
+      "firstRowWallMs": 9.599999904632568,
+      "firstRowBytes": 385,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.5,
+        "elapsedMs": 504.89999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 517.7000000476837,
+      "firstRowWallMs": 9.700000047683716,
+      "firstRowBytes": 385,
+      "loadMs": 1.600000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.600000023841858,
+        "elapsedMs": 509.60000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 350,
+      "firstRowWallMs": 9.600000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 1.5,
+        "elapsedMs": 341.89999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 466.60000002384186,
+      "firstRowWallMs": 12.699999928474426,
+      "firstRowBytes": 385,
+      "loadMs": 2.1999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.3000000715255737,
+        "elapsedMs": 457.10000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 364.2000000476837,
+      "firstRowWallMs": 11.300000071525574,
+      "firstRowBytes": 385,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.100000023841858,
+        "elapsedMs": 356.10000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 368.39999997615814,
+      "firstRowWallMs": 11.799999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.4000000953674316,
+        "elapsedMs": 360
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 472.1999999284744,
+      "firstRowWallMs": 12.099999904632568,
+      "firstRowBytes": 385,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.3000000715255737,
+        "elapsedMs": 463.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 459.7999999523163,
+      "firstRowWallMs": 12.5,
+      "firstRowBytes": 385,
+      "loadMs": 2.200000047683716,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.399999976158142,
+        "elapsedMs": 450.7999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 352.7000000476837,
+      "firstRowWallMs": 11.799999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.1999999284744263,
+        "elapsedMs": 343.89999997615814
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 336.59999990463257,
+      "firstRowWallMs": 11.299999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.299999952316284,
+        "elapsedMs": 328.60000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 530,
+      "firstRowWallMs": 11.200000047683716,
+      "firstRowBytes": 385,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.100000023841858,
+        "elapsedMs": 521.8999999761581
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 501.6999999284744,
+      "firstRowWallMs": 10.899999976158142,
+      "firstRowBytes": 385,
+      "loadMs": 1.9000000953674316,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.100000023841858,
+        "elapsedMs": 493.90000009536743
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 366.89999997615814,
+      "firstRowWallMs": 11.600000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3,
+        "elapsedMs": 358.2999999523163
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 371.2999999523163,
+      "firstRowWallMs": 11.299999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 2.9000000953674316,
+        "elapsedMs": 362.90000009536743
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 514.7000000476837,
+      "firstRowWallMs": 11.399999976158142,
+      "firstRowBytes": 385,
+      "loadMs": 2.200000047683716,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3,
+        "elapsedMs": 506.2000000476837
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 506.90000009536743,
+      "firstRowWallMs": 11.400000095367432,
+      "firstRowBytes": 385,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3,
+        "elapsedMs": 498.60000002384186
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 369.2999999523163,
+      "firstRowWallMs": 11.799999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 8192,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 4096,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 3.1999999284744263,
+        "elapsedMs": 360.6999999284744
+      },
+      "messages": {
+        "received": {
+          "needInput": 147,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 147,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 147,
+        "eofReads": 1,
+        "peakReadBytes": 4096,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 35197.200000047684,
+      "firstRowWallMs": 32.89999997615814,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 24.59999990463257,
+        "elapsedMs": 35188.799999952316
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 38208.299999952316,
+      "firstRowWallMs": 27.399999976158142,
+      "firstRowBytes": 573,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 17.399999976158142,
+        "elapsedMs": 38198.200000047684
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 36795.200000047684,
+      "firstRowWallMs": 30.100000023841858,
+      "firstRowBytes": 573,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 18.699999928474426,
+        "elapsedMs": 36783.89999997616
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 46658.300000071526,
+      "firstRowWallMs": 35.5,
+      "firstRowBytes": 573,
+      "loadMs": 2.3000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 20.40000009536743,
+        "elapsedMs": 46643.300000071526
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 35915.5,
+      "firstRowWallMs": 38.800000071525574,
+      "firstRowBytes": 573,
+      "loadMs": 1.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 25.700000047683716,
+        "elapsedMs": 35902.300000071526
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 34490.200000047684,
+      "firstRowWallMs": 36.800000071525574,
+      "firstRowBytes": 573,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 26.700000047683716,
+        "elapsedMs": 34480.10000002384
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 42128.200000047684,
+      "firstRowWallMs": 35,
+      "firstRowBytes": 573,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 24.40000009536743,
+        "elapsedMs": 42117.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 33039.39999997616,
+      "firstRowWallMs": 34.699999928474426,
+      "firstRowBytes": 573,
+      "loadMs": 2,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 23,
+        "elapsedMs": 33027.699999928474
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 39813,
+      "firstRowWallMs": 25.59999990463257,
+      "firstRowBytes": 573,
+      "loadMs": 1.600000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 16.600000023841858,
+        "elapsedMs": 39803.89999997616
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 33342.09999990463,
+      "firstRowWallMs": 34.299999952316284,
+      "firstRowBytes": 573,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 23.600000023841858,
+        "elapsedMs": 33331.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 37704.5,
+      "firstRowWallMs": 30.200000047683716,
+      "firstRowBytes": 573,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 19.799999952316284,
+        "elapsedMs": 37694.09999990463
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 23,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 23,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 33859.800000071526,
+      "firstRowWallMs": 31.899999976158142,
+      "firstRowBytes": 573,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 16.90000009536743,
+        "elapsedMs": 33844.90000009537
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 37736.10000002384,
+      "firstRowWallMs": 27.399999976158142,
+      "firstRowBytes": 573,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 17.699999928474426,
+        "elapsedMs": 37726.299999952316
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 34477.10000002384,
+      "firstRowWallMs": 36.5,
+      "firstRowBytes": 573,
+      "loadMs": 2.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 22.299999952316284,
+        "elapsedMs": 34462.89999997616
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 50075,
+      "firstRowWallMs": 55.799999952316284,
+      "firstRowBytes": 573,
+      "loadMs": 5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 36.700000047683716,
+        "elapsedMs": 50055.799999952316
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 32148.600000023842,
+      "firstRowWallMs": 35.799999952316284,
+      "firstRowBytes": 573,
+      "loadMs": 2.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 22.800000071525574,
+        "elapsedMs": 32135.600000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 30354.399999976158,
+      "firstRowWallMs": 31,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 20.699999928474426,
+        "elapsedMs": 30344.099999904633
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 30421,
+      "firstRowWallMs": 30.100000023841858,
+      "firstRowBytes": 573,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 20.100000023841858,
+        "elapsedMs": 30411
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 29772.399999976158,
+      "firstRowWallMs": 38.200000047683716,
+      "firstRowBytes": 573,
+      "loadMs": 1.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 18.399999976158142,
+        "elapsedMs": 29752.600000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 29857.599999904633,
+      "firstRowWallMs": 29.09999990463257,
+      "firstRowBytes": 573,
+      "loadMs": 1.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 19.09999990463257,
+        "elapsedMs": 29847.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 29309.200000047684,
+      "firstRowWallMs": 30.40000009536743,
+      "firstRowBytes": 573,
+      "loadMs": 2.200000047683716,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 18.800000071525574,
+        "elapsedMs": 29297.600000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 30177.399999976158,
+      "firstRowWallMs": 29.299999952316284,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 19.100000023841858,
+        "elapsedMs": 30167.299999952316
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 29625.399999976158,
+      "firstRowWallMs": 30.899999976158142,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 20.899999976158142,
+        "elapsedMs": 29615.399999976158
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 29844.299999952316,
+      "firstRowWallMs": 30.199999928474426,
+      "firstRowBytes": 573,
+      "loadMs": 2.799999952316284,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 19.799999952316284,
+        "elapsedMs": 29833.799999952316
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 29462.700000047684,
+      "firstRowWallMs": 32,
+      "firstRowBytes": 573,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 18.199999928474426,
+        "elapsedMs": 29448.899999976158
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 29571.899999976158,
+      "firstRowWallMs": 27.899999976158142,
+      "firstRowBytes": 573,
+      "loadMs": 1.8000000715255737,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 18.5,
+        "elapsedMs": 29562.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 29159.800000071526,
+      "firstRowWallMs": 31,
+      "firstRowBytes": 573,
+      "loadMs": 2.0999999046325684,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 19.800000071525574,
+        "elapsedMs": 29148.600000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 29440.099999904633,
+      "firstRowWallMs": 28.299999952316284,
+      "firstRowBytes": 573,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 0
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 1249961,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 573,
+        "firstRowMs": 19.199999928474426,
+        "elapsedMs": 29431
+      },
+      "messages": {
+        "received": {
+          "needInput": 1249962,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 1249962,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 1249962,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 1249961
+      },
+      "rows": 4096,
+      "checksum": "c4801dc5"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 14110.099999904633,
+      "firstRowWallMs": 22.399999976158142,
+      "firstRowBytes": 385,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 12.700000047683716,
+        "elapsedMs": 14100.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 14182.200000047684,
+      "firstRowWallMs": 20.300000071525574,
+      "firstRowBytes": 385,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 10.800000071525574,
+        "elapsedMs": 14172.600000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 14161.600000023842,
+      "firstRowWallMs": 20.600000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 1.399999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 11.300000071525574,
+        "elapsedMs": 14152.200000047684
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 14421.299999952316,
+      "firstRowWallMs": 22.299999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 13.299999952316284,
+        "elapsedMs": 14412.100000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 14230.600000023842,
+      "firstRowWallMs": 21,
+      "firstRowBytes": 385,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 11.200000047683716,
+        "elapsedMs": 14220.900000095367
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 14207.5,
+      "firstRowWallMs": 19.59999990463257,
+      "firstRowBytes": 385,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 11.200000047683716,
+        "elapsedMs": 14199.100000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 14037.799999952316,
+      "firstRowWallMs": 19.799999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 10.700000047683716,
+        "elapsedMs": 14028.600000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 14341.399999976158,
+      "firstRowWallMs": 19.800000071525574,
+      "firstRowBytes": 385,
+      "loadMs": 1.399999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 10.800000071525574,
+        "elapsedMs": 14332.300000071526
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 14180,
+      "firstRowWallMs": 21,
+      "firstRowBytes": 385,
+      "loadMs": 1.399999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 11.399999976158142,
+        "elapsedMs": 14170.300000071526
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 14291.899999976158,
+      "firstRowWallMs": 22.699999928474426,
+      "firstRowBytes": 385,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 12.199999928474426,
+        "elapsedMs": 14281.299999952316
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 14041.200000047684,
+      "firstRowWallMs": 21.600000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 1.600000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 11.599999904632568,
+        "elapsedMs": 14031.099999904633
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 14545.600000023842,
+      "firstRowWallMs": 20.700000047683716,
+      "firstRowBytes": 385,
+      "loadMs": 1.399999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 11.5,
+        "elapsedMs": 14536.399999976158
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 14098.100000023842,
+      "firstRowWallMs": 22.300000071525574,
+      "firstRowBytes": 385,
+      "loadMs": 1.899999976158142,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 11.100000023841858,
+        "elapsedMs": 14086.799999952316
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 14312.099999904633,
+      "firstRowWallMs": 21,
+      "firstRowBytes": 385,
+      "loadMs": 1.5,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 11.399999976158142,
+        "elapsedMs": 14302.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 14136.200000047684,
+      "firstRowWallMs": 23.200000047683716,
+      "firstRowBytes": 385,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 13.700000047683716,
+        "elapsedMs": 14126.700000047684
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 1,
+      "wallMs": 14392.800000071526,
+      "firstRowWallMs": 23,
+      "firstRowBytes": 385,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 13.200000047683716,
+        "elapsedMs": 14382.899999976158
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 14059.099999904633,
+      "firstRowWallMs": 24.09999990463257,
+      "firstRowBytes": 385,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 14,
+        "elapsedMs": 14049.099999904633
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "warmup",
+      "index": 2,
+      "wallMs": 14312.899999976158,
+      "firstRowWallMs": 24.299999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 14.399999976158142,
+        "elapsedMs": 14303.100000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 14239.799999952316,
+      "firstRowWallMs": 22.600000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 13.200000047683716,
+        "elapsedMs": 14230.400000095367
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 1,
+      "wallMs": 14203.200000047684,
+      "firstRowWallMs": 24,
+      "firstRowBytes": 385,
+      "loadMs": 1.6999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 14.300000071525574,
+        "elapsedMs": 14193.399999976158
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 14022.700000047684,
+      "firstRowWallMs": 23,
+      "firstRowBytes": 385,
+      "loadMs": 2.1999999284744263,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 14.400000095367432,
+        "elapsedMs": 14014.200000047684
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 2,
+      "wallMs": 14265.600000023842,
+      "firstRowWallMs": 24.299999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 14.899999976158142,
+        "elapsedMs": 14256.100000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 14133.5,
+      "firstRowWallMs": 22.100000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 13.100000023841858,
+        "elapsedMs": 14124.600000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 3,
+      "wallMs": 14163.399999976158,
+      "firstRowWallMs": 21.899999976158142,
+      "firstRowBytes": 385,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 13,
+        "elapsedMs": 14154.5
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 13948.5,
+      "firstRowWallMs": 23.299999952316284,
+      "firstRowBytes": 385,
+      "loadMs": 1.7000000476837158,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 13.400000095367432,
+        "elapsedMs": 13938.600000023842
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 4,
+      "wallMs": 14438.899999976158,
+      "firstRowWallMs": 25.600000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 2.299999952316284,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 14.600000023841858,
+        "elapsedMs": 14427.899999976158
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 14225.600000023842,
+      "firstRowWallMs": 23.600000023841858,
+      "firstRowBytes": 385,
+      "loadMs": 2.100000023841858,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 13.799999952316284,
+        "elapsedMs": 14215.699999928474
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 4096,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 4096,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "phase": "formal",
+      "index": 5,
+      "wallMs": 14363.300000071526,
+      "firstRowWallMs": 24.90000009536743,
+      "firstRowBytes": 385,
+      "loadMs": 1.7999999523162842,
+      "frame": {
+        "width": 512,
+        "height": 4096,
+        "bits": 16,
+        "near": 3
+      },
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 594831,
+        "outputProduced": 2097152,
+        "rows": 4096,
+        "coreWorkspaceBytes": 10751,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 1024,
+        "firstRowInputConsumed": 385,
+        "firstRowMs": 15,
+        "elapsedMs": 14353.399999976158
+      },
+      "messages": {
+        "received": {
+          "needInput": 594832,
+          "row": 4096,
+          "progress": 0,
+          "done": 1,
+          "error": 0
+        },
+        "sent": {
+          "start": 1,
+          "input": 594832,
+          "rowAck": 4096,
+          "progressAck": 0,
+          "cancel": 0
+        },
+        "peakPending": 1
+      },
+      "source": {
+        "reads": 594832,
+        "eofReads": 1,
+        "peakReadBytes": 1,
+        "logicalSourceCopyBytes": 594831
+      },
+      "rows": 4096,
+      "checksum": "5798bb24"
+    }
+  ],
+  "failures": [],
+  "summary": [
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "wallMs": [
+        520.5,
+        452,
+        470.1999999284744,
+        438.1999999284744,
+        450
+      ],
+      "firstRowWallMs": [
+        9.5,
+        9.399999976158142,
+        10.299999952316284,
+        9.5,
+        10.100000023841858
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 452,
+          "min": 438.1999999284744,
+          "max": 520.5,
+          "mad": 13.800000071525574
+        },
+        "firstRowWallMs": {
+          "median": 9.5,
+          "min": 9.399999976158142,
+          "max": 10.299999952316284,
+          "mad": 0.10000002384185791
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 4096,
+      "wallMs": [
+        416.2999999523163,
+        396.10000002384186,
+        337.1999999284744,
+        330.7000000476837,
+        352
+      ],
+      "firstRowWallMs": [
+        10.100000023841858,
+        10.300000071525574,
+        10.199999928474426,
+        8.700000047683716,
+        10.5
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 352,
+          "min": 330.7000000476837,
+          "max": 416.2999999523163,
+          "mad": 21.299999952316284
+        },
+        "firstRowWallMs": {
+          "median": 10.199999928474426,
+          "min": 8.700000047683716,
+          "max": 10.5,
+          "mad": 0.10000014305114746
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "wallMs": [
+        543.7000000476837,
+        490.5,
+        508.39999997615814,
+        430.39999997615814,
+        503
+      ],
+      "firstRowWallMs": [
+        13,
+        11.200000047683716,
+        12.300000071525574,
+        10.5,
+        11.300000071525574
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 503,
+          "min": 430.39999997615814,
+          "max": 543.7000000476837,
+          "mad": 12.5
+        },
+        "firstRowWallMs": {
+          "median": 11.300000071525574,
+          "min": 10.5,
+          "max": 13,
+          "mad": 0.8000000715255737
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 4096,
+      "wallMs": [
+        373.39999997615814,
+        369.3000000715256,
+        400,
+        388.5,
+        412.3000000715256
+      ],
+      "firstRowWallMs": [
+        11,
+        11.700000047683716,
+        11.5,
+        11.399999976158142,
+        13.200000047683716
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 388.5,
+          "min": 369.3000000715256,
+          "max": 412.3000000715256,
+          "mad": 15.100000023841858
+        },
+        "firstRowWallMs": {
+          "median": 11.5,
+          "min": 11,
+          "max": 13.200000047683716,
+          "mad": 0.20000004768371582
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "wallMs": [
+        457.7999999523163,
+        495.39999997615814,
+        479.60000002384186,
+        512.7999999523163,
+        517.7000000476837
+      ],
+      "firstRowWallMs": [
+        9,
+        9.299999952316284,
+        8.799999952316284,
+        9.599999904632568,
+        9.700000047683716
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 495.39999997615814,
+          "min": 457.7999999523163,
+          "max": 517.7000000476837,
+          "mad": 17.399999976158142
+        },
+        "firstRowWallMs": {
+          "median": 9.299999952316284,
+          "min": 8.799999952316284,
+          "max": 9.700000047683716,
+          "mad": 0.2999999523162842
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 4096,
+      "wallMs": [
+        363.2000000476837,
+        368.5,
+        345.60000002384186,
+        357.7000000476837,
+        350
+      ],
+      "firstRowWallMs": [
+        9.700000047683716,
+        9.699999928474426,
+        10,
+        9.899999976158142,
+        9.600000023841858
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 357.7000000476837,
+          "min": 345.60000002384186,
+          "max": 368.5,
+          "mad": 7.700000047683716
+        },
+        "firstRowWallMs": {
+          "median": 9.700000047683716,
+          "min": 9.600000023841858,
+          "max": 10,
+          "mad": 0.10000002384185791
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "wallMs": [
+        459.7999999523163,
+        530,
+        501.6999999284744,
+        514.7000000476837,
+        506.90000009536743
+      ],
+      "firstRowWallMs": [
+        12.5,
+        11.200000047683716,
+        10.899999976158142,
+        11.399999976158142,
+        11.400000095367432
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 506.90000009536743,
+          "min": 459.7999999523163,
+          "max": 530,
+          "mad": 7.799999952316284
+        },
+        "firstRowWallMs": {
+          "median": 11.399999976158142,
+          "min": 10.899999976158142,
+          "max": 12.5,
+          "mad": 0.19999992847442627
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 4096,
+      "wallMs": [
+        352.7000000476837,
+        336.59999990463257,
+        366.89999997615814,
+        371.2999999523163,
+        369.2999999523163
+      ],
+      "firstRowWallMs": [
+        11.799999952316284,
+        11.299999952316284,
+        11.600000023841858,
+        11.299999952316284,
+        11.799999952316284
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 366.89999997615814,
+          "min": 336.59999990463257,
+          "max": 371.2999999523163,
+          "mad": 4.399999976158142
+        },
+        "firstRowWallMs": {
+          "median": 11.600000023841858,
+          "min": 11.299999952316284,
+          "max": 11.799999952316284,
+          "mad": 0.19999992847442627
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "wallMs": [
+        35915.5,
+        33039.39999997616,
+        39813,
+        33859.800000071526,
+        37736.10000002384
+      ],
+      "firstRowWallMs": [
+        38.800000071525574,
+        34.699999928474426,
+        25.59999990463257,
+        31.899999976158142,
+        27.399999976158142
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 35915.5,
+          "min": 33039.39999997616,
+          "max": 39813,
+          "mad": 2055.6999999284744
+        },
+        "firstRowWallMs": {
+          "median": 31.899999976158142,
+          "min": 25.59999990463257,
+          "max": 38.800000071525574,
+          "mad": 4.5
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 0,
+      "chunk": 1,
+      "wallMs": [
+        34490.200000047684,
+        42128.200000047684,
+        33342.09999990463,
+        37704.5,
+        34477.10000002384
+      ],
+      "firstRowWallMs": [
+        36.800000071525574,
+        35,
+        34.299999952316284,
+        30.200000047683716,
+        36.5
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 34490.200000047684,
+          "min": 33342.09999990463,
+          "max": 42128.200000047684,
+          "mad": 1148.1000001430511
+        },
+        "firstRowWallMs": {
+          "median": 35,
+          "min": 30.200000047683716,
+          "max": 36.800000071525574,
+          "mad": 1.5
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "wallMs": [
+        29772.399999976158,
+        30177.399999976158,
+        29625.399999976158,
+        29571.899999976158,
+        29159.800000071526
+      ],
+      "firstRowWallMs": [
+        38.200000047683716,
+        29.299999952316284,
+        30.899999976158142,
+        27.899999976158142,
+        31
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 29625.399999976158,
+          "min": 29159.800000071526,
+          "max": 30177.399999976158,
+          "mad": 147
+        },
+        "firstRowWallMs": {
+          "median": 30.899999976158142,
+          "min": 27.899999976158142,
+          "max": 38.200000047683716,
+          "mad": 1.600000023841858
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 0,
+      "chunk": 1,
+      "wallMs": [
+        29857.599999904633,
+        29309.200000047684,
+        29844.299999952316,
+        29462.700000047684,
+        29440.099999904633
+      ],
+      "firstRowWallMs": [
+        29.09999990463257,
+        30.40000009536743,
+        30.199999928474426,
+        32,
+        28.299999952316284
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 29462.700000047684,
+          "min": 29309.200000047684,
+          "max": 29857.599999904633,
+          "mad": 153.5
+        },
+        "firstRowWallMs": {
+          "median": 30.199999928474426,
+          "min": 28.299999952316284,
+          "max": 32,
+          "mad": 1.100000023841858
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "wallMs": [
+        14230.600000023842,
+        14341.399999976158,
+        14180,
+        14545.600000023842,
+        14098.100000023842
+      ],
+      "firstRowWallMs": [
+        21,
+        19.800000071525574,
+        21,
+        20.700000047683716,
+        22.300000071525574
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 14230.600000023842,
+          "min": 14098.100000023842,
+          "max": 14545.600000023842,
+          "mad": 110.79999995231628
+        },
+        "firstRowWallMs": {
+          "median": 21,
+          "min": 19.800000071525574,
+          "max": 22.300000071525574,
+          "mad": 0.2999999523162842
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "backend": "wasm-gc",
+      "near": 3,
+      "chunk": 1,
+      "wallMs": [
+        14207.5,
+        14037.799999952316,
+        14291.899999976158,
+        14041.200000047684,
+        14312.099999904633
+      ],
+      "firstRowWallMs": [
+        19.59999990463257,
+        19.799999952316284,
+        22.699999928474426,
+        21.600000023841858,
+        21
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 14207.5,
+          "min": 14037.799999952316,
+          "max": 14312.099999904633,
+          "mad": 104.59999990463257
+        },
+        "firstRowWallMs": {
+          "median": 21,
+          "min": 19.59999990463257,
+          "max": 22.699999928474426,
+          "mad": 1.2000000476837158
+        }
+      }
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "wallMs": [
+        14239.799999952316,
+        14265.600000023842,
+        14133.5,
+        14438.899999976158,
+        14225.600000023842
+      ],
+      "firstRowWallMs": [
+        22.600000023841858,
+        24.299999952316284,
+        22.100000023841858,
+        25.600000023841858,
+        23.600000023841858
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 14239.799999952316,
+          "min": 14133.5,
+          "max": 14438.899999976158,
+          "mad": 25.800000071525574
+        },
+        "firstRowWallMs": {
+          "median": 23.600000023841858,
+          "min": 22.100000023841858,
+          "max": 25.600000023841858,
+          "mad": 1
+        }
+      }
+    },
+    {
+      "variant": "candidate",
+      "backend": "js",
+      "near": 3,
+      "chunk": 1,
+      "wallMs": [
+        14203.200000047684,
+        14022.700000047684,
+        14163.399999976158,
+        13948.5,
+        14363.300000071526
+      ],
+      "firstRowWallMs": [
+        24,
+        23,
+        21.899999976158142,
+        23.299999952316284,
+        24.90000009536743
+      ],
+      "summary": {
+        "wallMs": {
+          "median": 14163.399999976158,
+          "min": 13948.5,
+          "max": 14363.300000071526,
+          "mad": 140.69999992847443
+        },
+        "firstRowWallMs": {
+          "median": 23.299999952316284,
+          "min": 21.899999976158142,
+          "max": 24.90000009536743,
+          "mad": 0.7000000476837158
+        }
+      }
+    }
+  ],
+  "actualBrowserResponses": {
+    "/": {
+      "status": 200,
+      "deliveredSha256": "e8b5463041774ef406d2e7cce8c06182b8fb8022089b5d01fdac21695e2df774",
+      "browserBodySha256": "e8b5463041774ef406d2e7cce8c06182b8fb8022089b5d01fdac21695e2df774"
+    },
+    "/driver.mjs": {
+      "status": 200,
+      "deliveredSha256": "fd0e1977e48b0bd2ab5f927f16ac302eab2ce1dae30c1392782a506a6467e5b5",
+      "browserBodySha256": "fd0e1977e48b0bd2ab5f927f16ac302eab2ce1dae30c1392782a506a6467e5b5"
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "status": 200,
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/baseline/sdk/index.mjs": {
+      "status": 200,
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/fixtures/0.jls": {
+      "status": 200,
+      "deliveredSha256": "3b13b43e944157a11a2fe3561011ee6780a207eb654e890ffa8b50d8b855ecab",
+      "browserBodySha256": "3b13b43e944157a11a2fe3561011ee6780a207eb654e890ffa8b50d8b855ecab"
+    },
+    "/baseline/sdk/worker.mjs": {
+      "status": 200,
+      "deliveredSha256": "dd3efcc5fbc9168a9d5a01733b5ce2b1c9b4bd0f13ba5af2f7a7a0f60ba6406f",
+      "browserBodySha256": "dd3efcc5fbc9168a9d5a01733b5ce2b1c9b4bd0f13ba5af2f7a7a0f60ba6406f"
+    },
+    "/fixtures/0.raw": {
+      "status": 200,
+      "deliveredSha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89",
+      "browserBodySha256": "8d2957a342ebe35cb6d12678efc04f254deeedc2e0efb852bbb236ab8718dc89"
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "status": 200,
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    },
+    "/candidate/sdk/worker-client.mjs": {
+      "status": 200,
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/candidate/sdk/index.mjs": {
+      "status": 200,
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/candidate/sdk/worker.mjs": {
+      "status": 200,
+      "deliveredSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "browserBodySha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "/candidate/sdk/generated/core.wasm": {
+      "status": 200,
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    },
+    "/baseline/sdk/generated/core.mjs": {
+      "status": 200,
+      "deliveredSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "browserBodySha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93"
+    },
+    "/candidate/sdk/generated/core.mjs": {
+      "status": 200,
+      "deliveredSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "browserBodySha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93"
+    },
+    "/fixtures/3.jls": {
+      "status": 200,
+      "deliveredSha256": "33944793d7e3acb372917283471954f5210a4d0a95d1254ef1303046175ce5b9",
+      "browserBodySha256": "33944793d7e3acb372917283471954f5210a4d0a95d1254ef1303046175ce5b9"
+    },
+    "/fixtures/3.raw": {
+      "status": 200,
+      "deliveredSha256": "527faa32cb1e7218413c37e63abe87ee9a9281c4aca28a3b0414e11df9b53766",
+      "browserBodySha256": "527faa32cb1e7218413c37e63abe87ee9a9281c4aca28a3b0414e11df9b53766"
+    }
+  },
+  "serverDelivered": {
+    "/": {
+      "document <- ": 1
+    },
+    "/driver.mjs": {
+      "script <- ": 1
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "script <- /driver.mjs": 1
+    },
+    "/baseline/sdk/index.mjs": {
+      "script <- /baseline/sdk/worker-client.mjs": 1,
+      "worker <- /baseline/sdk/worker.mjs": 56
+    },
+    "/fixtures/0.jls": {
+      "empty <- /": 1
+    },
+    "/fixtures/0.raw": {
+      "empty <- /": 1
+    },
+    "/baseline/sdk/worker.mjs": {
+      "worker <- /": 56
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "empty <- /baseline/sdk/worker.mjs": 28
+    },
+    "/candidate/sdk/worker-client.mjs": {
+      "script <- /driver.mjs": 1
+    },
+    "/candidate/sdk/index.mjs": {
+      "script <- /candidate/sdk/worker-client.mjs": 1,
+      "worker <- /candidate/sdk/worker.mjs": 56
+    },
+    "/candidate/sdk/worker.mjs": {
+      "worker <- /": 56
+    },
+    "/candidate/sdk/generated/core.wasm": {
+      "empty <- /candidate/sdk/worker.mjs": 28
+    },
+    "/baseline/sdk/generated/core.mjs": {
+      "script <- /baseline/sdk/index.mjs": 28
+    },
+    "/candidate/sdk/generated/core.mjs": {
+      "script <- /candidate/sdk/index.mjs": 28
+    },
+    "/fixtures/3.jls": {
+      "empty <- /": 1
+    },
+    "/fixtures/3.raw": {
+      "empty <- /": 1
+    }
+  }
+}

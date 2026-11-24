@@ -1,0 +1,272 @@
+{
+  "nativeBefore": {
+    "exitCode": 1,
+    "log": {
+      "nativeBinarySha256": "ec9239a16916da98a0ee428c1fb6bbef5a34af89f6df9f98ccce505d0af76967",
+      "width": 1,
+      "height": 4,
+      "bits": 8,
+      "near": 0,
+      "nativeChunkBytes": 1,
+      "encodedBytesHex": "ffd8fff7000b080004000101011100ffda0008010100000000f0ffd9",
+      "withheldEoiBytes": 2,
+      "observationSecondsBeforeEoi": 1.0,
+      "rowsBeforeEoi": 1,
+      "rowsAfterEoi": 3,
+      "finalSamplesMatch": true
+    }
+  },
+  "nativeAfter": {
+    "exitCode": 0,
+    "log": {
+      "nativeBinarySha256": "267837ca5c3015adf1637a322bf27a8ab96699ff9c9e2ee9b3e1166539a7ed6c",
+      "width": 1,
+      "height": 4,
+      "bits": 8,
+      "near": 0,
+      "nativeChunkBytes": 1,
+      "encodedBytesHex": "ffd8fff7000b080004000101011100ffda0008010100000000f0ffd9",
+      "withheldEoiBytes": 2,
+      "observationSecondsBeforeEoi": 1.0,
+      "rowsBeforeEoi": 4,
+      "rowsAfterEoi": 0,
+      "finalSamplesMatch": true
+    }
+  },
+  "nativeTail": {
+    "trials": [
+      {
+        "case": "complete",
+        "chunk": 1,
+        "exitCode": 0
+      },
+      {
+        "case": "missing-eoi",
+        "chunk": 1,
+        "exitCode": 1
+      },
+      {
+        "case": "short-eoi",
+        "chunk": 1,
+        "exitCode": 1
+      },
+      {
+        "case": "nonzero-padding",
+        "chunk": 1,
+        "exitCode": 1
+      },
+      {
+        "case": "trailing-data",
+        "chunk": 1,
+        "exitCode": 1
+      },
+      {
+        "case": "complete",
+        "chunk": 2,
+        "exitCode": 0
+      },
+      {
+        "case": "missing-eoi",
+        "chunk": 2,
+        "exitCode": 1
+      },
+      {
+        "case": "short-eoi",
+        "chunk": 2,
+        "exitCode": 1
+      },
+      {
+        "case": "nonzero-padding",
+        "chunk": 2,
+        "exitCode": 1
+      },
+      {
+        "case": "trailing-data",
+        "chunk": 2,
+        "exitCode": 1
+      },
+      {
+        "case": "complete",
+        "chunk": 7,
+        "exitCode": 0
+      },
+      {
+        "case": "missing-eoi",
+        "chunk": 7,
+        "exitCode": 1
+      },
+      {
+        "case": "short-eoi",
+        "chunk": 7,
+        "exitCode": 1
+      },
+      {
+        "case": "nonzero-padding",
+        "chunk": 7,
+        "exitCode": 1
+      },
+      {
+        "case": "trailing-data",
+        "chunk": 7,
+        "exitCode": 1
+      },
+      {
+        "case": "complete",
+        "chunk": 4096,
+        "exitCode": 0
+      },
+      {
+        "case": "missing-eoi",
+        "chunk": 4096,
+        "exitCode": 1
+      },
+      {
+        "case": "short-eoi",
+        "chunk": 4096,
+        "exitCode": 1
+      },
+      {
+        "case": "nonzero-padding",
+        "chunk": 4096,
+        "exitCode": 1
+      },
+      {
+        "case": "trailing-data",
+        "chunk": 4096,
+        "exitCode": 1
+      }
+    ],
+    "lateTrailingDataWhileInputOpen": "rejected"
+  },
+  "portableCancelBeforeExpectBug": {
+    "exitCode": 0,
+    "log": {
+      "test": "cancelled old job must not overwrite new job preview",
+      "mode": "record-known-bug",
+      "expectedNewPixel": 4000,
+      "observed": "(0, 1) · original 2000 · reconstructed 2000 · error 0",
+      "oldWorkerTerminated": true,
+      "scope": "unchanged app.mjs + worker-client.mjs + pgm.mjs + preview.mjs; fake DOM/Worker transport; no generated codec"
+    }
+  },
+  "portableCancelBeforeGate": {
+    "exitCode": 1,
+    "log": {
+      "test": "cancelled old job must not overwrite new job preview",
+      "mode": "correctness-gate",
+      "expectedNewPixel": 4000,
+      "observed": "(0, 1) · original 2000 · reconstructed 2000 · error 0",
+      "oldWorkerTerminated": true,
+      "scope": "unchanged app.mjs + worker-client.mjs + pgm.mjs + preview.mjs; fake DOM/Worker transport; no generated codec"
+    }
+  },
+  "portableCancelAfterGate": {
+    "exitCode": 0,
+    "log": {
+      "test": "cancelled old job must not overwrite new job preview",
+      "mode": "correctness-gate",
+      "expectedNewPixel": 4000,
+      "observed": "(0, 1) · original 4000 · reconstructed 4000 · error 0",
+      "oldWorkerTerminated": true,
+      "scope": "unchanged app.mjs + worker-client.mjs + pgm.mjs + preview.mjs; fake DOM/Worker transport; no generated codec"
+    }
+  },
+  "smoke": [
+    {
+      "test": "browser sample round-trip",
+      "backend": "wasm-gc",
+      "encodedBytes": 105655,
+      "maxError": 3
+    },
+    {
+      "test": "browser decoded PGM download",
+      "backend": "js",
+      "pgmBytes": 208017
+    },
+    {
+      "test": "browser malformed/unsupported status",
+      "cases": 2
+    },
+    {
+      "test": "browser bounded verification and locale switch",
+      "inputChunkSize": 1024
+    },
+    {
+      "test": "browser UI pause and cancel",
+      "inputChunkSize": 1
+    },
+    {
+      "test": "browser cancel/restart with pending host operation",
+      "blocked": "read",
+      "newPixel": 4000,
+      "reconstructed": [
+        3000,
+        3000,
+        4000,
+        4000
+      ],
+      "download": "cancel-read-new.jls"
+    },
+    {
+      "test": "browser cancel/restart with pending host operation",
+      "blocked": "write",
+      "newPixel": 4000,
+      "reconstructed": [
+        3000,
+        3000,
+        4000,
+        4000
+      ],
+      "download": "cancel-write-new.jls"
+    },
+    {
+      "test": "worker ACK, manual resume and one-byte reads",
+      "before": 59,
+      "whileHeld": 59,
+      "whilePaused": 59,
+      "queue": 8,
+      "reads": 81,
+      "rows": [
+        0,
+        32767,
+        65535,
+        32768,
+        42,
+        7,
+        32,
+        0
+      ],
+      "expected": [
+        0,
+        32767,
+        65535,
+        32768,
+        42,
+        7,
+        32,
+        0
+      ],
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 80,
+        "outputProduced": 8,
+        "rows": 2,
+        "coreWorkspaceBytes": 6687,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 8,
+        "firstRowInputConsumed": 59,
+        "firstRowMs": 3.399999976158142,
+        "elapsedMs": 93
+      }
+    },
+    {
+      "status": "passed",
+      "browser": "158.0.8127.37",
+      "node": "v24.20.0"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "buildManifest": {
+    "path": ".tools/rc2-final-verified-build/build.json",
+    "sha256": "e8aa742771d2a73bc1fb9045e3f7dc278602d09972f2248c9e24d6b16591cde3"
+  },
+  "sourceCommit": "a146998f31675769fb6c3bc9055ef7798f254b1d",
+  "recordedUtc": "2026-11-24T04:16:42.056939+00:00",
+  "oracle": {
+    "native": {
+      "wheel": "2026.11.11",
+      "charls": "charls 2.4.5",
+      "selfTestCases": 8
+    },
+    "nativeExtension": {
+      "name": "_jpegls.pyd",
+      "sha256": "5f01d87668b83fbc6c5cde63f213e25a4181081006510f2ade96a60038b815a0"
+    },
+    "wasm": {
+      "package": "@team-charls/charls-wasm",
+      "version": "0.10.0",
+      "selfTestCases": 12
+    },
+    "wasmFiles": {
+      ".tools/oracle-npm/node_modules/@team-charls/charls-wasm/charlsjs.js": "93970a5f57e28e9911b38ff8efd4e92c03f37a9b8eeff3275f1cb5f2ceb5da33",
+      ".tools/oracle-npm/node_modules/@team-charls/charls-wasm/charlsjs.wasm": "068064e4a632803de18e9fac6c70d9852900975f2c32ff9956a3d15e53e0bbd6",
+      ".tools/oracle-npm/node_modules/@team-charls/charls-wasm/index.js": "5c334e30ecdd35b7347c916c0a551e848050c0f7b4e775c4997219b5c1313dd3",
+      ".tools/oracle-npm/node_modules/@team-charls/charls-wasm/jpegls-decoder.js": "d469813a79103f58a767091ea12216a3fd016701da46cc4d780eb1d8a42c61f1",
+      ".tools/oracle-npm/node_modules/@team-charls/charls-wasm/jpegls-encoder.js": "23e38875496a034dbd20031278f1d159bb40d70b3dc68125886e2bda0356304b",
+      ".tools/oracle-npm/node_modules/@team-charls/charls-wasm/jpegls-error.js": "6ab94d42ff4e18eb8de161224f88059ddd7e8f9222ee8690c4b505505df9cac0",
+      ".tools/oracle-npm/node_modules/@team-charls/charls-wasm/package.json": "dbb0e9c0128954f9e5206887c058a4dd017828d05fb3edd1ac690f911919a059"
+    }
+  },
+  "evidenceFiles": {
+    ".evidence/rc2/final-verified/node-effect/benchmark.json": "54db2b6e3026360de547f2ca3a1ba98aa13a52472602735ade0b63b7ad207579",
+    ".evidence/rc2/final-verified/node-effect/manifest.json": "0ba855c278c7d5970fd635f4c419771633675652c954bcd8659728cc220aaa89",
+    ".evidence/rc2/final-verified/node-resource/benchmark.json": "ad4209c5b4898e834db44ce81b37acb0f2f6966ee5eb87f0bcab29c9461580c2",
+    ".evidence/rc2/final-verified/node-resource/resource-fixtures.json": "c08a457161422294684cdcaa4de1094add28df784265ad7c2d83f3cc47656d9d",
+    ".evidence/rc2/final-verified/smoke-receipt.json": "99c75e278384850a8e8602b9b8ea5df6590bb2ebc65ecaaabbdfec24b23d9c52",
+    ".evidence/rc2/final-verified/validation/js-entropy-mutations.json": "6302e7a17cf5023403e13cbd5745c5ae3ca71d79780b3a161eecfe39a68302b1",
+    ".evidence/rc2/final-verified/validation/manifest.json": "6e4e7647acdd8a8c4836fa1b3d63a534ec920dc9687e2f9d97c3e038801ebe1c",
+    ".evidence/rc2/final-verified/validation/report.json": "88c3440cfb1e4f841c8089cfa4a88f632de94cf2cd3fc36392df36dd80f01628",
+    ".evidence/rc2/final-verified/validation/wasm-gc-entropy-mutations.json": "cc14edd482c8e5b1dbc6e71c7370ff3166f3d52d6bad39777725047307362f88",
+    ".evidence/rc2/worker-fixtures/resource-fixtures.json": "09a289b4c214b108cab9420df59e009bacf587d7825b28600457a33d95ea1c19",
+    ".evidence/rc2/worker-paired.json": "fac70657583c0c18a7192fc7c5762678685c6128e13d4b627570a4c6ec381685",
+    ".evidence/rc2/worker-profile-harness-check.json": "d4db83849d43d3d946cb0dd093bd61e6f1e144a559094f00fa9beaa5eb44689c"
+  },
+  "browser": {
+    "browser": "158.0.8127.37",
+    "node": "v24.20.0",
+    "responses": {
+      "/web/app.mjs": {
+        "sha256": "cfcf79227aea7bf7feaa3267d3ab10912abecdc14f336ca921b31ac27da08f4c",
+        "bytes": 9247
+      },
+      "/sdk/index.mjs": {
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "bytes": 11627
+      },
+      "/sdk/worker-client.mjs": {
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "bytes": 3055
+      },
+      "/web/pgm.mjs": {
+        "sha256": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f",
+        "bytes": 4407
+      },
+      "/web/labels.mjs": {
+        "sha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "bytes": 3490
+      },
+      "/web/preview.mjs": {
+        "sha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "bytes": 3512
+      },
+      "/web/transport.mjs": {
+        "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "bytes": 3288
+      },
+      "/sdk/worker.mjs": {
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "bytes": 3087
+      },
+      "/sdk/generated/core.wasm": {
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "bytes": 17158
+      },
+      "/sdk/generated/core.mjs": {
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "bytes": 100050
+      }
+    }
+  }
+}
