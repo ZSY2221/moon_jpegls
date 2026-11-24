@@ -108,6 +108,7 @@ async function assertViewSync(expectedView, expectedPanes) {
       view: tab.dataset.view,
       visible: getComputedStyle(tab).display !== 'none',
       selected: tab.getAttribute('aria-selected') === 'true',
+      tabIndex: tab.tabIndex,
     }));
     return {
       dataView: root.getAttribute('data-view'),
@@ -120,10 +121,33 @@ async function assertViewSync(expectedView, expectedPanes) {
   assert.deepEqual(state.visiblePanes, expectedPanes, `Expected visible panes ${expectedPanes}, got ${state.visiblePanes}`);
   const visibleSelected = state.tabs.filter((t) => t.visible && t.selected);
   const hiddenSelected = state.tabs.filter((t) => !t.visible && t.selected);
+  const tabbable = state.tabs.filter((t) => t.tabIndex === 0);
+  const negative = state.tabs.filter((t) => t.tabIndex === -1);
   assert.equal(visibleSelected.length, 1, `Expected exactly one visible selected tab, got ${JSON.stringify(state.tabs)}`);
   assert.equal(visibleSelected[0].view, expectedView, `Visible selected tab ${visibleSelected[0].view} !== ${expectedView}`);
   assert.equal(hiddenSelected.length, 0, `Hidden tabs must not stay selected: ${JSON.stringify(hiddenSelected)}`);
+  assert.equal(tabbable.length, 1, `Expected single Tab stop across view-tabs, got ${JSON.stringify(state.tabs)}`);
+  assert.equal(tabbable[0].view, expectedView, `Expected tabIndex=0 on ${expectedView}, got ${tabbable[0].view}`);
+  assert.equal(tabbable[0].visible, true, `Expected tabIndex=0 tab to be visible: ${JSON.stringify(tabbable[0])}`);
+  assert.equal(negative.length, state.tabs.length - 1, `Expected all non-selected tabs to have tabIndex=-1`);
   return state;
+}
+
+async function assertTabFocused(expectedView) {
+  const focused = await page.evaluate(() => {
+    const el = document.activeElement;
+    return { isTab: Boolean(el?.classList?.contains('view-tab')), view: el?.dataset?.view ?? null };
+  });
+  assert.equal(focused.isTab, true, `Expected activeElement to be a .view-tab, got ${JSON.stringify(focused)}`);
+  assert.equal(focused.view, expectedView, `Expected focused tab ${expectedView}, got ${focused.view}`);
+}
+
+async function assertSingleTabStopOut(startView) {
+  await page.locator(`.view-tab[data-view="${startView}"]`).focus();
+  await assertTabFocused(startView);
+  await page.keyboard.press('Tab');
+  const insideTablist = await page.evaluate(() => Boolean(document.activeElement?.closest?.('.view-tabs')));
+  assert.equal(insideTablist, false, 'Pressing Tab on the active view tab should move focus out of .view-tabs');
 }
 
 async function point(content, width, height, horizontal, vertical) {
@@ -161,11 +185,32 @@ try {
   const widePoint = await point(horizontal, 128, 16, 0.52, 0.44);
   await ignoreLetterbox(horizontal, 'top');
 
-  // Switching to Error view keeps the selected coordinate and shows the reticle there.
-  await page.locator('.view-tab[data-view="difference"]').click();
+  // Desktop tablist: single Tab stop + ArrowRight / ArrowLeft / Home / End navigation.
+  await assertViewSync('compare', ['original', 'reconstruction']);
+  await assertSingleTabStopOut('compare');
+  await page.locator('.view-tab[data-view="compare"]').focus();
+  await page.keyboard.press('ArrowRight');
+  await assertTabFocused('reconstruction');
+  await assertViewSync('reconstruction', ['reconstruction']);
+  await assertReticlesVisible(['reconstruction']);
+  await page.keyboard.press('ArrowRight');
+  await assertTabFocused('difference');
   await assertViewSync('difference', ['difference']);
   await assertReticlesVisible(['difference']);
-  await page.locator('.view-tab[data-view="compare"]').click();
+  await page.keyboard.press('ArrowRight');
+  await assertTabFocused('compare');
+  await assertViewSync('compare', ['original', 'reconstruction']);
+  await page.keyboard.press('ArrowLeft');
+  await assertTabFocused('difference');
+  await assertViewSync('difference', ['difference']);
+  await page.keyboard.press('Home');
+  await assertTabFocused('compare');
+  await assertViewSync('compare', ['original', 'reconstruction']);
+  await page.keyboard.press('End');
+  await assertTabFocused('difference');
+  await assertViewSync('difference', ['difference']);
+  await page.keyboard.press('Home');
+  await assertTabFocused('compare');
   await assertViewSync('compare', ['original', 'reconstruction']);
 
   await render(512, 4096);
@@ -176,24 +221,53 @@ try {
   await assertReticlesVisible(['original', 'reconstruction']);
   await assertViewSync('compare', ['original', 'reconstruction']);
 
-  // 1) Desktop compare -> shrink to 390px -> falls back to reconstruction BEFORE clicking any tab.
+  // 1) Desktop compare focused -> shrink to 390px -> falls back to reconstruction AND follows focus BEFORE clicking any tab.
+  await page.locator('.view-tab[data-view="compare"]').focus();
+  await assertTabFocused('compare');
   await page.setViewportSize({ width: 390, height: 840 });
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
   await assertViewSync('reconstruction', ['reconstruction']);
+  await assertTabFocused('reconstruction');
   await assertPixel(desktopPoint[0], desktopPoint[1]);
   await assertReticlesVisible(['reconstruction']);
 
-  // 2) Narrow original -> widen to 1366px -> falls back to compare BEFORE clicking any tab, drawer opens.
-  await page.locator('.view-tab[data-view="original"]').click();
+  // Narrow tablist: single Tab stop + Arrow / Home / End navigation.
+  await assertSingleTabStopOut('reconstruction');
+  await page.locator('.view-tab[data-view="reconstruction"]').focus();
+  await page.keyboard.press('ArrowLeft');
+  await assertTabFocused('original');
   await assertViewSync('original', ['original']);
   await assertReticlesVisible(['original']);
+  await page.keyboard.press('End');
+  await assertTabFocused('difference');
+  await assertViewSync('difference', ['difference']);
+  await page.keyboard.press('Home');
+  await assertTabFocused('original');
+  await assertViewSync('original', ['original']);
+
+  // 2) Narrow original focused -> widen to 1366px -> falls back to compare AND follows focus BEFORE clicking any tab.
   await page.setViewportSize({ width: 1366, height: 768 });
   await assertViewSync('compare', ['original', 'reconstruction']);
+  await assertTabFocused('compare');
   await assertPixel(desktopPoint[0], desktopPoint[1]);
   await assertReticlesVisible(['original', 'reconstruction']);
   assert.equal(await page.locator('#settings-drawer').evaluate((el) => el.open), true);
 
-  // 3) Desktop difference -> shrink to 390px -> preserves difference BEFORE clicking any tab.
+  // 3) Focus in parameters (#backend) stays on #backend across breakpoint shrink.
+  await page.locator('#backend').focus();
+  assert.equal(await page.evaluate(() => document.activeElement?.id), 'backend');
+  await page.setViewportSize({ width: 390, height: 840 });
+  await assertViewSync('reconstruction', ['reconstruction']);
+  assert.equal(await page.evaluate(() => document.activeElement?.id), 'backend');
+
+  // Focus in canvas (#reconstruction) stays on #reconstruction across breakpoint widen.
+  await page.locator('#reconstruction').focus();
+  assert.equal(await page.evaluate(() => document.activeElement?.id), 'reconstruction');
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await assertViewSync('reconstruction', ['reconstruction']);
+  assert.equal(await page.evaluate(() => document.activeElement?.id), 'reconstruction');
+
+  // 4) Desktop difference -> shrink to 390px -> preserves difference BEFORE clicking any tab.
   await page.locator('.view-tab[data-view="difference"]').click();
   await assertViewSync('difference', ['difference']);
   await page.setViewportSize({ width: 390, height: 840 });
@@ -207,7 +281,7 @@ try {
   await ignoreLetterbox(narrow, 'left');
   await assertReticlesVisible(['difference']);
 
-  // 4) Narrow reconstruction -> widen to 1366px -> preserves reconstruction BEFORE clicking any tab.
+  // 5) Narrow reconstruction -> widen to 1366px -> preserves reconstruction BEFORE clicking any tab.
   await page.locator('.view-tab[data-view="reconstruction"]').click();
   await assertViewSync('reconstruction', ['reconstruction']);
   await page.setViewportSize({ width: 1366, height: 768 });
@@ -215,7 +289,7 @@ try {
   await assertPixel(mobilePoint[0], mobilePoint[1]);
   await assertReticlesVisible(['reconstruction']);
 
-  // 5) Standalone JLS decode preserves no-reference semantics across breakpoint transitions.
+  // 6) Standalone JLS decode: keyboard skips hidden compare/original tabs, preserves error placeholder & cross-breakpoint state.
   const jlsBytes = Buffer.from(await page.evaluate(async () => {
     const { loadCore, encodeImage } = await import('/sdk/index.mjs');
     const core = await loadCore({ backend: 'wasm-gc' });
@@ -233,6 +307,20 @@ try {
   const jlsCoord = await page.locator('#inspect-coord').textContent();
   await assertReticlesVisible(['reconstruction']);
 
+  await page.locator('.view-tab[data-view="reconstruction"]').focus();
+  await page.keyboard.press('ArrowRight');
+  await assertTabFocused('difference');
+  await assertViewSync('difference', ['difference']);
+  assert.equal(await page.locator('#difference').isVisible(), false);
+  assert.equal(await page.locator('[data-pane="difference"] .reference-placeholder').isVisible(), true);
+  await page.keyboard.press('ArrowRight');
+  await assertTabFocused('reconstruction');
+  await assertViewSync('reconstruction', ['reconstruction']);
+  await page.keyboard.press('End');
+  await assertTabFocused('difference');
+  await page.keyboard.press('Home');
+  await assertTabFocused('reconstruction');
+
   await page.setViewportSize({ width: 390, height: 840 });
   const jlsNarrowState = await assertViewSync('reconstruction', ['reconstruction']);
   assert.equal(jlsNarrowState.dataReference, 'none');
@@ -240,23 +328,35 @@ try {
   assert.equal(await page.locator('#inspect-original').textContent(), 'Not compared');
   await assertReticlesVisible(['reconstruction']);
 
-  await page.locator('.view-tab[data-view="difference"]').click();
+  await page.locator('.view-tab[data-view="reconstruction"]').focus();
+  await page.keyboard.press('ArrowLeft');
+  await assertTabFocused('difference');
   await assertViewSync('difference', ['difference']);
   assert.equal(await page.locator('#difference').isVisible(), false);
   assert.equal(await page.locator('[data-pane="difference"] .reference-placeholder').isVisible(), true);
+
   await page.setViewportSize({ width: 1366, height: 768 });
   const jlsDiffDesktop = await assertViewSync('difference', ['difference']);
   assert.equal(jlsDiffDesktop.dataReference, 'none');
   assert.equal(await page.locator('#difference').isVisible(), false);
   assert.equal(await page.locator('[data-pane="difference"] .reference-placeholder').isVisible(), true);
+  await page.keyboard.press('ArrowRight');
+  await assertTabFocused('reconstruction');
+  await assertViewSync('reconstruction', ['reconstruction']);
+  await assertReticlesVisible(['reconstruction']);
 
   assert.ok([widePoint, desktopPoint, mobilePoint].every(([, , value]) => value > 255));
   assert.deepEqual(pageErrors, []);
   console.log(JSON.stringify({
     browser: browser.version(),
     scenarios: { widePoint, desktopPoint, mobilePoint, keyboardOrigin, keyboardNeighbor },
-    breakpointSync: ['desktop-compare->narrow-reconstruction', 'narrow-original->desktop-compare',
-      'desktop-difference->narrow-difference', 'narrow-reconstruction->desktop-reconstruction', 'jls-no-reference-roundtrip'],
+    keyboardAndFocus: [
+      'single-tab-stop-desktop-and-390',
+      'arrows-home-end-desktop-and-390',
+      'breakpoint-hidden-tab-focus-handoff-both-ways',
+      'non-tab-focus-preserved-in-settings-and-canvas',
+      'jls-no-ref-skips-hidden-tabs',
+    ],
     tallBackingCanvas: [40, 320],
     letterboxIgnored: ['horizontal-top', 'tall-left', 'narrow-left'],
     state: 'passed',

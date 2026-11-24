@@ -39,6 +39,7 @@ let presented;
 let state = { phase: 'idle', message: 'waiting', args: [] };
 let selectedPixel;
 let viewMode = isNarrow() ? 'reconstruction' : 'compare';
+let focusedViewTab = null;
 const preview = createPreview(previewIds.map(get), (pixel) => { selectedPixel = pixel; renderPixel(); });
 
 function translate(key, ...args) {
@@ -53,7 +54,29 @@ function effectiveDecodeOnly() {
   return presented ? presented.decodeOnly : isJls(source);
 }
 
-function setViewMode(mode) {
+function isTabVisible(tab) {
+  if (!tab) return false;
+  if (typeof globalThis.getComputedStyle === 'function') {
+    return globalThis.getComputedStyle(tab).display !== 'none';
+  }
+  return true;
+}
+
+function visibleViewTabs() {
+  const decodeOnly = effectiveDecodeOnly();
+  const narrow = isNarrow();
+  const allowed = decodeOnly
+    ? new Set(['reconstruction', 'difference'])
+    : narrow
+      ? new Set(['original', 'reconstruction', 'difference'])
+      : new Set(['compare', 'reconstruction', 'difference']);
+  return [...(document.querySelectorAll?.('.view-tab') ?? [])].filter((tab) => {
+    const view = tab.dataset?.view;
+    return allowed.has(view) && isTabVisible(tab);
+  });
+}
+
+function setViewMode(mode, { focus = false } = {}) {
   const decodeOnly = effectiveDecodeOnly();
   let next = mode;
   if (decodeOnly && (next === 'compare' || next === 'original')) {
@@ -63,8 +86,15 @@ function setViewMode(mode) {
   if (!isNarrow() && next === 'original') next = decodeOnly ? 'reconstruction' : 'compare';
   viewMode = next;
   setAttr('workspace-view', 'data-view', viewMode);
+  let activeTab = null;
   for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {
-    tab.setAttribute('aria-selected', String(tab.dataset?.view === viewMode));
+    const selected = tab.dataset?.view === viewMode;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    if (selected) activeTab = tab;
+  }
+  if (focus && activeTab && isTabVisible(activeTab)) {
+    activeTab.focus?.();
   }
   onPaint(() => preview.syncOverlays?.());
 }
@@ -549,12 +579,45 @@ for (const id of ['near', 'backend', 'sink']) {
 }
 for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {
   tab.addEventListener('click', () => setViewMode(tab.dataset.view));
+  tab.addEventListener('focus', () => { focusedViewTab = tab; });
+  tab.addEventListener('blur', (event) => {
+    if (focusedViewTab !== tab) return;
+    const next = event.relatedTarget;
+    if (next) {
+      if (!next.classList?.contains?.('view-tab')) focusedViewTab = null;
+    } else if (isTabVisible(tab)) {
+      focusedViewTab = null;
+    }
+  });
+  tab.addEventListener('keydown', (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    const visible = visibleViewTabs();
+    if (visible.length === 0) return;
+    const currentIndex = visible.indexOf(tab);
+    let nextIndex = -1;
+    if (event.key === 'ArrowRight') nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % visible.length;
+    else if (event.key === 'ArrowLeft') nextIndex = currentIndex < 0 ? 0 : (currentIndex - 1 + visible.length) % visible.length;
+    else if (event.key === 'Home') nextIndex = 0;
+    else if (event.key === 'End') nextIndex = visible.length - 1;
+    else return;
+    event.preventDefault();
+    setViewMode(visible[nextIndex].dataset.view, { focus: true });
+  });
 }
 function syncViewportMode() {
   if (typeof globalThis.innerWidth === 'number' && globalThis.innerWidth === 0) return;
+  const activeElement = document.activeElement;
+  const activeIsViewTab = Boolean(activeElement?.classList?.contains?.('view-tab'));
+  const lostHiddenTabFocus = Boolean(
+    focusedViewTab
+    && !isTabVisible(focusedViewTab)
+    && (!activeElement || activeElement === document.body || activeElement === document.documentElement || activeElement === focusedViewTab),
+  );
+  const shouldFollowFocus = (activeIsViewTab && !isTabVisible(activeElement)) || lostHiddenTabFocus;
   const drawer = get('settings-drawer');
   if (drawer && !isNarrow()) drawer.open = true;
-  setViewMode(viewMode);
+  setViewMode(viewMode, { focus: shouldFollowFocus });
+  if (!shouldFollowFocus && activeElement && !activeIsViewTab) focusedViewTab = null;
 }
 narrowQuery?.addEventListener?.('change', syncViewportMode);
 globalThis.addEventListener?.('resize', () => onPaint(() => preview.syncOverlays?.()));
