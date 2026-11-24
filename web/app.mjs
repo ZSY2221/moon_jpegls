@@ -57,7 +57,7 @@ function setViewMode(mode) {
   const decodeOnly = effectiveDecodeOnly();
   let next = mode;
   if (decodeOnly && (next === 'compare' || next === 'original')) {
-    next = next === 'difference' ? 'difference' : 'reconstruction';
+    next = 'reconstruction';
   }
   if (isNarrow() && next === 'compare') next = 'reconstruction';
   if (!isNarrow() && next === 'original') next = decodeOnly ? 'reconstruction' : 'compare';
@@ -154,12 +154,16 @@ function renderIdentity() {
     near === null ? translate('nearFromHeader') : `NEAR ${near}`,
   ].join(' · '));
 
+  const formDecodeOnly = isJls(source);
+  const formBackend = get('backend')?.value ?? 'wasm-gc';
+  const formBackendLabel = formBackend === 'js' ? 'JavaScript' : 'Wasm GC';
+  const formNear = Number(get('near')?.value ?? 0);
   const sinkSelect = get('sink');
   const sinkValue = sinkSelect?.value ?? 'buffered';
   const sinkText = translate(sinkValue === 'file' ? 'streamed' : sinkValue);
   setText('settings-summary-meta', [
-    decodeOnly ? 'JLS' : `NEAR ${near ?? 0}`,
-    backendLabel,
+    formDecodeOnly ? 'JLS' : `NEAR ${formNear}`,
+    formBackendLabel,
     sinkText,
   ].join(' · '));
 
@@ -546,6 +550,13 @@ for (const id of ['near', 'backend', 'sink']) {
 for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {
   tab.addEventListener('click', () => setViewMode(tab.dataset.view));
 }
+function syncViewportMode() {
+  if (typeof globalThis.innerWidth === 'number' && globalThis.innerWidth === 0) return;
+  const drawer = get('settings-drawer');
+  if (drawer && !isNarrow()) drawer.open = true;
+  setViewMode(viewMode);
+}
+narrowQuery?.addEventListener?.('change', syncViewportMode);
 globalThis.addEventListener?.('resize', () => onPaint(() => preview.syncOverlays?.()));
 
 function applyLocale() {

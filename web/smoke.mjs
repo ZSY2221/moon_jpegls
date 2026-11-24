@@ -281,6 +281,82 @@ async function gatedClose(fail) {
     bytesWritten: await page.evaluate(() => outputGate.bytes) }));
 }
 
+async function narrowSettingsSummary(jlsStream) {
+  await page.setViewportSize({ width: 390, height: 844 });
+  try {
+    await page.goto(`${origin}/web/`);
+    await click('example');
+    await select('near', '0');
+    await select('backend', 'wasm-gc');
+    await select('sink', 'buffered');
+    await click('run');
+    await phase('complete');
+
+    assert.equal(await page.locator('#settings-drawer').evaluate((el) => el.open), false);
+    assert.equal(await text('settings-summary-meta'), 'NEAR 0 · Wasm GC · Buffered download');
+    assert.equal(await text('task-meta'), 'Wasm GC · 16-bit · NEAR 0');
+    assert.equal(await text('frame'), '400 × 260 · 16-bit · NEAR 0');
+    assert.equal(await text('result-backend'), 'Wasm GC');
+    assert.equal(await text('error'), '0');
+    assert.equal(await text('inspect-near'), '0');
+
+    await page.locator('#settings-drawer > summary').click();
+    assert.equal(await page.locator('#settings-drawer').evaluate((el) => el.open), true);
+    await select('near', '3');
+    await select('backend', 'js');
+    await select('sink', 'bounded');
+    await page.locator('#settings-drawer > summary').click();
+    assert.equal(await page.locator('#settings-drawer').evaluate((el) => el.open), false);
+
+    // Summary reflects the upcoming run immediately while completed results stay bound to job #1.
+    assert.equal(await text('settings-summary-meta'), 'NEAR 3 · JavaScript · Bounded verification');
+    assert.equal(await text('task-meta'), 'Wasm GC · 16-bit · NEAR 0');
+    assert.equal(await text('frame'), '400 × 260 · 16-bit · NEAR 0');
+    assert.equal(await text('result-backend'), 'Wasm GC');
+    assert.equal(await text('error'), '0');
+    assert.equal(await text('inspect-near'), '0');
+
+    await click('run');
+    await phase('complete');
+    assert.equal(await text('task-meta'), 'JavaScript · 16-bit · NEAR 3');
+    assert.equal(await text('frame'), '400 × 260 · 16-bit · NEAR 3');
+    assert.equal(await text('result-backend'), 'JavaScript');
+    assert.equal(await text('error'), '3');
+    assert.equal(await text('inspect-near'), '3');
+    assert.equal(await page.locator('#download').isVisible(), false);
+
+    // Standalone JLS decode: summary shows JLS + current form settings, while parsed header NEAR stays in task info.
+    await upload('narrow-summary.jls', jlsStream);
+    if (!(await page.locator('#settings-drawer').evaluate((el) => el.open))) {
+      await page.locator('#settings-drawer > summary').click();
+    }
+    await select('backend', 'wasm-gc');
+    await select('sink', 'buffered');
+    await click('run');
+    await phase('complete');
+    assert.equal(await text('settings-summary-meta'), 'JLS · Wasm GC · Buffered download');
+    assert.equal(await text('task-meta'), 'Wasm GC · 16-bit · NEAR 3');
+    assert.equal(await text('inspect-near'), '3');
+
+    await page.locator('#settings-drawer > summary').click();
+    await select('backend', 'js');
+    await select('sink', 'bounded');
+    await page.locator('#settings-drawer > summary').click();
+    assert.equal(await text('settings-summary-meta'), 'JLS · JavaScript · Bounded verification');
+    assert.equal(await text('task-meta'), 'Wasm GC · 16-bit · NEAR 3');
+    assert.equal(await text('inspect-near'), '3');
+
+    console.log(JSON.stringify({
+      test: 'narrow settings summary tracks form changes without altering completed results',
+      viewport: [390, 844],
+      pgmUpdatedSummary: 'NEAR 3 · JavaScript · Bounded verification',
+      jlsUpdatedSummary: 'JLS · JavaScript · Bounded verification',
+    }));
+  } finally {
+    await page.setViewportSize({ width: 1440, height: 900 });
+  }
+}
+
 async function verifyLunarDownload(sourcePath) {
   const source = await readFile(sourcePath);
   const fingerprint = (value) => createHash('sha256').update(value).digest('hex');
@@ -428,6 +504,7 @@ try {
   await gatedEnding();
   await gatedClose(false);
   await gatedClose(true);
+  await narrowSettingsSummary(byteStream);
 
   const flow = await page.evaluate(async () => {
     const { loadCore, encodeImage } = await import('/sdk/index.mjs');
