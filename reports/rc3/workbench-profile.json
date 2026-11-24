@@ -1,0 +1,4627 @@
+{
+  "startedUtc": "2026-11-24T04:50:47.605Z",
+  "schema": 1,
+  "diagnostic": true,
+  "options": [
+    "--baseline",
+    ".tools/rc2-final-verified-build/static",
+    "--baseline-source",
+    "299fd9afcbaac67d8d65b42545fb632a429ef202",
+    "--output",
+    ".evidence/rc3/workbench-profile.json",
+    "--profile",
+    "--backends",
+    "wasm-gc,js",
+    "--nears",
+    "0,3",
+    "--warmup",
+    "2",
+    "--repeats",
+    "5"
+  ],
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "win32",
+    "release": "10.0.26200",
+    "cpu": "AMD Ryzen 9 8945HX with Radeon Graphics        ",
+    "browser": "158.0.8127.37"
+  },
+  "settings": {
+    "warmup": 2,
+    "repeats": 5,
+    "chunk": 4096,
+    "backends": [
+      "wasm-gc",
+      "js"
+    ],
+    "nears": [
+      0,
+      3
+    ],
+    "timeout": 120000
+  },
+  "fixture": {
+    "file": "resource-512x4096-16.pgm",
+    "bytes": 4194322,
+    "sha256": "57eb64cc0a21aacea581734284ccbead417bff17c89794535f7d3f9a442e7da8",
+    "width": 512,
+    "height": 4096,
+    "bits": 16,
+    "rasterSha256": "3edc48759d57ba5ba5c0605fc293cf9576ade2a865c00c8c76ca339c184627e4",
+    "formula": "(x*173+y*47+((x^y)&31)*3)&65535"
+  },
+  "assets": {
+    "baseline": {
+      "web/index.html": {
+        "originalSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "sha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "bytes": 4968,
+        "instrumented": false
+      },
+      "web/style.css": {
+        "originalSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "sha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "bytes": 4552,
+        "instrumented": false
+      },
+      "web/app.mjs": {
+        "originalSha256": "cfcf79227aea7bf7feaa3267d3ab10912abecdc14f336ca921b31ac27da08f4c",
+        "sha256": "5da8a73855417b5557fac7fd1fd3915241830121e15022e1bef8f3cfe11de888",
+        "bytes": 10212,
+        "instrumented": true
+      },
+      "web/labels.mjs": {
+        "originalSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "sha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "bytes": 3490,
+        "instrumented": false
+      },
+      "web/pgm.mjs": {
+        "originalSha256": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f",
+        "sha256": "cbe01119681f78d0c57ef35333b6ac48698628a427b3644f8ab8279548d2373b",
+        "bytes": 4607,
+        "instrumented": true
+      },
+      "web/preview.mjs": {
+        "originalSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "sha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "bytes": 3512,
+        "instrumented": false
+      },
+      "web/transport.mjs": {
+        "originalSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "bytes": 3288,
+        "instrumented": false
+      },
+      "sdk/index.mjs": {
+        "originalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "bytes": 11627,
+        "instrumented": false
+      },
+      "sdk/worker-client.mjs": {
+        "originalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "bytes": 3055,
+        "instrumented": false
+      },
+      "sdk/worker.mjs": {
+        "originalSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "bytes": 3087,
+        "instrumented": false
+      },
+      "sdk/generated/core.mjs": {
+        "originalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "bytes": 100050,
+        "instrumented": false
+      },
+      "sdk/generated/core.wasm": {
+        "originalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "bytes": 17158,
+        "instrumented": false
+      }
+    }
+  },
+  "sourceCommit": {
+    "baseline": "299fd9afcbaac67d8d65b42545fb632a429ef202"
+  },
+  "timing": "Browser performance.now from capture of the real Run click until task finalization. The original file, app, workers, preview and sink are active. Fixture creation and file selection are excluded. First display is the return from the first reconstruction Canvas putImageData, not the painted next frame. Profile enables operation counters; ordinary trials use job/sink clocks, first-row/canvas clock and terminal statistics only.",
+  "profileLimit": "Reference request durations are serial pre-row-ACK spans for this task. They include materialization and scheduling, and may overlap encoder and pipe work. The summed spans divided by wall time are a screening metric, not predicted savings. Cache/row/queue sizes are logical owned payloads, not renderer RSS.",
+  "trials": [
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "warmup",
+      "index": 1,
+      "order": 1,
+      "jobId": 1,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 560,
+      "startedAtMs": 560.2999999523163,
+      "finishedAtMs": 3802.399999976158,
+      "wallMs": 3242.399999976158,
+      "firstRowArrivalMs": 37.89999997615814,
+      "firstDisplayMs": 48.89999997615814,
+      "sinkOpenMs": 0.20000004768371582,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 18,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.100000023841858,
+          "doneMs": 3242,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 3.700000047683716,
+            "elapsedMs": 3207.899999976158
+          }
+        },
+        {
+          "createdMs": 18.200000047683716,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.9000000953674316,
+          "doneMs": 3241.100000023842,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.3000000715255737,
+            "elapsedMs": 3207
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 16.299999952316284,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 279.89999890327454,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 261.9999990463257,
+          "materializeCalls": 512,
+          "materializeMs": 3.8999998569488525,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 1989.7999980449677,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 1836.7999929189682,
+          "materializeCalls": 4096,
+          "materializeMs": 12.600000143051147,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 7.700000166893005
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 11.700000286102295
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.199999928474426
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 1877.399993777275
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6136812231864048,
+        "referenceIoAndMaterializationMs": 1849.3999930620193,
+        "referenceIoAndMaterializationShare": 0.5703799633221127,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3241.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "warmup",
+      "index": 2,
+      "order": 2,
+      "jobId": 2,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 3841.100000023842,
+      "startedAtMs": 3841.2000000476837,
+      "finishedAtMs": 7120.700000047684,
+      "wallMs": 3279.600000023842,
+      "firstRowArrivalMs": 16.299999952316284,
+      "firstDisplayMs": 17.899999976158142,
+      "sinkOpenMs": 0.10000002384185791,
+      "sinkCloseMs": 0.10000002384185791,
+      "workers": [
+        {
+          "createdMs": 2.6999999284744263,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2,
+          "doneMs": 3279.1999999284744,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 3.299999952316284,
+            "elapsedMs": 3266.100000023842
+          }
+        },
+        {
+          "createdMs": 2.799999952316284,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 3278.399999976158,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.5999999046325684,
+            "elapsedMs": 3265.0999999046326
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.899999976158142,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 279.0999993085861,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 261.49999940395355,
+          "materializeCalls": 512,
+          "materializeMs": 4.200000047683716,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2059.4999984502792,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 1902.9999976158142,
+          "materializeCalls": 4096,
+          "materializeMs": 14.300000309944153,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 9.400000214576721
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 10
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.999999761581421
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 1930.6999967098236
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6279729230501607,
+        "referenceIoAndMaterializationMs": 1917.2999979257584,
+        "referenceIoAndMaterializationShare": 0.5846139766775887,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3278.7 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 1,
+      "order": 3,
+      "jobId": 3,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 7157.5,
+      "startedAtMs": 7157.600000023842,
+      "finishedAtMs": 10343.5,
+      "wallMs": 3186,
+      "firstRowArrivalMs": 15.5,
+      "firstDisplayMs": 16.700000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.100000023841858,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2,
+          "doneMs": 3185.7999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 3,
+            "elapsedMs": 3173.3000000715256
+          }
+        },
+        {
+          "createdMs": 2.200000047683716,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.299999952316284,
+          "doneMs": 3185.2999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.299999952316284,
+            "elapsedMs": 3172.399999976158
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.600000023841858,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 266.70000088214874,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 249.20000112056732,
+          "materializeCalls": 512,
+          "materializeMs": 4.0999995470047,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 1962.4000012874603,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 1810.6000003814697,
+          "materializeCalls": 4096,
+          "materializeMs": 12.000001072883606,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 9.699999332427979
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 9.500000238418579
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.399999260902405
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 1850.6999992132187
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6159447587217389,
+        "referenceIoAndMaterializationMs": 1822.6000014543533,
+        "referenceIoAndMaterializationShare": 0.5720652860810902,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3185.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 2,
+      "order": 4,
+      "jobId": 4,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 10373,
+      "startedAtMs": 10373.100000023842,
+      "finishedAtMs": 13387.200000047684,
+      "wallMs": 3014.2000000476837,
+      "firstRowArrivalMs": 14.700000047683716,
+      "firstDisplayMs": 15.899999976158142,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.399999976158142,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.399999976158142,
+          "doneMs": 3014.100000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.100000023841858,
+            "elapsedMs": 3001.600000023842
+          }
+        },
+        {
+          "createdMs": 2.600000023841858,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 3013.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.0999999046325684,
+            "elapsedMs": 3001.0999999046326
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 2,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 248.80000030994415,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 232.69999980926514,
+          "materializeCalls": 512,
+          "materializeMs": 3.600000500679016,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 1811.1000051498413,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 1665.5000019073486,
+          "materializeCalls": 4096,
+          "materializeMs": 11.700000047683716,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 8.899999618530273
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 9.300000309944153
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.100000262260437
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 1717.8999943733215
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6008559502094055,
+        "referenceIoAndMaterializationMs": 1677.2000019550323,
+        "referenceIoAndMaterializationShare": 0.556432884987227,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3014.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 3,
+      "order": 5,
+      "jobId": 5,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 13419.799999952316,
+      "startedAtMs": 13419.799999952316,
+      "finishedAtMs": 16493.899999976158,
+      "wallMs": 3074.100000023842,
+      "firstRowArrivalMs": 12.300000071525574,
+      "firstDisplayMs": 13.400000095367432,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.600000023841858,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2,
+          "doneMs": 3073.8000000715256,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.200000047683716,
+            "elapsedMs": 3063.600000023842
+          }
+        },
+        {
+          "createdMs": 2.100000023841858,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 1.8000000715255737,
+          "doneMs": 3072.9000000953674,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 1.8000000715255737,
+            "elapsedMs": 3062.5
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.399999976158142,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 249.69999992847443,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 235.50000023841858,
+          "materializeCalls": 512,
+          "materializeMs": 3.299999475479126,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 1855.7000057697296,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 1710.900006532669,
+          "materializeCalls": 4096,
+          "materializeMs": 12.800000429153442,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 10.600000023841858
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 7.800000548362732
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.7999995946884155
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 1754.4000018835068
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6036563565776446,
+        "referenceIoAndMaterializationMs": 1723.7000069618225,
+        "referenceIoAndMaterializationShare": 0.560716960069111,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3073.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 4,
+      "order": 6,
+      "jobId": 6,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 16541.100000023842,
+      "startedAtMs": 16541.200000047684,
+      "finishedAtMs": 19663.5,
+      "wallMs": 3122.399999976158,
+      "firstRowArrivalMs": 16.399999976158142,
+      "firstDisplayMs": 17.799999952316284,
+      "sinkOpenMs": 0.10000002384185791,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.299999952316284,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.100000023841858,
+          "doneMs": 3122.100000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 3.399999976158142,
+            "elapsedMs": 3109.100000023842
+          }
+        },
+        {
+          "createdMs": 2.399999976158142,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.5,
+          "doneMs": 3121.2999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.5,
+            "elapsedMs": 3107.2000000476837
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.899999976158142,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 252.7000012397766,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 236.30000162124634,
+          "materializeCalls": 512,
+          "materializeMs": 4.200000286102295,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 1832.1000047922134,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 1687.900006055832,
+          "materializeCalls": 4096,
+          "materializeMs": 11.800000309944153,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 9.200000286102295
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 11.000000834465027
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.9000003337860107
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 1858.9000037908554
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.5867601860127475,
+        "referenceIoAndMaterializationMs": 1699.700006365776,
+        "referenceIoAndMaterializationShare": 0.5443569069878154,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3121.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 0,
+      "phase": "formal",
+      "index": 5,
+      "order": 7,
+      "jobId": 7,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 19697.5,
+      "startedAtMs": 19697.5,
+      "finishedAtMs": 22774,
+      "wallMs": 3076.5,
+      "firstRowArrivalMs": 13.299999952316284,
+      "firstDisplayMs": 14.5,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.100000023841858,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 1.899999976158142,
+          "doneMs": 3076.399999976158,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 2.5,
+            "elapsedMs": 3065.5999999046326
+          }
+        },
+        {
+          "createdMs": 2.200000047683716,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 1.5999999046325684,
+          "doneMs": 3075.7999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 1.899999976158142,
+            "elapsedMs": 3064.8000000715256
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.7000000476837158,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 263.69999861717224,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 247.0999983549118,
+          "materializeCalls": 512,
+          "materializeMs": 4.3999998569488525,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 1866.2999972105026,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 1724.2999951839447,
+          "materializeCalls": 4096,
+          "materializeMs": 11.800000429153442,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 8.800000309944153
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 9.300000190734863
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.600000262260437
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 1757.6999989748
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6066309108436544,
+        "referenceIoAndMaterializationMs": 1736.0999956130981,
+        "referenceIoAndMaterializationShare": 0.5643100912117985,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3076.2 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "warmup",
+      "index": 1,
+      "order": 8,
+      "jobId": 8,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 22810.700000047684,
+      "startedAtMs": 22810.799999952316,
+      "finishedAtMs": 26938.200000047684,
+      "wallMs": 4127.5,
+      "firstRowArrivalMs": 17,
+      "firstDisplayMs": 18.199999928474426,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.899999976158142,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.899999976158142,
+          "doneMs": 4127.299999952316,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.700000047683716,
+            "elapsedMs": 4114.899999976158
+          }
+        },
+        {
+          "createdMs": 2,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.899999976158142,
+          "doneMs": 4126.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.200000047683716,
+            "elapsedMs": 4113.899999976158
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.5,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 337.10000014305115,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 314.40000116825104,
+          "materializeCalls": 512,
+          "materializeMs": 5.399999618530273,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2471.7000057697296,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2290.9000051021576,
+          "materializeCalls": 4096,
+          "materializeMs": 12.700000047683716,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 11.299999833106995
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 10.300000190734863
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.200000047683716
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2451.6999995708466
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.5988370698412427,
+        "referenceIoAndMaterializationMs": 2303.6000051498413,
+        "referenceIoAndMaterializationShare": 0.5581102374681627,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "4127.2 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "warmup",
+      "index": 2,
+      "order": 9,
+      "jobId": 9,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 26982.5,
+      "startedAtMs": 26982.600000023842,
+      "finishedAtMs": 30970,
+      "wallMs": 3987.5,
+      "firstRowArrivalMs": 19.700000047683716,
+      "firstDisplayMs": 21.200000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.399999976158142,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.200000047683716,
+          "doneMs": 3987.2999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 5,
+            "elapsedMs": 3971.6999999284744
+          }
+        },
+        {
+          "createdMs": 2.5,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3.299999952316284,
+          "doneMs": 3985.600000023842,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.600000023841858,
+            "elapsedMs": 3970.899999976158
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.899999976158142,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 333.69999957084656,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 313.7999994754791,
+          "materializeCalls": 512,
+          "materializeMs": 4.799999713897705,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2430.100000023842,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2251.4000034332275,
+          "materializeCalls": 4096,
+          "materializeMs": 14.499999761581421,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 12.2999986410141
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 10.800000667572021
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.9000004529953
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2309.8000000715256
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6094294670906186,
+        "referenceIoAndMaterializationMs": 2265.900003194809,
+        "referenceIoAndMaterializationShare": 0.5682507845002656,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3987.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 1,
+      "order": 10,
+      "jobId": 10,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 31009.899999976158,
+      "startedAtMs": 31010,
+      "finishedAtMs": 35094,
+      "wallMs": 4084.100000023842,
+      "firstRowArrivalMs": 22.800000071525574,
+      "firstDisplayMs": 24.200000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3.700000047683716,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.399999976158142,
+          "doneMs": 4083.899999976158,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 5.5,
+            "elapsedMs": 4065.2999999523163
+          }
+        },
+        {
+          "createdMs": 3.899999976158142,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3.200000047683716,
+          "doneMs": 4081.7000000476837,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 4.100000023841858,
+            "elapsedMs": 4064.600000023842
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 3.200000047683716,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 341.00000047683716,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 317.89999997615814,
+          "materializeCalls": 512,
+          "materializeMs": 6.300000786781311,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2455.2999987602234,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2275.5999953746796,
+          "materializeCalls": 4096,
+          "materializeMs": 15.599999904632568,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 11
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 12.399999976158142
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 5.600000500679016
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2351.0999982357025
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6011850833098822,
+        "referenceIoAndMaterializationMs": 2291.199995279312,
+        "referenceIoAndMaterializationShare": 0.561004871395396,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "4083.7 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 2,
+      "order": 11,
+      "jobId": 11,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 35132.299999952316,
+      "startedAtMs": 35132.299999952316,
+      "finishedAtMs": 38875.299999952316,
+      "wallMs": 3743,
+      "firstRowArrivalMs": 22.300000071525574,
+      "firstDisplayMs": 24,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.9000000953674316,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.1999999284744263,
+          "doneMs": 3742.9000000953674,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 6,
+            "elapsedMs": 3726.7000000476837
+          }
+        },
+        {
+          "createdMs": 3.100000023841858,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3.399999976158142,
+          "doneMs": 3742.3000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 4.099999904632568,
+            "elapsedMs": 3725.6999999284744
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 2.299999952316284,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 304.30000019073486,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 285.000000834465,
+          "materializeCalls": 512,
+          "materializeMs": 4.100000262260437,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2271.9000067710876,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2092.300006747246,
+          "materializeCalls": 4096,
+          "materializeMs": 17.499999284744263,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 11.000000476837158
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 11.59999942779541
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.800000071525574
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2141.1000022888184
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6069730181060881,
+        "referenceIoAndMaterializationMs": 2109.80000603199,
+        "referenceIoAndMaterializationShare": 0.563665510561579,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3742.6 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 3,
+      "order": 12,
+      "jobId": 12,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 38908.60000002384,
+      "startedAtMs": 38908.60000002384,
+      "finishedAtMs": 42527.89999997616,
+      "wallMs": 3619.2999999523163,
+      "firstRowArrivalMs": 17.899999976158142,
+      "firstDisplayMs": 19.5,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.299999952316284,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.100000023841858,
+          "doneMs": 3619.100000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.899999976158142,
+            "elapsedMs": 3606.3000000715256
+          }
+        },
+        {
+          "createdMs": 2.399999976158142,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.899999976158142,
+          "doneMs": 3618.2999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.399999976158142,
+            "elapsedMs": 3604.5
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.8000000715255737,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 301.30000054836273,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 280,
+          "materializeCalls": 512,
+          "materializeMs": 4.900000095367432,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2182.5999941825867,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2013.9999967813492,
+          "materializeCalls": 4096,
+          "materializeMs": 13.90000033378601,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 11.799999475479126
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 10.799999594688416
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.900000214576721
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2083.799996495247
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6030447860667373,
+        "referenceIoAndMaterializationMs": 2027.8999971151352,
+        "referenceIoAndMaterializationShare": 0.5603017150117018,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3618.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 4,
+      "order": 13,
+      "jobId": 13,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 42561.299999952316,
+      "startedAtMs": 42561.299999952316,
+      "finishedAtMs": 46447.10000002384,
+      "wallMs": 3885.8000000715256,
+      "firstRowArrivalMs": 19.100000023841858,
+      "firstDisplayMs": 20.600000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.100000023841858,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 3885.7000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 4.900000095367432,
+            "elapsedMs": 3871.5
+          }
+        },
+        {
+          "createdMs": 2.200000047683716,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 3884.4000000953674,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.5,
+            "elapsedMs": 3870.399999976158
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.6999999284744263,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 317.9000005722046,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 299.50000059604645,
+          "materializeCalls": 512,
+          "materializeMs": 4.199999928474426,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2338.6999928951263,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2167.899995326996,
+          "materializeCalls": 4096,
+          "materializeMs": 13.599999785423279,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 11.300000548362732
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 12.100000023841858
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 5.600000500679016
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2197.900000691414
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6018580454094596,
+        "referenceIoAndMaterializationMs": 2181.499995112419,
+        "referenceIoAndMaterializationShare": 0.5614030560173618,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3885.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 0,
+      "phase": "formal",
+      "index": 5,
+      "order": 14,
+      "jobId": 14,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 46484.89999997616,
+      "startedAtMs": 46484.89999997616,
+      "finishedAtMs": 50012.39999997616,
+      "wallMs": 3527.5,
+      "firstRowArrivalMs": 20.600000023841858,
+      "firstDisplayMs": 22,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3,
+          "doneMs": 3527.3000000715256,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 1249961,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4629,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 533,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 573,
+            "firstRowMs": 5.399999976158142,
+            "elapsedMs": 3512.2000000476837
+          }
+        },
+        {
+          "createdMs": 2.100000023841858,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3,
+          "doneMs": 3526.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 1249961,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 533,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.700000047683716,
+            "elapsedMs": 3511.100000023842
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.6999999284744263,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 295.89999997615814,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 277.4000002145767,
+          "materializeCalls": 512,
+          "materializeMs": 5.0000001192092896,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2136.599996805191,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 1976.6999965906143,
+          "materializeCalls": 4096,
+          "materializeMs": 12.699999332427979,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 9.299999475479126
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 11.900000810623169
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.3999998569488525
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2041.7000015974045
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6056980855578146,
+        "referenceIoAndMaterializationMs": 1989.3999959230423,
+        "referenceIoAndMaterializationShare": 0.5639688152864755,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "encoded": "1,249,961 B",
+      "maxError": "0",
+      "appLatency": "3527.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 533 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "warmup",
+      "index": 1,
+      "order": 15,
+      "jobId": 15,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 50048.10000002384,
+      "startedAtMs": 50048.200000047684,
+      "finishedAtMs": 53770.89999997616,
+      "wallMs": 3722.7999999523163,
+      "firstRowArrivalMs": 15.699999928474426,
+      "firstDisplayMs": 17.100000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.600000023841858,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.600000023841858,
+          "doneMs": 3722.600000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.799999952316284,
+            "elapsedMs": 3708.7999999523163
+          }
+        },
+        {
+          "createdMs": 2.799999952316284,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.600000023841858,
+          "doneMs": 3721,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.200000047683716,
+            "elapsedMs": 3708
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.8000000715255737,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 315.79999935626984,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 293.900000333786,
+          "materializeCalls": 512,
+          "materializeMs": 5.599999308586121,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2258.3000037670135,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2085.8000042438507,
+          "materializeCalls": 4096,
+          "materializeMs": 15.599999785423279,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 17.899999380111694
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 14.099999904632568
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.90000057220459
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2124.199996948242
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6066133028354838,
+        "referenceIoAndMaterializationMs": 2101.400004029274,
+        "referenceIoAndMaterializationShare": 0.5644676061180267,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3721.9 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "warmup",
+      "index": 2,
+      "order": 16,
+      "jobId": 16,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 53813,
+      "startedAtMs": 53813.10000002384,
+      "finishedAtMs": 58189.799999952316,
+      "wallMs": 4376.799999952316,
+      "firstRowArrivalMs": 18.799999952316284,
+      "firstDisplayMs": 20.200000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.5,
+          "doneMs": 4376.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 3,
+            "elapsedMs": 4360.699999928474
+          }
+        },
+        {
+          "createdMs": 3.100000023841858,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3.200000047683716,
+          "doneMs": 4375.799999952316,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.700000047683716,
+            "elapsedMs": 4360.100000023842
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 2.399999976158142,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 360.4000012874603,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 335.7000011205673,
+          "materializeCalls": 512,
+          "materializeMs": 5.5000001192092896,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2571.9000005722046,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2371.3000000715256,
+          "materializeCalls": 4096,
+          "materializeMs": 16.799999594688416,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 19.100001335144043
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 14.099999785423279
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 6.700000643730164
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2631.0000017881393
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.5876210931731458,
+        "referenceIoAndMaterializationMs": 2388.099999666214,
+        "referenceIoAndMaterializationShare": 0.5456269419878065,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "4376.3 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 1,
+      "order": 17,
+      "jobId": 17,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 58228.5,
+      "startedAtMs": 58228.5,
+      "finishedAtMs": 62070.200000047684,
+      "wallMs": 3841.7000000476837,
+      "firstRowArrivalMs": 18.600000023841858,
+      "firstDisplayMs": 20.700000047683716,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0.10000002384185791,
+      "workers": [
+        {
+          "createdMs": 2,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 3841.399999976158,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 4.100000023841858,
+            "elapsedMs": 3827.100000023842
+          }
+        },
+        {
+          "createdMs": 2.100000023841858,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 1.7999999523162842,
+          "doneMs": 3840.7999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.799999952316284,
+            "elapsedMs": 3826
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.6999999284744263,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 319.6999980211258,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 297.49999809265137,
+          "materializeCalls": 512,
+          "materializeMs": 4.700000166893005,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2342.7999980449677,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2162.2999951839447,
+          "materializeCalls": 4096,
+          "materializeMs": 15.200000405311584,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 18.999999523162842
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 11.700000166893005
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 5.100000262260437
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2190.2999979257584
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.609834187473225,
+        "referenceIoAndMaterializationMs": 2177.4999955892563,
+        "referenceIoAndMaterializationShare": 0.5668063606117679,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3841.3 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 2,
+      "order": 18,
+      "jobId": 18,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 62104.60000002384,
+      "startedAtMs": 62104.60000002384,
+      "finishedAtMs": 65843,
+      "wallMs": 3738.399999976158,
+      "firstRowArrivalMs": 16.899999976158142,
+      "firstDisplayMs": 18.299999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.899999976158142,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.200000047683716,
+          "doneMs": 3738.100000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.899999976158142,
+            "elapsedMs": 3724.100000023842
+          }
+        },
+        {
+          "createdMs": 3,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3.0999999046325684,
+          "doneMs": 3737.600000023842,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.399999976158142,
+            "elapsedMs": 3723.5
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 2.600000023841858,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 302.9000012874603,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 283.4000017642975,
+          "materializeCalls": 512,
+          "materializeMs": 5.199999809265137,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2269.699999690056,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2100.6000006198883,
+          "materializeCalls": 4096,
+          "materializeMs": 14.199999809265137,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 18.899999022483826
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 12.00000011920929
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.800000309944153
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2112.0000005960464
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6071313930303154,
+        "referenceIoAndMaterializationMs": 2114.8000004291534,
+        "referenceIoAndMaterializationShare": 0.5656965547942009,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3738.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 3,
+      "order": 19,
+      "jobId": 19,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 65882.89999997616,
+      "startedAtMs": 65882.89999997616,
+      "finishedAtMs": 69605.10000002384,
+      "wallMs": 3722.2000000476837,
+      "firstRowArrivalMs": 18,
+      "firstDisplayMs": 19.5,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.600000023841858,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.6999999284744263,
+          "doneMs": 3721.899999976158,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 3.399999976158142,
+            "elapsedMs": 3707.399999976158
+          }
+        },
+        {
+          "createdMs": 2.700000047683716,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.299999952316284,
+          "doneMs": 3720.399999976158,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.700000047683716,
+            "elapsedMs": 3705.7000000476837
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 2.299999952316284,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 311.5,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 291.60000002384186,
+          "materializeCalls": 512,
+          "materializeMs": 4.600000381469727,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2246.700001835823,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2069.7000027894974,
+          "materializeCalls": 4096,
+          "materializeMs": 15.000000357627869,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 19.699999451637268
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 12.59999942779541
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.799999475479126
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2122.0000007152557
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6035946488117354,
+        "referenceIoAndMaterializationMs": 2084.7000031471252,
+        "referenceIoAndMaterializationShare": 0.5600720012681798,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3721.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 4,
+      "order": 20,
+      "jobId": 20,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 69644.29999995232,
+      "startedAtMs": 69644.29999995232,
+      "finishedAtMs": 73348.60000002384,
+      "wallMs": 3704.3000000715256,
+      "firstRowArrivalMs": 15.5,
+      "firstDisplayMs": 17,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.3000000715255737,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.3000000715255737,
+          "doneMs": 3704.100000023842,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.8000000715255737,
+            "elapsedMs": 3691.5
+          }
+        },
+        {
+          "createdMs": 2.3000000715255737,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.200000047683716,
+          "doneMs": 3702.9000000953674,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.5,
+            "elapsedMs": 3690.2999999523163
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.7999999523162842,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 305.00000178813934,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 282.30000138282776,
+          "materializeCalls": 512,
+          "materializeMs": 5.4000004529953,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2237.8999972343445,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2067.9999977350235,
+          "materializeCalls": 4096,
+          "materializeMs": 14.000000715255737,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 18.49999976158142
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 13.199999928474426
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 5.7000004053115845
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2115.000002145767
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6041357333885304,
+        "referenceIoAndMaterializationMs": 2081.9999984502792,
+        "referenceIoAndMaterializationShare": 0.5620495095996756,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3704.0 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 5,
+      "order": 21,
+      "jobId": 21,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 73386.29999995232,
+      "startedAtMs": 73386.39999997616,
+      "finishedAtMs": 77156.70000004768,
+      "wallMs": 3770.4000000953674,
+      "firstRowArrivalMs": 17.5,
+      "firstDisplayMs": 19.100000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.3000000715255737,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.5,
+          "doneMs": 3770.3000000715256,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 2.9000000953674316,
+            "elapsedMs": 3755.7000000476837
+          }
+        },
+        {
+          "createdMs": 2.5,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.399999976158142,
+          "doneMs": 3769.600000023842,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 2.600000023841858,
+            "elapsedMs": 3755
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.899999976158142,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 312.69999945163727,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 292.5999993085861,
+          "materializeCalls": 512,
+          "materializeMs": 5.700000047683716,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2299.000003695488,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2128.9000047445297,
+          "materializeCalls": 4096,
+          "materializeMs": 14.899999380111694,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 19.40000033378601
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 12.100000023841858
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 3.2000004053115845
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2170.000002384186
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6097496296513202,
+        "referenceIoAndMaterializationMs": 2143.8000041246414,
+        "referenceIoAndMaterializationShare": 0.5685868884124806,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3770.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "warmup",
+      "index": 1,
+      "order": 22,
+      "jobId": 22,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 77198,
+      "startedAtMs": 77198.10000002384,
+      "finishedAtMs": 80952,
+      "wallMs": 3754,
+      "firstRowArrivalMs": 25.200000047683716,
+      "firstDisplayMs": 27,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3.600000023841858,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.700000047683716,
+          "doneMs": 3753.7999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 8.799999952316284,
+            "elapsedMs": 3737.5999999046326
+          }
+        },
+        {
+          "createdMs": 3.799999952316284,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.700000047683716,
+          "doneMs": 3752.2999999523163,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 5.899999976158142,
+            "elapsedMs": 3736
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 2.799999952316284,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 314.09999907016754,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 293.6999982595444,
+          "materializeCalls": 512,
+          "materializeMs": 4.500000715255737,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2250.999997615814,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2083.8999985456467,
+          "materializeCalls": 4096,
+          "materializeMs": 13.199999451637268,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 18.300000190734863
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 11.8000009059906
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.500000238418579
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2155.3999989032745
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.5996270638294657,
+        "referenceIoAndMaterializationMs": 2097.099997997284,
+        "referenceIoAndMaterializationShare": 0.5586307932864368,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3753.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "warmup",
+      "index": 2,
+      "order": 23,
+      "jobId": 23,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 80989.89999997616,
+      "startedAtMs": 80989.89999997616,
+      "finishedAtMs": 84783.60000002384,
+      "wallMs": 3793.7000000476837,
+      "firstRowArrivalMs": 20.200000047683716,
+      "firstDisplayMs": 22.399999976158142,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 1.899999976158142,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.100000023841858,
+          "doneMs": 3793.5,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 6.700000047683716,
+            "elapsedMs": 3780.100000023842
+          }
+        },
+        {
+          "createdMs": 1.899999976158142,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3.100000023841858,
+          "doneMs": 3792.8000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.9000000953674316,
+            "elapsedMs": 3779.2000000476837
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.5,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 326.1999999284744,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 305.7999997138977,
+          "materializeCalls": 512,
+          "materializeMs": 4.100000023841858,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2310.0999995470047,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2120.399999976158,
+          "materializeCalls": 4096,
+          "materializeMs": 15.49999988079071,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 19.799999356269836
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 12.399999618530273
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 5.299999833106995
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2145.5000001192093
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6089305953338346,
+        "referenceIoAndMaterializationMs": 2135.899999856949,
+        "referenceIoAndMaterializationShare": 0.5630123625563704,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3793.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 1,
+      "order": 24,
+      "jobId": 24,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 84821.29999995232,
+      "startedAtMs": 84821.29999995232,
+      "finishedAtMs": 88756.39999997616,
+      "wallMs": 3935.100000023842,
+      "firstRowArrivalMs": 19,
+      "firstDisplayMs": 20.40000009536743,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.4000000953674316,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.6999999284744263,
+          "doneMs": 3934.8000000715256,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 4.800000071525574,
+            "elapsedMs": 3920.7000000476837
+          }
+        },
+        {
+          "createdMs": 2.5,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.6999999284744263,
+          "doneMs": 3933.2000000476837,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.200000047683716,
+            "elapsedMs": 3918.899999976158
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 2,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 330.10000026226044,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 310.3000009059906,
+          "materializeCalls": 512,
+          "materializeMs": 4.5,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2287.400000810623,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2104.200000524521,
+          "materializeCalls": 4096,
+          "materializeMs": 17.100001215934753,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 20.90000009536743
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 13.500000596046448
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.899999737739563
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2294.0000017881393
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.5812812891150834,
+        "referenceIoAndMaterializationMs": 2121.3000017404556,
+        "referenceIoAndMaterializationShare": 0.5390714344559485,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3934.7 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 2,
+      "order": 25,
+      "jobId": 25,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 88794.79999995232,
+      "startedAtMs": 88794.79999995232,
+      "finishedAtMs": 92616.79999995232,
+      "wallMs": 3822,
+      "firstRowArrivalMs": 19.300000071525574,
+      "firstDisplayMs": 20.800000071525574,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.3000000715255737,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.100000023841858,
+          "doneMs": 3821.7000000476837,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 6,
+            "elapsedMs": 3808.5
+          }
+        },
+        {
+          "createdMs": 2.4000000953674316,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3.100000023841858,
+          "doneMs": 3820,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.799999952316284,
+            "elapsedMs": 3806.2999999523163
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.899999976158142,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 318.00000059604645,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 298.00000047683716,
+          "materializeCalls": 512,
+          "materializeMs": 4.8999998569488525,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2323.599999666214,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2142.8000000715256,
+          "materializeCalls": 4096,
+          "materializeMs": 15,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 19.600000619888306
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 15.299999117851257
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.499999403953552
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2165.299995660782
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6079539507237609,
+        "referenceIoAndMaterializationMs": 2157.8000000715256,
+        "referenceIoAndMaterializationShare": 0.564573521735093,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3821.5 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 3,
+      "order": 26,
+      "jobId": 26,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 92654.39999997616,
+      "startedAtMs": 92654.39999997616,
+      "finishedAtMs": 96480.79999995232,
+      "wallMs": 3826.399999976158,
+      "firstRowArrivalMs": 22.200000047683716,
+      "firstDisplayMs": 23.700000047683716,
+      "sinkOpenMs": 0.10000002384185791,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2.200000047683716,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.3000000715255737,
+          "doneMs": 3826,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 6.600000023841858,
+            "elapsedMs": 3810.5
+          }
+        },
+        {
+          "createdMs": 2.399999976158142,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 2.9000000953674316,
+          "doneMs": 3824.8000000715256,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 4.399999976158142,
+            "elapsedMs": 3809.100000023842
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.7999999523162842,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 315.39999973773956,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 292.7999995946884,
+          "materializeCalls": 512,
+          "materializeMs": 5.1000001430511475,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2317.9000005722046,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2135.999997496605,
+          "materializeCalls": 4096,
+          "materializeMs": 16.50000023841858,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 17.09999966621399
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 12.600000023841858
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 4.6000001430511475
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2167.9999994039536
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6057652102724878,
+        "referenceIoAndMaterializationMs": 2152.4999977350235,
+        "referenceIoAndMaterializationShare": 0.5625392007496434,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3825.8 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 4,
+      "order": 27,
+      "jobId": 27,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 96516.5,
+      "startedAtMs": 96516.5,
+      "finishedAtMs": 100384.10000002384,
+      "wallMs": 3867.600000023842,
+      "firstRowArrivalMs": 19.700000047683716,
+      "firstDisplayMs": 22.299999952316284,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 2,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 3.399999976158142,
+          "doneMs": 3867.2999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 5,
+            "elapsedMs": 3852.5999999046326
+          }
+        },
+        {
+          "createdMs": 2.100000023841858,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3.600000023841858,
+          "doneMs": 3866.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.1999999284744263,
+            "elapsedMs": 3851.399999976158
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 1.600000023841858,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 318.9999988079071,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 297.99999928474426,
+          "materializeCalls": 512,
+          "materializeMs": 4.299999833106995,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2355.700003385544,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2178.1000043153763,
+          "materializeCalls": 4096,
+          "materializeMs": 14.799999833106995,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 17.699999928474426
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 13.200000286102295
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 5.5
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2202.400002002716
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.6090857387969341,
+        "referenceIoAndMaterializationMs": 2192.9000041484833,
+        "referenceIoAndMaterializationShare": 0.5669924511673816,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3867.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    },
+    {
+      "variant": "baseline",
+      "backend": "js",
+      "near": 3,
+      "phase": "formal",
+      "index": 5,
+      "order": 28,
+      "jobId": 28,
+      "timeOriginMs": 1795495848192.3,
+      "clickAtMs": 100423,
+      "startedAtMs": 100423,
+      "finishedAtMs": 104094.60000002384,
+      "wallMs": 3671.600000023842,
+      "firstRowArrivalMs": 23.5,
+      "firstDisplayMs": 25.100000023841858,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0,
+      "workers": [
+        {
+          "createdMs": 3.200000047683716,
+          "protocol": {
+            "requests": 8195,
+            "replies": 8195,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "decode",
+          "loadMs": 2.899999976158142,
+          "doneMs": 3671.2999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 594831,
+            "outputProduced": 2097152,
+            "rows": 4096,
+            "coreWorkspaceBytes": 10751,
+            "bridgeBufferPeakBytes": 4440,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 344,
+            "outputPeakBytes": 1024,
+            "firstRowInputConsumed": 385,
+            "firstRowMs": 6.199999928474426,
+            "elapsedMs": 3654.0999999046326
+          }
+        },
+        {
+          "createdMs": 3.299999952316284,
+          "protocol": {
+            "requests": 8707,
+            "replies": 8707,
+            "peakPending": 1,
+            "pending": 0,
+            "violations": 0
+          },
+          "mode": "encode",
+          "loadMs": 3,
+          "doneMs": 3670.5,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 2097152,
+            "outputProduced": 594831,
+            "rows": 4096,
+            "coreWorkspaceBytes": 9992,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 344,
+            "firstRowInputConsumed": 512,
+            "firstRowMs": 3.6999999284744263,
+            "elapsedMs": 3653.0999999046326
+          }
+        }
+      ],
+      "diagnostic": {
+        "header": {
+          "requests": 1,
+          "requestMs": 0,
+          "blobReads": 1,
+          "blobBytes": 65537,
+          "peakBlobBytes": 65537,
+          "arrayBufferMs": 2.700000047683716,
+          "materializeCalls": 0,
+          "materializeMs": 0,
+          "peakMaterializedBytes": 0
+        },
+        "source": {
+          "requests": 513,
+          "requestMs": 293.2000004053116,
+          "blobReads": 512,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 8192,
+          "arrayBufferMs": 273.4000004529953,
+          "materializeCalls": 512,
+          "materializeMs": 4,
+          "peakMaterializedBytes": 8192
+        },
+        "reference": {
+          "requests": 4096,
+          "requestMs": 2202.500003695488,
+          "blobReads": 4096,
+          "blobBytes": 4194304,
+          "peakBlobBytes": 1024,
+          "arrayBufferMs": 2024.2000014781952,
+          "materializeCalls": 4096,
+          "materializeMs": 14.09999966621399,
+          "peakMaterializedBytes": 1024
+        },
+        "comparison": {
+          "calls": 4096,
+          "ms": 17.500000715255737
+        },
+        "preview": {
+          "calls": 4096,
+          "ms": 11.399999737739563
+        },
+        "sinkWrite": {
+          "calls": 4098,
+          "ms": 6.100000619888306
+        },
+        "pipeWrite": {
+          "calls": 4098,
+          "ms": 2087.8000010252
+        },
+        "rejectedJobContinuations": 0,
+        "staleWorkerMessages": 0,
+        "referenceCachePeakBytes": 0,
+        "referenceWindowLoads": 0,
+        "referencePreAckShare": 0.599874715023746,
+        "referenceIoAndMaterializationMs": 2038.3000011444092,
+        "referenceIoAndMaterializationShare": 0.5551530670909612,
+        "referenceRatioMeasuredIncludesScheduling": true
+      },
+      "status": "Complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 3",
+      "encoded": "594,831 B",
+      "maxError": "3",
+      "appLatency": "3671.1 ms",
+      "workspace": "9,992 / 10,751 B",
+      "queues": "0 / 0 B · max 344 / 1024 B",
+      "progress": 4096,
+      "downloadVisible": false
+    }
+  ],
+  "failures": [],
+  "actualBrowserResponses": {
+    "/": {
+      "status": 200,
+      "deliveredSha256": "8369915b3cd9d1afdb13b62cca67c3867bd56b7eefb8c541ee3e38f83da8fade",
+      "browserBodySha256": "8369915b3cd9d1afdb13b62cca67c3867bd56b7eefb8c541ee3e38f83da8fade"
+    },
+    "/baseline/web/": {
+      "status": 200,
+      "deliveredSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "browserBodySha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2"
+    },
+    "/baseline/web/style.css": {
+      "status": 200,
+      "deliveredSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "browserBodySha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b"
+    },
+    "/baseline/web/app.mjs": {
+      "status": 200,
+      "deliveredSha256": "5da8a73855417b5557fac7fd1fd3915241830121e15022e1bef8f3cfe11de888",
+      "browserBodySha256": "5da8a73855417b5557fac7fd1fd3915241830121e15022e1bef8f3cfe11de888"
+    },
+    "/baseline/sdk/index.mjs": {
+      "status": 200,
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "status": 200,
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/baseline/web/labels.mjs": {
+      "status": 200,
+      "deliveredSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "browserBodySha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67"
+    },
+    "/baseline/web/transport.mjs": {
+      "status": 200,
+      "deliveredSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "browserBodySha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+    },
+    "/baseline/web/preview.mjs": {
+      "status": 200,
+      "deliveredSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "browserBodySha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0"
+    },
+    "/baseline/web/pgm.mjs": {
+      "status": 200,
+      "deliveredSha256": "cbe01119681f78d0c57ef35333b6ac48698628a427b3644f8ab8279548d2373b",
+      "browserBodySha256": "cbe01119681f78d0c57ef35333b6ac48698628a427b3644f8ab8279548d2373b"
+    },
+    "/baseline/sdk/worker.mjs": {
+      "status": 200,
+      "deliveredSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "browserBodySha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "status": 200,
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    },
+    "/baseline/sdk/generated/core.mjs": {
+      "status": 200,
+      "deliveredSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "browserBodySha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93"
+    }
+  },
+  "serverDelivered": {
+    "/": {
+      "document ← ": 1
+    },
+    "/baseline/web/": {
+      "iframe ← /": 1
+    },
+    "/baseline/web/style.css": {
+      "style ← /baseline/web/": 1
+    },
+    "/baseline/web/app.mjs": {
+      "script ← /baseline/web/": 1
+    },
+    "/baseline/sdk/index.mjs": {
+      "script ← /baseline/web/app.mjs": 1,
+      "worker ← /baseline/sdk/worker.mjs": 56
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/labels.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/pgm.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/preview.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/transport.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/sdk/worker.mjs": {
+      "worker ← /baseline/web/": 56
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "empty ← /baseline/sdk/worker.mjs": 28
+    },
+    "/baseline/sdk/generated/core.mjs": {
+      "script ← /baseline/sdk/index.mjs": 28
+    }
+  },
+  "harness": {
+    "runnerSha256": "3dafe62d3039d56331ddb298667ae81b93b9fa7264b1507a3b189d2814f824b1",
+    "probeSha256": "248c4195fdc8691c3d00efaf769eeb14fdfce585033e3c104947061d7c0cf935"
+  },
+  "finishedUtc": "2026-11-24T04:52:32.292Z",
+  "summary": [
+    {
+      "backend": "wasm-gc",
+      "near": 0,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            3186,
+            3014.2000000476837,
+            3074.100000023842,
+            3122.399999976158,
+            3076.5
+          ],
+          "median": 3076.5,
+          "min": 3014.2000000476837,
+          "max": 3186,
+          "mad": 45.89999997615814
+        },
+        "firstDisplayMs": {
+          "samples": [
+            16.700000047683716,
+            15.899999976158142,
+            13.400000095367432,
+            17.799999952316284,
+            14.5
+          ],
+          "median": 15.899999976158142,
+          "min": 13.400000095367432,
+          "max": 17.799999952316284,
+          "mad": 1.399999976158142
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            15.5,
+            14.700000047683716,
+            12.300000071525574,
+            16.399999976158142,
+            13.299999952316284
+          ],
+          "median": 14.700000047683716,
+          "min": 12.300000071525574,
+          "max": 16.399999976158142,
+          "mad": 1.4000000953674316
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0.10000002384185791,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0.10000002384185791,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      }
+    },
+    {
+      "backend": "wasm-gc",
+      "near": 3,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            3841.7000000476837,
+            3738.399999976158,
+            3722.2000000476837,
+            3704.3000000715256,
+            3770.4000000953674
+          ],
+          "median": 3738.399999976158,
+          "min": 3704.3000000715256,
+          "max": 3841.7000000476837,
+          "mad": 32.00000011920929
+        },
+        "firstDisplayMs": {
+          "samples": [
+            20.700000047683716,
+            18.299999952316284,
+            19.5,
+            17,
+            19.100000023841858
+          ],
+          "median": 19.100000023841858,
+          "min": 17,
+          "max": 20.700000047683716,
+          "mad": 0.8000000715255737
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            18.600000023841858,
+            16.899999976158142,
+            18,
+            15.5,
+            17.5
+          ],
+          "median": 17.5,
+          "min": 15.5,
+          "max": 18.600000023841858,
+          "mad": 0.6000000238418579
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0.10000002384185791,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0.10000002384185791,
+          "mad": 0
+        }
+      }
+    },
+    {
+      "backend": "js",
+      "near": 0,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            4084.100000023842,
+            3743,
+            3619.2999999523163,
+            3885.8000000715256,
+            3527.5
+          ],
+          "median": 3743,
+          "min": 3527.5,
+          "max": 4084.100000023842,
+          "mad": 142.80000007152557
+        },
+        "firstDisplayMs": {
+          "samples": [
+            24.200000047683716,
+            24,
+            19.5,
+            20.600000023841858,
+            22
+          ],
+          "median": 22,
+          "min": 19.5,
+          "max": 24.200000047683716,
+          "mad": 2
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            22.800000071525574,
+            22.300000071525574,
+            17.899999976158142,
+            19.100000023841858,
+            20.600000023841858
+          ],
+          "median": 20.600000023841858,
+          "min": 17.899999976158142,
+          "max": 22.800000071525574,
+          "mad": 1.7000000476837158
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      }
+    },
+    {
+      "backend": "js",
+      "near": 3,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            3935.100000023842,
+            3822,
+            3826.399999976158,
+            3867.600000023842,
+            3671.600000023842
+          ],
+          "median": 3826.399999976158,
+          "min": 3671.600000023842,
+          "max": 3935.100000023842,
+          "mad": 41.200000047683716
+        },
+        "firstDisplayMs": {
+          "samples": [
+            20.40000009536743,
+            20.800000071525574,
+            23.700000047683716,
+            22.299999952316284,
+            25.100000023841858
+          ],
+          "median": 22.299999952316284,
+          "min": 20.40000009536743,
+          "max": 25.100000023841858,
+          "mad": 1.4999998807907104
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            19,
+            19.300000071525574,
+            22.200000047683716,
+            19.700000047683716,
+            23.5
+          ],
+          "median": 19.700000047683716,
+          "min": 19,
+          "max": 23.5,
+          "mad": 0.7000000476837158
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0,
+            0,
+            0.10000002384185791,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0.10000002384185791,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        }
+      }
+    }
+  ],
+  "gate": null,
+  "recordedUtc": "2026-11-24T04:52:32.293Z"
+}
