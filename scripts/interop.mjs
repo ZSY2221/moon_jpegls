@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { access, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { createOracle, readRaw, writeRaw } from './oracle.mjs';
-import { decodeImage, decodeStream, encodeImage, encodeStream, loadCore } from '../sdk/index.mjs';
+import { CodecError, decodeImage, decodeStream, encodeImage, encodeStream, loadCore } from '../sdk/index.mjs';
 
 function checkSamples(actual, expected, tolerance, label) {
   assert.equal(actual.length, expected.length, `${label}: sample count`);
@@ -221,25 +222,82 @@ async function invalidTests(core, initial, directory, label, counts) {
   counts.trailingAllow++;
 }
 
-async function mutationTests(core, source, directory, backend, counts, seed) {
+async function attemptMutation(decodeTrial, isExpectedRejection) {
+  try {
+    const image = await decodeTrial();
+    return { image, observation: { outcome: 'accepted', frame: image.frame } };
+  } catch (error) {
+    if (!isExpectedRejection(error)) throw error;
+    return { observation: { outcome: 'rejected', name: error.name, code: error.code, message: error.message } };
+  }
+}
+
+async function mutationTests(core, oracle, source, directory, backend, counts, seed) {
   let entropySeed = seed >>> 0;
   const start = scanStart(source);
+  const chunk = 3;
+  const trials = [];
+  const corpus = {
+    source: 'split-16bit-near3.jls',
+    sourceSha256: createHash('sha256').update(source).digest('hex'),
+    seed, backend, inputChunkSize: chunk, oracle: '@team-charls/charls-wasm 0.10.0'
+  };
   for (let i = 0; i < 48; i++) {
     const changed = Buffer.from(source);
     entropySeed = (Math.imul(entropySeed, 1664525) + 1013904223) >>> 0;
-    changed[start + entropySeed % (changed.length - start - 2)] ^= 1 << (entropySeed >>> 29);
+    const offset = start + entropySeed % (changed.length - start - 2);
+    const bit = entropySeed >>> 29;
+    changed[offset] ^= 1 << bit;
+    const trial = {
+      index: i, entropySeed, offset, bit, originalByte: source[offset], mutatedByte: changed[offset],
+      sha256: createHash('sha256').update(changed).digest('hex')
+    };
+    let moon;
+    let reference;
+    let classification = 'unexpected-moonjls-error';
     try {
-      const result = await decode(core, changed, { chunk: 3 });
-      assert.equal(result.pixels.length, result.frame.width * result.frame.height);
-      counts.entropyMutationAccepted++;
-    } catch (error) {
-      if (error instanceof assert.AssertionError || !/invalid|malform|bit|marker|truncat|format|entropy|eof|input|corrupt|unsupported/i.test(errorLabel(error))) {
-        await writeFile(join(directory, `${backend}-failed-mutation-${i}.jls`), changed);
-        throw error;
+      // Structural rejection codes for this fixed entropy-only corpus.
+      moon = await attemptMutation(
+        () => decode(core, changed, { chunk }),
+        (error) => error instanceof CodecError && error.code === 'InvalidData'
+      );
+      trial.moonjls = moon.observation;
+      classification = 'unexpected-charls-error';
+      reference = await attemptMutation(
+        () => oracle.decode(changed),
+        (error) => error?.name === 'JpegLSError' && error.code === 5
+      );
+      trial.charls = reference.observation;
+      classification = 'unadjudicated-acceptance-disagreement';
+      assert.equal(moon.observation.outcome, reference.observation.outcome, `${backend} mutation ${i}: acceptance disagreement`);
+      if (moon.image) {
+        classification = 'reconstruction-mismatch';
+        compareFrame(moon.image.frame, reference.image.frame);
+        checkSamples(moon.image.pixels, reference.image.pixels, 0, `${backend} mutation ${i} reference reconstruction`);
+        trial.reconstructedSamples = Array.from(moon.image.pixels);
+        counts.entropyMutationAccepted++;
+        trial.classification = 'matched-reconstruction';
+      } else {
+        counts.entropyMutationRejected++;
+        trial.classification = 'matched-structural-rejection';
       }
-      counts.entropyMutationRejected++;
+      trials.push(trial);
+    } catch (error) {
+      const stem = `${backend}-failed-mutation-${i}`;
+      await writeFile(join(directory, `${stem}.jls`), changed);
+      const failure = {
+        ...corpus, ...trial, classification, stream: `${stem}.jls`,
+        error: { name: error?.name, code: error?.code, message: error?.message ?? String(error) },
+        moonjlsSamples: moon?.image ? Array.from(moon.image.pixels) : undefined,
+        charlsSamples: reference?.image ? Array.from(reference.image.pixels) : undefined
+      };
+      await writeFile(join(directory, `${stem}.json`), `${JSON.stringify(failure, null, 2)}\n`);
+      throw new Error(`${backend} mutation ${i}: ${classification}, see ${stem}.json`, { cause: error });
     }
   }
+  const report = `${backend}-entropy-mutations.json`;
+  await writeFile(join(directory, report), `${JSON.stringify({ ...corpus, trials }, null, 2)}\n`);
+  counts.entropyMutationReports.push(report);
 }
 
 async function main(directory, backends) {
@@ -249,7 +307,7 @@ async function main(directory, backends) {
     backendByteMatches: 0, outputQuantumByteMatches: 0, allSingleCuts: 0, wholeImageMatches: 0, truncationPrefixes: 0,
     supportedOfficial: 0, unsupportedOfficial: 0, explicitPresetVariants: 0,
     pauseResume: 0, cancellation: 0, negativeStructures: 0, trailingAllow: 0,
-    entropyMutationAccepted: 0, entropyMutationRejected: 0
+    entropyMutationAccepted: 0, entropyMutationRejected: 0, entropyMutationDistinctInputs: 48, entropyMutationReports: []
   };
   let mostStuffed = { entropyFF: 0, entropyBytes: 0 };
   const loaded = new Map();
@@ -350,7 +408,7 @@ async function main(directory, backends) {
       const metadata = withMarker(withMarker(plain, 0xe1, Buffer.of(0xff, 0xd9, 0xe0)), 0xfe, Buffer.from('comment'));
       checkSamples((await decode(core, metadata, { chunk: 1 })).pixels, gray, 0, `${backend} bounded metadata skips`);
       await invalidTests(core, plain, directory, backend, counts);
-      await mutationTests(core, stream, directory, backend, counts, manifest.seed);
+      await mutationTests(core, oracle, stream, directory, backend, counts, manifest.seed);
 
       for (const item of manifest.conformance) {
         const official = await readFile(join(directory, item.name));

@@ -3,6 +3,7 @@
 import argparse
 from collections import defaultdict
 from datetime import datetime, timezone
+from hashlib import file_digest
 import json
 import os
 from pathlib import Path
@@ -30,6 +31,7 @@ def check_samples(name, output, expected, tolerance):
 
 def prepare(directory, with_conformance, match):
     cases = []
+    inputs = []
     for bits in (8, 12, 16):
         for pattern, pixels in fixtures(bits):
             for near in range(4):
@@ -37,17 +39,22 @@ def prepare(directory, with_conformance, match):
                 if match and match not in name:
                     continue
                 case = {"name": name, "width": pixels.shape[1], "height": pixels.shape[0], "bits": bits, "near": near}
-                save_raw(directory / f"{name}.raw", pixels)
+                raw = directory / f"{name}.raw"
+                save_raw(raw, pixels)
+                inputs.append(raw)
                 if bits != 12:
                     native = encode_native(pixels, bits, near)
                     check_samples(name, decode_native(native), pixels, near)
-                    (directory / f"{name}.native.jls").write_bytes(native)
+                    reference = directory / f"{name}.native.jls"
+                    reference.write_bytes(native)
+                    inputs.append(reference)
                 cases.append(case)
 
     official = []
     if with_conformance:
         original = TOOLS / "conformance" / "test16.pgm"
         download(original, CONFORMANCE + original.name, 140_000, CONFORMANCE_HASHES[original.name])
+        inputs.append(original)
         pixels, maximum = pgm_samples(original)
         for fixture, near in [("t16e0.jls", 0), ("t16e3.jls", 3)]:
             stream = download(TOOLS / "conformance" / fixture, CONFORMANCE + fixture, 140_000, CONFORMANCE_HASHES[fixture])
@@ -55,10 +62,12 @@ def prepare(directory, with_conformance, match):
             check_samples(fixture, reconstructed, pixels, near)
             save_raw(directory / f"{fixture}.raw", reconstructed)
             (directory / fixture).write_bytes(stream)
+            inputs.extend((directory / fixture, directory / f"{fixture}.raw"))
             official.append({"name": fixture, "expected": "valid", "near": near, "sourceMaximum": maximum})
         for fixture in ["t8c0e0.jls", "t8c1e0.jls", "t8c2e0.jls", "t8sse0.jls", "t8nde0.jls"]:
             stream = download(TOOLS / "conformance" / fixture, CONFORMANCE + fixture, 140_000, CONFORMANCE_HASHES[fixture])
             (directory / fixture).write_bytes(stream)
+            inputs.append(directory / fixture)
             official.append({"name": fixture, "expected": "unsupported"})
     if not cases:
         raise ValueError("no matching image cases")
@@ -67,7 +76,12 @@ def prepare(directory, with_conformance, match):
         tracked_diff = subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT, text=True).splitlines()
     except (OSError, subprocess.CalledProcessError):
         revision, tracked_diff = "unavailable", []
+    fixture_hashes = {}
+    for path in inputs:
+        with path.open("rb") as file:
+            fixture_hashes[path.name] = file_digest(file, "sha256").hexdigest()
     manifest = {"seed": SEED, "charlsNativeCommit": CHARLS, "revision": revision, "trackedDiff": tracked_diff,
+                "fixtureSha256": fixture_hashes,
                 "command": [str(Path(sys.executable)), *sys.argv], "cases": cases, "conformance": official}
     (directory / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf8")
     return manifest
