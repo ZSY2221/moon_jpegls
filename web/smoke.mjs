@@ -476,8 +476,33 @@ try {
   assert.equal(await page.locator('#error').textContent(), '3');
   await select('language', 'zh');
   await status('已完成');
+  assert.equal(await page.title(), 'MoonJLS · JPEG-LS 工作台');
+  assert.equal(await page.locator('.view-tabs').getAttribute('aria-label'), '图像显示模式');
   await select('language', 'en');
-  console.log(JSON.stringify({ test: 'browser bounded verification and locale switch', inputChunkSize: 1024 }));
+  assert.equal(await page.title(), 'MoonJLS · JPEG-LS Workbench');
+  assert.equal(await page.locator('.view-tabs').getAttribute('aria-label'), 'Image view mode');
+
+  // Empty file-picker cancel should keep loaded source and completed results intact.
+  await page.locator('#file').setInputFiles([]);
+  assert.equal(await text('phase'), 'Complete');
+  assert.equal(await text('error'), '3');
+
+  // Drag-and-drop PGM file load resets drop ring and sets source cleanly.
+  const dropBytes = smallPgm([100, 200, 300, 400]).bytes;
+  await page.evaluate((raw) => {
+    const dt = new DataTransfer();
+    dt.items.add(new File([Uint8Array.from(raw)], 'dropped.pgm', { type: 'image/x-portable-graymap' }));
+    document.body.dispatchEvent(new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer: dt }));
+    document.body.dispatchEvent(new DragEvent('dragover', { bubbles: true, cancelable: true, dataTransfer: dt }));
+    document.body.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: dt }));
+  }, [...dropBytes]);
+  assert.equal(await text('source-name'), 'dropped.pgm');
+  assert.equal(await page.locator('#workspace-view').getAttribute('data-drop-active'), 'false');
+  await select('near', '0');
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('error'), '0');
+  console.log(JSON.stringify({ test: 'browser bounded verification, locale ARIA/title, cancel-picker guard & drag-drop', inputChunkSize: 1024 }));
 
   await click('example');
   await select('near', '0');

@@ -112,12 +112,20 @@ priv struct Parameters {
   near : Int32
   step : Int32
   range : Int32
+  half_range : Int32
+  min_err : Int32
+  max_err : Int32
+  wrap : Int32
+  maxval_plus_near : Int32
+  neg_near : Int32
   qbpp : Int32
   limit : Int32
+  escape_limit : Int32
   t1 : Int32
   t2 : Int32
   t3 : Int32
   reset : Int32
+  q_lut : FixedArray[Int32]
 }
 
 ///|
@@ -181,16 +189,46 @@ fn default_parameters(maxval : Int32, near : Int32) -> Parameters {
   let step = 2 * near + 1
   let range = (maxval + 2 * near) / step + 1
   let bpp = max(2, ceil_log2(maxval + 1))
+  let qbpp = ceil_log2(range)
+  let limit = 2 * (bpp + max(8, bpp))
+  let q_lut = FixedArray::makei(2 * t3 + 1, i => {
+    let g = i - t3
+    let mag = g.abs()
+    let bucket = if mag >= t3 {
+      4
+    } else if mag >= t2 {
+      3
+    } else if mag >= t1 {
+      2
+    } else if mag > near {
+      1
+    } else {
+      0
+    }
+    if g < 0 {
+      -bucket
+    } else {
+      bucket
+    }
+  })
   {
     maxval,
     near,
     step,
     range,
-    qbpp: ceil_log2(range),
-    limit: 2 * (bpp + max(8, bpp)),
+    half_range: (range + 1) >> 1,
+    min_err: -(range >> 1),
+    max_err: (range - 1) >> 1,
+    wrap: range * step,
+    maxval_plus_near: maxval + near,
+    neg_near: -near,
+    qbpp,
+    limit,
+    escape_limit: limit - qbpp - 1,
     t1,
     t2,
     t3,
     reset: 64,
+    q_lut,
   }
 }

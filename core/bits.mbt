@@ -147,16 +147,14 @@ fn BitReader::new() -> BitReader {
 }
 
 ///|
-fn BitReader::byte(self : BitReader, byte : Int32) -> Unit raise CodecError {
-  guard !self.stuffed || byte < 128 else {
-    if byte >= 0xD0 && byte <= 0xD7 {
-      raise UnsupportedFeature("restart marker")
-    }
-    raise InvalidData("marker inside an incomplete scan")
+fn BitReader::byte(self : BitReader, byte : Int32) -> Int32 {
+  if self.stuffed && byte >= 128 {
+    return if byte >= 0xD0 && byte <= 0xD7 { 1 } else { 2 }
   }
   self.word = byte
   self.left = if self.stuffed { 7 } else { 8 }
   self.stuffed = byte == 255
+  0
 }
 
 ///|
@@ -201,18 +199,18 @@ fn GolombReader::start(
 fn GolombReader::read(
   self : GolombReader,
   bits : BitReader,
-) -> Int32? raise CodecError {
+) -> Int32 {
   while self.unary {
     if bits.left == 0 {
-      return None
+      return -1
     }
     if bits.take(1) == 1 {
       self.unary = false
       self.left = if self.zeros == self.escape { self.qbpp } else { self.k }
     } else {
       self.zeros += 1
-      guard self.zeros <= self.escape else {
-        raise InvalidData("Golomb unary exceeds limit")
+      if self.zeros > self.escape {
+        return -2
       }
     }
   }
@@ -220,10 +218,10 @@ fn GolombReader::read(
   self.value = (self.value << count) | bits.take(count)
   self.left -= count
   if self.left > 0 {
-    None
+    -1
   } else if self.zeros == self.escape {
-    Some(self.value + 1)
+    self.value + 1
   } else {
-    Some((self.zeros << self.k) | self.value)
+    (self.zeros << self.k) | self.value
   }
 }

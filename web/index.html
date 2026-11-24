@@ -139,7 +139,7 @@
     </aside>
 
     <div class="stage-column">
-      <section class="workspace-bar panel" aria-label="Task status and view selector">
+      <section class="workspace-bar panel" aria-label="Task status and view selector" data-aria-label="ariaWorkspaceBar">
         <div class="bar-top">
           <div class="status-lead">
             <span id="phase" data-state="idle">No source</span>
@@ -149,7 +149,7 @@
               <span id="task-meta"></span>
             </span>
           </div>
-          <div class="view-tabs" role="tablist" aria-label="Image view mode">
+          <div class="view-tabs" role="tablist" aria-label="Image view mode" data-aria-label="ariaViewTabs">
             <button type="button" role="tab" class="view-tab" data-view="compare" aria-selected="true" tabindex="0" data-label="viewCompare">Compare</button>
             <button type="button" role="tab" class="view-tab" data-view="original" aria-selected="false" tabindex="-1" data-label="original">Original</button>
             <button type="button" role="tab" class="view-tab" data-view="reconstruction" aria-selected="false" tabindex="-1" data-label="viewReconstruction">Reconstruction</button>
@@ -349,7 +349,7 @@
                 <dd>64 MiB</dd>
               </div>
             </dl>
-            <div class="pipeline-diagram" aria-label="Streaming pipeline schematic">
+            <div class="pipeline-diagram" aria-label="Streaming pipeline schematic" data-aria-label="ariaPipeline">
               <span class="pipeline-label" data-label="pipelineCaption">Pipeline schematic</span>
               <div class="pipeline-steps">
                 <span data-label="pipeRead">Chunk read</span>

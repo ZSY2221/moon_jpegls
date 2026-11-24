@@ -101,44 +101,67 @@ async fn encode_stream(
 }
 
 ///|
-async fn write_row(
+async fn buffer_row(
   sink : &@io.BinaryWriter,
   row : FixedArray[Int32],
   buffer : FixedArray[Byte],
+  filled : Int32,
   frame : @jls.Frame,
   format : Format,
-) -> (Int32, Int32) {
+) -> (Int32, Int32, Int32) {
   let wide = frame.bits > 8
   let big = match format {
     RawLittle => false
     RawBig | Pgm => true
   }
   let stride = if wide { 2 } else { 1 }
+  let cap = buffer.length()
+  let mut out_len = filled
   let mut position = 0
   let mut high_water = 0
-  while position < row.length() {
-    let available = row.length() - position
-    let per_chunk = buffer.length() / stride
-    let count = if available < per_chunk { available } else { per_chunk }
-    for index in 0..<count {
-      let sample = row[position + index]
-      if wide {
-        let high = (sample >> 8).to_byte()
-        let low = (sample & 255).to_byte()
-        buffer[index * 2] = if big { high } else { low }
-        buffer[index * 2 + 1] = if big { low } else { high }
+  let row_len = row.length()
+  while position < row_len {
+    let available = row_len - position
+    let per_space = (cap - out_len) / stride
+    let count = if available < per_space { available } else { per_space }
+    if wide {
+      if big {
+        let end = position + count
+        while position < end {
+          let sample = row[position]
+          buffer[out_len] = (sample >> 8).to_byte()
+          buffer[out_len + 1] = (sample & 255).to_byte()
+          out_len += 2
+          position += 1
+        }
       } else {
-        buffer[index] = sample.to_byte()
+        let end = position + count
+        while position < end {
+          let sample = row[position]
+          buffer[out_len] = (sample & 255).to_byte()
+          buffer[out_len + 1] = (sample >> 8).to_byte()
+          out_len += 2
+          position += 1
+        }
+      }
+    } else {
+      let end = position + count
+      while position < end {
+        buffer[out_len] = row[position].to_byte()
+        out_len += 1
+        position += 1
       }
     }
-    let written = Bytes::from_array(buffer[:count * stride])
-    sink.write(written[:])
-    if written.length() > high_water {
-      high_water = written.length()
+    if cap - out_len < stride {
+      let written = Bytes::from_array(buffer[:out_len])
+      sink.write(written[:])
+      if out_len > high_water {
+        high_water = out_len
+      }
+      out_len = 0
     }
-    position += count
   }
-  (row.length() * stride, high_water)
+  (row_len * stride, out_len, high_water)
 }
 
 ///|
@@ -151,6 +174,7 @@ async fn decode_stream(
 ) -> Unit {
   let decoder = @jls.Decoder::new(@jls.Limits::default())
   let output = FixedArray::make(if chunk < 2 { 2 } else { chunk }, b'\x00')
+  let mut out_len = 0
   let mut rows = 0
   let mut bytes = 0L
   let mut consumed = 0L
@@ -190,13 +214,15 @@ async fn decode_stream(
             sink.write(header[:])
             bytes += header.length().to_int64()
           }
-          let (count, peak) = write_row(
+          let (count, next_len, peak) = buffer_row(
             sink,
             decoder.row(),
             output,
+            out_len,
             frame,
             format,
           )
+          out_len = next_len
           bytes += count.to_int64()
           if peak > high_water {
             high_water = peak
@@ -207,6 +233,14 @@ async fn decode_stream(
       Done => {
         guard position == input.length() && !source.fill() else {
           raise Input("trailing bytes after EOI")
+        }
+        if sink is Some(sink) && out_len > 0 {
+          let written = Bytes::from_array(output[:out_len])
+          sink.write(written[:])
+          if out_len > high_water {
+            high_water = out_len
+          }
+          out_len = 0
         }
         break
       }

@@ -127,6 +127,47 @@ pub fn encoder_set(port : EncodePort, index : Int32, value : Int32) -> Unit {
 }
 
 ///|
+#export_name("encoder_set8")
+pub fn encoder_set8(
+  port : EncodePort,
+  offset : Int32,
+  p0 : Int32,
+  p1 : Int32,
+  p2 : Int32,
+  p3 : Int32,
+  p4 : Int32,
+  p5 : Int32,
+  p6 : Int32,
+  p7 : Int32,
+) -> Unit {
+  let inp = port.input
+  let u0 = p0.reinterpret_as_uint()
+  let u1 = p1.reinterpret_as_uint()
+  let u2 = p2.reinterpret_as_uint()
+  let u3 = p3.reinterpret_as_uint()
+  let u4 = p4.reinterpret_as_uint()
+  let u5 = p5.reinterpret_as_uint()
+  let u6 = p6.reinterpret_as_uint()
+  let u7 = p7.reinterpret_as_uint()
+  inp[offset] = (u0 & 0xFFFFU).reinterpret_as_int()
+  inp[offset + 1] = (u0 >> 16).reinterpret_as_int()
+  inp[offset + 2] = (u1 & 0xFFFFU).reinterpret_as_int()
+  inp[offset + 3] = (u1 >> 16).reinterpret_as_int()
+  inp[offset + 4] = (u2 & 0xFFFFU).reinterpret_as_int()
+  inp[offset + 5] = (u2 >> 16).reinterpret_as_int()
+  inp[offset + 6] = (u3 & 0xFFFFU).reinterpret_as_int()
+  inp[offset + 7] = (u3 >> 16).reinterpret_as_int()
+  inp[offset + 8] = (u4 & 0xFFFFU).reinterpret_as_int()
+  inp[offset + 9] = (u4 >> 16).reinterpret_as_int()
+  inp[offset + 10] = (u5 & 0xFFFFU).reinterpret_as_int()
+  inp[offset + 11] = (u5 >> 16).reinterpret_as_int()
+  inp[offset + 12] = (u6 & 0xFFFFU).reinterpret_as_int()
+  inp[offset + 13] = (u6 >> 16).reinterpret_as_int()
+  inp[offset + 14] = (u7 & 0xFFFFU).reinterpret_as_int()
+  inp[offset + 15] = (u7 >> 16).reinterpret_as_int()
+}
+
+///|
 #export_name("encoder_step")
 pub fn encoder_step(
   port : EncodePort,
@@ -162,6 +203,29 @@ pub fn encoder_byte(port : EncodePort, index : Int32) -> Int32 {
 }
 
 ///|
+#export_name("encoder_word")
+pub fn encoder_word(port : EncodePort, offset : Int32) -> Int32 {
+  let out = port.output
+  out[offset].to_int() |
+  (out[offset + 1].to_int() << 8) |
+  (out[offset + 2].to_int() << 16) |
+  (out[offset + 3].to_int() << 24)
+}
+
+///|
+#export_name("encoder_pack6")
+pub fn encoder_pack6(port : EncodePort, offset : Int32) -> Double {
+  let out = port.output
+  let lo = out[offset].to_int() |
+    (out[offset + 1].to_int() << 8) |
+    (out[offset + 2].to_int() << 16)
+  let hi = out[offset + 3].to_int() |
+    (out[offset + 4].to_int() << 8) |
+    (out[offset + 5].to_int() << 16)
+  lo.to_double() + hi.to_double() * 16777216.0
+}
+
+///|
 #export_name("encoder_workspace")
 pub fn encoder_workspace(port : EncodePort) -> Int32 {
   match port.codec {
@@ -183,6 +247,7 @@ pub struct DecodePort {
   codec : @jls.Decoder
   staging : FixedArray[Byte]
   mut input : Bytes
+  mut row : FixedArray[Int32]
   mut consumed : Int32
   mut status : @jls.Status
 }
@@ -202,6 +267,7 @@ pub fn decoder_new(
     ),
     staging: FixedArray::make(input_capacity, 0),
     input: b"",
+    row: [],
     consumed: 0,
     status: NeedInput,
   }
@@ -211,6 +277,63 @@ pub fn decoder_new(
 #export_name("decoder_set")
 pub fn decoder_set(port : DecodePort, index : Int32, value : Int32) -> Unit {
   port.staging[index] = value.to_byte()
+}
+
+///|
+#export_name("decoder_set8")
+pub fn decoder_set8(
+  port : DecodePort,
+  offset : Int32,
+  w0 : Int32,
+  w1 : Int32,
+  w2 : Int32,
+  w3 : Int32,
+  w4 : Int32,
+  w5 : Int32,
+  w6 : Int32,
+  w7 : Int32,
+) -> Unit {
+  let st = port.staging
+  let u0 = w0.reinterpret_as_uint()
+  let u1 = w1.reinterpret_as_uint()
+  let u2 = w2.reinterpret_as_uint()
+  let u3 = w3.reinterpret_as_uint()
+  let u4 = w4.reinterpret_as_uint()
+  let u5 = w5.reinterpret_as_uint()
+  let u6 = w6.reinterpret_as_uint()
+  let u7 = w7.reinterpret_as_uint()
+  st[offset] = (u0 & 255U).to_byte()
+  st[offset + 1] = ((u0 >> 8) & 255U).to_byte()
+  st[offset + 2] = ((u0 >> 16) & 255U).to_byte()
+  st[offset + 3] = (u0 >> 24).to_byte()
+  st[offset + 4] = (u1 & 255U).to_byte()
+  st[offset + 5] = ((u1 >> 8) & 255U).to_byte()
+  st[offset + 6] = ((u1 >> 16) & 255U).to_byte()
+  st[offset + 7] = (u1 >> 24).to_byte()
+  st[offset + 8] = (u2 & 255U).to_byte()
+  st[offset + 9] = ((u2 >> 8) & 255U).to_byte()
+  st[offset + 10] = ((u2 >> 16) & 255U).to_byte()
+  st[offset + 11] = (u2 >> 24).to_byte()
+  st[offset + 12] = (u3 & 255U).to_byte()
+  st[offset + 13] = ((u3 >> 8) & 255U).to_byte()
+  st[offset + 14] = ((u3 >> 16) & 255U).to_byte()
+  st[offset + 15] = (u3 >> 24).to_byte()
+  st[offset + 16] = (u4 & 255U).to_byte()
+  st[offset + 17] = ((u4 >> 8) & 255U).to_byte()
+  st[offset + 18] = ((u4 >> 16) & 255U).to_byte()
+  st[offset + 19] = (u4 >> 24).to_byte()
+  st[offset + 20] = (u5 & 255U).to_byte()
+  st[offset + 21] = ((u5 >> 8) & 255U).to_byte()
+  st[offset + 22] = ((u5 >> 16) & 255U).to_byte()
+  st[offset + 23] = (u5 >> 24).to_byte()
+  st[offset + 24] = (u6 & 255U).to_byte()
+  st[offset + 25] = ((u6 >> 8) & 255U).to_byte()
+  st[offset + 26] = ((u6 >> 16) & 255U).to_byte()
+  st[offset + 27] = (u6 >> 24).to_byte()
+  st[offset + 28] = (u7 & 255U).to_byte()
+  st[offset + 29] = ((u7 >> 8) & 255U).to_byte()
+  st[offset + 30] = ((u7 >> 16) & 255U).to_byte()
+  st[offset + 31] = (u7 >> 24).to_byte()
 }
 
 ///|
@@ -230,6 +353,9 @@ pub fn decoder_step(
   let step = port.codec.step(port.input, offset, count, eof != 0)
   port.consumed = step.consumed
   port.status = step.status
+  if step.status is RowReady {
+    port.row = port.codec.row()
+  }
   status_code(port.status)
 }
 
@@ -263,7 +389,23 @@ pub fn decoder_frame(port : DecodePort, field : Int32) -> Int32 {
 ///|
 #export_name("decoder_sample")
 pub fn decoder_sample(port : DecodePort, index : Int32) -> Int32 {
-  port.codec.row()[index]
+  port.row[index]
+}
+
+///|
+#export_name("decoder_pair")
+pub fn decoder_pair(port : DecodePort, offset : Int32) -> Int32 {
+  let r = port.row
+  r[offset] | (r[offset + 1] << 16)
+}
+
+///|
+#export_name("decoder_pack3")
+pub fn decoder_pack3(port : DecodePort, offset : Int32) -> Double {
+  let r = port.row
+  r[offset].to_double() +
+  r[offset + 1].to_double() * 65536.0 +
+  r[offset + 2].to_double() * 4294967296.0
 }
 
 ///|

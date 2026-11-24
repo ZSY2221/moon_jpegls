@@ -48,8 +48,9 @@ export async function openPgm(file, near, signal) {
     const output = new Uint16Array(size);
     if (sampleBytes === 1) output.set(bytes);
     else {
-      const view = new DataView(bytes.buffer);
-      for (let i = 0; i < size; i++) output[i] = view.getUint16(i * 2, false);
+      for (let i = 0, p = 0; i < size; i++, p += 2) {
+        output[i] = (bytes[p] << 8) | bytes[p + 1];
+      }
     }
     return output;
   };
@@ -107,8 +108,9 @@ export async function openPgm(file, near, signal) {
       const pixels = new Uint16Array(width);
       if (sampleBytes === 1) pixels.set(bytes.subarray(offset, offset + rowBytes));
       else {
-        const view = new DataView(bytes.buffer, offset, rowBytes);
-        for (let i = 0; i < width; i++) pixels[i] = view.getUint16(i * 2, false);
+        for (let i = 0, p = offset; i < width; i++, p += 2) {
+          pixels[i] = (bytes[p] << 8) | bytes[p + 1];
+        }
       }
       return pixels;
     },
@@ -126,8 +128,11 @@ export function pgmHeader({ width, height, bits }) {
 export function pgmRow(samples, { bits }) {
   if (bits === 8) return Uint8Array.from(samples);
   const row = new Uint8Array(samples.length * 2);
-  const view = new DataView(row.buffer);
-  for (let i = 0; i < samples.length; i++) view.setUint16(i * 2, samples[i], false);
+  for (let i = 0, p = 0; i < samples.length; i++, p += 2) {
+    const s = samples[i];
+    row[p] = s >> 8;
+    row[p + 1] = s & 255;
+  }
   return row;
 }
 

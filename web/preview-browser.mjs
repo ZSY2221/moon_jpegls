@@ -267,6 +267,19 @@ try {
   await assertViewSync('reconstruction', ['reconstruction']);
   assert.equal(await page.evaluate(() => document.activeElement?.id), 'reconstruction');
 
+  // Focus in desktop #original canvas in compare view transfers cleanly to #reconstruction when shrinking <= 640px.
+  await page.locator('.view-tab[data-view="compare"]').click();
+  await assertViewSync('compare', ['original', 'reconstruction']);
+  await page.locator('#original').focus();
+  assert.equal(await page.evaluate(() => document.activeElement?.id), 'original');
+  await page.setViewportSize({ width: 390, height: 840 });
+  await assertViewSync('reconstruction', ['reconstruction']);
+  assert.equal(await page.evaluate(() => document.activeElement?.id), 'reconstruction');
+  await page.locator('.view-tab[data-view="difference"]').focus();
+  await page.keyboard.press('Home');
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await assertViewSync('compare', ['original', 'reconstruction']);
+
   // 4) Desktop difference -> shrink to 390px -> preserves difference BEFORE clicking any tab.
   await page.locator('.view-tab[data-view="difference"]').click();
   await assertViewSync('difference', ['difference']);

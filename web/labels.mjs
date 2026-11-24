@@ -1,5 +1,10 @@
 export const strings = {
   en: {
+    pageTitle: 'MoonJLS · JPEG-LS Workbench',
+    ariaWorkspaceBar: 'Task status and view selector',
+    ariaViewTabs: 'Image view mode',
+    ariaPipeline: 'Streaming pipeline schematic',
+    wasmFallbackHint: 'Switch Backend to JavaScript if this browser does not support Wasm GC.',
     tagline: 'Pure MoonBit · 8, 12, 16-bit grayscale JPEG-LS · Native, JS, Wasm GC',
     codec: 'T.87 Part 1 subset',
     workbench: 'Sample-verifiable JPEG-LS Workbench',
@@ -131,6 +136,11 @@ export const strings = {
     scopeText: 'T.87 Part 1 subset · grayscale, single frame, single component and single scan · 8/12/16 bit · NEAR 0–3.',
   },
   zh: {
+    pageTitle: 'MoonJLS · JPEG-LS 工作台',
+    ariaWorkspaceBar: '任务状态与视图切换',
+    ariaViewTabs: '图像显示模式',
+    ariaPipeline: '流式处理管线示意',
+    wasmFallbackHint: '若当前浏览器不支持 Wasm GC，可将运行后端切换为 JavaScript。',
     tagline: '纯 MoonBit · 8、12、16 位灰度 JPEG-LS · Native、JS、Wasm GC',
     codec: 'T.87 Part 1 子集',
     workbench: '逐样本可核验的 JPEG-LS 工作台',

@@ -40,6 +40,7 @@ let state = { phase: 'idle', message: 'waiting', args: [] };
 let selectedPixel;
 let viewMode = isNarrow() ? 'reconstruction' : 'compare';
 let focusedViewTab = null;
+let focusedOriginalCanvas = false;
 const preview = createPreview(previewIds.map(get), (pixel) => { selectedPixel = pixel; renderPixel(); });
 
 function translate(key, ...args) {
@@ -398,20 +399,29 @@ function launch(job, options) {
 }
 
 async function decodeFile(job, file, settings, sink) {
+  const handleRow = async (frame, index, row) => {
+    if (index === 0) {
+      preview.configure(frame, false);
+      await sink.write(pgmHeader(frame));
+      requireActive(job);
+    }
+    draw(job, index, row, null);
+    await sink.write(pgmRow(row, frame));
+    requireActive(job);
+  };
   const result = await launch(job, {
     ...settings, mode: 'decode', read: readBlob(file),
+    maxBatchBytes: settings.inputChunkSize >= 256 ? 16384 : 0,
     async onEvent(event) {
       recordStats(job, event.stats, event.frame);
-      if (event.type !== 'row') return;
-      const { frame, index, row } = event;
-      if (index === 0) {
-        preview.configure(frame, false);
-        await sink.write(pgmHeader(frame));
-        requireActive(job);
+      if (event.type === 'row') {
+        await handleRow(event.frame, event.index, event.row);
+      } else if (event.type === 'rows') {
+        const w = event.frame.width;
+        for (let i = 0; i < event.count; i++) {
+          await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w));
+        }
       }
-      draw(job, index, row, null);
-      await sink.write(pgmRow(row, frame));
-      requireActive(job);
     },
   });
   requireActive(job);
@@ -424,18 +434,30 @@ async function roundTrip(job, file, near, settings, sink) {
   setFrame(job, input.frame);
   const pipe = createPipe();
   let maxError = 0;
+  const handleRow = async (frame, index, row) => {
+    if (index === 0) preview.configure(frame, true);
+    const original = await input.row(index);
+    requireActive(job);
+    for (let i = 0; i < row.length; i++) {
+      const diff = original[i] >= row[i] ? original[i] - row[i] : row[i] - original[i];
+      if (diff > maxError) maxError = diff;
+    }
+    if (maxError > near) throw new Error(`Round-trip error ${maxError} exceeds NEAR ${near} at row ${index}`);
+    draw(job, index, row, original);
+  };
   const decoded = launch(job, {
     ...settings, mode: 'decode', read: pipe.read,
+    maxBatchBytes: settings.inputChunkSize >= 256 ? 16384 : 0,
     async onEvent(event) {
       recordStats(job, event.stats, event.frame);
-      if (event.type !== 'row') return;
-      const { frame, index, row } = event;
-      if (index === 0) preview.configure(frame, true);
-      const original = await input.row(index);
-      requireActive(job);
-      for (let i = 0; i < row.length; i++) maxError = Math.max(maxError, Math.abs(original[i] - row[i]));
-      if (maxError > near) throw new Error(`Round-trip error ${maxError} exceeds NEAR ${near} at row ${index}`);
-      draw(job, index, row, original);
+      if (event.type === 'row') {
+        await handleRow(event.frame, event.index, event.row);
+      } else if (event.type === 'rows') {
+        const w = event.frame.width;
+        for (let i = 0; i < event.count; i++) {
+          await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w));
+        }
+      }
     },
   });
   const encoded = launch(job, {
@@ -538,7 +560,12 @@ async function run() {
       active = undefined;
       lock(false);
       if (cancelled) transition('cancelled');
-      else transition('failed', 'failure', typeof error.code === 'string' ? error.code : error.name ?? 'Error', error.message);
+      else {
+        const isWasmFailure = job.backend === 'wasm-gc'
+          && (error.name === 'CompileError' || /\bwasm\b|webassembly/i.test(error.message ?? ''));
+        const detail = isWasmFailure ? `${error.message} · ${translate('wasmFallbackHint')}` : error.message;
+        transition('failed', 'failure', typeof error.code === 'string' ? error.code : error.name ?? 'Error', detail);
+      }
       renderProgress(job);
     }
     try { await sink?.abort(); } catch { /* The browser may already have closed the writer. */ }
@@ -551,8 +578,43 @@ async function run() {
   }
 }
 
-get('file').addEventListener('change', (event) => setSource(event.target.files[0]));
+get('file').addEventListener('change', (event) => {
+  const file = event.target.files?.[0];
+  if (file) setSource(file);
+});
 get('example').addEventListener('click', () => { get('file').value = ''; setSource(samplePgm()); });
+
+let dragDepth = 0;
+const setDropActive = (on) => setAttr('workspace-view', 'data-drop-active', on ? 'true' : 'false');
+const hasDragFiles = (event) => Boolean(event.dataTransfer?.types?.includes?.('Files'));
+document.body?.addEventListener?.('dragenter', (event) => {
+  if (!hasDragFiles(event)) return;
+  event.preventDefault();
+  dragDepth++;
+  if (!active) setDropActive(true);
+});
+document.body?.addEventListener?.('dragover', (event) => {
+  if (!hasDragFiles(event)) return;
+  event.preventDefault();
+  if (event.dataTransfer) event.dataTransfer.dropEffect = active ? 'none' : 'copy';
+});
+document.body?.addEventListener?.('dragleave', (event) => {
+  if (!hasDragFiles(event) && dragDepth === 0) return;
+  dragDepth = event.relatedTarget === null ? 0 : Math.max(0, dragDepth - 1);
+  if (dragDepth === 0) setDropActive(false);
+});
+document.body?.addEventListener?.('drop', (event) => {
+  dragDepth = 0;
+  setDropActive(false);
+  if (!hasDragFiles(event)) return;
+  event.preventDefault();
+  if (active) return;
+  const file = event.dataTransfer?.files?.[0];
+  if (!file) return;
+  const fileInput = get('file');
+  if (fileInput) fileInput.value = '';
+  setSource(file);
+});
 get('run').addEventListener('click', run);
 get('pause').addEventListener('click', () => {
   const job = active;
@@ -604,9 +666,37 @@ for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {
     setViewMode(visible[nextIndex].dataset.view, { focus: true });
   });
 }
+const origCanvasEl = get('original');
+origCanvasEl?.addEventListener?.('focus', () => { focusedOriginalCanvas = true; });
+origCanvasEl?.addEventListener?.('blur', (event) => {
+  if (!focusedOriginalCanvas) return;
+  if (event.relatedTarget) {
+    focusedOriginalCanvas = false;
+    return;
+  }
+  const origCard = origCanvasEl.closest?.('.preview-card') ?? origCanvasEl;
+  const visible = typeof globalThis.getComputedStyle === 'function'
+    ? globalThis.getComputedStyle(origCard).display !== 'none'
+    : true;
+  if (visible) focusedOriginalCanvas = false;
+});
+
 function syncViewportMode() {
   if (typeof globalThis.innerWidth === 'number' && globalThis.innerWidth === 0) return;
   const activeElement = document.activeElement;
+  const origCanvas = get('original');
+  const recCanvas = get('reconstruction');
+  const lostOriginalCanvasFocus = Boolean(
+    focusedOriginalCanvas
+    && (!activeElement || activeElement === document.body || activeElement === document.documentElement || activeElement === origCanvas),
+  );
+  const shouldMoveOriginalCanvasFocus = Boolean(
+    isNarrow()
+    && viewMode === 'compare'
+    && recCanvas
+    && !effectiveDecodeOnly()
+    && ((origCanvas && activeElement === origCanvas) || lostOriginalCanvasFocus),
+  );
   const activeIsViewTab = Boolean(activeElement?.classList?.contains?.('view-tab'));
   const lostHiddenTabFocus = Boolean(
     focusedViewTab
@@ -617,14 +707,23 @@ function syncViewportMode() {
   const drawer = get('settings-drawer');
   if (drawer && !isNarrow()) drawer.open = true;
   setViewMode(viewMode, { focus: shouldFollowFocus });
+  if (shouldMoveOriginalCanvasFocus && recCanvas.tabIndex >= 0) {
+    focusedOriginalCanvas = false;
+    recCanvas.focus?.();
+  }
   if (!shouldFollowFocus && activeElement && !activeIsViewTab) focusedViewTab = null;
+  if (!shouldMoveOriginalCanvasFocus && activeElement && activeElement !== origCanvas) focusedOriginalCanvas = false;
 }
 narrowQuery?.addEventListener?.('change', syncViewportMode);
 globalThis.addEventListener?.('resize', () => onPaint(() => preview.syncOverlays?.()));
 
 function applyLocale() {
   document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en';
+  if ('title' in document) document.title = translate('pageTitle');
   for (const element of document.querySelectorAll('[data-label]')) element.textContent = translate(element.dataset.label);
+  for (const element of document.querySelectorAll('[data-aria-label]')) {
+    element.setAttribute('aria-label', translate(element.dataset.ariaLabel));
+  }
   renderIdentity();
   renderState();
   renderProgress(presented);
