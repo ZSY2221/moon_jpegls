@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Stream high bit-depth grayscale JPEG-LS files in your browser.">
+  <meta name="description" content="Sample-verifiable high bit-depth grayscale JPEG-LS workbench running locally in your browser.">
   <title>MoonJLS · JPEG-LS Workbench</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./style.css">
@@ -12,158 +12,371 @@
 <body>
   <header class="masthead">
     <div class="masthead-inner">
-      <div class="identity"><span class="moon" aria-hidden="true"></span><strong>MoonJLS</strong></div>
-      <p data-label="tagline">Pure MoonBit JPEG-LS · 8/12/16 bit · Native, JS, Wasm GC</p>
-      <label class="language"><span class="visually-hidden" data-label="language">Language</span>
-        <select id="language"><option value="en">English</option><option value="zh">简体中文</option></select>
-      </label>
+      <div class="brand">
+        <svg class="brand-mark" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M13.5 3.6a8.6 8.6 0 1 0 6.9 13.7 7.1 7.1 0 0 1-6.9-13.7Z" fill="currentColor" opacity=".92"/>
+          <line x1="13" y1="8.5" x2="21" y2="8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".85"/>
+          <line x1="11.5" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".55"/>
+          <line x1="13.5" y1="15.5" x2="20" y2="15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".35"/>
+        </svg>
+        <strong class="brand-name">MoonJLS</strong>
+        <span class="brand-sep" aria-hidden="true"></span>
+        <h1 id="workbench" class="brand-title" data-label="workbench">Sample-verifiable JPEG-LS Workbench</h1>
+      </div>
+      <div class="masthead-meta">
+        <span class="scope-pill" data-label="scopeBits">8 / 12 / 16-bit grayscale</span>
+        <span class="scope-pill" data-label="scopeNear">NEAR 0–3</span>
+        <span class="local" data-label="local">Local processing</span>
+        <label class="language">
+          <span class="visually-hidden" data-label="language">Language</span>
+          <select id="language">
+            <option value="en">English</option>
+            <option value="zh">简体中文</option>
+          </select>
+        </label>
+      </div>
     </div>
   </header>
 
-  <main id="workspace-view" class="workspace" data-state="waiting">
-    <header class="workspace-heading">
-      <div>
-        <h1 id="workbench" data-label="workbench">JPEG-LS Workbench</h1>
-        <p class="intro" data-label="intro">Round-trip a PGM or decode a JPEG-LS file.</p>
-      </div>
-      <span class="local" data-label="local">Local processing</span>
-    </header>
-
-    <section class="panel controls" aria-labelledby="controls-title">
+  <main id="workspace-view" class="workspace" data-state="idle" data-reference="available" data-view="compare" data-has-image="false">
+    <aside class="sidebar panel" aria-labelledby="controls-title">
       <h2 id="controls-title" class="visually-hidden" data-label="controlsTitle">Codec controls</h2>
-      <div class="source">
-        <div class="source-current">
+
+      <section class="sidebar-section source-section">
+        <div class="section-label-row">
           <span class="field-label" data-label="sourceLabel">Source</span>
+          <span id="source-spec" class="source-spec" data-label="noSourceSpec">—</span>
+        </div>
+        <div class="source-file-box">
           <strong id="source-name" data-label="noFile">No file selected</strong>
           <span id="selected" hidden>No file selected</span>
         </div>
         <div class="source-actions">
           <div class="file-pick">
-            <label class="file-button" for="file" data-label="file">Choose PGM or JLS</label>
+            <label class="file-button" for="file">
+              <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2.5 5.5v7a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H8L6.5 3.5h-3a1 1 0 0 0-1 1Z"/>
+              </svg>
+              <span data-label="file">Choose PGM or JLS</span>
+            </label>
             <input id="file" class="visually-hidden" type="file" accept=".pgm,.jls,image/x-portable-graymap,image/jls">
           </div>
-          <button type="button" id="example" data-label="example">Load 16-bit sample</button>
+          <button type="button" id="example" class="sample-button">
+            <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2.2" y="2.2" width="11.6" height="11.6" rx="2"/>
+              <circle cx="8" cy="8" r="2.6"/>
+            </svg>
+            <span data-label="example">Load 16-bit sample</span>
+          </button>
         </div>
-      </div>
+      </section>
 
-      <div class="settings">
-        <label class="setting"><span class="field-label" data-label="near">NEAR</span><select id="near"><option value="0">0</option><option>1</option><option>2</option><option>3</option></select></label>
-        <label class="setting"><span class="field-label" data-label="backend">Backend</span><select id="backend"><option value="wasm-gc">Wasm GC</option><option value="js">JavaScript</option></select></label>
-        <label class="setting sink"><span class="field-label" data-label="sink">Output</span><select id="sink">
-          <option value="buffered" data-label="buffered">Buffered download · up to 64 MiB</option>
-          <option value="bounded" data-label="bounded">Bounded verification · no file saved</option>
-          <option value="file" data-label="streamed">Stream to a file</option>
-        </select></label>
-      </div>
-
-      <details id="advanced" class="advanced">
-        <summary data-label="advanced">Advanced controls</summary>
-        <div class="advanced-inner">
+      <details id="settings-drawer" class="sidebar-section settings-drawer" open>
+        <summary class="settings-summary">
+          <span data-label="settingsTitle">Parameters</span>
+          <span id="settings-summary-meta" class="settings-summary-meta"></span>
+        </summary>
+        <div class="settings">
           <label class="setting">
-            <span class="field-label" data-label="chunk">Input chunk</span>
-            <input id="chunk" type="number" min="1" max="1048576" value="32768" aria-describedby="chunk-help">
+            <span class="field-label" data-label="near">NEAR</span>
+            <select id="near">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
           </label>
-          <p id="chunk-help" class="microcopy" data-label="chunkHelp">PGM uses samples for encoding and bytes for decoding. JLS decoding uses bytes. Very small blocks exercise stream boundaries and may run slowly.</p>
+          <p id="near-note" class="microcopy near-note" hidden data-label="nearFromHeader">NEAR from JLS header</p>
+
+          <label class="setting">
+            <span class="field-label" data-label="backend">Backend</span>
+            <select id="backend">
+              <option value="wasm-gc">Wasm GC</option>
+              <option value="js">JavaScript</option>
+            </select>
+          </label>
+
+          <label class="setting sink">
+            <span class="field-label" data-label="sink">Output</span>
+            <select id="sink">
+              <option value="buffered" data-label="buffered">Buffered download</option>
+              <option value="bounded" data-label="bounded">Bounded verification</option>
+              <option value="file" data-label="streamed">Stream to a file</option>
+            </select>
+          </label>
         </div>
+
+        <details id="advanced" class="advanced">
+          <summary data-label="advanced">Advanced controls</summary>
+          <div class="advanced-inner">
+            <label class="setting">
+              <span class="field-label" data-label="chunk">Input chunk size</span>
+              <input id="chunk" type="number" min="1" max="1048576" value="32768" aria-describedby="chunk-help">
+            </label>
+            <p id="chunk-help" class="microcopy" data-label="chunkHelp">PGM round-trip: encode samples, decode bytes. JLS decode: bytes. Very small blocks exercise stream boundaries and may run slowly.</p>
+          </div>
+        </details>
       </details>
 
-      <div class="task">
-        <div class="actions">
-          <button id="run" type="button" class="primary" disabled data-label="run">Run codec</button>
+      <section class="sidebar-section task-actions">
+        <button id="run" type="button" class="primary run-cta" disabled>
+          <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M4.5 3.1a.6.6 0 0 1 .9-.5l8 4.9a.6.6 0 0 1 0 1l-8 4.9a.6.6 0 0 1-.9-.5V3.1Z"/>
+          </svg>
+          <span data-label="run">Run codec</span>
+        </button>
+        <div class="secondary-actions">
           <button id="pause" type="button" disabled data-label="pause">Pause</button>
           <button id="cancel" type="button" disabled data-label="cancel">Cancel</button>
-          <a id="download" class="button" hidden data-label="download">Download result</a>
         </div>
-        <div class="task-identity">
-          <span id="phase" data-state="waiting">Waiting</span>
-          <span id="task-id"></span>
-          <span id="task-meta"></span>
-        </div>
-      </div>
-      <div class="task-status">
-        <p id="status" role="status" aria-live="polite" aria-atomic="true" data-state="waiting" data-label="waiting">Select a file to begin.</p>
-        <span id="progress-copy" class="progress-copy"></span>
-      </div>
-      <progress id="progress" value="0" max="1" aria-label="Decoded rows"></progress>
-    </section>
+        <a id="download" class="button download-cta" hidden>
+          <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M8 2.5v7.8m0 0-3-3m3 3 3-3M3 13.2h10"/>
+          </svg>
+          <span data-label="download">Download result</span>
+        </a>
+      </section>
+    </aside>
 
-    <section class="preview-panel" aria-labelledby="previews-title">
-      <header class="section-heading">
-        <h2 id="previews-title" data-label="previewsTitle">Image preview</h2>
-        <div class="preview-qualification">
-          <span id="preview-state"></span>
-          <span id="preview-detail"></span>
-        </div>
-      </header>
-      <div class="previews">
-        <figure class="panel preview-card">
-          <figcaption id="original-label" data-label="original">Original</figcaption>
-          <div class="image-stage">
-            <canvas id="original" tabindex="0" aria-labelledby="original-label" aria-describedby="pixel-help"></canvas>
-            <p class="reference-placeholder" data-label="noReference">No reference PGM</p>
+    <div class="stage-column">
+      <section class="workspace-bar panel" aria-label="Task status and view selector">
+        <div class="bar-top">
+          <div class="status-lead">
+            <span id="phase" data-state="idle">No source</span>
+            <p id="status" role="status" aria-live="polite" aria-atomic="true" data-state="idle" data-label="waiting">Choose a file or load the sample to begin.</p>
+            <span class="task-identity">
+              <span id="task-id">—</span>
+              <span id="task-meta"></span>
+            </span>
           </div>
-        </figure>
-        <figure class="panel preview-card">
-          <figcaption id="reconstruction-label" data-label="reconstruction">Reconstruction</figcaption>
-          <div class="image-stage">
-            <canvas id="reconstruction" tabindex="0" aria-labelledby="reconstruction-label" aria-describedby="pixel-help"></canvas>
+          <div class="view-tabs" role="tablist" aria-label="Image view mode">
+            <button type="button" role="tab" class="view-tab" data-view="compare" aria-selected="true" data-label="viewCompare">Compare</button>
+            <button type="button" role="tab" class="view-tab" data-view="original" aria-selected="false" data-label="original">Original</button>
+            <button type="button" role="tab" class="view-tab" data-view="reconstruction" aria-selected="false" data-label="viewReconstruction">Reconstruction</button>
+            <button type="button" role="tab" class="view-tab" data-view="difference" aria-selected="false" data-label="viewError">Error</button>
           </div>
-        </figure>
-        <figure class="panel preview-card">
-          <figcaption id="difference-label" data-label="difference">Absolute error</figcaption>
-          <div class="image-stage">
-            <canvas id="difference" tabindex="0" aria-labelledby="difference-label" aria-describedby="pixel-help"></canvas>
-            <p class="reference-placeholder" data-label="noReference">No reference PGM</p>
+        </div>
+        <div class="bar-sub">
+          <div class="preview-qualification">
+            <span id="preview-state"></span>
+            <span id="preview-detail"></span>
           </div>
-        </figure>
-      </div>
-      <div class="inspection">
-        <div>
-          <p id="pixel" class="pixel" aria-live="polite" data-label="pickPixel">Select a preview pixel to inspect its integer samples.</p>
-          <p id="pixel-help" class="microcopy" data-label="pixelHelp">Click an image pixel, or focus a preview and use the arrow keys. Values are original integer samples.</p>
+          <span id="progress-copy" class="progress-copy">—</span>
         </div>
-        <div class="error-legend">
-          <p class="microcopy" data-label="errorLegend">Absolute error · integer sample units</p>
-          <span class="legend-scale" aria-hidden="true"></span>
-          <div class="legend-ends"><span data-label="zeroError">0 · exact</span><span id="error-legend-value">—</span></div>
-        </div>
-      </div>
-    </section>
+        <progress id="progress" value="0" max="1" aria-label="Decoded rows"></progress>
+      </section>
 
-    <section class="results" aria-labelledby="results-title">
-      <header class="section-heading"><h2 id="results-title" data-label="resultsTitle">This run</h2></header>
-      <dl class="panel metrics">
-        <div><dt data-label="frame">Frame</dt><dd id="frame">—</dd></div>
-        <div><dt data-label="rawSize">Raw storage</dt><dd id="raw-size">—</dd></div>
-        <div><dt data-label="encoded">JLS bytes</dt><dd id="encoded">—</dd></div>
-        <div><dt data-label="ratio">Raw / JLS</dt><dd id="ratio">—</dd></div>
-        <div><dt data-label="error">Max absolute error</dt><dd id="error">—</dd></div>
-        <div><dt data-label="latency">Processing time</dt><dd id="latency">—</dd></div>
-        <div><dt data-label="firstCanvas">First Canvas update</dt><dd id="first-canvas">—</dd></div>
-      </dl>
-      <div class="metric-notes">
-        <p class="microcopy" data-label="timingHelp">Processing time includes validation and output close. File selection, save-location selection and sink setup are outside this timer.</p>
-        <p class="microcopy" data-label="ratioHelp">Raw storage uses 1 byte per 8-bit sample and 2 bytes per 12- or 16-bit sample.</p>
-      </div>
-    </section>
+      <section class="preview-panel" aria-labelledby="previews-title">
+        <h2 id="previews-title" class="visually-hidden" data-label="previewsTitle">Image preview</h2>
+        <div class="previews">
+          <figure class="panel preview-card" data-pane="original">
+            <figcaption class="pane-head">
+              <span id="original-label" class="pane-title" data-label="original">Original</span>
+              <span id="original-scale" class="pane-tag"></span>
+            </figcaption>
+            <div class="image-stage">
+              <canvas id="original" tabindex="0" aria-labelledby="original-label" aria-describedby="pixel-help"></canvas>
+              <div class="reticle-layer" hidden aria-hidden="true">
+                <span class="reticle-h"></span>
+                <span class="reticle-v"></span>
+                <span class="reticle-box"></span>
+              </div>
+              <p class="stage-empty" data-label="emptyStage">Select a PGM/JLS source or load the 16-bit sample, then run.</p>
+              <p class="reference-placeholder" data-label="noReference">No reference PGM</p>
+            </div>
+          </figure>
 
-    <div class="disclosures">
-      <details id="resource-details" class="panel disclosure">
-        <summary data-label="resourcesTitle">Streaming resources</summary>
-        <dl class="resources">
-          <div><dt data-label="workspace">Encode / decode core payload</dt><dd id="workspace">—</dd></div>
-          <div><dt data-label="queues">Decode Worker input / output queue</dt><dd id="queues">—</dd></div>
-          <div><dt data-label="referenceLimit">Reference window limit</dt><dd>64 KiB</dd></div>
-          <div><dt data-label="downloadLimit">Buffered download payload limit</dt><dd>64 MiB</dd></div>
-        </dl>
-        <p class="microcopy" data-label="resourceHelp">Byte counts are logical payloads. Queue measurements belong to the decode Worker.</p>
-      </details>
-      <details class="panel disclosure">
-        <summary data-label="scopeTitle">Supported format</summary>
-        <p class="microcopy" data-label="scopeText">T.87 Part 1 subset: grayscale, one frame, one component, one scan, 8/12/16 bits, NEAR 0–3.</p>
-      </details>
+          <figure class="panel preview-card" data-pane="reconstruction">
+            <figcaption class="pane-head">
+              <span id="reconstruction-label" class="pane-title" data-label="reconstruction">Reconstruction</span>
+              <span id="reconstruction-scale" class="pane-tag"></span>
+            </figcaption>
+            <div class="image-stage">
+              <canvas id="reconstruction" tabindex="0" aria-labelledby="reconstruction-label" aria-describedby="pixel-help"></canvas>
+              <div class="reticle-layer" hidden aria-hidden="true">
+                <span class="reticle-h"></span>
+                <span class="reticle-v"></span>
+                <span class="reticle-box"></span>
+              </div>
+              <p class="stage-empty" data-label="emptyStage">Select a PGM/JLS source or load the 16-bit sample, then run.</p>
+            </div>
+          </figure>
+
+          <figure class="panel preview-card" data-pane="difference">
+            <figcaption class="pane-head">
+              <span id="difference-label" class="pane-title" data-label="difference">Absolute error</span>
+              <span id="difference-bound" class="pane-tag pane-bound"></span>
+            </figcaption>
+            <div class="image-stage">
+              <canvas id="difference" tabindex="0" aria-labelledby="difference-label" aria-describedby="pixel-help"></canvas>
+              <div class="reticle-layer" hidden aria-hidden="true">
+                <span class="reticle-h"></span>
+                <span class="reticle-v"></span>
+                <span class="reticle-box"></span>
+              </div>
+              <p class="stage-empty" data-label="emptyStage">Select a PGM/JLS source or load the 16-bit sample, then run.</p>
+              <p class="reference-placeholder" data-label="noReferenceError">No reference PGM · Standalone JLS decode verifies stream termination only and does not produce a zero-error map.</p>
+            </div>
+          </figure>
+        </div>
+
+        <div id="error-legend-panel" class="panel error-legend-panel">
+          <div class="legend-header">
+            <div class="legend-title-group">
+              <span class="legend-title" data-label="errorLegend">Absolute error · integer sample units</span>
+              <span id="error-legend-value" class="legend-value">—</span>
+            </div>
+            <span id="error-legend-max" class="legend-max">—</span>
+          </div>
+          <div id="error-legend-swatches" class="legend-swatches" aria-live="polite"></div>
+          <p class="microcopy legend-note" data-label="errorLegendNote">False color highlights tiny integer differences for inspection and does not indicate image corruption. Scale is fixed to this task’s integer NEAR units.</p>
+        </div>
+      </section>
+
+      <section class="panel inspector-panel" aria-labelledby="inspector-title">
+        <div class="inspector-header">
+          <div class="inspector-title-wrap">
+            <h2 id="inspector-title" data-label="inspectorTitle">Integer Inspector</h2>
+            <span class="inspector-badge" data-label="inspectorSampleBadge">Preview sample · ≤ 480×320</span>
+          </div>
+          <p id="pixel-help" class="microcopy" data-label="pixelHelp">Click an image pixel, or focus a preview and use the arrow keys. Values reflect saved preview samples.</p>
+        </div>
+        <div class="inspector-grid">
+          <div class="inspect-cell">
+            <span class="inspect-label" data-label="inspectCoord">Coordinate</span>
+            <strong id="inspect-coord" class="inspect-val">—</strong>
+          </div>
+          <div class="inspect-cell">
+            <span class="inspect-label" data-label="inspectOriginal">Original</span>
+            <strong id="inspect-original" class="inspect-val">—</strong>
+          </div>
+          <div class="inspect-cell">
+            <span class="inspect-label" data-label="inspectReconstructed">Reconstructed</span>
+            <strong id="inspect-reconstructed" class="inspect-val">—</strong>
+          </div>
+          <div class="inspect-cell">
+            <span class="inspect-label" data-label="inspectError">Abs error</span>
+            <strong id="inspect-error" class="inspect-val" data-error-level="none">—</strong>
+          </div>
+          <div class="inspect-cell">
+            <span class="inspect-label" data-label="inspectNear">Task NEAR</span>
+            <strong id="inspect-near" class="inspect-val">—</strong>
+          </div>
+        </div>
+        <p id="pixel" class="visually-hidden" aria-live="polite" data-label="pickPixel">Select a pixel to read its integer samples.</p>
+      </section>
+
+      <section class="results" aria-labelledby="results-title">
+        <header class="results-head">
+          <h2 id="results-title" data-label="resultsTitle">This run</h2>
+          <div class="run-identity">
+            <span id="frame" class="identity-chip">—</span>
+            <span id="result-backend" class="identity-chip"></span>
+            <span id="result-mode" class="identity-chip"></span>
+          </div>
+        </header>
+        <div class="kpi-grid">
+          <article class="panel kpi-card kpi-primary">
+            <span class="kpi-label" data-label="encoded">JLS bytes</span>
+            <strong id="encoded" class="kpi-value">—</strong>
+            <div class="kpi-sub">
+              <span data-label="rawSize">Raw storage</span>
+              <span id="raw-size" class="kpi-subval">—</span>
+            </div>
+          </article>
+
+          <article class="panel kpi-card kpi-primary">
+            <span class="kpi-label" data-label="ratio">Raw / JLS</span>
+            <strong id="ratio" class="kpi-value">—</strong>
+            <div class="kpi-sub">
+              <span data-label="ratioBasis">1 B/8-bit · 2 B/12–16-bit</span>
+            </div>
+          </article>
+
+          <article class="panel kpi-card kpi-primary">
+            <div class="kpi-label-row">
+              <span class="kpi-label" data-label="error">Max absolute error</span>
+              <span id="error-bound" class="kpi-bound"></span>
+            </div>
+            <strong id="error" class="kpi-value">—</strong>
+            <div class="kpi-sub">
+              <span id="error-scope" data-label="errorScopeIdle">Awaiting completion</span>
+            </div>
+          </article>
+
+          <article class="panel kpi-card kpi-primary">
+            <span class="kpi-label" data-label="latency">In-page processing time</span>
+            <strong id="latency" class="kpi-value">—</strong>
+            <div class="kpi-sub">
+              <span data-label="firstCanvas">First Canvas update</span>
+              <span id="first-canvas" class="kpi-subval">—</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <div class="disclosures">
+        <details id="resource-details" class="panel disclosure">
+          <summary data-label="resourcesTitle">Streaming resources</summary>
+          <div class="disclosure-body">
+            <dl class="resources">
+              <div class="resource-item">
+                <dt>
+                  <span data-label="workspace">Core logical payload · encode / decode</span>
+                  <span class="res-tag res-observed" data-label="observedMetric">Observed</span>
+                </dt>
+                <dd id="workspace">—</dd>
+              </div>
+              <div class="resource-item">
+                <dt>
+                  <span data-label="queues">Decode Worker queues · input / output</span>
+                  <span class="res-tag res-observed" data-label="observedMetric">Observed</span>
+                </dt>
+                <dd id="queues">—</dd>
+              </div>
+              <div class="resource-item">
+                <dt>
+                  <span data-label="referenceLimit">Reference window configuration limit</span>
+                  <span class="res-tag res-config" data-label="configBound">Config limit</span>
+                </dt>
+                <dd>64 KiB</dd>
+              </div>
+              <div class="resource-item">
+                <dt>
+                  <span data-label="downloadLimit">Buffered download payload limit</span>
+                  <span class="res-tag res-config" data-label="configBound">Config limit</span>
+                </dt>
+                <dd>64 MiB</dd>
+              </div>
+            </dl>
+            <div class="pipeline-diagram" aria-label="Streaming pipeline schematic">
+              <span class="pipeline-label" data-label="pipelineCaption">Pipeline schematic</span>
+              <div class="pipeline-steps">
+                <span data-label="pipeRead">Chunk read</span>
+                <span class="pipe-arrow" aria-hidden="true">→</span>
+                <span data-label="pipeWorker">Wasm / JS Worker</span>
+                <span class="pipe-arrow" aria-hidden="true">→</span>
+                <span data-label="pipeVerify">Sample verify / ACK</span>
+                <span class="pipe-arrow" aria-hidden="true">→</span>
+                <span data-label="pipeClose">Sink write &amp; close</span>
+              </div>
+            </div>
+            <p class="microcopy" data-label="resourceHelp">Byte counts describe logical payloads. Bounded verification discards output after processing.</p>
+          </div>
+        </details>
+
+        <details id="scope-details" class="panel disclosure">
+          <summary data-label="scopeAndNotes">Format scope &amp; measurement notes</summary>
+          <div class="disclosure-body notes-body">
+            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset · grayscale, single frame, single component and single scan · 8/12/16 bit · NEAR 0–3.</p>
+            <p class="microcopy" data-label="timingHelp">Starts after the sink opens. Includes validation and output close. Excludes file and save-location selection and sink setup. First Canvas update is when the first reconstruction draw returns.</p>
+            <p class="microcopy" data-label="ratioHelp">Raw storage uses 1 byte per 8-bit sample and 2 bytes per 12- or 16-bit sample.</p>
+          </div>
+        </details>
+      </div>
     </div>
   </main>
+
   <script type="module" src="./app.mjs"></script>
 </body>
 </html>

@@ -43,12 +43,14 @@ async function geometry(id) {
   const rect = await canvas.evaluate((element) => {
     const style = getComputedStyle(element);
     const bounds = element.getBoundingClientRect();
-    return { left: bounds.left, top: bounds.top, w: bounds.width, h: bounds.height,
-      naturalWidth: element.width, naturalHeight: element.height, fit: style.objectFit, position: style.objectPosition };
+    return {
+      left: bounds.left, top: bounds.top, w: bounds.width, h: bounds.height,
+      naturalWidth: element.width, naturalHeight: element.height, fit: style.objectFit, position: style.objectPosition,
+    };
   });
   assert.equal(rect.fit, 'contain');
   assert.equal(rect.position, '50% 50%');
-  assert.ok(rect.h <= 320, 'The canvas box should remain bounded even for tall PGM data');
+  assert.ok(rect.h > 0 && rect.h <= 320, `The canvas box should remain bounded (got ${rect.h})`);
   const scale = Math.min(rect.w / rect.naturalWidth, rect.h / rect.naturalHeight);
   const w = rect.naturalWidth * scale;
   const h = rect.naturalHeight * scale;
@@ -59,7 +61,40 @@ async function assertPixel(x, y) {
   const value = sample(x, y);
   const text = await page.locator('#pixel').textContent();
   assert.ok(text.includes(`(${x}, ${y})`) && text.includes(`original ${value} · reconstructed ${value} · error 0`), text);
+  assert.equal(await page.locator('#inspect-coord').textContent(), `(${x}, ${y})`);
+  assert.equal(await page.locator('#inspect-original').textContent(), value.toLocaleString('en'));
+  assert.equal(await page.locator('#inspect-reconstructed').textContent(), value.toLocaleString('en'));
+  assert.equal(await page.locator('#inspect-error').textContent(), '0');
   return [x, y, value];
+}
+
+async function assertReticlesVisible(panes) {
+  for (const pane of panes) {
+    const box = await page.locator(`[data-pane="${pane}"] .reticle-layer .reticle-box`).evaluate((el) => {
+      const layer = el.closest('.reticle-layer');
+      const stage = el.closest('.image-stage');
+      const canvas = stage.querySelector('canvas');
+      const cRect = canvas.getBoundingClientRect();
+      const scale = Math.min(cRect.width / canvas.width, cRect.height / canvas.height);
+      const drawW = canvas.width * scale;
+      const drawH = canvas.height * scale;
+      const cLeft = cRect.left + (cRect.width - drawW) / 2;
+      const cTop = cRect.top + (cRect.height - drawH) / 2;
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const hRect = layer.querySelector('.reticle-h').getBoundingClientRect();
+      const vRect = layer.querySelector('.reticle-v').getBoundingClientRect();
+      return {
+        hidden: layer.hidden,
+        centerInContent: cx >= cLeft - 1 && cx <= cLeft + drawW + 1 && cy >= cTop - 1 && cy <= cTop + drawH + 1,
+        hairlinesFitContent: Math.abs(hRect.width - drawW) < 2 && Math.abs(vRect.height - drawH) < 2,
+      };
+    });
+    assert.equal(box.hidden, false, `Expected reticle visible on ${pane}`);
+    assert.equal(box.centerInContent, true, `Expected reticle center inside content box on ${pane}`);
+    assert.equal(box.hairlinesFitContent, true, `Expected crosshair hairlines bounded to content box on ${pane}`);
+  }
 }
 
 async function point(content, width, height, horizontal, vertical) {
@@ -91,26 +126,40 @@ try {
   await page.locator('#original').focus();
   await page.keyboard.press('Enter');
   const keyboardOrigin = await assertPixel(0, 0);
+  await assertReticlesVisible(['original', 'reconstruction']);
   await page.keyboard.press('ArrowRight');
   const keyboardNeighbor = await assertPixel(1, 0);
   const widePoint = await point(horizontal, 128, 16, 0.52, 0.44);
   await ignoreLetterbox(horizontal, 'top');
+
+  // Switching to Error view keeps the selected coordinate and shows the reticle there.
+  await page.locator('.view-tab[data-view="difference"]').click();
+  await assertReticlesVisible(['difference']);
+  await page.locator('.view-tab[data-view="compare"]').click();
 
   await render(512, 4096);
   const tall = await geometry('reconstruction');
   assert.deepEqual([tall.rect.naturalWidth, tall.rect.naturalHeight], [40, 320]);
   const desktopPoint = await point(tall, 512, 4096, 0.62, 0.35);
   await ignoreLetterbox(tall, 'left');
+  await assertReticlesVisible(['original', 'reconstruction']);
 
   await page.setViewportSize({ width: 390, height: 840 });
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1));
+  await page.locator('.view-tab[data-view="difference"]').click();
   const narrow = await geometry('difference');
   const mobilePoint = await point(narrow, 512, 4096, 0.54, 0.66);
   await ignoreLetterbox(narrow, 'left');
+  await assertReticlesVisible(['difference']);
   assert.ok([widePoint, desktopPoint, mobilePoint].every(([, , value]) => value > 255));
   assert.deepEqual(pageErrors, []);
-  console.log(JSON.stringify({ browser: browser.version(), scenarios: { widePoint, desktopPoint, mobilePoint, keyboardOrigin, keyboardNeighbor },
-    tallBackingCanvas: [40, 320], letterboxIgnored: ['horizontal-top', 'tall-left', 'narrow-left'], state: 'passed' }));
+  console.log(JSON.stringify({
+    browser: browser.version(),
+    scenarios: { widePoint, desktopPoint, mobilePoint, keyboardOrigin, keyboardNeighbor },
+    tallBackingCanvas: [40, 320],
+    letterboxIgnored: ['horizontal-top', 'tall-left', 'narrow-left'],
+    state: 'passed',
+  }));
 } finally {
   await browser.close();
 }

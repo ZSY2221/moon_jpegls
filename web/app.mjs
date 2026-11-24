@@ -2,15 +2,34 @@ import { CodecError } from '../sdk/index.mjs';
 import { startWorker } from '../sdk/worker-client.mjs';
 import { strings } from './labels.mjs';
 import { openPgm, pgmHeader, pgmRow, samplePgm } from './pgm.mjs';
-import { createPreview, previewIds } from './preview.mjs';
+import { createPreview, errorPalette, previewIds } from './preview.mjs';
 import { createPipe, openSink, readBlob } from './transport.mjs';
 
 const get = (id) => document.getElementById(id);
+const setText = (id, value) => {
+  const element = get(id);
+  const text = String(value);
+  if (element && element.textContent !== text) element.textContent = text;
+};
+const setAttr = (id, name, value) => {
+  const element = get(id);
+  if (element?.setAttribute && element.getAttribute?.(name) !== String(value)) {
+    element.setAttribute(name, value);
+  }
+};
+const setHidden = (id, hidden) => {
+  const element = get(id);
+  if (element) element.hidden = hidden;
+};
+
 const controls = ['example', 'file', 'near', 'backend', 'chunk', 'sink'];
 const measures = ['frame', 'raw-size', 'encoded', 'ratio', 'error', 'latency', 'first-canvas', 'workspace', 'queues'];
 const isJls = (file) => /\.jls$/i.test(file?.name ?? '');
 const onPaint = (callback) => globalThis.requestAnimationFrame
   ? globalThis.requestAnimationFrame(callback) : queueMicrotask(callback);
+const narrowQuery = globalThis.matchMedia?.('(max-width: 640px)');
+const isNarrow = () => Boolean(narrowQuery?.matches);
+
 let locale = 'en';
 let source;
 let active;
@@ -19,6 +38,7 @@ let sequence = 0;
 let presented;
 let state = { phase: 'idle', message: 'waiting', args: [] };
 let selectedPixel;
+let viewMode = isNarrow() ? 'reconstruction' : 'compare';
 const preview = createPreview(previewIds.map(get), (pixel) => { selectedPixel = pixel; renderPixel(); });
 
 function translate(key, ...args) {
@@ -26,38 +46,183 @@ function translate(key, ...args) {
   return typeof value === 'function' ? value(...args) : value ?? key;
 }
 
+const formatInt = (value) => value === undefined || value === null ? '—' : value.toLocaleString(locale);
+const bytes = (value) => value === undefined ? '—' : `${value.toLocaleString(locale)} B`;
+
+function effectiveDecodeOnly() {
+  return presented ? presented.decodeOnly : isJls(source);
+}
+
+function setViewMode(mode) {
+  const decodeOnly = effectiveDecodeOnly();
+  let next = mode;
+  if (decodeOnly && (next === 'compare' || next === 'original')) {
+    next = next === 'difference' ? 'difference' : 'reconstruction';
+  }
+  if (isNarrow() && next === 'compare') next = 'reconstruction';
+  if (!isNarrow() && next === 'original') next = decodeOnly ? 'reconstruction' : 'compare';
+  viewMode = next;
+  setAttr('workspace-view', 'data-view', viewMode);
+  for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {
+    tab.setAttribute('aria-selected', String(tab.dataset?.view === viewMode));
+  }
+  onPaint(() => preview.syncOverlays?.());
+}
+
 function renderPixel() {
-  get('pixel').textContent = selectedPixel ? translate('pixel', selectedPixel) : translate('pickPixel');
+  setText('pixel', selectedPixel ? translate('pixel', selectedPixel) : translate('pickPixel'));
+  const frame = presented?.frame;
+  const near = frame?.near ?? presented?.near;
+  const nearText = near === undefined || near === null ? '—' : String(near);
+  setText('inspect-near', selectedPixel || frame ? nearText : '—');
+  if (!selectedPixel) {
+    setText('inspect-coord', '—');
+    setText('inspect-original', '—');
+    setText('inspect-reconstructed', '—');
+    setText('inspect-error', '—');
+    setAttr('inspect-error', 'data-error-level', 'none');
+    return;
+  }
+  setText('inspect-coord', `(${selectedPixel.x}, ${selectedPixel.y})`);
+  setText('inspect-reconstructed', formatInt(selectedPixel.reconstructed));
+  if (selectedPixel.original === undefined) {
+    setText('inspect-original', translate('notCompared'));
+    setText('inspect-error', translate('notCompared'));
+    setAttr('inspect-error', 'data-error-level', 'none');
+  } else {
+    setText('inspect-original', formatInt(selectedPixel.original));
+    setText('inspect-error', formatInt(selectedPixel.error));
+    const level = selectedPixel.error === 0 ? 'exact'
+      : (near !== undefined && selectedPixel.error > near ? 'exceeded' : 'within');
+    setAttr('inspect-error', 'data-error-level', level);
+  }
+}
+
+let legendKey = '';
+
+function renderErrorLegend() {
+  const frame = presented?.frame;
+  const decodeOnly = effectiveDecodeOnly();
+  const nextLegendKey = !frame || decodeOnly ? '' : `${locale}:${frame.near}`;
+  setText('error-legend-value', frame && !decodeOnly ? translate('legendMax', frame.near) : '—');
+  const maxErr = presented?.result?.maxError;
+  const boundText = frame && !decodeOnly ? translate('errorBoundSummary', maxErr ?? null, frame.near) : '—';
+  setText('error-legend-max', boundText);
+  setText('difference-bound', frame && !decodeOnly ? boundText : '');
+
+  const container = get('error-legend-swatches');
+  if (!container || typeof document.createElement !== 'function') return;
+  if (legendKey === nextLegendKey) return;
+  legendKey = nextLegendKey;
+  if (!nextLegendKey) {
+    container.textContent = '';
+    return;
+  }
+  const stops = errorPalette(frame.near);
+  const items = stops.map((stop) => {
+    const chip = document.createElement('span');
+    chip.className = 'legend-chip';
+    const swatch = document.createElement('span');
+    swatch.className = 'legend-swatch';
+    swatch.style.backgroundColor = stop.hex;
+    const label = document.createElement('span');
+    label.className = 'legend-chip-label';
+    if (stop.value === 0) label.textContent = translate('legendStopExact');
+    else if (stop.value === frame.near) label.textContent = translate('legendStopLimit', stop.value);
+    else label.textContent = translate('legendStopWithin', stop.value);
+    chip.append(swatch, label);
+    return chip;
+  });
+  container.replaceChildren(...items);
 }
 
 function renderIdentity() {
   const frame = presented?.frame;
+  const decodeOnly = effectiveDecodeOnly();
   const backend = presented?.backend ?? get('backend').value;
-  const near = frame?.near ?? (isJls(source) ? null : presented?.near ?? Number(get('near').value));
+  const backendLabel = backend === 'js' ? 'JavaScript' : 'Wasm GC';
+  const near = frame?.near ?? (decodeOnly ? null : presented?.near ?? Number(get('near').value));
   const name = source?.name ?? translate('noFile');
-  get('selected').textContent = name;
-  get('source-name').textContent = name;
-  get('task-id').textContent = presented ? `#${presented.id}` : '—';
-  get('task-meta').textContent = [backend === 'js' ? 'JavaScript' : 'Wasm GC',
-    frame ? `${frame.bits}-bit` : translate('precisionPending'), near === null ? translate('nearFromHeader') : `NEAR ${near}`].join(' · ');
-  get('workspace-view').setAttribute('data-reference', isJls(source) ? 'none' : 'available');
-  get('workspace-view').setAttribute('data-near', frame?.near ?? '');
-  if (isJls(source)) get('error').textContent = translate('notCompared');
-  if (frame) get('frame').textContent = `${frame.width} × ${frame.height} · ${frame.bits}-bit · NEAR ${frame.near}`;
-  get('error-legend-value').textContent = frame ? translate('legendMax', frame.near) : '—';
+
+  setText('selected', name);
+  setText('source-name', name);
+  setText('source-spec', !source ? translate('noSourceSpec') : (decodeOnly ? 'JLS' : 'PGM'));
+  setText('task-id', presented ? `#${presented.id}` : '—');
+  setText('task-meta', [
+    backendLabel,
+    frame ? `${frame.bits}-bit` : translate('precisionPending'),
+    near === null ? translate('nearFromHeader') : `NEAR ${near}`,
+  ].join(' · '));
+
+  const sinkSelect = get('sink');
+  const sinkValue = sinkSelect?.value ?? 'buffered';
+  const sinkText = translate(sinkValue === 'file' ? 'streamed' : sinkValue);
+  setText('settings-summary-meta', [
+    decodeOnly ? 'JLS' : `NEAR ${near ?? 0}`,
+    backendLabel,
+    sinkText,
+  ].join(' · '));
+
+  setHidden('near-note', !isJls(source));
+  setAttr('workspace-view', 'data-reference', decodeOnly ? 'none' : 'available');
+  setAttr('workspace-view', 'data-near', frame?.near ?? '');
+
+  if (decodeOnly) {
+    setText('error', translate('notCompared'));
+    setText('error-bound', '');
+  } else if (!presented?.result) {
+    setText('error-bound', near === null ? '' : (near === 0 ? translate('errorBoundExact') : translate('errorBoundNear', near)));
+  }
+  renderErrorScope();
+
+  if (frame) {
+    const spec = `${frame.width} × ${frame.height} · ${frame.bits}-bit · NEAR ${frame.near}`;
+    setText('frame', spec);
+    setText('original-scale', decodeOnly ? '' : `${frame.width} × ${frame.height} · ${frame.bits}-bit`);
+    setText('reconstruction-scale', `${frame.width} × ${frame.height} · ${frame.bits}-bit`);
+  } else {
+    setText('original-scale', '');
+    setText('reconstruction-scale', '');
+  }
+
+  if (presented) {
+    setText('result-backend', backendLabel);
+    setText('result-mode', translate(decodeOnly ? 'modeDecodeOnly' : 'modeRoundTrip'));
+  } else {
+    setText('result-backend', '');
+    setText('result-mode', '');
+  }
+
+  renderErrorLegend();
+  renderPixel();
+}
+
+function renderErrorScope() {
+  if (effectiveDecodeOnly()) {
+    setText('error-scope', translate('streamOnlyCheck'));
+    return;
+  }
+  if (state.phase === 'complete' && presented?.result) {
+    setText('error-scope', translate('fullSampleCheck'));
+  } else if (state.phase === 'failed' || state.phase === 'cancelled') {
+    setText('error-scope', translate('errorScopeUnfinished'));
+  } else {
+    setText('error-scope', translate('errorScopeIdle'));
+  }
 }
 
 function renderState() {
   const { phase, message, args } = state;
-  for (const id of ['workspace-view', 'phase', 'status']) get(id).setAttribute('data-state', phase);
-  get('phase').textContent = translate(`phase-${phase}`);
-  get('status').textContent = translate(message, ...args);
-  get('pause').textContent = translate(active?.paused ? 'resume' : 'pause');
+  for (const id of ['workspace-view', 'phase', 'status']) setAttr(id, 'data-state', phase);
+  setText('phase', translate(`phase-${phase}`));
+  setText('status', translate(message, ...args));
+  setText('pause', translate(active?.paused ? 'resume' : 'pause'));
   const previewState = phase === 'complete' ? (presented?.decodeOnly ? 'streamVerified' : 'samplesVerified')
     : ['failed', 'cancelled'].includes(phase) ? 'previewIncomplete'
       : ['running', 'paused', 'finalizing'].includes(phase) ? 'previewProvisional' : 'previewWaiting';
-  get('preview-state').textContent = translate(previewState);
-  get('preview-detail').textContent = translate(`${previewState}Detail`);
+  setText('preview-state', translate(previewState));
+  setText('preview-detail', translate(`${previewState}Detail`));
+  renderErrorScope();
 }
 
 function transition(phase, message = phase, ...args) {
@@ -67,26 +232,35 @@ function transition(phase, message = phase, ...args) {
 }
 
 function lock(running) {
-  for (const id of controls) get(id).disabled = running || (id === 'near' && isJls(source));
-  get('run').disabled = running || source === undefined;
-  get('pause').disabled = !running || Boolean(active?.closing);
-  get('cancel').disabled = !running;
+  for (const id of controls) {
+    const control = get(id);
+    if (control) control.disabled = running || (id === 'near' && isJls(source));
+  }
+  const filePick = get('file')?.parentElement;
+  if (filePick?.setAttribute) filePick.setAttribute('data-disabled', String(running));
+  const runBtn = get('run');
+  if (runBtn) runBtn.disabled = running || source === undefined;
+  const pauseBtn = get('pause');
+  if (pauseBtn) pauseBtn.disabled = !running || Boolean(active?.closing);
+  const cancelBtn = get('cancel');
+  if (cancelBtn) cancelBtn.disabled = !running;
 }
-
-const bytes = (value) => value === undefined ? '—' : `${value.toLocaleString(locale)} B`;
 
 function renderProgress(job) {
   const { frame, stats } = job ?? {};
   const rows = stats?.rows ?? 0;
-  get('progress').max = frame?.height ?? 1;
-  get('progress').value = rows;
+  const progress = get('progress');
+  if (progress) {
+    progress.max = frame?.height ?? 1;
+    progress.value = rows;
+  }
   const key = state.phase === 'complete' ? 'rowsComplete'
     : ['failed', 'cancelled'].includes(state.phase) ? 'rowsIncomplete' : 'rowsProvisional';
-  get('progress-copy').textContent = frame ? translate(key, rows, frame.height) : '—';
+  setText('progress-copy', frame ? translate(key, rows, frame.height) : '—');
   if (stats) {
-    get('workspace').textContent = `${bytes(job.encodeWorkspace)} / ${bytes(stats.coreWorkspaceBytes)}`;
-    get('queues').textContent = translate('queueValues', bytes(stats.inputQueueBytes), bytes(stats.outputQueueBytes),
-      bytes(stats.inputPeakBytes), bytes(stats.outputPeakBytes));
+    setText('workspace', `${bytes(job.encodeWorkspace)} / ${bytes(stats.coreWorkspaceBytes)}`);
+    setText('queues', translate('queueValues', bytes(stats.inputQueueBytes), bytes(stats.outputQueueBytes),
+      bytes(stats.inputPeakBytes), bytes(stats.outputPeakBytes)));
   }
 }
 
@@ -94,24 +268,32 @@ function renderResult(job) {
   if (!job?.result) return;
   const { frame, jlsBytes, maxError } = job.result;
   const raw = frame.width * frame.height * Math.ceil(frame.bits / 8);
-  get('raw-size').textContent = bytes(raw);
-  get('encoded').textContent = bytes(jlsBytes);
-  get('ratio').textContent = `${(raw / jlsBytes).toFixed(2)}×`;
-  get('error').textContent = maxError ?? translate('notCompared');
-  get('latency').textContent = `${job.elapsed.toFixed(1)} ms`;
-  if (job.firstCanvas !== undefined) get('first-canvas').textContent = `${(job.firstCanvas - job.started).toFixed(1)} ms`;
+  setText('raw-size', bytes(raw));
+  setText('encoded', bytes(jlsBytes));
+  setText('ratio', `${(raw / jlsBytes).toFixed(2)}×`);
+  setText('error', maxError ?? translate('notCompared'));
+  setText('error-bound', job.decodeOnly ? '' : (frame.near === 0 ? translate('errorBoundExact') : translate('errorBoundNear', frame.near)));
+  setText('error-scope', translate(job.decodeOnly ? 'streamOnlyCheck' : 'fullSampleCheck'));
+  setText('latency', `${job.elapsed.toFixed(1)} ms`);
+  if (job.firstCanvas !== undefined) setText('first-canvas', `${(job.firstCanvas - job.started).toFixed(1)} ms`);
+  renderErrorLegend();
 }
 
 function clearOutput() {
   preview.clear();
   selectedPixel = undefined;
-  for (const id of measures) get(id).textContent = '—';
-  get('download').hidden = true;
-  get('download').href = '';
-  get('download').download = '';
+  setAttr('workspace-view', 'data-has-image', 'false');
+  for (const id of measures) setText(id, '—');
+  setHidden('download', true);
+  const download = get('download');
+  if (download) {
+    download.href = '';
+    download.download = '';
+  }
   if (artifactUrl) URL.revokeObjectURL(artifactUrl);
   artifactUrl = undefined;
   renderPixel();
+  renderErrorLegend();
 }
 
 function setSource(file) {
@@ -121,6 +303,9 @@ function setSource(file) {
   clearOutput();
   lock(false);
   transition(file ? 'ready' : 'idle', file ? 'ready' : 'waiting');
+  setViewMode(isJls(file) ? 'reconstruction' : (isNarrow() ? 'reconstruction' : 'compare'));
+  const drawer = get('settings-drawer');
+  if (drawer && isNarrow()) drawer.open = true;
   renderIdentity();
   renderProgress();
 }
@@ -156,6 +341,10 @@ function recordStats(job, stats, frame) {
 function draw(job, index, reconstructed, original) {
   const firstCanvas = preview.drawRow(index, reconstructed, original);
   if (firstCanvas !== undefined && job.firstCanvas === undefined) job.firstCanvas = firstCanvas;
+  if (!job.hasImageShown && firstCanvas !== undefined) {
+    job.hasImageShown = true;
+    setAttr('workspace-view', 'data-has-image', 'true');
+  }
 }
 
 function launch(job, options) {
@@ -262,10 +451,17 @@ async function run() {
   const decodeOnly = isJls(file);
   const outputName = file.name.replace(/\.[^.]+$/, '') + (decodeOnly ? '.pgm' : '.jls');
   const settings = { backend: get('backend').value, inputChunkSize: chunk, outputChunkSize: Math.min(chunk, 32 * 1024) };
-  const job = { id: ++sequence, backend: settings.backend, near, decodeOnly,
-    abort: new AbortController(), paused: false, workers: [] };
+  const job = {
+    id: ++sequence, backend: settings.backend, near, decodeOnly,
+    abort: new AbortController(), paused: false, workers: [],
+  };
   active = job;
   presented = job;
+  if (decodeOnly && (viewMode === 'compare' || viewMode === 'original')) {
+    setViewMode('reconstruction');
+  }
+  const drawer = get('settings-drawer');
+  if (drawer && isNarrow()) drawer.open = false;
   lock(true);
   transition('running', 'starting');
   renderIdentity();
@@ -291,9 +487,12 @@ async function run() {
     job.result = result;
     if (artifact instanceof Blob) {
       artifactUrl = URL.createObjectURL(artifact);
-      get('download').href = artifactUrl;
-      get('download').download = outputName;
-      get('download').hidden = false;
+      const download = get('download');
+      if (download) {
+        download.href = artifactUrl;
+        download.download = outputName;
+        download.hidden = false;
+      }
     }
     renderResult(job);
     transition('complete', decodeOnly ? 'decodeOnly' : 'complete');
@@ -340,7 +539,15 @@ get('cancel').addEventListener('click', () => {
   transition('cancelled');
   renderProgress(job);
 });
-for (const id of ['near', 'backend']) get(id).addEventListener('change', renderIdentity);
+
+for (const id of ['near', 'backend', 'sink']) {
+  get(id)?.addEventListener?.('change', renderIdentity);
+}
+for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {
+  tab.addEventListener('click', () => setViewMode(tab.dataset.view));
+}
+globalThis.addEventListener?.('resize', () => onPaint(() => preview.syncOverlays?.()));
+
 function applyLocale() {
   document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en';
   for (const element of document.querySelectorAll('[data-label]')) element.textContent = translate(element.dataset.label);
@@ -351,9 +558,14 @@ function applyLocale() {
   renderPixel();
   get('progress').setAttribute('aria-label', translate('reconstruction'));
 }
+
 get('language').addEventListener('change', (event) => {
   locale = event.target.value;
   applyLocale();
 });
-if (!globalThis.showSaveFilePicker) get('sink').querySelector('[value="file"]').disabled = true;
+
+const fileSinkOption = get('sink').querySelector?.('[value="file"]');
+if (!globalThis.showSaveFilePicker && fileSinkOption) fileSinkOption.disabled = true;
+
+setViewMode(viewMode);
 applyLocale();

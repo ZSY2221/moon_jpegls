@@ -7,7 +7,7 @@ import { chromium } from 'playwright-core';
 const origin = process.env.MOONJLS_WEB_URL ?? 'http://127.0.0.1:8000';
 const executablePath = process.env.MOONJLS_CHROME;
 const browser = await chromium.launch(executablePath ? { executablePath } : { channel: 'chrome' });
-const page = await browser.newPage({ viewport: { width: 1440, height: 1080 }, acceptDownloads: true });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
 const pageErrors = [];
 page.on('pageerror', (error) => pageErrors.push(error));
 const consoleErrors = [];
@@ -18,7 +18,7 @@ const expectReferenceWindow = process.env.MOONJLS_EXPECT_REFERENCE_WINDOW === '1
 if (receiptPath) {
   page.context().on('response', (response) => {
     const url = new URL(response.url());
-    if (url.origin !== origin || !/\.(mjs|wasm)$/.test(url.pathname) || !response.ok() || loaded.has(url.pathname)) return;
+    if (url.origin !== origin || !/\.(mjs|wasm|css)$/.test(url.pathname) || !response.ok() || loaded.has(url.pathname)) return;
     loaded.set(url.pathname, response.body().then(
       (body) => ({ sha256: createHash('sha256').update(body).digest('hex'), bytes: body.byteLength }),
       (error) => ({ error: error.message }),
@@ -175,6 +175,9 @@ async function cancelRestart(kind, oldStream) {
   });
   await canvas.click({ position: point });
   assert.match(await page.locator('#pixel').textContent(), /original 4000 · reconstructed 4000 · error 0/);
+  assert.equal(await text('inspect-original'), '4,000');
+  assert.equal(await text('inspect-reconstructed'), '4,000');
+  assert.equal(await text('inspect-error'), '0');
 
   const pendingDownload = page.waitForEvent('download');
   await click('download');
@@ -340,6 +343,11 @@ try {
   const pixel = /original (\d+) · reconstructed (\d+) · error (\d+)/.exec(await page.locator('#pixel').textContent());
   assert.ok(pixel && Number(pixel[1]) > 255);
   assert.equal(Math.abs(Number(pixel[1]) - Number(pixel[2])), Number(pixel[3]));
+  assert.equal(await text('inspect-original'), Number(pixel[1]).toLocaleString('en'));
+  assert.equal(await text('inspect-reconstructed'), Number(pixel[2]).toLocaleString('en'));
+  assert.equal(await text('inspect-error'), Number(pixel[3]).toLocaleString('en'));
+  assert.equal(await page.locator('[data-pane="original"] .reticle-layer').evaluate((el) => el.hidden), false);
+  assert.equal(await page.locator('[data-pane="reconstruction"] .reticle-layer').evaluate((el) => el.hidden), false);
   if (process.env.MOONJLS_SCREENSHOT) {
     await mkdir(dirname(process.env.MOONJLS_SCREENSHOT), { recursive: true });
     await page.screenshot({ path: process.env.MOONJLS_SCREENSHOT, fullPage: true });
@@ -358,6 +366,13 @@ try {
   await phase('complete');
   assert.match(await text('status'), /stream termination verified\. No original comparison/);
   assert.equal(await text('error'), 'Not compared');
+  await page.locator('#reconstruction').click();
+  assert.equal(await text('inspect-original'), 'Not compared');
+  assert.equal(await text('inspect-error'), 'Not compared');
+  await page.locator('.view-tab[data-view="difference"]').click();
+  assert.equal(await page.locator('#difference').isVisible(), false);
+  assert.equal(await page.locator('[data-pane="difference"] .reference-placeholder').isVisible(), true);
+  await page.locator('.view-tab[data-view="reconstruction"]').click();
   const pgmDownload = page.waitForEvent('download');
   await click('download');
   const pgm = await readFile(await (await pgmDownload).path());
@@ -467,8 +482,8 @@ try {
   assert.deepEqual(consoleErrors, []);
   if (receiptPath) {
     const responses = Object.fromEntries(await Promise.all([...loaded].map(async ([path, receipt]) => [path, await receipt])));
-    for (const path of ['/web/app.mjs', '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs',
-      '/sdk/generated/core.mjs', '/sdk/generated/core.wasm']) {
+    for (const path of ['/web/app.mjs', '/web/style.css', '/web/preview.mjs', '/web/labels.mjs',
+      '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs', '/sdk/generated/core.mjs', '/sdk/generated/core.wasm']) {
       assert.ok(responses[path]?.sha256, `No browser body hash for ${path}`);
     }
     await mkdir(dirname(receiptPath), { recursive: true });
