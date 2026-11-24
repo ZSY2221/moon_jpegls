@@ -1,0 +1,65 @@
+{
+  "recordedAtSingapore": "2026-11-24T12:46:28.343034+08:00",
+  "scope": "Author-side recomputation and hash linkage for RC2 historical measurements; no new RC2 timings.",
+  "sourceCommit": "a146998f31675769fb6c3bc9055ef7798f254b1d",
+  "reportCommit": "299fd9afcbaac67d8d65b42545fb632a429ef202",
+  "analyzerCommand": [
+    "node",
+    "scripts/analyze_worker_bench.mjs",
+    "reports/rc2/worker-paired.json"
+  ],
+  "analyzerSha256": "a8ad7a853cd2883ecc6c24f430607662cbcb48ca6acc1a3c1609a3d50026c2a8",
+  "historicalResultMatches": true,
+  "configurations": 8,
+  "warmupTrials": 32,
+  "formalTrials": 80,
+  "badTrialReportsRejected": [
+    "duplicate phase index with unchanged count",
+    "JSON exponent overflow to non-finite timing"
+  ],
+  "primary": {
+    "backend": "wasm-gc",
+    "near": 0,
+    "chunk": 4096,
+    "beforeMs": 452,
+    "afterMs": 352,
+    "slowdownPercent": -22.123893805309734,
+    "pairedSlowdownPercent": [
+      -20.0192123050305,
+      -12.367256631893397,
+      -28.28583581884977,
+      -24.532177064887605,
+      -21.777777777777775
+    ],
+    "beforeMadMs": 13.800000071525574,
+    "afterMadMs": 21.299999952316284,
+    "beforeFirstRowMs": 9.5,
+    "afterFirstRowMs": 10.199999928474426,
+    "headAllowanceMs": 2,
+    "primary": true,
+    "timingPass": true,
+    "stableRegression": false,
+    "firstRowPass": true,
+    "trialContract": true
+  },
+  "oneByteWasmGcNear0FirstRow": {
+    "beforeMs": 31.899999976158142,
+    "afterMs": 35,
+    "allowedDeltaMs": 3.189999997615814,
+    "observedDeltaMs": 3.100000023841858,
+    "headroomMs": 0.0899999737739563,
+    "passes": true
+  },
+  "hashes": {
+    "build": "e8aa742771d2a73bc1fb9045e3f7dc278602d09972f2248c9e24d6b16591cde3",
+    "manifest": "9357022907642b81992145367eef438d65796b8c464eeff96986ecf1df4eb298",
+    "paired": "fac70657583c0c18a7192fc7c5762678685c6128e13d4b627570a4c6ec381685",
+    "gates": "89f0763553d60217a8c6ee29beb704593a82cdc47d1c7f0d49eff7f85f9ff364",
+    "workerBuilds": "bd9a51d79bb7e8f1b48ed34a185d35a5c796c12e546d1b6fc306342d263df1ac",
+    "sourceFilesVerifiedAgainstGit": 64,
+    "localBuildArtifactsVerified": 16,
+    "historicalEvidenceFilesVerified": 12,
+    "smokeBrowserReceiptsMatched": 10,
+    "pairedBrowserAssetCopiesMatched": 10
+  }
+}

@@ -1,0 +1,781 @@
+{
+  "recordedAtSingapore": "2026-11-24T12:53:46.658841+08:00",
+  "tempDirectory": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+  "scope": "Author local consumption checks using extracted Moon and SDK archives in an external directory",
+  "commands": [
+    {
+      "step": "resolve-source",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "git",
+        "-C",
+        "D:\\Program Files\\GPT_project\\moon_jpegls",
+        "rev-parse",
+        "299fd9a^{commit}"
+      ],
+      "exitCode": 0,
+      "stdout": "299fd9afcbaac67d8d65b42545fb632a429ef202",
+      "stderr": ""
+    },
+    {
+      "step": "export-git-snapshot",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "git",
+        "-C",
+        "D:\\Program Files\\GPT_project\\moon_jpegls",
+        "archive",
+        "--format=zip",
+        "--output=C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\exported-source.zip",
+        "299fd9afcbaac67d8d65b42545fb632a429ef202"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "step": "moon-package",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\source",
+      "command": [
+        "moon",
+        "package",
+        "--frozen"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Warning: 'repository' field is not set or empty in module manifest\nRunning moon check ...\nFinished. moon: ran 5 tasks, now up to date\nCheck passed\nPackage to \\\\?\\C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\source\\_build\\publish\\ZSY2221-moon_jpegls-0.1.0.zip"
+    },
+    {
+      "step": "moon-consumer-js",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\moon-consumer",
+      "command": [
+        "moon",
+        "run",
+        "--release",
+        "--frozen",
+        "--target",
+        "js",
+        "."
+      ],
+      "exitCode": 0,
+      "stdout": "package-case bits=8 near=0 maxError=0\npackage-case bits=8 near=3 maxError=3\npackage-case bits=12 near=0 maxError=0\npackage-case bits=12 near=3 maxError=3\npackage-case bits=16 near=0 maxError=0\npackage-case bits=16 near=3 maxError=3",
+      "stderr": ""
+    },
+    {
+      "step": "moon-consumer-wasm-gc",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\moon-consumer",
+      "command": [
+        "moon",
+        "run",
+        "--release",
+        "--frozen",
+        "--target",
+        "wasm-gc",
+        "."
+      ],
+      "exitCode": 0,
+      "stdout": "package-case bits=8 near=0 maxError=0\npackage-case bits=8 near=3 maxError=3\npackage-case bits=12 near=0 maxError=0\npackage-case bits=12 near=3 maxError=3\npackage-case bits=16 near=0 maxError=0\npackage-case bits=16 near=3 maxError=3",
+      "stderr": ""
+    },
+    {
+      "step": "moon-consumer-native",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\moon-consumer",
+      "command": [
+        "wsl",
+        "-d",
+        "Ubuntu-22.04",
+        "--exec",
+        "bash",
+        "-lc",
+        "env CC=clang /root/.moon/bin/moon run --release --frozen --target native ."
+      ],
+      "exitCode": 0,
+      "stdout": "package-case bits=8 near=0 maxError=0\npackage-case bits=8 near=3 maxError=3\npackage-case bits=12 near=0 maxError=0\npackage-case bits=12 near=3 maxError=3\npackage-case bits=16 near=0 maxError=0\npackage-case bits=16 near=3 maxError=3",
+      "stderr": "wsl: �hKm0R localhost �N\u0006tM�n\f�FO*g\\��P0R WSL\u00020NAT !j\u000f_\u000bN�v WSL \rN/e\u0001c localhost �N\u0006t\u00020"
+    },
+    {
+      "step": "prepare-b8-n0-charls-encode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "node",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.mjs",
+        "encode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n0.raw",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n0.charls.jls",
+        "3",
+        "2",
+        "8",
+        "0",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b8-n0-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n0.charls.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n0.reference.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b8-n3-charls-encode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "node",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.mjs",
+        "encode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n3.raw",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n3.charls.jls",
+        "3",
+        "2",
+        "8",
+        "3",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b8-n3-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n3.charls.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n3.reference.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b12-n0-charls-encode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "node",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.mjs",
+        "encode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n0.raw",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n0.charls.jls",
+        "3",
+        "2",
+        "12",
+        "0",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b12-n0-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n0.charls.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n0.reference.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b12-n3-charls-encode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "node",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.mjs",
+        "encode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n3.raw",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n3.charls.jls",
+        "3",
+        "2",
+        "12",
+        "3",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b12-n3-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n3.charls.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n3.reference.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b16-n0-charls-encode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "node",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.mjs",
+        "encode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n0.raw",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n0.charls.jls",
+        "3",
+        "2",
+        "16",
+        "0",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b16-n0-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n0.charls.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n0.reference.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b16-n3-charls-encode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "node",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.mjs",
+        "encode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n3.raw",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n3.charls.jls",
+        "3",
+        "2",
+        "16",
+        "3",
+        "4"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "step": "prepare-b16-n3-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n3.charls.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n3.reference.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "node-extracted-sdk",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer",
+      "command": [
+        "node",
+        "consumer.mjs"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"trials\":[{\"id\":\"b8-n0\",\"backend\":\"js\",\"maxError\":0,\"oracleDecodedExactly\":true},{\"id\":\"b8-n3\",\"backend\":\"js\",\"maxError\":3,\"oracleDecodedExactly\":true},{\"id\":\"b12-n0\",\"backend\":\"js\",\"maxError\":0,\"oracleDecodedExactly\":true},{\"id\":\"b12-n3\",\"backend\":\"js\",\"maxError\":3,\"oracleDecodedExactly\":true},{\"id\":\"b16-n0\",\"backend\":\"js\",\"maxError\":0,\"oracleDecodedExactly\":true},{\"id\":\"b16-n3\",\"backend\":\"js\",\"maxError\":3,\"oracleDecodedExactly\":true},{\"id\":\"b8-n0\",\"backend\":\"wasm-gc\",\"maxError\":0,\"oracleDecodedExactly\":true},{\"id\":\"b8-n3\",\"backend\":\"wasm-gc\",\"maxError\":3,\"oracleDecodedExactly\":true},{\"id\":\"b12-n0\",\"backend\":\"wasm-gc\",\"maxError\":0,\"oracleDecodedExactly\":true},{\"id\":\"b12-n3\",\"backend\":\"wasm-gc\",\"maxError\":3,\"oracleDecodedExactly\":true},{\"id\":\"b16-n0\",\"backend\":\"wasm-gc\",\"maxError\":0,\"oracleDecodedExactly\":true},{\"id\":\"b16-n3\",\"backend\":\"wasm-gc\",\"maxError\":3,\"oracleDecodedExactly\":true}],\"workerExportPresent\":true,\"typedTruncated\":true}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b8-n0.js-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n0.js.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n0.js.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b8-n3.js-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n3.js.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n3.js.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b12-n0.js-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n0.js.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n0.js.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b12-n3.js-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n3.js.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n3.js.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b16-n0.js-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n0.js.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n0.js.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b16-n3.js-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n3.js.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n3.js.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b8-n0.wasm-gc-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n0.wasm-gc.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n0.wasm-gc.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b8-n3.wasm-gc-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n3.wasm-gc.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b8-n3.wasm-gc.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b12-n0.wasm-gc-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n0.wasm-gc.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n0.wasm-gc.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b12-n3.wasm-gc-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n3.wasm-gc.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b12-n3.wasm-gc.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b16-n0.wasm-gc-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n0.wasm-gc.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n0.wasm-gc.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "check-sdk-b16-n3.wasm-gc-charls-decode",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj",
+      "command": [
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls\\scripts\\oracle.py",
+        "decode",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n3.wasm-gc.jls",
+        "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer\\fixtures\\b16-n3.wasm-gc.charls-check.raw"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"width\": 3, \"height\": 2}",
+      "stderr": ""
+    },
+    {
+      "step": "typecheck-extracted-sdk-declarations",
+      "cwd": "C:\\Users\\sjm\\AppData\\Local\\Temp\\moonjls-rc3-package-6b89jeaj\\sdk-consumer",
+      "command": [
+        "node",
+        "C:\\Users\\sjm\\AppData\\Local\\npm-cache\\_npx\\d08dbff2f92d3e31\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit",
+        "--strict",
+        "--module",
+        "node16",
+        "--target",
+        "es2022",
+        "types.mts"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "sourceCommit": "299fd9afcbaac67d8d65b42545fb632a429ef202",
+  "moonArchive": {
+    "file": "ZSY2221-moon_jpegls-0.1.0.zip",
+    "sha256": "eb135fda965f069efe7fd67552211864aa968071558ee49800cf75e778ea1afd",
+    "bytes": 141585,
+    "entries": 81
+  },
+  "sdkArchive": {
+    "file": "MoonJLS-SDK-consumption-check.zip",
+    "sha256": "94ab9bbea5ee27b8c58b3ad134290db4e920db9969ad2a13d8450ebd53fc77e8",
+    "bytes": 33657,
+    "files": [
+      "sdk/index.mjs",
+      "sdk/index.d.mts",
+      "sdk/worker-client.mjs",
+      "sdk/worker-client.d.mts",
+      "sdk/worker.mjs",
+      "sdk/cli.mjs",
+      "sdk/README.md",
+      "sdk/generated/core.mjs",
+      "sdk/generated/core.wasm"
+    ],
+    "generatedFromBuildSource": "a146998f31675769fb6c3bc9055ef7798f254b1d"
+  },
+  "moonWorkspaceMembers": [
+    "moon-consumer",
+    "moon-package"
+  ],
+  "fixtures": [
+    {
+      "id": "b8-n0",
+      "frame": {
+        "width": 3,
+        "height": 2,
+        "bits": 8,
+        "near": 0
+      },
+      "original": [
+        0,
+        1,
+        127,
+        128,
+        254,
+        255
+      ],
+      "expected": [
+        0,
+        1,
+        127,
+        128,
+        254,
+        255
+      ],
+      "sourceSha256": "4813eeafc3090124f19d156c91b8b1a36eefffcc38ed4d70ca503173be41d37d",
+      "charlsEncodedSha256": "c6e68ea268f3d440b6c7af71225d1fc9911b195f37538dff6d63675b976e0b1c",
+      "charlsReconstructedSha256": "4813eeafc3090124f19d156c91b8b1a36eefffcc38ed4d70ca503173be41d37d"
+    },
+    {
+      "id": "b8-n3",
+      "frame": {
+        "width": 3,
+        "height": 2,
+        "bits": 8,
+        "near": 3
+      },
+      "original": [
+        0,
+        1,
+        127,
+        128,
+        254,
+        255
+      ],
+      "expected": [
+        0,
+        0,
+        126,
+        126,
+        252,
+        252
+      ],
+      "sourceSha256": "4813eeafc3090124f19d156c91b8b1a36eefffcc38ed4d70ca503173be41d37d",
+      "charlsEncodedSha256": "b10c4ce7883cdedad6c60884a272f598268b1332fd81e7dfb6f596d6078b6fbe",
+      "charlsReconstructedSha256": "671f8eaa7369e22ce0c4a96ddf908c59e1655286626e179f75e41b66f098dfe6"
+    },
+    {
+      "id": "b12-n0",
+      "frame": {
+        "width": 3,
+        "height": 2,
+        "bits": 12,
+        "near": 0
+      },
+      "original": [
+        0,
+        255,
+        256,
+        2048,
+        4094,
+        4095
+      ],
+      "expected": [
+        0,
+        255,
+        256,
+        2048,
+        4094,
+        4095
+      ],
+      "sourceSha256": "70466731ecec42abcfc9524cb88922fc890520dc43e6e4c8158efdb03070c7b8",
+      "charlsEncodedSha256": "8b1b8936c18a6dbb7db837358058105770f16ac1a7d0d56400e40196da0eaf9e",
+      "charlsReconstructedSha256": "70466731ecec42abcfc9524cb88922fc890520dc43e6e4c8158efdb03070c7b8"
+    },
+    {
+      "id": "b12-n3",
+      "frame": {
+        "width": 3,
+        "height": 2,
+        "bits": 12,
+        "near": 3
+      },
+      "original": [
+        0,
+        255,
+        256,
+        2048,
+        4094,
+        4095
+      ],
+      "expected": [
+        0,
+        252,
+        259,
+        2051,
+        4095,
+        4095
+      ],
+      "sourceSha256": "70466731ecec42abcfc9524cb88922fc890520dc43e6e4c8158efdb03070c7b8",
+      "charlsEncodedSha256": "d265212b5b931b3efbfc3ac81d0ffec4d14d10692ad51c07e507f82b0dc43e74",
+      "charlsReconstructedSha256": "5b0ed8ce774eee2dbd3a0a2d59f9866215ca382432062b6128bc56bd85a33b16"
+    },
+    {
+      "id": "b16-n0",
+      "frame": {
+        "width": 3,
+        "height": 2,
+        "bits": 16,
+        "near": 0
+      },
+      "original": [
+        0,
+        255,
+        256,
+        32768,
+        65534,
+        65535
+      ],
+      "expected": [
+        0,
+        255,
+        256,
+        32768,
+        65534,
+        65535
+      ],
+      "sourceSha256": "78b191f724c5d20c2d728d3132fe8ce148fcfc4f796ad41ebe5ae706d1047f35",
+      "charlsEncodedSha256": "458387c548aed55612110d5d18ff7f7f48592646a27b922dda42df56c964bb5f",
+      "charlsReconstructedSha256": "78b191f724c5d20c2d728d3132fe8ce148fcfc4f796ad41ebe5ae706d1047f35"
+    },
+    {
+      "id": "b16-n3",
+      "frame": {
+        "width": 3,
+        "height": 2,
+        "bits": 16,
+        "near": 3
+      },
+      "original": [
+        0,
+        255,
+        256,
+        32768,
+        65534,
+        65535
+      ],
+      "expected": [
+        0,
+        252,
+        259,
+        32767,
+        65534,
+        65534
+      ],
+      "sourceSha256": "78b191f724c5d20c2d728d3132fe8ce148fcfc4f796ad41ebe5ae706d1047f35",
+      "charlsEncodedSha256": "79dd2afea50a6f8bf70ba5ce72ba03a535b9615b08ae650b704b5a20a04c28c2",
+      "charlsReconstructedSha256": "04742efcfd09c155854bdd35d80f2ac4dd7a3fcaa971195b3440eb4741667974"
+    }
+  ],
+  "sdkResult": {
+    "trials": [
+      {
+        "id": "b8-n0",
+        "backend": "js",
+        "maxError": 0,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b8-n3",
+        "backend": "js",
+        "maxError": 3,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b12-n0",
+        "backend": "js",
+        "maxError": 0,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b12-n3",
+        "backend": "js",
+        "maxError": 3,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b16-n0",
+        "backend": "js",
+        "maxError": 0,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b16-n3",
+        "backend": "js",
+        "maxError": 3,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b8-n0",
+        "backend": "wasm-gc",
+        "maxError": 0,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b8-n3",
+        "backend": "wasm-gc",
+        "maxError": 3,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b12-n0",
+        "backend": "wasm-gc",
+        "maxError": 0,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b12-n3",
+        "backend": "wasm-gc",
+        "maxError": 3,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b16-n0",
+        "backend": "wasm-gc",
+        "maxError": 0,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      },
+      {
+        "id": "b16-n3",
+        "backend": "wasm-gc",
+        "maxError": 3,
+        "oracleDecodedExactly": true,
+        "charlsMatchedSdkBitstream": true
+      }
+    ],
+    "workerExportPresent": true,
+    "typedTruncated": true
+  },
+  "verdict": "passed"
+}

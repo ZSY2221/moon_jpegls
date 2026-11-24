@@ -13,6 +13,25 @@ function median(values) {
 }
 
 const configs = ['js', 'wasm-gc'].flatMap((backend) => [0, 3].flatMap((near) => [4096, 1].map((chunk) => ({ backend, near, chunk }))));
+const configurationKey = ({ backend, near, chunk }) => JSON.stringify([backend, near, chunk]);
+const configurationKeys = new Set(configs.map(configurationKey));
+const trialKeys = new Set();
+for (const trial of evidence.trials) {
+  const { variant, phase, index, wallMs, firstRowWallMs } = trial;
+  const configuration = configurationKey(trial);
+  const phaseLimit = phase === 'warmup' ? 2 : phase === 'formal' ? 5 : 0;
+  const identity = `${configuration}/${variant}/${phase}/${index}`;
+  if (!configurationKeys.has(configuration) || !['baseline', 'candidate'].includes(variant)
+    || !Number.isInteger(index) || index < 1 || index > phaseLimit) {
+    throw new Error(`Unexpected Worker trial identity: ${identity}`);
+  }
+  if (trialKeys.has(identity)) throw new Error(`Duplicate Worker trial: ${identity}`);
+  if (!Number.isFinite(wallMs) || wallMs <= 0 || !Number.isFinite(firstRowWallMs)
+    || firstRowWallMs < 0 || firstRowWallMs > wallMs) {
+    throw new Error(`Invalid Worker trial timings: ${identity}`);
+  }
+  trialKeys.add(identity);
+}
 const incomplete = [];
 const results = [];
 for (const config of configs) {
