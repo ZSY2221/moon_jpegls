@@ -1,0 +1,1156 @@
+{
+  "source": "split-16bit-near3.jls",
+  "sourceSha256": "8f932357449701a589ef0eeb51ce26cacab85f9c9cfe776657038d378613c667",
+  "seed": 141648163,
+  "backend": "wasm-gc",
+  "inputChunkSize": 3,
+  "oracle": "@team-charls/charls-wasm 0.10.0",
+  "trials": [
+    {
+      "index": 0,
+      "entropySeed": 1397740582,
+      "offset": 44,
+      "bit": 2,
+      "originalByte": 3,
+      "mutatedByte": 7,
+      "sha256": "0f11e932c6fd5f6e902e92835bf941e32e7d8e607d18452fd9c01097e9ca279d",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "Golomb unary exceeds limit"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 1,
+      "entropySeed": 4256816461,
+      "offset": 41,
+      "bit": 7,
+      "originalByte": 0,
+      "mutatedByte": 128,
+      "sha256": "42cf4c6213d0716ce1c6480108e2cade67df306fdeaefbff69052a3cdc826220",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 2,
+      "entropySeed": 3381714504,
+      "offset": 52,
+      "bit": 6,
+      "originalByte": 0,
+      "mutatedByte": 64,
+      "sha256": "e29af06e41be0e68e63b995bab49ea1461bfadb96a83cfccc8cfc6294216118b",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 3,
+      "entropySeed": 3865242887,
+      "offset": 78,
+      "bit": 7,
+      "originalByte": 3,
+      "mutatedByte": 131,
+      "sha256": "2104bd40ff6163946415b1f11b1045c467b8bd88485837b89a805e33e1854f6b",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 4,
+      "entropySeed": 2140456634,
+      "offset": 57,
+      "bit": 3,
+      "originalByte": 7,
+      "mutatedByte": 15,
+      "sha256": "c00c07167db21f76bd37e38a333164f4ce2856de710a813561480b30e5e6fd95",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 5,
+      "entropySeed": 1716856529,
+      "offset": 51,
+      "bit": 3,
+      "originalByte": 0,
+      "mutatedByte": 8,
+      "sha256": "490cb1afa896bbc21e24a02d6c824057d455b3b39ba211a5e608776482b859d5",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 6,
+      "entropySeed": 648163836,
+      "offset": 61,
+      "bit": 1,
+      "originalByte": 0,
+      "mutatedByte": 2,
+      "sha256": "d61957d56b5acb2e25233fc1b20d290501d73d9f14d9f512071b5ad22aa23d6e",
+      "moonjls": {
+        "outcome": "accepted",
+        "frame": {
+          "width": 11,
+          "height": 2,
+          "bits": 16,
+          "near": 3
+        }
+      },
+      "charls": {
+        "outcome": "accepted",
+        "frame": {
+          "width": 11,
+          "height": 2,
+          "bits": 16,
+          "near": 3
+        }
+      },
+      "reconstructedSamples": [
+        0,
+        32767,
+        32767,
+        65534,
+        65535,
+        15,
+        65521,
+        3,
+        3,
+        3,
+        3,
+        7,
+        0,
+        0,
+        65534,
+        65534,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "classification": "matched-reconstruction"
+    },
+    {
+      "index": 7,
+      "entropySeed": 3023168811,
+      "offset": 40,
+      "bit": 5,
+      "originalByte": 128,
+      "mutatedByte": 160,
+      "sha256": "583be1cd6db1044855373100d47a60f4872b46c5f47d40e69427c460dc192894",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 8,
+      "entropySeed": 2776217742,
+      "offset": 52,
+      "bit": 5,
+      "originalByte": 0,
+      "mutatedByte": 32,
+      "sha256": "7bb0bc4b77f34e09cf08ba7680464e12975ac7756592fe8de6b17587ceaab80d",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 9,
+      "entropySeed": 688121493,
+      "offset": 73,
+      "bit": 1,
+      "originalByte": 50,
+      "mutatedByte": 48,
+      "sha256": "548ee8c73c264efaf578a2c585dad2c0df575434a96aaf75a7571f9dcb887c7f",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 10,
+      "entropySeed": 1678640880,
+      "offset": 73,
+      "bit": 3,
+      "originalByte": 50,
+      "mutatedByte": 58,
+      "sha256": "959e185630b6b7373fa9f039228631bf9807796ddfc76cb80c908d779b0f0d4f",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 11,
+      "entropySeed": 2505633167,
+      "offset": 51,
+      "bit": 4,
+      "originalByte": 0,
+      "mutatedByte": 16,
+      "sha256": "d4526838bf7f701edfe2b8978c83979208e9be97c10c3c3781fd280171d18ba5",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 12,
+      "entropySeed": 1938881954,
+      "offset": 75,
+      "bit": 3,
+      "originalByte": 16,
+      "mutatedByte": 24,
+      "sha256": "abfb8be9238327f5c8d4c088431f5217c75f4aea29d1c7296a36b8476e553774",
+      "moonjls": {
+        "outcome": "accepted",
+        "frame": {
+          "width": 11,
+          "height": 2,
+          "bits": 16,
+          "near": 3
+        }
+      },
+      "charls": {
+        "outcome": "accepted",
+        "frame": {
+          "width": 11,
+          "height": 2,
+          "bits": 16,
+          "near": 3
+        }
+      },
+      "reconstructedSamples": [
+        0,
+        32767,
+        32767,
+        65534,
+        65535,
+        15,
+        65521,
+        3,
+        3,
+        3,
+        3,
+        0,
+        0,
+        0,
+        65534,
+        65535,
+        65101,
+        15,
+        3,
+        3,
+        3,
+        3
+      ],
+      "classification": "matched-reconstruction"
+    },
+    {
+      "index": 13,
+      "entropySeed": 2762760345,
+      "offset": 73,
+      "bit": 5,
+      "originalByte": 50,
+      "mutatedByte": 18,
+      "sha256": "f77b2e8820e8eadc2a5c1054a631bd4bb60aa6674c6fb90b3d0149a0d847ac92",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 14,
+      "entropySeed": 3063796004,
+      "offset": 75,
+      "bit": 5,
+      "originalByte": 16,
+      "mutatedByte": 48,
+      "sha256": "59bcaa5bc7efb05210731c7320981fad9c66f6ac1c8f3c4ed017e5509767241e",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 15,
+      "entropySeed": 3494570547,
+      "offset": 40,
+      "bit": 6,
+      "originalByte": 128,
+      "mutatedByte": 192,
+      "sha256": "4df203a2428f12da1c7b2bedb83d152cf8d49162219f5275b7217b2e2080fe60",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 16,
+      "entropySeed": 2290625014,
+      "offset": 68,
+      "bit": 4,
+      "originalByte": 0,
+      "mutatedByte": 16,
+      "sha256": "ffe48b9365462caafaf39c85bb1693dd715ac0198bd3496a3dea2ef4f9da0a2e",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 17,
+      "entropySeed": 2232883421,
+      "offset": 42,
+      "bit": 4,
+      "originalByte": 0,
+      "mutatedByte": 16,
+      "sha256": "a6d00ad6f997383d9e39e9aa45994474dc549b9a63e4afc9507843d6b2c33db2",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 18,
+      "entropySeed": 2685944984,
+      "offset": 48,
+      "bit": 5,
+      "originalByte": 0,
+      "mutatedByte": 32,
+      "sha256": "3a8737a79cf468bd315b73c0aac41ac0240ccbfeccfce79ea00102889eb93a4a",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 19,
+      "entropySeed": 3151429399,
+      "offset": 41,
+      "bit": 5,
+      "originalByte": 0,
+      "mutatedByte": 32,
+      "sha256": "fdcd27d91b4bf58b002d954aa48229aa7e3c11a4ea948ca926b4edb45a5e46f9",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 20,
+      "entropySeed": 1497108874,
+      "offset": 41,
+      "bit": 2,
+      "originalByte": 0,
+      "mutatedByte": 4,
+      "sha256": "b42833e590aa5b5f56c2e51aefa7133611f549a0e8724c4fd5bea6c7c9b65adb",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 21,
+      "entropySeed": 1777521505,
+      "offset": 59,
+      "bit": 3,
+      "originalByte": 64,
+      "mutatedByte": 72,
+      "sha256": "ae8e7b214fc8a457eabd8a4e68f6272c1da53948e28fba105797b37322d44089",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 22,
+      "entropySeed": 41243980,
+      "offset": 77,
+      "bit": 0,
+      "originalByte": 92,
+      "mutatedByte": 93,
+      "sha256": "bec1a528a09e86f5e1e5a1daf5d38f6fc755e11a740e71015f0d0b74f1ce6c59",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 23,
+      "entropySeed": 1892454459,
+      "offset": 52,
+      "bit": 3,
+      "originalByte": 0,
+      "mutatedByte": 8,
+      "sha256": "17e8625cc00889ca216186ebaf6adcc9c7ab8df7ff62b1edc2c0d40d4554f019",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 24,
+      "entropySeed": 2383202398,
+      "offset": 71,
+      "bit": 4,
+      "originalByte": 0,
+      "mutatedByte": 16,
+      "sha256": "42bf261df8c09c1f0fb583645f7f545420d56774cb7a83a68c9a27af4da4cc16",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 25,
+      "entropySeed": 471372837,
+      "offset": 40,
+      "bit": 0,
+      "originalByte": 128,
+      "mutatedByte": 129,
+      "sha256": "aed628b2765e5b22e049404e9b8266fd67e5ce8e5bf757e4a82dd86a51ba3166",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 26,
+      "entropySeed": 3964811072,
+      "offset": 54,
+      "bit": 7,
+      "originalByte": 144,
+      "mutatedByte": 16,
+      "sha256": "883de3e1aac7fb9833f0ef65d606dc8184e194649a740ef688b67e32e57b77e4",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 27,
+      "entropySeed": 1675575711,
+      "offset": 70,
+      "bit": 3,
+      "originalByte": 0,
+      "mutatedByte": 8,
+      "sha256": "91852eb3ca48899358ad4d0b374569db79bd7914e7c4bffd834746fd4d2ca7fa",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 28,
+      "entropySeed": 2876351090,
+      "offset": 42,
+      "bit": 5,
+      "originalByte": 0,
+      "mutatedByte": 32,
+      "sha256": "855aa58bcab40ebd305a5151c20c33e2db6d7295106b5d30b56b54a37e1c6707",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 29,
+      "entropySeed": 353345321,
+      "offset": 57,
+      "bit": 0,
+      "originalByte": 7,
+      "mutatedByte": 6,
+      "sha256": "d7b94a51c67c433ebf1881df9b482e90ee7460587052eb2eed8fd671ed11f081",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 30,
+      "entropySeed": 312827508,
+      "offset": 46,
+      "bit": 0,
+      "originalByte": 0,
+      "mutatedByte": 1,
+      "sha256": "53c3b78899507b50f5f50546bbe4997c569904aaf73604716974ab6e33477b7e",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 31,
+      "entropySeed": 1271592771,
+      "offset": 73,
+      "bit": 2,
+      "originalByte": 50,
+      "mutatedByte": 54,
+      "sha256": "78c50442150f0bba5ba4c4ea0fcd73b3ce4320f0abdec61092b93b56dae268bb",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 32,
+      "entropySeed": 432878534,
+      "offset": 63,
+      "bit": 0,
+      "originalByte": 0,
+      "mutatedByte": 1,
+      "sha256": "f37e44b9edbf21520435e981e021e16d3a3ea41ecad243cd004663ae938f5f71",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 33,
+      "entropySeed": 1557231725,
+      "offset": 63,
+      "bit": 2,
+      "originalByte": 0,
+      "mutatedByte": 4,
+      "sha256": "113d7c0f290927e3c2e1a0d9a93d1bf9117cf8f21ca398e3bc20b4dfce9ddcf1",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 34,
+      "entropySeed": 733118184,
+      "offset": 46,
+      "bit": 1,
+      "originalByte": 0,
+      "mutatedByte": 2,
+      "sha256": "f4a658ddfd517418e549dc066c5dc08519e42d4054981788938c93c22822b0c5",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 35,
+      "entropySeed": 4156020007,
+      "offset": 62,
+      "bit": 7,
+      "originalByte": 0,
+      "mutatedByte": 128,
+      "sha256": "aa19715fc9bc3f0c59a9751259edf8a5c4f6d50a5c07a9ba8534582bdd74b7aa",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 36,
+      "entropySeed": 3766571098,
+      "offset": 44,
+      "bit": 7,
+      "originalByte": 3,
+      "mutatedByte": 131,
+      "sha256": "215f40864aabde282f6380be26fb7886365dc81a2c182577f9bdf8411b8a0fb7",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "Golomb unary exceeds limit"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 37,
+      "entropySeed": 30270449,
+      "offset": 54,
+      "bit": 0,
+      "originalByte": 144,
+      "mutatedByte": 145,
+      "sha256": "1c8aa20fea7447092f47876673912a3f8f2ecf28407817d628d26b039990827c",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 38,
+      "entropySeed": 2671676572,
+      "offset": 59,
+      "bit": 4,
+      "originalByte": 64,
+      "mutatedByte": 80,
+      "sha256": "dcd701fe33f6747010f38061ba43b7298a2f6fd128a859d772c8b36da796a1fc",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 39,
+      "entropySeed": 4192091979,
+      "offset": 76,
+      "bit": 7,
+      "originalByte": 56,
+      "mutatedByte": 184,
+      "sha256": "e00c766cd1bf141b701adb134650d98208604f3c0d7f071e9ad83cf86faffcc9",
+      "moonjls": {
+        "outcome": "accepted",
+        "frame": {
+          "width": 11,
+          "height": 2,
+          "bits": 16,
+          "near": 3
+        }
+      },
+      "charls": {
+        "outcome": "accepted",
+        "frame": {
+          "width": 11,
+          "height": 2,
+          "bits": 16,
+          "near": 3
+        }
+      },
+      "reconstructedSamples": [
+        0,
+        32767,
+        32767,
+        65534,
+        65535,
+        15,
+        65521,
+        3,
+        3,
+        3,
+        3,
+        0,
+        0,
+        0,
+        65534,
+        65535,
+        65521,
+        15,
+        3,
+        3,
+        3,
+        3
+      ],
+      "classification": "matched-reconstruction"
+    },
+    {
+      "index": 40,
+      "entropySeed": 2822966318,
+      "offset": 69,
+      "bit": 5,
+      "originalByte": 0,
+      "mutatedByte": 32,
+      "sha256": "de49bd8ee8839dd22a506a335ed8c3b80a860fe5983746c5108a498cc736debe",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "marker inside an incomplete scan"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 41,
+      "entropySeed": 2939086261,
+      "offset": 47,
+      "bit": 5,
+      "originalByte": 0,
+      "mutatedByte": 32,
+      "sha256": "92f4c94b78a9444e94d0eca82bdbe17f92b36c3bcc6291392b3cfa95e1220234",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 42,
+      "entropySeed": 1073986448,
+      "offset": 42,
+      "bit": 2,
+      "originalByte": 0,
+      "mutatedByte": 4,
+      "sha256": "bf17f925b2bd035b7886f3ee783a0d93d459c0d02ebc52bf14c1289f2d503bd3",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 43,
+      "entropySeed": 1248516527,
+      "offset": 51,
+      "bit": 2,
+      "originalByte": 0,
+      "mutatedByte": 4,
+      "sha256": "88652d936a4c6cf93ee98f43fff911310f2525eaa8444df3864166e04ecc95c4",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 44,
+      "entropySeed": 3635329858,
+      "offset": 44,
+      "bit": 6,
+      "originalByte": 3,
+      "mutatedByte": 67,
+      "sha256": "67146ab48b07dbf9036c56c76fa66cca88180311d395067110df368a870e29dc",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "Golomb unary exceeds limit"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 45,
+      "entropySeed": 626835897,
+      "offset": 52,
+      "bit": 1,
+      "originalByte": 0,
+      "mutatedByte": 2,
+      "sha256": "da925c6df235cb7e636ae4242c2e4ef4883adb4cd25e00b16033db3bfb9228ae",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 46,
+      "entropySeed": 40206276,
+      "offset": 46,
+      "bit": 0,
+      "originalByte": 0,
+      "mutatedByte": 1,
+      "sha256": "53c3b78899507b50f5f50546bbe4997c569904aaf73604716974ab6e33477b7e",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "prediction residual outside RANGE"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    },
+    {
+      "index": 47,
+      "entropySeed": 1185056851,
+      "offset": 44,
+      "bit": 2,
+      "originalByte": 3,
+      "mutatedByte": 7,
+      "sha256": "0f11e932c6fd5f6e902e92835bf941e32e7d8e607d18452fd9c01097e9ca279d",
+      "moonjls": {
+        "outcome": "rejected",
+        "name": "CodecError",
+        "code": "InvalidData",
+        "message": "Golomb unary exceeds limit"
+      },
+      "charls": {
+        "outcome": "rejected",
+        "name": "JpegLSError",
+        "code": 5,
+        "message": "errorCode: 5, message: Invalid JPEG-LS stream, the encoded bit stream contains a general structural problem"
+      },
+      "classification": "matched-structural-rejection"
+    }
+  ]
+}

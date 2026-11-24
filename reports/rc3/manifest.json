@@ -1,0 +1,162 @@
+{
+  "recordedAtSingapore": "2026-11-24T13:06:59.402523+08:00",
+  "testedSource": "2feb00b8ef657b7259ba70bccf1ff0ceaf08765b",
+  "pairedStaticSnapshotSources": {
+    "baseline": "299fd9afcbaac67d8d65b42545fb632a429ef202",
+    "candidate": "65422925136b9035e5762ab314631e5c6b667506"
+  },
+  "pinnedNativeSource": "a146998f31675769fb6c3bc9055ef7798f254b1d",
+  "nativeBinarySha256": "267837ca5c3015adf1637a322bf27a8ab96699ff9c9e2ee9b3e1166539a7ed6c",
+  "unchangedSinceRc2MeasuredSource": [
+    "core",
+    "cmd/moonjls",
+    "cmd/bridge",
+    "sdk",
+    "web/transport.mjs",
+    "moon.mod"
+  ],
+  "tools": {
+    "moon": [
+      "moon 0.1.20261119 (738607b 2026-11-19) ~\\.moon\\bin\\moon.exe",
+      "moonc v0.10.22+124d61d05 (2026-11-19) ~\\.moon\\bin\\moonc.exe",
+      "moonrun 0.1.20261119 (738607b 2026-11-19) ~\\.moon\\bin\\moonrun.exe"
+    ],
+    "node": "v24.20.0",
+    "chrome": "158.0.8127.37",
+    "python": "3.12.10",
+    "windowsPowerPlan": {
+      "name": "High performance",
+      "guid": "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c"
+    },
+    "playwrightCore": "1.65.1",
+    "charlsWasm": "@team-charls/charls-wasm 0.10.0",
+    "charlsNative": "imagecodecs 2026.11.11 / CharLS 2.4.5"
+  },
+  "staticAssets": {
+    "web/index.html": {
+      "rc2StaticOriginalSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "rc3StaticOriginalSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "rc2PairedServedSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "rc3PairedServedSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "testedSourceRebuildSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2"
+    },
+    "web/style.css": {
+      "rc2StaticOriginalSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "rc3StaticOriginalSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "rc2PairedServedSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "rc3PairedServedSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "testedSourceRebuildSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b"
+    },
+    "web/app.mjs": {
+      "rc2StaticOriginalSha256": "cfcf79227aea7bf7feaa3267d3ab10912abecdc14f336ca921b31ac27da08f4c",
+      "rc3StaticOriginalSha256": "abf4da7aba31d150df56d064c6e802465d332b9acac36b65823cd6838d3a1fae",
+      "rc2PairedServedSha256": "567a83b37b9e303f8bda0655b2af7cc6c4346cd77b736f2ee810a452240f907e",
+      "rc3PairedServedSha256": "e2d2566769aca0c7ef0fde5f7dbb87f49a98234fbafbcad34ca8952a329c8d81",
+      "reviewArchiveBaselineCopy": "reports/rc3/baseline-web/app.mjs",
+      "testedSourceRebuildSha256": "abf4da7aba31d150df56d064c6e802465d332b9acac36b65823cd6838d3a1fae"
+    },
+    "web/labels.mjs": {
+      "rc2StaticOriginalSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "rc3StaticOriginalSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "rc2PairedServedSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "rc3PairedServedSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "testedSourceRebuildSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67"
+    },
+    "web/pgm.mjs": {
+      "rc2StaticOriginalSha256": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f",
+      "rc3StaticOriginalSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+      "rc2PairedServedSha256": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f",
+      "rc3PairedServedSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+      "reviewArchiveBaselineCopy": "reports/rc3/baseline-web/pgm.mjs",
+      "testedSourceRebuildSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106"
+    },
+    "web/preview.mjs": {
+      "rc2StaticOriginalSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "rc3StaticOriginalSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "rc2PairedServedSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "rc3PairedServedSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "testedSourceRebuildSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0"
+    },
+    "web/transport.mjs": {
+      "rc2StaticOriginalSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "rc3StaticOriginalSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "rc2PairedServedSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "rc3PairedServedSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "testedSourceRebuildSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+    },
+    "sdk/index.mjs": {
+      "rc2StaticOriginalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "rc3StaticOriginalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "rc2PairedServedSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "rc3PairedServedSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "testedSourceRebuildSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "sdk/worker-client.mjs": {
+      "rc2StaticOriginalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "rc3StaticOriginalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "rc2PairedServedSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "rc3PairedServedSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "testedSourceRebuildSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "sdk/worker.mjs": {
+      "rc2StaticOriginalSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "rc3StaticOriginalSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "rc2PairedServedSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "rc3PairedServedSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "testedSourceRebuildSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "sdk/generated/core.mjs": {
+      "rc2StaticOriginalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "rc3StaticOriginalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "rc2PairedServedSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "rc3PairedServedSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "testedSourceRebuildSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93"
+    },
+    "sdk/generated/core.wasm": {
+      "rc2StaticOriginalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "rc3StaticOriginalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "rc2PairedServedSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "rc3PairedServedSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "testedSourceRebuildSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    }
+  },
+  "pairedBrowserReceipts": "workbench-paired.json#actualBrowserResponses",
+  "uninstrumentedChromeSmokeReceipts": "chrome-smoke.json#responses",
+  "rawEvidenceSha256": {
+    "baseline-web/app.mjs": "cfcf79227aea7bf7feaa3267d3ab10912abecdc14f336ca921b31ac27da08f4c",
+    "baseline-web/pgm.mjs": "0ff6acf8ad671cf9ae7e2272c337742bb7d159bf57bd93326e244d3ccae6997f",
+    "cancel-probe.txt": "88a901a7681238c3132563e5ce192c6d29812d64d7fc9e2c61debcca90e45fb8",
+    "chrome-smoke.json": "eb23ffa90a428413e94d6daf2d082c597a14546b4508c3bf02f27b7ca557f660",
+    "chrome-smoke.txt": "ab28065f7a6dd492271bebeaee06a8046ac80c87429be6bd611f8e1647961898",
+    "core-js.txt": "4b32850fd24f3dc1a857526ea218013ca7e1f8f03a9896857e7a5c985bf656b9",
+    "core-native.txt": "29250d71d26eddc15e31c1bdd9bba84e69f30e65ab60f24e083ca22ffdaddc4a",
+    "core-wasm-gc.txt": "4b32850fd24f3dc1a857526ea218013ca7e1f8f03a9896857e7a5c985bf656b9",
+    "external-consumer.json": "38fbc89b44294a0f0902ca67eb0ca03f197e0d927db7b28de7eadecd2b54b958",
+    "external-consumer.md": "96602c1520cace730bd38a294cde225fea47dffb5814b179bc9190e3af18e90a",
+    "external-consumer.py": "9fb887966184978291894bda5d7bb8c308006cda2610f5b20fa32fc49cd14396",
+    "interop-near0/js-entropy-mutations.json": "6302e7a17cf5023403e13cbd5745c5ae3ca71d79780b3a161eecfe39a68302b1",
+    "interop-near0/report.json": "e0f8d4cddcb70b5f70976443d929a82cd0de055175b82fa39b44f01d6cd188d0",
+    "interop-near0/wasm-gc-entropy-mutations.json": "cc14edd482c8e5b1dbc6e71c7370ff3166f3d52d6bad39777725047307362f88",
+    "interop-near3/js-entropy-mutations.json": "6302e7a17cf5023403e13cbd5745c5ae3ca71d79780b3a161eecfe39a68302b1",
+    "interop-near3/report.json": "73545e32e85f156dfeb79c9e504960d0818210cfc335251fbe7468aea9b2e863",
+    "interop-near3/wasm-gc-entropy-mutations.json": "cc14edd482c8e5b1dbc6e71c7370ff3166f3d52d6bad39777725047307362f88",
+    "moon-check.txt": "70b3dd07f2f4b23024a1d173cf2da5b20d9fa378a0ad868a07cd5e6fd087f822",
+    "native-controls.json": "553bfcf099a5a6abb3a571ab454122e847292841de125a4a99740d5c677a2eec",
+    "native-eager.json": "ab46fc6ee7e83ea01e6ac75e1a9115805e539ba77381ef86ccdd9c7ce497c745",
+    "native-rc2-original.json": "88a9538641d28dbbdbb5fc7a02831c311d2b48fe56af4e961cd135e6b339df50",
+    "native-rc2-timeout.txt": "a82cbc34bd4a8b8105304903a89d6d88d70c3fed36091c39cf76d1a21509b596",
+    "native-tail.json": "12b61bb98a5e918e0bd22c2d0909afedb0ca8fb37b673a66b5bbba01c12e5c95",
+    "pgm-unit.txt": "17f4322d865820b2dbb82a95ad2427f7e4a31c0db695f8a8959a72a78e6bc5a9",
+    "rc2-recheck.json": "0e5430c41ba4f2388a85fd4bd6fb8986f40f52ebd678743d39ab6c26842b007d",
+    "sdk-build.txt": "147af1d8a57172c50ba54b537fd2cb180f9ae3d4477c41249ae9d06132830daf",
+    "web-build.txt": "53c59dbf5207ff176955efce104d94db1a59045e78009cdb442689106e583a63",
+    "workbench-gates.json": "219f2d1e4f67d68f22690bcb1a37d95e160af90dabff62b9e42b08a4764682de",
+    "workbench-memory-short.json": "d541fab8f6e0d06c4386018608ab4309d52fe5067f2e2a83dcbe4f10c31487cc",
+    "workbench-memory.json": "1a94987618dda99ee4369f6d5b78d0716006863fad8566b3b05760162b2e5ae4",
+    "workbench-paired.json": "15b02b905f31ade22d14fa1393cec8a8a97c7ce6aa4de9cc8f7ad7c75e31c690",
+    "workbench-profile.json": "779746025f764d8a843a98166ab1c9c345933d6e646be4b8b627ea1f6654edbe",
+    "workbench-real-download.json": "b891c9a3638a45aed8168370e8b8b7369d93bd2d5b0be7b68e2c12c947c74016",
+    "interop-near0/manifest.json": "573161c7d19d99329640a9c26f80ca1b2427864cc6f1e55c54e2a1da03f96549",
+    "interop-near3/manifest.json": "df03f82daad735eebbbc38cf3d9902a209e10e56c4b8446b3721f43526a173fb"
+  }
+}

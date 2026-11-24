@@ -1,0 +1,374 @@
+{
+  "startedUtc": "2026-11-24T05:01:13.144Z",
+  "schema": 1,
+  "diagnostic": false,
+  "options": [
+    "--baseline",
+    ".evidence/rc3/workbench-candidate",
+    "--baseline-source",
+    "65422925136b9035e5762ab314631e5c6b667506",
+    "--output",
+    ".evidence/rc3/workbench-real-download.json",
+    "--check-download",
+    ".evidence/real/lola.pgm",
+    "--nears",
+    "3"
+  ],
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "win32",
+    "release": "10.0.26200",
+    "cpu": "AMD Ryzen 9 8945HX with Radeon Graphics        ",
+    "browser": "158.0.8127.37"
+  },
+  "settings": {
+    "warmup": 0,
+    "repeats": 1,
+    "chunk": 4096,
+    "backends": [
+      "wasm-gc"
+    ],
+    "nears": [
+      3
+    ],
+    "timeout": 120000
+  },
+  "fixture": {
+    "file": "lola.pgm",
+    "bytes": 2073618,
+    "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+    "width": 1440,
+    "height": 720,
+    "bits": 16,
+    "rasterSha256": "a77a9101781ab6e92bc870944f96528bbe435ee1048e5b3a420c7106c2e3d050",
+    "formula": null
+  },
+  "assets": {
+    "baseline": {
+      "web/index.html": {
+        "originalSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "sha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+        "bytes": 4968,
+        "instrumented": false
+      },
+      "web/style.css": {
+        "originalSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "sha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+        "bytes": 4552,
+        "instrumented": false
+      },
+      "web/app.mjs": {
+        "originalSha256": "abf4da7aba31d150df56d064c6e802465d332b9acac36b65823cd6838d3a1fae",
+        "sha256": "e2d2566769aca0c7ef0fde5f7dbb87f49a98234fbafbcad34ca8952a329c8d81",
+        "bytes": 9661,
+        "instrumented": true
+      },
+      "web/labels.mjs": {
+        "originalSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "sha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+        "bytes": 3490,
+        "instrumented": false
+      },
+      "web/pgm.mjs": {
+        "originalSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+        "sha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+        "bytes": 6665,
+        "instrumented": false
+      },
+      "web/preview.mjs": {
+        "originalSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "sha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+        "bytes": 3512,
+        "instrumented": false
+      },
+      "web/transport.mjs": {
+        "originalSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+        "bytes": 3288,
+        "instrumented": false
+      },
+      "sdk/index.mjs": {
+        "originalSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+        "bytes": 11627,
+        "instrumented": false
+      },
+      "sdk/worker-client.mjs": {
+        "originalSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+        "bytes": 3055,
+        "instrumented": false
+      },
+      "sdk/worker.mjs": {
+        "originalSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+        "bytes": 3087,
+        "instrumented": false
+      },
+      "sdk/generated/core.mjs": {
+        "originalSha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+        "bytes": 100050,
+        "instrumented": false
+      },
+      "sdk/generated/core.wasm": {
+        "originalSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+        "bytes": 17158,
+        "instrumented": false
+      }
+    }
+  },
+  "sourceCommit": {
+    "baseline": "65422925136b9035e5762ab314631e5c6b667506"
+  },
+  "timing": "Browser performance.now from capture of the real Run click until task finalization. The original file, app, workers, preview and sink are active. Fixture creation and file selection are excluded. First display is the return from the first reconstruction Canvas putImageData, not the painted next frame. Profile enables operation counters; ordinary trials use job/sink clocks, first-row/canvas clock and terminal statistics only.",
+  "profileLimit": "Reference request durations are serial pre-row-ACK spans for this task. They include materialization and scheduling, and may overlap encoder and pipe work. The summed spans divided by wall time are a screening metric, not predicted savings. Cache/row/queue sizes are logical owned payloads, not renderer RSS.",
+  "trials": [
+    {
+      "variant": "baseline",
+      "backend": "wasm-gc",
+      "near": 3,
+      "phase": "formal",
+      "index": 1,
+      "order": 1,
+      "jobId": 1,
+      "timeOriginMs": 1795496473655.1,
+      "clickAtMs": 401.8000000715256,
+      "startedAtMs": 402.10000002384186,
+      "finishedAtMs": 1010.4000000953674,
+      "wallMs": 608.6000000238419,
+      "firstRowArrivalMs": 76,
+      "firstDisplayMs": 111.39999997615814,
+      "sinkOpenMs": 0,
+      "sinkCloseMs": 0.6000000238418579,
+      "workers": [
+        {
+          "createdMs": 58.799999952316284,
+          "mode": "decode",
+          "loadMs": 2.8000000715255737,
+          "doneMs": 606.7999999523163,
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 999459,
+            "outputProduced": 1036800,
+            "rows": 720,
+            "coreWorkspaceBytes": 18175,
+            "bridgeBufferPeakBytes": 5649,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 1553,
+            "outputPeakBytes": 2880,
+            "firstRowInputConsumed": 287,
+            "firstRowMs": 4.700000047683716,
+            "elapsedMs": 535.5
+          }
+        },
+        {
+          "createdMs": 59,
+          "mode": "encode",
+          "loadMs": 3,
+          "doneMs": 606.6000000238419,
+          "stats": {
+            "inputUnit": "samples",
+            "outputUnit": "bytes",
+            "inputConsumed": 1036800,
+            "outputProduced": 999459,
+            "rows": 720,
+            "coreWorkspaceBytes": 17416,
+            "bridgeBufferPeakBytes": 20480,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 8192,
+            "outputPeakBytes": 1553,
+            "firstRowInputConsumed": 1440,
+            "firstRowMs": 3.600000023841858,
+            "elapsedMs": 535.3000000715256
+          }
+        }
+      ],
+      "status": "Complete",
+      "frame": "1440 × 720 · 16-bit · NEAR 3",
+      "encoded": "999,459 B",
+      "maxError": "3",
+      "appLatency": "606.5 ms",
+      "workspace": "17,416 / 18,175 B",
+      "queues": "0 / 0 B · max 1553 / 2880 B",
+      "progress": 720,
+      "downloadVisible": true
+    }
+  ],
+  "failures": [],
+  "actualBrowserResponses": {
+    "/": {
+      "status": 200,
+      "deliveredSha256": "8369915b3cd9d1afdb13b62cca67c3867bd56b7eefb8c541ee3e38f83da8fade",
+      "browserBodySha256": "8369915b3cd9d1afdb13b62cca67c3867bd56b7eefb8c541ee3e38f83da8fade"
+    },
+    "/baseline/web/": {
+      "status": 200,
+      "deliveredSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "browserBodySha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2"
+    },
+    "/baseline/web/style.css": {
+      "status": 200,
+      "deliveredSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "browserBodySha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b"
+    },
+    "/baseline/web/app.mjs": {
+      "status": 200,
+      "deliveredSha256": "e2d2566769aca0c7ef0fde5f7dbb87f49a98234fbafbcad34ca8952a329c8d81",
+      "browserBodySha256": "e2d2566769aca0c7ef0fde5f7dbb87f49a98234fbafbcad34ca8952a329c8d81"
+    },
+    "/baseline/sdk/index.mjs": {
+      "status": 200,
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "status": 200,
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/baseline/web/pgm.mjs": {
+      "status": 200,
+      "deliveredSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+      "browserBodySha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106"
+    },
+    "/baseline/web/labels.mjs": {
+      "status": 200,
+      "deliveredSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "browserBodySha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67"
+    },
+    "/baseline/web/preview.mjs": {
+      "status": 200,
+      "deliveredSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "browserBodySha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0"
+    },
+    "/baseline/web/transport.mjs": {
+      "status": 200,
+      "deliveredSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "browserBodySha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+    },
+    "/baseline/sdk/worker.mjs": {
+      "status": 200,
+      "deliveredSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "browserBodySha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "status": 200,
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    }
+  },
+  "serverDelivered": {
+    "/": {
+      "document ← ": 1
+    },
+    "/baseline/web/": {
+      "iframe ← /": 1
+    },
+    "/baseline/web/style.css": {
+      "style ← /baseline/web/": 1
+    },
+    "/baseline/web/app.mjs": {
+      "script ← /baseline/web/": 1
+    },
+    "/baseline/sdk/index.mjs": {
+      "script ← /baseline/web/app.mjs": 1,
+      "worker ← /baseline/sdk/worker.mjs": 3
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/labels.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/pgm.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/preview.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/web/transport.mjs": {
+      "script ← /baseline/web/app.mjs": 1
+    },
+    "/baseline/sdk/worker.mjs": {
+      "worker ← /baseline/web/": 3
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "empty ← /baseline/sdk/worker.mjs": 3
+    }
+  },
+  "harness": {
+    "runnerSha256": "3dafe62d3039d56331ddb298667ae81b93b9fa7264b1507a3b189d2814f824b1",
+    "probeSha256": "554dff0c5ff612eb4d7182af879842ff5bdcaed665a47ccefcd7758098c66405"
+  },
+  "download": {
+    "jlsBytes": 999459,
+    "jlsSha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+    "pgmBytes": 2073618,
+    "pgmSha256": "0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002",
+    "samplesChecked": 1036800,
+    "maxError": 3,
+    "oracle": "@team-charls/charls-wasm 0.10.0",
+    "sameStreamReferenceMatch": true
+  },
+  "finishedUtc": "2026-11-24T05:01:15.610Z",
+  "summary": [
+    {
+      "backend": "wasm-gc",
+      "near": 3,
+      "baseline": {
+        "wallMs": {
+          "samples": [
+            608.6000000238419
+          ],
+          "median": 608.6000000238419,
+          "min": 608.6000000238419,
+          "max": 608.6000000238419,
+          "mad": 0
+        },
+        "firstDisplayMs": {
+          "samples": [
+            111.39999997615814
+          ],
+          "median": 111.39999997615814,
+          "min": 111.39999997615814,
+          "max": 111.39999997615814,
+          "mad": 0
+        },
+        "firstRowArrivalMs": {
+          "samples": [
+            76
+          ],
+          "median": 76,
+          "min": 76,
+          "max": 76,
+          "mad": 0
+        },
+        "sinkOpenMs": {
+          "samples": [
+            0
+          ],
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "mad": 0
+        },
+        "sinkCloseMs": {
+          "samples": [
+            0.6000000238418579
+          ],
+          "median": 0.6000000238418579,
+          "min": 0.6000000238418579,
+          "max": 0.6000000238418579,
+          "mad": 0
+        }
+      }
+    }
+  ],
+  "gate": null,
+  "recordedUtc": "2026-11-24T05:01:15.610Z"
+}

@@ -1,0 +1,1 @@
+{"test":"cancelled old job must not overwrite new job preview","mode":"correctness-gate","expectedNewPixel":4000,"observed":"(0, 1) · original 4000 · reconstructed 4000 · error 0","oldWorkerTerminated":true,"scope":"unchanged app.mjs + worker-client.mjs + pgm.mjs + preview.mjs; fake DOM/Worker transport; no generated codec"}

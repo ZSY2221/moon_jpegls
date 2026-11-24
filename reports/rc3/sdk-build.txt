@@ -1,0 +1,6 @@
+Artifacts:
+  ZSY2221/moon_jpegls/cmd/bridge  js  D:\Program Files\GPT_project\moon_jpegls\_build\js\release\build\cmd\bridge\bridge.js
+Finished. moon: no work to do
+Artifacts:
+  ZSY2221/moon_jpegls/cmd/bridge  wasm-gc  D:\Program Files\GPT_project\moon_jpegls\_build\wasm-gc\release\build\cmd\bridge\bridge.wasm
+Finished. moon: no work to do

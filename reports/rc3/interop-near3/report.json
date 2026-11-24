@@ -1,0 +1,56 @@
+{
+  "images": 1,
+  "encodes": 4,
+  "sameStreamComparisons": 8,
+  "backendByteMatches": 1,
+  "outputQuantumByteMatches": 2,
+  "allSingleCuts": 160,
+  "wholeImageMatches": 4,
+  "truncationPrefixes": 162,
+  "supportedOfficial": 0,
+  "unsupportedOfficial": 0,
+  "explicitPresetVariants": 8,
+  "pauseResume": 4,
+  "cancellation": 4,
+  "negativeStructures": 26,
+  "trailingAllow": 2,
+  "entropyMutationAccepted": 6,
+  "entropyMutationRejected": 90,
+  "entropyMutationDistinctInputs": 48,
+  "entropyMutationReports": [
+    "js-entropy-mutations.json",
+    "wasm-gc-entropy-mutations.json"
+  ],
+  "mostStuffed": {
+    "name": "b16-n3-all-values",
+    "entropyFF": 4328,
+    "entropyBytes": 9023
+  },
+  "node": "v24.20.0",
+  "wasmOracle": "@team-charls/charls-wasm 0.10.0",
+  "nativeCLIImages": 1,
+  "nativeCLIEncodeQuantumMatches": 1,
+  "nativeCrossBackendBytes": 2,
+  "nativeCLISameStreamComparisons": 5,
+  "nativeCLIPgmPipeChecks": 0,
+  "nativeCLIOfficialPass": 0,
+  "nativeCLIOfficialUnsupported": 0,
+  "nativeOracleSameStreamComparisons": 13,
+  "maxAbsoluteErrorByBitsAndNear": {
+    "16/3": 3
+  },
+  "sourceRevision": "2feb00b8ef657b7259ba70bccf1ff0ceaf08765b",
+  "trackedDiff": [],
+  "seed": 141648163,
+  "backends": [
+    "js",
+    "wasm-gc",
+    "native"
+  ],
+  "python": "3.12.10",
+  "nativeOracle": "imagecodecs 2026.11.11 / CharLS 2.4.5",
+  "runtime": {
+    "platform": "win32",
+    "cpuCount": 32
+  }
+}
