@@ -201,6 +201,7 @@ async function effect(folder, warmup, repeats) {
         const dec = await measure(() => oracle.decode(enc.result), warmup, repeats);
         const report = {
           ...item, near,
+          commonDecodeInputBytes: enc.result.byteLength,
           'charls-wasm': {
             bytes: enc.result.length, maxError: errorBound(pixels, dec.result.pixels, near),
             encode: enc.timings, decode: dec.timings,
@@ -211,14 +212,13 @@ async function effect(folder, warmup, repeats) {
             inputChunkSize: 8192, outputChunkSize: 8192,
           }), warmup, repeats);
           const compressed = encode.result.bytes;
-          const decode = await measure(() => decodeImage(core, compressed, {
+          const decode = await measure(() => decodeImage(core, enc.result, {
             inputChunkSize: 8192,
           }), warmup, repeats);
-          const reconstruction = decode.result.samples;
+          assert.equal(errorBound(dec.result.pixels, decode.result.samples, 0), 0, 'common-stream reference reconstruction');
           const reference = oracle.decode(compressed);
-          assert.equal(errorBound(reference.pixels, reconstruction, 0), 0, 'same-stream reference reconstruction');
           report[core.backend] = {
-            bytes: compressed.length, maxError: errorBound(pixels, reconstruction, near),
+            bytes: compressed.length, maxError: errorBound(pixels, reference.pixels, near),
             encode: encode.timings, decode: decode.timings,
           };
         }
@@ -230,7 +230,8 @@ async function effect(folder, warmup, repeats) {
   }
   return {
     timingBoundary: 'Wall time from complete-result API call to usable result; excludes fixture I/O, module load, and external correctness checks.',
-    representation: { encodeInput: 'Uint16Array samples', encodedBytes: 'Uint8Array', decodeOutput: 'Uint16Array samples' },
+    representation: { encodeInput: 'Uint16Array samples', encodedBytes: 'Uint8Array', decodeOutput: 'Uint16Array samples',
+      decodeInput: 'The same CharLS Wasm stream for all timed Node decoders' },
     coldLoadMs: { js: js.loadMs, 'wasm-gc': wasm.loadMs, 'charls-wasm': oracleLoadMs }, records,
   };
 }
