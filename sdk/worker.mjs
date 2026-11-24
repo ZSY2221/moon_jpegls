@@ -37,10 +37,15 @@ async function run(message) {
   const core = await loadCore({ backend });
   let reportedRows = 0;
   let lastProgress = 0;
+  let deliveredRow = false;
   const settings = {
     frame, inputChunkSize, outputChunkSize, limits, trailing, signal: abort.signal,
     read: (maxElements) => request('needInput', { maxElements }),
     onProgress: (stats, info) => {
+      if (deliveredRow) {
+        deliveredRow = false;
+        return;
+      }
       if (stats.rows !== reportedRows || stats.elapsedMs - lastProgress >= 50) {
         reportedRows = stats.rows;
         lastProgress = stats.elapsedMs;
@@ -48,7 +53,12 @@ async function run(message) {
       }
     },
     onBytes: (chunk, stats) => request('bytes', { chunk, stats }, [chunk.buffer]),
-    onRow: (row, index, info, stats) => request('row', { row, index, frame: info, stats }, [row.buffer]),
+    onRow: (row, index, info, stats) => {
+      deliveredRow = true;
+      reportedRows = stats.rows;
+      lastProgress = stats.elapsedMs;
+      return request('row', { row, index, frame: info, stats }, [row.buffer]);
+    },
   };
   const result = await (mode === 'encode' ? encodeStream(core, settings) : decodeStream(core, settings));
   finish('done', { ...result, backend: core.backend, loadMs: core.loadMs });
