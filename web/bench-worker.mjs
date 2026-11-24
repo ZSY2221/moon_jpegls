@@ -235,7 +235,7 @@ try {
   await page.goto(`http://127.0.0.1:${connection.port}/`);
   await page.evaluate(async () => { globalThis.runWorkerTrial = (await import('/driver.mjs')).workerTrial; });
 
-  for (const near of nears) for (const backend of backends) for (const chunk of chunks) {
+  for (const chunk of chunks) for (const near of nears) for (const backend of backends) {
     for (let index = 0; index < warmup + repeats; index++) {
       const order = index % 2 === 0 ? variants : [...variants].reverse();
       for (const variant of order) {
