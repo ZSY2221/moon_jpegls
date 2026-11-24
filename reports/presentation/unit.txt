@@ -1,0 +1,16 @@
+✔ PGM P5 retains 8-, 12- and 16-bit samples including CRLF and big-endian boundaries (3.7072ms)
+✔ Reference windows hit, replace and clip by whole row without moving the encoding cursor (4.2073ms)
+✔ A row wider than 64 KiB uses the existing uncached read (3.2015ms)
+✔ Concurrent reference requests share at most one physical window load (1.602ms)
+✔ A released old window cannot trigger another read after cancellation and restart (2.0075ms)
+✔ wide preview ignores letterbox and preserves equal grayscale mapping and full integers (2.0158ms)
+✔ tall sampled preview maps across desktop and narrow content boxes without borrowing input rows (0.5292ms)
+✔ standalone decode exposes the reconstructed integers with no original or error (0.1799ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 74.5728

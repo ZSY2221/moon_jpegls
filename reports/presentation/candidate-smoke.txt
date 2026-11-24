@@ -1,0 +1,15 @@
+{"test":"browser sample round-trip","backend":"wasm-gc","encodedBytes":105655,"maxError":3}
+{"test":"browser decoded PGM download","backend":"js","pgmBytes":208017}
+{"test":"browser malformed/unsupported status","cases":2}
+{"test":"browser bounded verification and locale switch","inputChunkSize":1024}
+{"test":"browser sample lossless full-range endpoints","backend":"js","maxError":0,"displayEndpoints":[0,0,0,255,255,255,255,255]}
+{"test":"browser UI pause, resume and cancel","inputChunkSize":1}
+{"test":"browser cancel/restart with pending host operation","blocked":"read","reads":{"old":[{"start":17,"end":25,"bytes":8}],"next":[{"start":17,"end":21,"bytes":4}]},"newPixel":4000,"reconstructed":[3000,3000,4000,4000],"download":"cancel-read-new.jls"}
+{"test":"browser cancel/restart with pending host operation","blocked":"write","reads":{"old":[],"next":[{"start":13,"end":17,"bytes":4}]},"newPixel":4000,"reconstructed":[3000,3000,4000,4000],"download":"cancel-write-new.jls"}
+{"test":"browser cancel/restart with pending host operation","blocked":"close","reads":{"old":[],"next":[{"start":13,"end":17,"bytes":4}]},"newPixel":4000,"reconstructed":[3000,3000,4000,4000],"download":"cancel-close-new.jls"}
+{"test":"four preview rows provisional before withheld EOI","before":4,"afterRelease":"complete"}
+{"test":"pending sink close gates success and page timer","fail":false,"closeHeldMs":175.5,"elapsed":"396.3 ms","bytesWritten":142176}
+{"test":"pending sink close gates success and page timer","fail":true,"closeHeldMs":96,"elapsed":"—","bytesWritten":142176}
+{"test":"worker ACK, manual resume and one-byte reads","before":59,"whileHeld":59,"whilePaused":59,"queue":8,"reads":81,"rows":[0,32767,65535,32768,42,7,32,0],"expected":[0,32767,65535,32768,42,7,32,0],"stats":{"inputUnit":"bytes","outputUnit":"samples","inputConsumed":80,"outputProduced":8,"rows":2,"coreWorkspaceBytes":6687,"bridgeBufferPeakBytes":2,"inputQueueBytes":0,"outputQueueBytes":0,"inputPeakBytes":1,"outputPeakBytes":8,"firstRowInputConsumed":59,"firstRowMs":5.699999928474426,"elapsedMs":99.69999992847443}}
+{"test":"NASA LOLA real browser downloads agree with CharLS","near":3,"maxError":3,"samples":1036800,"fixtureSha256":"1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6","jlsBytes":999459,"jlsSha256":"b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9","pgmBytes":2073618,"pgmSha256":"0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002"}
+{"status":"passed","browser":"158.0.8127.37","node":"v24.20.0"}

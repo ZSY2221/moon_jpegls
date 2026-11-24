@@ -1,0 +1,46 @@
+{
+  "browser": "158.0.8127.37",
+  "node": "v24.20.0",
+  "responses": {
+    "/web/app.mjs": {
+      "sha256": "a37e0a040110ed18758c6f1b04199223c8f213819f20788d15364edad4474765",
+      "bytes": 13631
+    },
+    "/sdk/worker-client.mjs": {
+      "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "bytes": 3055
+    },
+    "/web/preview.mjs": {
+      "sha256": "fe11da70cb8a3c15febc90c0103b3f45e0cf2daee6f47fbd410f436da50c2de9",
+      "bytes": 4809
+    },
+    "/web/pgm.mjs": {
+      "sha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+      "bytes": 6665
+    },
+    "/web/transport.mjs": {
+      "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "bytes": 3288
+    },
+    "/web/labels.mjs": {
+      "sha256": "6b6e0d8a707bd5892202619ff53395ae4e09cdaa24d1fea006c8997d35fdac93",
+      "bytes": 9236
+    },
+    "/sdk/index.mjs": {
+      "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "bytes": 11627
+    },
+    "/sdk/worker.mjs": {
+      "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "bytes": 3087
+    },
+    "/sdk/generated/core.wasm": {
+      "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "bytes": 17158
+    },
+    "/sdk/generated/core.mjs": {
+      "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93",
+      "bytes": 100050
+    }
+  }
+}

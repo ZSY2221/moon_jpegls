@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Stream high bit-depth grayscale JPEG-LS files in your browser.">
+  <title>MoonJLS · JPEG-LS Workbench</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="identity"><span class="moon" aria-hidden="true"></span><strong>MoonJLS</strong></div>
+    <p data-label="tagline">High bit-depth grayscale JPEG-LS</p>
+    <label class="language"><span class="visually-hidden">Language</span>
+      <select id="language"><option value="en">English</option><option value="zh">简体中文</option></select>
+    </label>
+  </header>
+
+  <main>
+    <section class="workspace" aria-labelledby="workbench">
+      <p class="eyebrow" data-label="codec">T.87 Part 1 · grayscale</p>
+      <h1 id="workbench" data-label="workbench">JPEG-LS Workbench</h1>
+      <p class="intro" data-label="intro">Encode a PGM or decode a JPEG-LS file. All samples stay on your device.</p>
+
+      <div class="panel controls">
+        <div class="source">
+          <div class="file-pick">
+            <label class="file-button" for="file" data-label="file">Choose PGM or JLS</label>
+            <input id="file" class="visually-hidden" type="file" accept=".pgm,.jls,image/x-portable-graymap,image/jls">
+            <span id="selected" class="selected" data-label="noFile">No file selected</span>
+          </div>
+          <button type="button" id="example" class="quiet" data-label="example">Load 16-bit sample</button>
+        </div>
+        <div class="settings">
+          <label><span data-label="near">NEAR</span><select id="near"><option value="0">0</option><option>1</option><option>2</option><option>3</option></select></label>
+          <label><span data-label="backend">Backend</span><select id="backend"><option value="wasm-gc">Wasm GC</option><option value="js">JavaScript</option></select></label>
+          <label><span data-label="chunk">Input chunk (bytes or samples)</span><input id="chunk" type="number" min="1" max="1048576" value="32768"></label>
+          <label class="sink"><span data-label="sink">Output</span><select id="sink">
+            <option value="buffered" data-label="buffered">Buffered download · up to 64 MiB</option>
+            <option value="bounded" data-label="bounded">Bounded verification · no file saved</option>
+            <option value="file" data-label="streamed">Stream to a file</option>
+          </select></label>
+        </div>
+        <div class="actions">
+          <button id="run" type="button" class="primary" disabled data-label="run">Run codec</button>
+          <button id="pause" type="button" disabled data-label="pause">Pause</button>
+          <button id="cancel" type="button" disabled data-label="cancel">Cancel</button>
+          <a id="download" class="button" hidden data-label="download">Download result</a>
+          <span id="status" role="status" aria-live="polite" data-label="waiting">Select a file to begin.</span>
+        </div>
+        <progress id="progress" value="0" max="1" aria-label="Decoded rows"></progress>
+      </div>
+
+      <div class="panel previews" aria-label="Pixel previews">
+        <figure><figcaption data-label="original">Original</figcaption><canvas id="original" aria-label="Original sample preview"></canvas></figure>
+        <figure><figcaption data-label="reconstruction">Reconstruction</figcaption><canvas id="reconstruction" aria-label="Reconstructed sample preview"></canvas></figure>
+        <figure><figcaption data-label="difference">Absolute error</figcaption><canvas id="difference" aria-label="Absolute error preview"></canvas></figure>
+      </div>
+      <p id="pixel" class="pixel" aria-live="polite" data-label="pickPixel">Select a preview pixel to inspect its integer samples.</p>
+
+      <dl class="panel metrics" aria-label="Codec measurements">
+        <div><dt data-label="frame">Frame</dt><dd id="frame">—</dd></div>
+        <div><dt data-label="encoded">JLS bytes</dt><dd id="encoded">—</dd></div>
+        <div><dt data-label="ratio">Raw / JLS</dt><dd id="ratio">—</dd></div>
+        <div><dt data-label="error">Max absolute error</dt><dd id="error">—</dd></div>
+        <div><dt data-label="latency">End-to-end</dt><dd id="latency">—</dd></div>
+        <div><dt data-label="workspace">Encode / decode payload peak</dt><dd id="workspace">—</dd></div>
+        <div><dt data-label="queues">Input / output queue</dt><dd id="queues">—</dd></div>
+      </dl>
+      <p class="footnote" data-label="limits">Previews are sampled to 480 × 320. Raw size uses one storage byte per 8-bit sample and two for 12- or 16-bit samples. The queue readout shows current and peak payload for the active Worker.</p>
+    </section>
+  </main>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

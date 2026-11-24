@@ -1,0 +1,586 @@
+{
+  "startedUtc": "2026-11-24T05:46:41.054Z",
+  "runnerSha256": "038a4c920edcaafd1592e6b3a10982458c76528a988af625658802d19e2494a2",
+  "sourceCommit": {
+    "baseline": "2feb00b8ef657b7259ba70bccf1ff0ceaf08765b",
+    "candidate": "c97a38c8f3a16ce26e07c51b72094424bc5bffed"
+  },
+  "environment": {
+    "node": "v24.20.0",
+    "platform": "win32",
+    "release": "10.0.26200",
+    "cpu": "AMD Ryzen 9 8945HX with Radeon Graphics        ",
+    "browser": "158.0.8127.37"
+  },
+  "settings": {
+    "width": 512,
+    "height": 4096,
+    "bits": 16,
+    "backend": "wasm-gc",
+    "near": 0,
+    "chunk": 4096,
+    "sink": "bounded",
+    "warmup": 2,
+    "repeats": 5,
+    "viewport": [
+      1440,
+      900
+    ]
+  },
+  "fixture": {
+    "bytes": 4194322,
+    "sha256": "57eb64cc0a21aacea581734284ccbead417bff17c89794535f7d3f9a442e7da8",
+    "rasterSha256": "3edc48759d57ba5ba5c0605fc293cf9576ade2a865c00c8c76ca339c184627e4",
+    "formula": "(x*173+y*47+((x^y)&31)*3)&65535"
+  },
+  "timing": "Browser performance.now from capture of the real Run click until the post-finalization Run control is enabled (MutationObserver microtask). Includes worker load, preview, verification and output close. Excludes test setup and file selection. First Canvas time is measured at the return of first reconstruction putImageData.",
+  "assets": {
+    "baseline": {
+      "web/index.html": {
+        "bytes": 4968,
+        "sha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2"
+      },
+      "web/style.css": {
+        "bytes": 4552,
+        "sha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b"
+      },
+      "web/app.mjs": {
+        "bytes": 9307,
+        "sha256": "abf4da7aba31d150df56d064c6e802465d332b9acac36b65823cd6838d3a1fae"
+      },
+      "web/labels.mjs": {
+        "bytes": 3490,
+        "sha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67"
+      },
+      "web/preview.mjs": {
+        "bytes": 3512,
+        "sha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0"
+      },
+      "web/pgm.mjs": {
+        "bytes": 6665,
+        "sha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106"
+      },
+      "web/transport.mjs": {
+        "bytes": 3288,
+        "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+      },
+      "sdk/index.mjs": {
+        "bytes": 11627,
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+      },
+      "sdk/worker-client.mjs": {
+        "bytes": 3055,
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+      },
+      "sdk/worker.mjs": {
+        "bytes": 3087,
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+      },
+      "sdk/generated/core.mjs": {
+        "bytes": 100050,
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93"
+      },
+      "sdk/generated/core.wasm": {
+        "bytes": 17158,
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+      }
+    },
+    "candidate": {
+      "web/index.html": {
+        "bytes": 9404,
+        "sha256": "dbe2e1adad1d33c3ae7626c519c0d0db225e101597619764f72f92616301ac2b"
+      },
+      "web/style.css": {
+        "bytes": 11467,
+        "sha256": "2edfe558e56abdd0e4d450290057b70d4d25851fff97a191e0d86ad8e87fa4c0"
+      },
+      "web/app.mjs": {
+        "bytes": 13631,
+        "sha256": "a37e0a040110ed18758c6f1b04199223c8f213819f20788d15364edad4474765"
+      },
+      "web/labels.mjs": {
+        "bytes": 9236,
+        "sha256": "6b6e0d8a707bd5892202619ff53395ae4e09cdaa24d1fea006c8997d35fdac93"
+      },
+      "web/preview.mjs": {
+        "bytes": 4809,
+        "sha256": "fe11da70cb8a3c15febc90c0103b3f45e0cf2daee6f47fbd410f436da50c2de9"
+      },
+      "web/pgm.mjs": {
+        "bytes": 6665,
+        "sha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106"
+      },
+      "web/transport.mjs": {
+        "bytes": 3288,
+        "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+      },
+      "sdk/index.mjs": {
+        "bytes": 11627,
+        "sha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+      },
+      "sdk/worker-client.mjs": {
+        "bytes": 3055,
+        "sha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+      },
+      "sdk/worker.mjs": {
+        "bytes": 3087,
+        "sha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+      },
+      "sdk/generated/core.mjs": {
+        "bytes": 100050,
+        "sha256": "f5541fca8e0386bbb9d7e3c89420a7c7131f0650174bf0074d36b83b3efcfa93"
+      },
+      "sdk/generated/core.wasm": {
+        "bytes": 17158,
+        "sha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+      }
+    }
+  },
+  "serverDelivered": {
+    "/": 1,
+    "/baseline/web/": 1,
+    "/candidate/web/": 1,
+    "/baseline/web/style.css": 1,
+    "/candidate/web/style.css": 1,
+    "/baseline/web/app.mjs": 1,
+    "/candidate/web/app.mjs": 1,
+    "/baseline/sdk/index.mjs": 15,
+    "/baseline/sdk/worker-client.mjs": 1,
+    "/baseline/web/labels.mjs": 1,
+    "/baseline/web/pgm.mjs": 1,
+    "/baseline/web/preview.mjs": 1,
+    "/candidate/sdk/index.mjs": 15,
+    "/baseline/web/transport.mjs": 1,
+    "/candidate/sdk/worker-client.mjs": 1,
+    "/candidate/web/labels.mjs": 1,
+    "/candidate/web/pgm.mjs": 1,
+    "/candidate/web/preview.mjs": 1,
+    "/candidate/web/transport.mjs": 1,
+    "/baseline/sdk/worker.mjs": 14,
+    "/baseline/sdk/generated/core.wasm": 14,
+    "/candidate/sdk/worker.mjs": 14,
+    "/candidate/sdk/generated/core.wasm": 14
+  },
+  "browserResponses": {
+    "/": {
+      "deliveredSha256": "6ed3cae0d2e28186d4b4ed29f1b3909520d1220645c7fce0371a5fdade0905cf",
+      "browserBodySha256": "6ed3cae0d2e28186d4b4ed29f1b3909520d1220645c7fce0371a5fdade0905cf"
+    },
+    "/baseline/web/": {
+      "deliveredSha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2",
+      "browserBodySha256": "7484822d6fb262e1aa4ae321d7fa43492ef055a3ad43cd36e021d0a3967b2cd2"
+    },
+    "/candidate/web/": {
+      "deliveredSha256": "dbe2e1adad1d33c3ae7626c519c0d0db225e101597619764f72f92616301ac2b",
+      "browserBodySha256": "dbe2e1adad1d33c3ae7626c519c0d0db225e101597619764f72f92616301ac2b"
+    },
+    "/baseline/web/style.css": {
+      "deliveredSha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b",
+      "browserBodySha256": "eb7b4ec5218402fa6f97c736d1dbda803e5df95b783fbf3df7b845e501a2355b"
+    },
+    "/candidate/web/style.css": {
+      "deliveredSha256": "2edfe558e56abdd0e4d450290057b70d4d25851fff97a191e0d86ad8e87fa4c0",
+      "browserBodySha256": "2edfe558e56abdd0e4d450290057b70d4d25851fff97a191e0d86ad8e87fa4c0"
+    },
+    "/baseline/web/app.mjs": {
+      "deliveredSha256": "abf4da7aba31d150df56d064c6e802465d332b9acac36b65823cd6838d3a1fae",
+      "browserBodySha256": "abf4da7aba31d150df56d064c6e802465d332b9acac36b65823cd6838d3a1fae"
+    },
+    "/candidate/web/app.mjs": {
+      "deliveredSha256": "a37e0a040110ed18758c6f1b04199223c8f213819f20788d15364edad4474765",
+      "browserBodySha256": "a37e0a040110ed18758c6f1b04199223c8f213819f20788d15364edad4474765"
+    },
+    "/baseline/sdk/worker-client.mjs": {
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/baseline/sdk/index.mjs": {
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/baseline/web/labels.mjs": {
+      "deliveredSha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67",
+      "browserBodySha256": "47d439ddb4c410e9e203be9e04a1e4b4a0fd837c578c32a0fcba656a02dbaf67"
+    },
+    "/baseline/web/preview.mjs": {
+      "deliveredSha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0",
+      "browserBodySha256": "e3811f212286d9badb99c112eff1702237ee42bfad48db35f6dbd1dc827cdab0"
+    },
+    "/candidate/sdk/index.mjs": {
+      "deliveredSha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2",
+      "browserBodySha256": "4c639e9373ff942d2fe603db6edc74877e9eda0df2d7485f66f696584aa5cdb2"
+    },
+    "/baseline/web/pgm.mjs": {
+      "deliveredSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+      "browserBodySha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106"
+    },
+    "/baseline/web/transport.mjs": {
+      "deliveredSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "browserBodySha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+    },
+    "/candidate/sdk/worker-client.mjs": {
+      "deliveredSha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360",
+      "browserBodySha256": "96f3d7429fc21c4371950054ffb284740448bf18f164ab462d0583f8d68e9360"
+    },
+    "/candidate/web/pgm.mjs": {
+      "deliveredSha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106",
+      "browserBodySha256": "563876ac92bfc557216fafd3e543eaea9aec0a46f0eca70e62b2e4dd568e4106"
+    },
+    "/candidate/web/labels.mjs": {
+      "deliveredSha256": "6b6e0d8a707bd5892202619ff53395ae4e09cdaa24d1fea006c8997d35fdac93",
+      "browserBodySha256": "6b6e0d8a707bd5892202619ff53395ae4e09cdaa24d1fea006c8997d35fdac93"
+    },
+    "/candidate/web/transport.mjs": {
+      "deliveredSha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "browserBodySha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f"
+    },
+    "/candidate/web/preview.mjs": {
+      "deliveredSha256": "fe11da70cb8a3c15febc90c0103b3f45e0cf2daee6f47fbd410f436da50c2de9",
+      "browserBodySha256": "fe11da70cb8a3c15febc90c0103b3f45e0cf2daee6f47fbd410f436da50c2de9"
+    },
+    "/baseline/sdk/worker.mjs": {
+      "deliveredSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "browserBodySha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "/baseline/sdk/generated/core.wasm": {
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    },
+    "/candidate/sdk/worker.mjs": {
+      "deliveredSha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab",
+      "browserBodySha256": "992ae926a980a6fa1c22dd852cee5e78c521db7a1a4dcce87919c334bb045eab"
+    },
+    "/candidate/sdk/generated/core.wasm": {
+      "deliveredSha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d",
+      "browserBodySha256": "6559fa44617287c89fdd3c60811989fb52d4cbf30bb81aeef3ddb4c6f193173d"
+    }
+  },
+  "trials": [
+    {
+      "variant": "baseline",
+      "phase": "warmup",
+      "pair": 1,
+      "order": 1,
+      "timeOriginMs": 1795499201545,
+      "clickedAtMs": 593.2000000476837,
+      "finishedAtMs": 1891.1000000238419,
+      "wallMs": 1297.8999999761581,
+      "firstCanvasMs": 87.10000002384186,
+      "status": "Complete",
+      "state": null,
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "candidate",
+      "phase": "warmup",
+      "pair": 1,
+      "order": 2,
+      "timeOriginMs": 1795499201545.7,
+      "clickedAtMs": 2142.7999999523163,
+      "finishedAtMs": 3324.5,
+      "wallMs": 1181.7000000476837,
+      "firstCanvasMs": 17.700000047683716,
+      "status": "Complete · every reconstructed sample verified.",
+      "state": "complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "candidate",
+      "phase": "warmup",
+      "pair": 2,
+      "order": 3,
+      "timeOriginMs": 1795499201545.7,
+      "clickedAtMs": 3379.399999976158,
+      "finishedAtMs": 4453,
+      "wallMs": 1073.6000000238419,
+      "firstCanvasMs": 15.200000047683716,
+      "status": "Complete · every reconstructed sample verified.",
+      "state": "complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "baseline",
+      "phase": "warmup",
+      "pair": 2,
+      "order": 4,
+      "timeOriginMs": 1795499201545,
+      "clickedAtMs": 4483.900000095367,
+      "finishedAtMs": 5705.300000071526,
+      "wallMs": 1221.3999999761581,
+      "firstCanvasMs": 13.899999976158142,
+      "status": "Complete",
+      "state": null,
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "baseline",
+      "phase": "formal",
+      "pair": 1,
+      "order": 5,
+      "timeOriginMs": 1795499201545,
+      "clickedAtMs": 5737.200000047684,
+      "finishedAtMs": 6939.200000047684,
+      "wallMs": 1202,
+      "firstCanvasMs": 14.5,
+      "status": "Complete",
+      "state": null,
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "candidate",
+      "phase": "formal",
+      "pair": 1,
+      "order": 6,
+      "timeOriginMs": 1795499201545.7,
+      "clickedAtMs": 6996.200000047684,
+      "finishedAtMs": 7977.200000047684,
+      "wallMs": 981,
+      "firstCanvasMs": 14,
+      "status": "Complete · every reconstructed sample verified.",
+      "state": "complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "candidate",
+      "phase": "formal",
+      "pair": 2,
+      "order": 7,
+      "timeOriginMs": 1795499201545.7,
+      "clickedAtMs": 8036.299999952316,
+      "finishedAtMs": 9000.5,
+      "wallMs": 964.2000000476837,
+      "firstCanvasMs": 15.700000047683716,
+      "status": "Complete · every reconstructed sample verified.",
+      "state": "complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "baseline",
+      "phase": "formal",
+      "pair": 2,
+      "order": 8,
+      "timeOriginMs": 1795499201545,
+      "clickedAtMs": 9038,
+      "finishedAtMs": 10139.400000095367,
+      "wallMs": 1101.4000000953674,
+      "firstCanvasMs": 16.100000023841858,
+      "status": "Complete",
+      "state": null,
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "baseline",
+      "phase": "formal",
+      "pair": 3,
+      "order": 9,
+      "timeOriginMs": 1795499201545,
+      "clickedAtMs": 10170.100000023842,
+      "finishedAtMs": 11309.200000047684,
+      "wallMs": 1139.1000000238419,
+      "firstCanvasMs": 15.100000023841858,
+      "status": "Complete",
+      "state": null,
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "candidate",
+      "phase": "formal",
+      "pair": 3,
+      "order": 10,
+      "timeOriginMs": 1795499201545.7,
+      "clickedAtMs": 11363.700000047684,
+      "finishedAtMs": 12470.799999952316,
+      "wallMs": 1107.0999999046326,
+      "firstCanvasMs": 14.699999928474426,
+      "status": "Complete · every reconstructed sample verified.",
+      "state": "complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "candidate",
+      "phase": "formal",
+      "pair": 4,
+      "order": 11,
+      "timeOriginMs": 1795499201545.7,
+      "clickedAtMs": 12526.399999976158,
+      "finishedAtMs": 13628.100000023842,
+      "wallMs": 1101.7000000476837,
+      "firstCanvasMs": 15.200000047683716,
+      "status": "Complete · every reconstructed sample verified.",
+      "state": "complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "baseline",
+      "phase": "formal",
+      "pair": 4,
+      "order": 12,
+      "timeOriginMs": 1795499201545,
+      "clickedAtMs": 13662.100000023842,
+      "finishedAtMs": 14868,
+      "wallMs": 1205.8999999761581,
+      "firstCanvasMs": 14.800000071525574,
+      "status": "Complete",
+      "state": null,
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "baseline",
+      "phase": "formal",
+      "pair": 5,
+      "order": 13,
+      "timeOriginMs": 1795499201545,
+      "clickedAtMs": 14897.900000095367,
+      "finishedAtMs": 16151.600000023842,
+      "wallMs": 1253.6999999284744,
+      "firstCanvasMs": 14.299999952316284,
+      "status": "Complete",
+      "state": null,
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    },
+    {
+      "variant": "candidate",
+      "phase": "formal",
+      "pair": 5,
+      "order": 14,
+      "timeOriginMs": 1795499201545.7,
+      "clickedAtMs": 16217.600000023842,
+      "finishedAtMs": 17162.200000047684,
+      "wallMs": 944.6000000238419,
+      "firstCanvasMs": 13.799999952316284,
+      "status": "Complete · every reconstructed sample verified.",
+      "state": "complete",
+      "frame": "512 × 4096 · 16-bit · NEAR 0",
+      "rows": 4096,
+      "jlsBytes": "1,249,961 B",
+      "maxError": "0",
+      "downloadHidden": true
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "baseline": {
+      "wallMs": {
+        "samples": [
+          1202,
+          1101.4000000953674,
+          1139.1000000238419,
+          1205.8999999761581,
+          1253.6999999284744
+        ],
+        "median": 1202,
+        "min": 1101.4000000953674,
+        "max": 1253.6999999284744,
+        "mad": 51.699999928474426
+      },
+      "firstCanvasMs": {
+        "samples": [
+          14.5,
+          16.100000023841858,
+          15.100000023841858,
+          14.800000071525574,
+          14.299999952316284
+        ],
+        "median": 14.800000071525574,
+        "min": 14.299999952316284,
+        "max": 16.100000023841858,
+        "mad": 0.30000007152557373
+      }
+    },
+    "candidate": {
+      "wallMs": {
+        "samples": [
+          981,
+          964.2000000476837,
+          1107.0999999046326,
+          1101.7000000476837,
+          944.6000000238419
+        ],
+        "median": 981,
+        "min": 944.6000000238419,
+        "max": 1107.0999999046326,
+        "mad": 36.39999997615814
+      },
+      "firstCanvasMs": {
+        "samples": [
+          14,
+          15.700000047683716,
+          14.699999928474426,
+          15.200000047683716,
+          13.799999952316284
+        ],
+        "median": 14.699999928474426,
+        "min": 13.799999952316284,
+        "max": 15.700000047683716,
+        "mad": 0.6999999284744263
+      }
+    }
+  },
+  "gate": {
+    "wallRegressionPercent": -18.386023294509148,
+    "pairedWallRegressionPercent": [
+      -18.386023294509148,
+      -12.456873073888131,
+      -2.8092353716565266,
+      -8.640849152544538,
+      -24.655021131232925
+    ],
+    "stableWallRegression": false,
+    "firstCanvasDeltaMs": -0.10000014305114746,
+    "firstCanvasAllowanceMs": 2,
+    "pass": true
+  },
+  "finishedUtc": "2026-11-24T05:46:58.707Z"
+}

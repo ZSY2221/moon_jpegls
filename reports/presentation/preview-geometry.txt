@@ -1,0 +1,1 @@
+{"browser":"158.0.8127.37","scenarios":{"widePoint":[66,6,11712],"desktopPoint":[320,1433,57250],"mobilePoint":[281,2700,44504],"keyboardOrigin":[0,0,0],"keyboardNeighbor":[1,0,176]},"tallBackingCanvas":[40,320],"letterboxIgnored":["horizontal-top","tall-left","narrow-left"],"state":"passed"}
