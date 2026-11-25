@@ -9,6 +9,86 @@ pub(all) struct Frame {
 }
 
 ///|
+/// Component specification declared in SOF55.
+#derive(Eq, Debug)
+pub(all) struct ComponentSpec {
+  id : Int32
+  h_sampling : Int32
+  v_sampling : Int32
+}
+
+///|
+/// Frame-level geometry, precision, and component table independent of per-scan NEAR/presets.
+#derive(Eq, Debug)
+pub(all) struct FrameInfo {
+  width : Int32
+  height : Int32
+  bits : Int32
+  components : Array[ComponentSpec]
+}
+
+///|
+/// Requested scan encoding parameters for one non-interleaved component scan.
+#derive(Eq, Debug)
+pub(all) struct ScanSpec {
+  component_id : Int32
+  near : Int32
+  preset : Preset
+}
+
+///|
+/// Decoded or encoded metadata for one JPEG-LS scan segment and its byte boundaries.
+#derive(Eq, Debug)
+pub(all) struct ScanInfo {
+  scan_index : Int32
+  component_index : Int32
+  component_id : Int32
+  near : Int32
+  interleave : Int32
+  point_transform : Int32
+  preset : Preset
+  header_offset : Int64
+  entropy_offset : Int64
+  end_offset : Int64
+  rows_decoded : Int32
+  completed : Bool
+}
+
+///|
+/// Parsed marker record with exact codestream byte offset and segment length (including marker bytes).
+#derive(Eq, Debug)
+pub(all) struct MarkerRecord {
+  code : Int32
+  offset : Int64
+  length : Int32
+  scan_index : Int32
+  detail : Int32
+}
+
+///|
+/// Structured error location pointing at the active scan, component, marker, or offset.
+#derive(Eq, Debug)
+pub(all) struct ErrorLocation {
+  scan_index : Int32
+  component_id : Int32
+  marker : Int32
+  offset : Int64
+}
+
+///|
+/// Complete parsed frame, scan, and marker layout for a JPEG-LS interchange stream.
+#derive(Eq, Debug)
+pub(all) struct StreamStructure {
+  soi_offset : Int64
+  sof_offset : Int64
+  sof_length : Int32
+  eoi_offset : Int64
+  frame : FrameInfo
+  scans : Array[ScanInfo]
+  markers : Array[MarkerRecord]
+}
+
+///|
 /// Coding parameters for the current scan. Zero fields request the defaults in T.87 Table C.2.
 #derive(Eq, Debug)
 pub(all) struct Preset {
@@ -83,6 +163,47 @@ pub fn Frame::maxval(self : Frame) -> Int32 {
 }
 
 ///|
+/// Full-scale default for FrameInfo precision.
+pub fn FrameInfo::maxval(self : FrameInfo) -> Int32 {
+  (1 << self.bits) - 1
+}
+
+///|
+pub fn FrameInfo::component_count(self : FrameInfo) -> Int32 {
+  self.components.length()
+}
+
+///|
+pub fn FrameInfo::find_component(self : FrameInfo, id : Int32) -> Int32? {
+  for index in 0..<self.components.length() {
+    if self.components[index].id == id {
+      return Some(index)
+    }
+  }
+  None
+}
+
+///|
+pub fn checked_total_samples(
+  width : Int32,
+  height : Int32,
+  components : Int32,
+) -> Int64 {
+  width.to_int64() * height.to_int64() * components.to_int64()
+}
+
+///|
+pub fn checked_raw_bytes(
+  width : Int32,
+  height : Int32,
+  components : Int32,
+  bits : Int32,
+) -> Int64 {
+  let bytes_per_sample = if bits <= 8 { 1L } else { 2L }
+  checked_total_samples(width, height, components) * bytes_per_sample
+}
+
+///|
 fn validate_limits(limits : Limits) -> Unit raise CodecError {
   guard limits.max_width > 0 &&
     limits.max_height > 0 &&
@@ -93,17 +214,22 @@ fn validate_limits(limits : Limits) -> Unit raise CodecError {
 }
 
 ///|
-fn validate_dimensions(
+fn validate_frame_dimensions(
   width : Int32,
   height : Int32,
+  components : Int32,
   limits : Limits,
 ) -> Unit raise CodecError {
   guard width > 0 && height > 0 && width <= 65535 && height <= 65535 else {
     raise InvalidArgument("dimensions must be in 1..65535")
   }
+  guard components > 0 && components <= 255 else {
+    raise InvalidArgument("component count must be in 1..255")
+  }
+  let total_samples = checked_total_samples(width, height, components)
   guard width <= limits.max_width &&
     height <= limits.max_height &&
-    width <= limits.max_pixels / height else {
+    total_samples <= limits.max_pixels.to_int64() else {
     raise ResourceLimit("frame dimensions exceed limits")
   }
 }

@@ -59,9 +59,11 @@ function nativeMetrics(stdout) {
   const metrics = JSON.parse(stdout);
   const fields = ['width', 'height', 'bits', 'maxval', 'near', 'rows', 'inputBytes',
     'corePayloadBytes', 'inputPeakBytes', 'firstRowInputConsumed'];
+  const components = metrics.componentCount ?? 1;
   if (!metrics || !fields.every((key) => Number.isSafeInteger(metrics[key]) && metrics[key] >= 0) ||
       metrics.bits < 2 || metrics.bits > 16 || metrics.width < 1 || metrics.height < 1 ||
-      metrics.rows !== metrics.height || metrics.maxval < 1 || metrics.maxval > 2 ** metrics.bits - 1 ||
+      !Number.isSafeInteger(components) || components < 1 || components > 255 ||
+      metrics.rows !== metrics.height * components || metrics.maxval < 1 || metrics.maxval > 2 ** metrics.bits - 1 ||
       metrics.near > Math.min(255, Math.floor(metrics.maxval / 2)) ||
       metrics.firstRowInputConsumed > metrics.inputBytes) {
     throw new Error('Native command returned invalid verification metrics');

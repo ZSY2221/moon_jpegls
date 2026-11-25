@@ -147,11 +147,159 @@ fn get_preset_field(preset : @jls.Preset, near : Int32, field : Int32) -> Int32 
 }
 
 ///|
+pub struct EncodeBuilder {
+  width : Int32
+  height : Int32
+  bits : Int32
+  input_capacity : Int32
+  output_capacity : Int32
+  budget : @jls.Limits
+  components : Array[@jls.ComponentSpec]
+  scans : Array[@jls.ScanSpec]
+}
+
+///|
+#export_name("encoder_builder_new")
+pub fn encoder_builder_new(
+  width : Int32,
+  height : Int32,
+  bits : Int32,
+  input_capacity : Int32,
+  output_capacity : Int32,
+  max_width : Int32,
+  max_height : Int32,
+  max_pixels : Int32,
+  max_metadata : Int32,
+) -> EncodeBuilder {
+  {
+    width,
+    height,
+    bits,
+    input_capacity,
+    output_capacity,
+    budget: limits(max_width, max_height, max_pixels, max_metadata),
+    components: [],
+    scans: [],
+  }
+}
+
+///|
+#export_name("encoder_builder_component")
+pub fn encoder_builder_component(
+  builder : EncodeBuilder,
+  id : Int32,
+  h_sampling : Int32,
+  v_sampling : Int32,
+) -> Unit {
+  builder.components.push({ id, h_sampling, v_sampling })
+}
+
+///|
+#export_name("encoder_builder_scan")
+pub fn encoder_builder_scan(
+  builder : EncodeBuilder,
+  component_id : Int32,
+  near : Int32,
+  maxval : Int32,
+  t1 : Int32,
+  t2 : Int32,
+  t3 : Int32,
+  reset : Int32,
+) -> Unit {
+  builder.scans.push({
+    component_id,
+    near,
+    preset: { maxval, t1, t2, t3, reset },
+  })
+}
+
+///|
+#export_name("encoder_builder_build")
+pub fn encoder_builder_build(builder : EncodeBuilder) -> EncodePort {
+  let frame : @jls.FrameInfo = {
+    width: builder.width,
+    height: builder.height,
+    bits: builder.bits,
+    components: builder.components,
+  }
+  try {
+    let codec = @jls.Encoder::new_multicomponent(
+      frame,
+      builder.scans,
+      builder.budget,
+    )
+    {
+      codec: Some(codec),
+      input: FixedArray::make(builder.input_capacity, 0),
+      output: FixedArray::make(builder.output_capacity, 0),
+      consumed: 0,
+      produced: 0,
+      status: NeedInput,
+    }
+  } catch {
+    error =>
+      {
+        codec: None,
+        input: [],
+        output: [],
+        consumed: 0,
+        produced: 0,
+        status: Failed(error),
+      }
+  }
+}
+
+///|
 #export_name("encoder_preset")
 pub fn encoder_preset(port : EncodePort, near : Int32, field : Int32) -> Int32 {
   match port.codec {
     Some(codec) => get_preset_field(codec.preset(), near, field)
     None => 0
+  }
+}
+
+///|
+#export_name("encoder_scan_index")
+pub fn encoder_scan_index(port : EncodePort) -> Int32 {
+  match port.codec {
+    Some(codec) => codec.scan_index()
+    None => -1
+  }
+}
+
+///|
+#export_name("encoder_scan_count")
+pub fn encoder_scan_count(port : EncodePort) -> Int32 {
+  match port.codec {
+    Some(codec) => codec.scan_count()
+    None => 0
+  }
+}
+
+///|
+#export_name("encoder_component_index")
+pub fn encoder_component_index(port : EncodePort) -> Int32 {
+  match port.codec {
+    Some(codec) => codec.component_index()
+    None => -1
+  }
+}
+
+///|
+#export_name("encoder_component_id")
+pub fn encoder_component_id(port : EncodePort) -> Int32 {
+  match port.codec {
+    Some(codec) => codec.component_id()
+    None => -1
+  }
+}
+
+///|
+#export_name("encoder_row_index")
+pub fn encoder_row_index(port : EncodePort) -> Int32 {
+  match port.codec {
+    Some(codec) => codec.row_index()
+    None => -1
   }
 }
 
@@ -474,4 +622,179 @@ pub fn decoder_workspace(port : DecodePort) -> Int32 {
 #export_name("decoder_cancel")
 pub fn decoder_cancel(port : DecodePort) -> Unit {
   port.codec.cancel()
+}
+
+///|
+#export_name("decoder_component_count")
+pub fn decoder_component_count(port : DecodePort) -> Int32 {
+  match port.codec.frame_info() {
+    Some(info) => info.components.length()
+    None => 0
+  }
+}
+
+///|
+#export_name("decoder_component_field")
+pub fn decoder_component_field(
+  port : DecodePort,
+  index : Int32,
+  field : Int32,
+) -> Int32 {
+  match port.codec.frame_info() {
+    Some(info) if index >= 0 && index < info.components.length() => {
+      let comp = info.components[index]
+      match field {
+        0 => comp.id
+        1 => comp.h_sampling
+        _ => comp.v_sampling
+      }
+    }
+    _ => -1
+  }
+}
+
+///|
+#export_name("decoder_scan_count")
+pub fn decoder_scan_count(port : DecodePort) -> Int32 {
+  port.codec.scans().length()
+}
+
+///|
+#export_name("decoder_current_scan")
+pub fn decoder_current_scan(port : DecodePort, field : Int32) -> Int32 {
+  match port.codec.current_scan() {
+    Some(scan) =>
+      match field {
+        0 => scan.scan_index
+        1 => scan.component_index
+        2 => scan.component_id
+        3 => scan.near
+        4 => port.codec.current_row()
+        _ => if scan.completed { 1 } else { 0 }
+      }
+    None => -1
+  }
+}
+
+///|
+#export_name("decoder_scan_int")
+pub fn decoder_scan_int(
+  port : DecodePort,
+  scan_index : Int32,
+  field : Int32,
+) -> Int32 {
+  let scans = port.codec.scans()
+  guard scan_index >= 0 && scan_index < scans.length() else { return -1 }
+  let scan = scans[scan_index]
+  match field {
+    0 => scan.scan_index
+    1 => scan.component_index
+    2 => scan.component_id
+    3 => scan.near
+    4 => scan.interleave
+    5 => scan.point_transform
+    6 => scan.preset.maxval
+    7 => scan.preset.t1
+    8 => scan.preset.t2
+    9 => scan.preset.t3
+    10 => scan.preset.reset
+    11 => scan.rows_decoded
+    _ => if scan.completed { 1 } else { 0 }
+  }
+}
+
+///|
+#export_name("decoder_scan_offset")
+pub fn decoder_scan_offset(
+  port : DecodePort,
+  scan_index : Int32,
+  which : Int32,
+) -> Double {
+  let scans = port.codec.scans()
+  guard scan_index >= 0 && scan_index < scans.length() else { return -1.0 }
+  let scan = scans[scan_index]
+  match which {
+    0 => scan.header_offset.to_double()
+    1 => scan.entropy_offset.to_double()
+    _ => scan.end_offset.to_double()
+  }
+}
+
+///|
+#export_name("decoder_structure_offset")
+pub fn decoder_structure_offset(port : DecodePort, which : Int32) -> Double {
+  match port.codec.structure() {
+    Some(st) =>
+      match which {
+        0 => st.soi_offset.to_double()
+        1 => st.sof_offset.to_double()
+        2 => st.sof_length.to_double()
+        _ => st.eoi_offset.to_double()
+      }
+    None => -1.0
+  }
+}
+
+///|
+#export_name("decoder_marker_count")
+pub fn decoder_marker_count(port : DecodePort) -> Int32 {
+  match port.codec.structure() {
+    Some(st) => st.markers.length()
+    None => 0
+  }
+}
+
+///|
+#export_name("decoder_marker_int")
+pub fn decoder_marker_int(
+  port : DecodePort,
+  index : Int32,
+  field : Int32,
+) -> Int32 {
+  match port.codec.structure() {
+    Some(st) if index >= 0 && index < st.markers.length() => {
+      let m = st.markers[index]
+      match field {
+        0 => m.code
+        1 => m.length
+        2 => m.scan_index
+        _ => m.detail
+      }
+    }
+    _ => -1
+  }
+}
+
+///|
+#export_name("decoder_marker_offset")
+pub fn decoder_marker_offset(port : DecodePort, index : Int32) -> Double {
+  match port.codec.structure() {
+    Some(st) if index >= 0 && index < st.markers.length() =>
+      st.markers[index].offset.to_double()
+    _ => -1.0
+  }
+}
+
+///|
+#export_name("decoder_error_int")
+pub fn decoder_error_int(port : DecodePort, field : Int32) -> Int32 {
+  match port.codec.error_location() {
+    Some(loc) =>
+      match field {
+        0 => 1
+        1 => loc.scan_index
+        2 => loc.component_id
+        _ => loc.marker
+      }
+    None => 0
+  }
+}
+
+///|
+#export_name("decoder_error_offset")
+pub fn decoder_error_offset(port : DecodePort) -> Double {
+  match port.codec.error_location() {
+    Some(loc) => loc.offset.to_double()
+    None => -1.0
+  }
 }

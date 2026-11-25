@@ -559,6 +559,126 @@ async function verifyLunarDownload(sourcePath) {
     fixtureSha256, jlsBytes: jls.length, jlsSha256: fingerprint(jls), pgmBytes: pgm.length, pgmSha256: fingerprint(pgm) }));
 }
 
+async function verifyMulticomponentWorkbench() {
+  const downloadBytes = async (expectedName) => {
+    const pending = page.waitForEvent('download');
+    await click('download');
+    const file = await pending;
+    if (expectedName) assert.equal(file.suggestedFilename(), expectedName);
+    return readFile(await file.path());
+  };
+
+  await page.goto(`${origin}/web/`);
+  await click('sample-rgb8');
+  await select('near', '0');
+  await select('backend', 'wasm-gc');
+  await select('sink', 'buffered');
+  await click('run');
+  await phase('complete');
+  assert.match(await text('mc-provenance-badge'), /Synthetic/i);
+  assert.equal(await text('error'), '0');
+  assert.match(await text('frame'), /256 × 192 · 3 ch · 8-bit · NEAR 0/);
+  const hostBuf = await text('host-conv-buffer');
+  const prevBuf = await text('preview-buffer');
+  assert.notEqual(hostBuf, '—');
+  assert.notEqual(prevBuf, '—');
+  assert.equal(await page.locator('#sof-components-body tr').count(), 3);
+  assert.equal(await page.locator('#scan-table-body tr').count(), 3);
+  assert.match(await text('scan-inspector-summary'), /256×192.*P=8.*EOI @/);
+  await page.locator('#channel-buttons button[data-comp="1"]').click();
+  assert.equal(await page.locator('#channel-buttons button[data-comp="1"]').getAttribute('aria-pressed'), 'true');
+  await page.locator('#channel-buttons button[data-comp="composite"]').click();
+  assert.equal(await page.locator('#channel-buttons button[data-comp="composite"]').getAttribute('aria-pressed'), 'true');
+  await capture('m3a-rgb8-near0');
+
+  await select('near', '3');
+  await click('run');
+  await phase('complete');
+  const rgbNear3Err = Number(await text('error'));
+  assert.ok(rgbNear3Err > 0 && rgbNear3Err <= 3, `Expected 1..3 error on RGB NEAR=3, got ${rgbNear3Err}`);
+  const rgbJls = await downloadBytes('synthetic-rgb-8.jls');
+
+  const { createOracle } = await import('../scripts/oracle.mjs');
+  const oracle = await createOracle();
+  try {
+    const decodedOracle = oracle.decode(rgbJls);
+    assert.equal(decodedOracle.frame.width, 256);
+    assert.equal(decodedOracle.frame.height, 192);
+    assert.equal(decodedOracle.frame.components, 3);
+    assert.equal(decodedOracle.frame.near, 3);
+    assert.equal(decodedOracle.pixels.length, 256 * 192 * 3);
+  } finally {
+    oracle.close();
+  }
+
+  await upload('rgb8-near3.jls', rgbJls);
+  await select('backend', 'js');
+  await click('run');
+  await phase('complete');
+  assert.match(await text('mc-provenance-badge'), /C0\/C1\/C2/);
+  assert.equal(await text('error'), 'Not compared');
+  await page.locator('#scan-table-body tr[data-scan-index="1"]').click();
+  assert.equal(await page.locator('#channel-buttons button[data-comp="1"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(await text('precision-near'), '3');
+  await capture('m3a-jls-scan-inspector');
+  const ppmBytes = await downloadBytes('rgb8-near3.ppm');
+  const ppmHdr = Buffer.from('P6\n256 192\n255\n');
+  assert.deepEqual(ppmBytes.subarray(0, ppmHdr.length), ppmHdr);
+  assert.equal(ppmBytes.length, ppmHdr.length + 256 * 192 * 3);
+
+  await click('sample-multi16');
+  await select('near', '0');
+  await select('backend', 'wasm-gc');
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('precision-maxval'), '65,535');
+  assert.equal(await text('error'), '0');
+  await page.locator('#reconstruction').press('Enter');
+  await page.waitForFunction(() => !document.getElementById('inspect-components').hidden);
+  const compCards = await page.locator('#inspect-components .inspect-comp-card').allTextContents();
+  assert.equal(compCards.length, 3);
+  assert.match(compCards[0], /Band 0: 65,535/);
+  assert.match(compCards[1], /Band 1: 32,768/);
+  assert.match(compCards[2], /Band 2: 1,025/);
+  await capture('m3a-multi16-inspector');
+  const multi16Jls = await downloadBytes('synthetic-3comp-16.jls');
+  const oracle16 = await createOracle();
+  try {
+    const dec16 = oracle16.decode(multi16Jls);
+    assert.equal(dec16.frame.width, 256);
+    assert.equal(dec16.frame.height, 192);
+    assert.equal(dec16.frame.components, 3);
+    assert.equal(dec16.frame.bits, 16);
+    const planePx = 256 * 192;
+    assert.equal(dec16.pixels[0], 65535);
+    assert.equal(dec16.pixels[planePx], 32768);
+    assert.equal(dec16.pixels[2 * planePx], 1025);
+    assert.equal(dec16.pixels[1], 0);
+    assert.equal(dec16.pixels[planePx + 1], 49151);
+    assert.equal(dec16.pixels[2 * planePx + 1], 65535);
+  } finally {
+    oracle16.close();
+  }
+
+  await upload('truncated-rgb.jls', rgbJls.subarray(0, rgbJls.length - 10));
+  await click('run');
+  await phase('failed');
+  assert.equal(await page.locator('#scan-error-location').isVisible(), true);
+  assert.match(await text('scan-error-location'), /Failed at/);
+
+  await page.locator('.scientific-nav a[href="#compatibility-view"]').click();
+  assert.equal(await page.locator('#compatibility-scope-note').isVisible(), true);
+  await capture('m3a-compatibility');
+
+  console.log(JSON.stringify({
+    test: 'M3-A multicomponent workbench, PPM P6, 16-bit inspector, Scan Inspector & CharLS verification',
+    rgbNear3Err,
+    rgbJlsBytes: rgbJls.length,
+    multi16JlsBytes: multi16Jls.length,
+    compCards,
+  }));
+}
+
 try {
   await page.goto(`${origin}/web/`);
   await click('example');
@@ -733,13 +853,14 @@ try {
 
   await expandedNear();
   await verifyM2Workbench();
+  await verifyMulticomponentWorkbench();
   if (process.env.MOONJLS_LOLA) await verifyLunarDownload(process.env.MOONJLS_LOLA);
 
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(consoleErrors, []);
   if (receiptPath) {
     const responses = Object.fromEntries(await Promise.all([...loaded].map(async ([path, receipt]) => [path, await receipt])));
-    for (const path of ['/web/app.mjs', '/web/style.css', '/web/preview.mjs', '/web/labels.mjs',
+    for (const path of ['/web/app.mjs', '/web/style.css', '/web/preview.mjs', '/web/ppm.mjs', '/web/scan-inspector.mjs', '/web/labels.mjs',
       '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs', '/sdk/generated/core.mjs', '/sdk/generated/core.wasm']) {
       assert.ok(responses[path]?.sha256, `No browser body hash for ${path}`);
     }

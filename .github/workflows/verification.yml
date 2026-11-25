@@ -56,12 +56,13 @@ jobs:
           moon test core --target js --deny-warn
           moon test core --target wasm-gc --deny-warn
           CC=clang moon test core --target native --deny-warn
-          CC=clang moon build cmd/moonjls --target native --release
+          CC=clang moon build cmd/moonjls --target native --release --deny-warn
           node sdk/build.mjs
           node web/build.mjs
       - name: Check Native streams, Worker, reports and declarations
         run: |
           python3 REVIEW_EVIDENCE/native_row_delivery_regression.py "$NATIVE_BINARY" --output .evidence/ci/native-row-delivery.json
+          python3 REVIEW_EVIDENCE/native_multiscan_delivery_regression.py "$NATIVE_BINARY" --output .evidence/ci/native-multiscan-delivery.json
           python3 REVIEW_EVIDENCE/native_tail_matrix.py "$NATIVE_BINARY"
           printf '\x00\x00\xff\x00' > .evidence/ci/input.raw
           node sdk/cli.mjs encode --input .evidence/ci/input.raw --output .evidence/ci/coded.jls --width 2 --height 1 --bits 8 --report .evidence/ci/sdk-encode.json
@@ -74,6 +75,7 @@ jobs:
           npx --yes --package typescript@7.0.2 tsc --noEmit --strict --module nodenext --target es2022 --lib es2022,dom sdk/*.d.mts
           node scripts/validate_annex_e.mjs --check-manifest
           node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY"
+          node scripts/verify_m3a_golden.mjs --native-exe "$NATIVE_BINARY"
       - name: Run the existing three-backend NEAR matrix
         run: |
           python3 -m venv .tools/oracle-venv

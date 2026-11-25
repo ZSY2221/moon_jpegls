@@ -5,22 +5,25 @@ import { decodeStream, encodeStream, loadCore } from './index.mjs';
 import { buildIdentity } from './report-node.mjs';
 import { codecMeasurements, createRunId, createVerificationReport, serializeVerificationReport } from './verification-report.mjs';
 
-const help = `Usage: node sdk/cli.mjs encode|decode --input FILE --output FILE [options]
+const help = `Usage: node sdk/cli.mjs encode|decode|inspect --input FILE [--output FILE] [options]
   --backend js|wasm-gc    Default: wasm-gc
   --chunk N               Samples on encode, bytes on decode
   --output-chunk N        Encoded bytes per sink call
   --width --height --bits Required on encode
+  --components N          Planar components on encode (default: 1)
   --near N                Default: 0
   --maxval N              Effective MAXVAL, default: full coded range
   --t1 --t2 --t3 --reset  Optional LSE thresholds and reset interval
   --report FILE           Write a verification JSON report to a new file
-All raw input/output samples use unsigned 16-bit little-endian storage, including 8-bit images.`;
+All raw input/output samples use unsigned 16-bit little-endian storage (planar across scans).`;
 
 function parse(args) {
   const [mode, ...flags] = args;
-  if (!['encode', 'decode'].includes(mode)) throw new Error(help);
+  if (!['encode', 'decode', 'inspect'].includes(mode)) throw new Error(help);
   const allowed = new Set(['--input', '--output', '--backend', '--chunk', '--output-chunk', '--report']);
-  if (mode === 'encode') for (const key of ['--width', '--height', '--bits', '--near', '--maxval', '--t1', '--t2', '--t3', '--reset']) allowed.add(key);
+  if (mode === 'encode') {
+    for (const key of ['--width', '--height', '--bits', '--components', '--near', '--maxval', '--t1', '--t2', '--t3', '--reset']) allowed.add(key);
+  }
   const values = new Map();
   for (let i = 0; i < flags.length; i += 2) {
     const [name, value] = [flags[i], flags[i + 1]];
@@ -30,17 +33,22 @@ function parse(args) {
   const input = values.get('--input');
   const output = values.get('--output');
   const report = values.get('--report');
-  if (!input || !output || resolve(input) === resolve(output)) throw new Error('Distinct input and output files are required');
+  if (!input || (mode !== 'inspect' && (!output || resolve(input) === resolve(output)))) {
+    throw new Error('Distinct input and output files are required');
+  }
   if (report === '') throw new Error('Report file path is required');
   const number = (key) => values.has(key) ? Number(values.get(key)) : undefined;
+  const compCount = number('--components');
+  const frame = {
+    width: number('--width'), height: number('--height'), bits: number('--bits'), near: number('--near') ?? 0,
+    maxval: number('--maxval'),
+    preset: { t1: number('--t1'), t2: number('--t2'), t3: number('--t3'), reset: number('--reset') },
+    ...(compCount !== undefined ? { components: Array.from({ length: compCount }, (_, i) => ({ id: i + 1 })) } : {}),
+  };
   return {
     mode, input, output, report, backend: values.get('--backend'),
     inputChunkSize: number('--chunk'), outputChunkSize: number('--output-chunk'),
-    frame: {
-      width: number('--width'), height: number('--height'), bits: number('--bits'), near: number('--near') ?? 0,
-      maxval: number('--maxval'),
-      preset: { t1: number('--t1'), t2: number('--t2'), t3: number('--t3'), reset: number('--reset') },
-    },
+    frame,
   };
 }
 
@@ -52,8 +60,8 @@ async function reportPathKey(path) {
 }
 
 async function reserveReport({ report, input, output }) {
-  const [reportKey, inputKey, outputKey] = await Promise.all([report, input, output].map(reportPathKey));
-  if (reportKey === inputKey || reportKey === outputKey) throw new Error('Report must use a distinct file');
+  const keys = await Promise.all([report, input, ...(output ? [output] : [])].map(reportPathKey));
+  if (keys[0] === keys[1] || (keys[2] && keys[0] === keys[2])) throw new Error('Report must use a distinct file');
   return open(report, 'wx');
 }
 
@@ -162,7 +170,7 @@ async function main(args) {
   try {
     core = await loadCore({ backend });
     input = await open(options.input, 'r');
-    output = await open(options.output, 'wx');
+    if (options.output) output = await open(options.output, 'wx');
     started = performance.now();
     result = encoding
       ? await encodeStream(core, {
@@ -176,11 +184,11 @@ async function main(args) {
       : await decodeStream(core, {
           ...options, onProgress: observe,
           read: (size) => readChunk(input, size, inputTracking),
-          onRow: observe ? async (row, _index, frame, stats) => {
+          onRow: output ? (observe ? async (row, _index, frame, stats) => {
             observe(stats, frame);
             await writeRow(row);
             rowsDelivered++;
-          } : writeRow,
+          } : writeRow) : undefined,
         });
   } catch (error) {
     failure = error;
@@ -208,21 +216,21 @@ async function main(args) {
           bytes: inputTracking.eof ? inputTracking.bytes : null,
           sha256: inputTracking.eof ? inputTracking.digest() : null,
         },
-        output: {
+        output: options.output ? {
           name: basename(options.output), format: encoding ? 'jls' : 'raw-u16le',
           bytes: output ? outputTracking.bytes : null, sha256: output && outputClosed ? outputTracking.digest() : null,
           retained: Boolean(output), complete: Boolean(result && outputClosed),
-        },
+        } : null,
         frame: result?.frame ?? observedFrame,
         preset: result?.preset ?? observedPreset,
-        stages: { [options.mode]: stage },
+        stages: { [options.mode === 'inspect' ? 'decode' : options.mode]: stage },
         status: failure ? 'failed' : 'passed',
         error: failure ? { code: failure.code ?? failure.name, message: failure.message } : null,
         timing: {
           elapsedMs: elapsedMs ?? null,
           boundary: 'SDK stream start through output close, including incremental hashing; excludes backend load, file open, and any post-failure input fingerprinting',
         },
-        memory: { [options.mode]: memory },
+        memory: { [options.mode === 'inspect' ? 'decode' : options.mode]: memory },
         stream: {
           rowsDecoded: encoding ? null : stats?.rows ?? null,
           rowsDelivered: encoding ? null : rowsDelivered,

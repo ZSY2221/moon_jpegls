@@ -8,9 +8,9 @@ priv struct BitWriter {
 }
 
 ///|
-fn BitWriter::new() -> BitWriter {
+fn BitWriter::with_capacity(capacity : Int32) -> BitWriter {
   {
-    pending: FixedArray::make(32, b'\x00'),
+    pending: FixedArray::make(capacity, b'\x00'),
     start: 0,
     end: 0,
     word: 0,
@@ -68,39 +68,44 @@ fn BitWriter::symbol(
 }
 
 ///|
-fn BitWriter::header(
-  self : BitWriter,
-  frame : Frame,
-  preset : Preset?,
-) -> Unit {
+fn BitWriter::frame_header(self : BitWriter, frame : FrameInfo) -> Unit {
   self.word16(0xFFD8)
   self.word16(0xFFF7)
-  self.word16(11)
+  let count = frame.components.length()
+  self.word16(8 + 3 * count)
   self.byte(frame.bits)
   self.word16(frame.height)
   self.word16(frame.width)
-  self.byte(1)
-  self.byte(1)
-  self.byte(0x11)
-  self.byte(0)
-  if preset is Some(params) {
-    self.word16(0xFFF8)
-    self.word16(13)
-    self.byte(1)
-    self.word16(params.maxval)
-    self.word16(params.t1)
-    self.word16(params.t2)
-    self.word16(params.t3)
-    self.word16(params.reset)
+  self.byte(count)
+  for comp in frame.components {
+    self.byte(comp.id)
+    self.byte((comp.h_sampling << 4) | comp.v_sampling)
+    self.byte(0)
   }
 }
 
 ///|
-fn BitWriter::scan_header(self : BitWriter, near : Int32) -> Unit {
+fn BitWriter::lse1(self : BitWriter, preset : Preset) -> Unit {
+  self.word16(0xFFF8)
+  self.word16(13)
+  self.byte(1)
+  self.word16(preset.maxval)
+  self.word16(preset.t1)
+  self.word16(preset.t2)
+  self.word16(preset.t3)
+  self.word16(preset.reset)
+}
+
+///|
+fn BitWriter::scan_header_for(
+  self : BitWriter,
+  component_id : Int32,
+  near : Int32,
+) -> Unit {
   self.word16(0xFFDA)
   self.word16(8)
   self.byte(1)
-  self.byte(1)
+  self.byte(component_id)
   self.byte(0)
   self.byte(near)
   self.byte(0)
@@ -108,12 +113,24 @@ fn BitWriter::scan_header(self : BitWriter, near : Int32) -> Unit {
 }
 
 ///|
-fn BitWriter::finish(self : BitWriter) -> Unit {
+fn BitWriter::finish_scan(self : BitWriter) -> Unit {
   if self.free != 8 {
     // A byte with the stuffed high bit may be required even with no payload.
     self.bits(0, self.free)
   }
+  self.word = 0
+  self.free = 8
+}
+
+///|
+fn BitWriter::finish_frame(self : BitWriter) -> Unit {
   self.word16(0xFFD9)
+}
+
+///|
+fn BitWriter::finish(self : BitWriter) -> Unit {
+  self.finish_scan()
+  self.finish_frame()
 }
 
 ///|
@@ -147,6 +164,13 @@ fn BitReader::new() -> BitReader {
 }
 
 ///|
+fn BitReader::reset(self : BitReader) -> Unit {
+  self.word = 0
+  self.left = 0
+  self.stuffed = false
+}
+
+///|
 fn BitReader::byte(self : BitReader, byte : Int32) -> Int32 {
   if self.stuffed && byte >= 128 {
     return if byte >= 0xD0 && byte <= 0xD7 { 1 } else { 2 }
@@ -177,6 +201,17 @@ priv struct GolombReader {
 ///|
 fn GolombReader::new() -> GolombReader {
   { zeros: 0, escape: 0, k: 0, qbpp: 0, unary: false, left: 0, value: 0, }
+}
+
+///|
+fn GolombReader::reset(self : GolombReader) -> Unit {
+  self.zeros = 0
+  self.escape = 0
+  self.k = 0
+  self.qbpp = 0
+  self.unary = false
+  self.left = 0
+  self.value = 0
 }
 
 ///|

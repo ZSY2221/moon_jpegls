@@ -14,13 +14,14 @@ function showFeatures(features, destination) {
     name.scope = 'row';
     name.append(element('small', feature.target_milestone));
     const states = ['encode_status', 'decode_status', 'format_status'].map((field) => feature[field]);
-    const status = element('td', states.join(' / '));
+    const status = element('td', `archived: ${states.join(' / ')}`);
     status.dataset.encode = states[0];
     status.dataset.decode = states[1];
     status.dataset.format = states[2];
     const evidence = element('td');
     if (feature.test_ids.length) evidence.append(element('strong', feature.test_ids.join(', ')));
     if (feature.reference_support) evidence.append(element('small', feature.reference_support));
+    if (feature.notes) evidence.append(element('small', feature.notes));
     if (feature.evidence_path) {
       const evidenceRef = feature.evidence_ref ?? feature.source_revision;
       if (evidenceRef) {

@@ -24,8 +24,8 @@ export interface VerificationReport {
   artifact: { name: string; sha256: string } | null;
   input: Input | null;
   output: Output | null;
-  frame: (Omit<Frame, 'maxval' | 'preset'> & {
-    maxval: number; components: 1; scans: 1; interleave: 0; pointTransform: 0; mapping: false;
+  frame: (Omit<Frame, 'maxval' | 'preset' | 'components' | 'scans'> & {
+    maxval: number; components: number; scans: number; interleave: 0; pointTransform: 0; mapping: false;
     preset: Preset | null;
   }) | null;
   stages: Record<'encode' | 'decode' | 'compare', Stage>;

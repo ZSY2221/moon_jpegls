@@ -1,8 +1,11 @@
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 
-const packageUrl = new URL('../.tools/oracle-npm/node_modules/@team-charls/charls-wasm/', import.meta.url);
+const localPackage = new URL('../.tools/oracle-npm/node_modules/@team-charls/charls-wasm/', import.meta.url);
+const fallbackPackage = new URL('../../moon_jpegls/.tools/oracle-npm/node_modules/@team-charls/charls-wasm/', import.meta.url);
+const packageUrl = existsSync(localPackage) ? localPackage : fallbackPackage;
 const expectedVersion = '0.10.0';
 const { version } = JSON.parse(await readFile(new URL('package.json', packageUrl), 'utf8'));
 assert.equal(version, expectedVersion, `Install @team-charls/charls-wasm@${expectedVersion}`);
@@ -27,16 +30,20 @@ export async function createOracle() {
     decode(input) {
       const result = decoder.decode(input);
       const { width, height, bitsPerSample: bits, componentCount } = decoder.getFrameInfo();
-      assert.equal(componentCount, 1, 'expected monochrome reference output');
+      assert.ok(componentCount >= 1, 'expected valid component count');
       const near = decoder.getNearLossless();
-      const pixels = new Uint16Array(width * height);
+      const total = width * height * componentCount;
+      const pixels = new Uint16Array(total);
       if (bits <= 8) {
         pixels.set(result);
       } else {
         const view = new DataView(result.buffer, result.byteOffset, result.byteLength);
         for (let i = 0; i < pixels.length; i++) pixels[i] = view.getUint16(i * 2, true);
       }
-      return { pixels, frame: { width, height, bits, near } };
+      return {
+        pixels,
+        frame: { width, height, bits, near, ...(componentCount > 1 ? { components: componentCount } : {}) },
+      };
     },
     close() {
       encoder.dispose();

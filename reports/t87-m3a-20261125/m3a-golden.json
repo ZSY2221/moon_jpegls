@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "verifiedFrozenFiles": 21,
+  "positiveCases": 7,
+  "negativeCases": 7,
+  "backendChecks": 21,
+  "oracleChecks": 2,
+  "backends": [
+    "js",
+    "wasm-gc",
+    "native"
+  ]
+}

@@ -1,0 +1,32 @@
+(node:22080) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+WORKER_BATCH_TRACE [{"type":"row","count":1,"viewBytes":16,"backingBytes":16,"queue":16,"peak":16},{"type":"rows","count":6,"viewBytes":96,"backingBytes":96,"queue":96,"peak":112},{"type":"rows","count":5,"viewBytes":80,"backingBytes":80,"queue":80,"peak":112},{"type":"done","queue":0,"peak":112}]
+✔ real Worker/client/SDK driver: batch high water includes simultaneous source row and survives Done (12.3207ms)
+WORKER_PARTIAL_TRACE [{"type":"row","count":1,"viewBytes":16,"backingBytes":16,"queue":16,"peak":16},{"type":"progress","queue":96,"peak":112},{"type":"rows","count":3,"viewBytes":48,"backingBytes":96,"queue":96,"peak":112},{"type":"rows","count":6,"viewBytes":96,"backingBytes":96,"queue":96,"peak":112},{"type":"rows","count":6,"viewBytes":96,"backingBytes":96,"queue":96,"peak":112},{"type":"rows","count":4,"viewBytes":64,"backingBytes":64,"queue":64,"peak":112},{"type":"done","queue":0,"peak":112}]
+✔ partial batch survives progress and NeedInput; early flush counts backing buffer, not only view (6.1197ms)
+✔ batch ACK is backpressure; wrong ACK is ignored; pause blocks next request until resume (5.2998ms)
+✔ cancel during held batch ACK rejects once and sends no late ACK or Done (6.2992ms)
+✔ atomic row fallback with maxBatchBytes=0 (5.0737ms)
+✔ atomic row fallback with maxBatchBytes=1 (4.2373ms)
+✔ atomic row fallback with maxBatchBytes=15 (4.2531ms)
+✔ atomic row fallback with maxBatchBytes=16 (4.1402ms)
+✔ atomic row fallback with maxBatchBytes=17 (5.1398ms)
+✔ atomic row fallback with maxBatchBytes=31 (4.2232ms)
+✔ small images do not reserve the entire allowed batch capacity (4.1688ms)
+✔ invalid batch capacity -1 rejects before loading codec (3.295ms)
+✔ invalid batch capacity 0.5 rejects before loading codec (3.0113ms)
+✔ invalid batch capacity NaN rejects before loading codec (3.2429ms)
+✔ invalid batch capacity Infinity rejects before loading codec (4.3961ms)
+✔ invalid batch capacity 1048577 rejects before loading codec (3.2607ms)
+✔ invalid batch capacity 9007199254740991 rejects before loading codec (3.5111ms)
+✔ invalid batch capacity 96 rejects before loading codec (3.0312ms)
+✔ invalid batch capacity null rejects before loading codec (3.4836ms)
+✔ multi-scan fixture flushes batch at scan boundary and tracks component identity (5.242ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 178.1336

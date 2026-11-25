@@ -21,7 +21,16 @@ priv struct HeaderParser {
   mut width : Int32
   mut height : Int32
   mut bits : Int32
-  mut component : Int32
+  components : Array[ComponentSpec]
+  seen_components : Array[Bool]
+  mut scanned_count : Int32
+  mut soi_offset : Int64
+  mut sof_offset : Int64
+  mut sof_length : Int32
+  mut marker_offset : Int64
+  mut eoi_offset : Int64
+  markers : Array[MarkerRecord]
+  mut last_component_id : Int32
   preset : FixedArray[Int32]
 }
 
@@ -38,9 +47,67 @@ fn HeaderParser::new(limits : Limits) -> HeaderParser {
     width: 0,
     height: 0,
     bits: 0,
-    component: 0,
+    components: [],
+    seen_components: [],
+    scanned_count: 0,
+    soi_offset: -1L,
+    sof_offset: -1L,
+    sof_length: 0,
+    marker_offset: 0L,
+    eoi_offset: -1L,
+    markers: [],
+    last_component_id: -1,
     preset: FixedArray::make(5, 0),
   }
+}
+
+///|
+fn HeaderParser::frame_info(self : HeaderParser) -> FrameInfo {
+  {
+    width: self.width,
+    height: self.height,
+    bits: self.bits,
+    components: self.components.copy(),
+  }
+}
+
+///|
+fn HeaderParser::all_components_scanned(self : HeaderParser) -> Bool {
+  self.bits > 0 && self.scanned_count == self.components.length()
+}
+
+///|
+fn HeaderParser::find_component(self : HeaderParser, id : Int32) -> Int32? {
+  for index in 0..<self.components.length() {
+    if self.components[index].id == id {
+      return Some(index)
+    }
+  }
+  None
+}
+
+///|
+fn HeaderParser::record_marker(
+  self : HeaderParser,
+  code : Int32,
+  offset : Int64,
+  length : Int32,
+  scan_index : Int32,
+  detail : Int32,
+) -> Unit {
+  self.markers.push({ code, offset, length, scan_index, detail })
+}
+
+///|
+fn HeaderParser::begin_inter_scan(
+  self : HeaderParser,
+  marker_offset : Int64,
+) -> Unit {
+  self.phase = MarkerCode
+  self.marker_offset = marker_offset
+  self.marker = 0
+  self.length = 0
+  self.index = 0
 }
 
 ///|
@@ -66,6 +133,8 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
   guard count > 0 && self.length == 6 + 3 * count && bits >= 2 && bits <= 16 else {
     raise InvalidData("SOF55 fields or length")
   }
+  let parsed : Array[ComponentSpec] = []
+  let mut has_subsampling = false
   for index in 0..<count {
     let pos = 6 + 3 * index
     let id = self.at(pos)
@@ -76,15 +145,16 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
       raise InvalidData("SOF55 component fields")
     }
     for earlier in 0..<index {
-      guard id != self.at(6 + 3 * earlier) else {
+      guard id != parsed[earlier].id else {
         raise InvalidData("duplicate SOF55 component identifier")
       }
     }
+    if h != 1 || v != 1 {
+      has_subsampling = true
+    }
+    parsed.push({ id, h_sampling: h, v_sampling: v })
   }
-  guard count == 1 else {
-    raise UnsupportedFeature("multiple frame components")
-  }
-  guard self.at(7) == 0x11 else {
+  guard !has_subsampling else {
     raise UnsupportedFeature("component subsampling")
   }
   let height = self.word(1)
@@ -92,11 +162,17 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
   guard width != 0 && height != 0 else {
     raise UnsupportedFeature("deferred or extended dimensions")
   }
-  validate_dimensions(width, height, self.limits)
+  validate_frame_dimensions(width, height, count, self.limits)
   self.width = width
   self.height = height
   self.bits = bits
-  self.component = self.at(6)
+  for comp in parsed {
+    self.components.push(comp)
+    self.seen_components.push(false)
+  }
+  self.sof_offset = self.marker_offset
+  self.sof_length = self.length + 4
+  self.record_marker(0xF7, self.marker_offset, self.length + 4, -1, count)
 }
 
 ///|
@@ -104,10 +180,12 @@ fn HeaderParser::preset_segment(self : HeaderParser) -> Unit raise CodecError {
   match self.at(0) {
     1 => {
       guard self.length == 11 else { raise InvalidData("LSE preset length") }
-      // An ID=1 segment replaces the active values, including zeros.
+      // An ID=1 segment replaces the raw values, including zeros, preserving default semantics across scans.
       for index in 0..<5 {
         self.preset[index] = self.word(1 + 2 * index)
       }
+      let scan_hint = if self.bits == 0 { -1 } else { self.scanned_count }
+      self.record_marker(0xF8, self.marker_offset, self.length + 4, scan_hint, 1)
     }
     0 => raise InvalidData("LSE identifier zero")
     2 => {
@@ -139,21 +217,50 @@ fn HeaderParser::preset_segment(self : HeaderParser) -> Unit raise CodecError {
 ///|
 fn HeaderParser::scan_segment(
   self : HeaderParser,
-) -> (Frame, Parameters) raise CodecError {
+  entropy_offset : Int64,
+) -> (Frame, Parameters, ScanInfo) raise CodecError {
   guard self.bits > 0 else { raise InvalidData("SOS precedes SOF55") }
   let count = self.at(0)
   guard count > 0 && count <= 4 && self.length == 4 + 2 * count else {
     raise InvalidData("SOS length or component count")
   }
-  guard count == 1 && self.at(1) == self.component else {
-    raise InvalidData("SOS component selector")
+  let mut any_mapping = false
+  let selected : Array[Int32] = []
+  for i in 0..<count {
+    let cs = self.at(1 + 2 * i)
+    let tm = self.at(2 + 2 * i)
+    guard self.find_component(cs) is Some(comp_idx) else {
+      raise InvalidData("SOS component selector")
+    }
+    for earlier in selected {
+      guard comp_idx != earlier else {
+        raise InvalidData("duplicate component selector in SOS")
+      }
+    }
+    selected.push(comp_idx)
+    if tm != 0 {
+      any_mapping = true
+    }
   }
-  let near = self.at(3)
-  let ilv = self.at(4)
-  let transform = self.at(5)
-  let mapping = self.at(2)
-  guard ilv == 0 && transform >> 4 == 0 && (transform == 0 || mapping == 0) else {
-    raise InvalidData("single-component SOS fields")
+  let tail = 1 + 2 * count
+  let near = self.at(tail)
+  let ilv = self.at(tail + 1)
+  let transform = self.at(tail + 2)
+  guard ilv >= 0 &&
+    ilv <= 2 &&
+    ((count == 1 && ilv == 0) || (count > 1 && ilv > 0)) &&
+    transform >> 4 == 0 &&
+    (transform == 0 || !any_mapping) else {
+    raise InvalidData("SOS scan parameters")
+  }
+  guard count == 1 else {
+    raise UnsupportedFeature("interleaved multi-component scan")
+  }
+  let comp_idx = selected[0]
+  let comp_id = self.components[comp_idx].id
+  self.last_component_id = comp_id
+  guard !self.seen_components[comp_idx] else {
+    raise InvalidData("duplicate scan for component")
   }
   let frame : Frame = { width: self.width, height: self.height, bits: self.bits, near }
   let requested : Preset = {
@@ -167,27 +274,53 @@ fn HeaderParser::scan_segment(
     InvalidArgument(message) => raise InvalidData(message)
     error => raise error
   }
-  guard mapping == 0 && transform == 0 else {
+  guard !any_mapping && transform == 0 else {
     raise UnsupportedFeature("mapping selector or point transform")
   }
-  (frame, Parameters::new(effective, near))
+  let scan_index = self.scanned_count
+  self.seen_components[comp_idx] = true
+  self.scanned_count += 1
+  self.record_marker(0xDA, self.marker_offset, self.length + 4, scan_index, comp_id)
+  let scan_info : ScanInfo = {
+    scan_index,
+    component_index: comp_idx,
+    component_id: comp_id,
+    near,
+    interleave: ilv,
+    point_transform: transform,
+    preset: effective,
+    header_offset: self.marker_offset,
+    entropy_offset,
+    end_offset: -1L,
+    rows_decoded: 0,
+    completed: false,
+  }
+  (frame, Parameters::new(effective, near), scan_info)
 }
 
 ///|
 fn HeaderParser::finish_segment(
   self : HeaderParser,
-) -> (Frame, Parameters)? raise CodecError {
+  stream_pos : Int64,
+) -> (Frame, Parameters, ScanInfo)? raise CodecError {
   self.phase = MarkerPrefix
   match self.marker {
     0xF7 => self.frame_segment()
     0xF8 => self.preset_segment()
-    0xDA => return Some(self.scan_segment())
+    0xDA => return Some(self.scan_segment(stream_pos))
     0xDD => {
+      let interval = self.word(0)
       let mut nonzero = false
       for index in 0..<self.length {
         nonzero = nonzero || self.at(index) != 0
       }
       guard !nonzero else { raise UnsupportedFeature("restart interval") }
+      let scan_hint = if self.bits == 0 { -1 } else { self.scanned_count }
+      self.record_marker(0xDD, self.marker_offset, self.length + 4, scan_hint, interval)
+    }
+    code if is_metadata(code) => {
+      let scan_hint = if self.bits == 0 { -1 } else { self.scanned_count }
+      self.record_marker(code, self.marker_offset, self.length + 4, scan_hint, self.length)
     }
     _ => ()
   }
@@ -198,10 +331,12 @@ fn HeaderParser::finish_segment(
 fn HeaderParser::accept(
   self : HeaderParser,
   byte : Int32,
-) -> (Frame, Parameters)? raise CodecError {
+  stream_pos : Int64,
+) -> (Frame, Parameters, ScanInfo)? raise CodecError {
   match self.phase {
     StartPrefix => {
       guard byte == 0xFF else { raise InvalidData("missing SOI prefix") }
+      self.marker_offset = stream_pos - 1L
       self.phase = StartCode
     }
     StartCode => {
@@ -209,6 +344,8 @@ fn HeaderParser::accept(
         return None
       }
       guard byte == 0xD8 else { raise InvalidData("missing SOI") }
+      self.soi_offset = stream_pos - 2L
+      self.record_marker(0xD8, self.soi_offset, 2, -1, 0)
       self.phase = MarkerPrefix
     }
     MarkerPrefix => {
@@ -219,9 +356,16 @@ fn HeaderParser::accept(
       if byte == 0xFF {
         return None
       }
+      self.marker_offset = stream_pos - 2L
       if !is_metadata(byte) {
         match byte {
           0xF7 | 0xF8 | 0xDA | 0xDD => ()
+          0xD9 =>
+            if self.bits > 0 {
+              raise InvalidData("premature EOI: missing frame components")
+            } else {
+              raise InvalidData("unexpected EOI before frame")
+            }
           0xDC | 0xF9 =>
             raise UnsupportedFeature("marker outside JPEG-LS baseline subset")
           0xC0..<=0xCF if self.bits == 0 =>
@@ -258,7 +402,7 @@ fn HeaderParser::accept(
         guard valid else { raise InvalidData("invalid segment length") }
       }
       if self.length == 0 {
-        return self.finish_segment()
+        return self.finish_segment(stream_pos)
       }
       self.phase = Payload
     }
@@ -268,7 +412,7 @@ fn HeaderParser::accept(
       }
       self.index += 1
       if self.index == self.length {
-        return self.finish_segment()
+        return self.finish_segment(stream_pos)
       }
     }
   }

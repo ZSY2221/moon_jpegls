@@ -2,31 +2,29 @@
 
 状态日期：**2026-11-25**。项目当前由 **Antigravity** 担任唯一主力 AI 维护助手，参赛者/项目负责人（`ZSY2221`）负责最终技术决策、标准边界确认与提交审核。
 
-## 1. GitHub 分支、提交基线与 PR 状态
+## 1. GitHub 分支、提交基线与合并状态
 
 | 条目 | 实际标识与说明 |
 | --- | --- |
 | 公开仓库 | `https://github.com/ZSY2221/moon_jpegls` |
-| 受测 M2 产品源码提交 | [`fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44)（`core/`、`cmd/`、`sdk/`、`web/` 自此提交后未变动） |
-| M2 证据冻结基线提交 | [`a7d8c391b7af0d88bc5c912ed62c78eaf4c79565`](https://github.com/ZSY2221/moon_jpegls/commit/a7d8c391b7af0d88bc5c912ed62c78eaf4c79565)（原有 CI run [`45566033737`](https://github.com/ZSY2221/moon_jpegls/actions/runs/45566033737) 通过） |
-| 现有开放/目标合并 PR | [PR #1](https://github.com/ZSY2221/moon_jpegls/pull/1)（`codex/moonjls-reappeal-20261125` → `main`，在最新 CI 通过后合入 `main`） |
-| 复审与同步分支 | `codex/moonjls-reappeal-20261125` 与 `antigravity/t87-m2-20261125`（本轮复审文档、CI 黄金回归与报名材料均同步推送至此二分支最新 HEAD，并通过 PR #1 正常合入 `main`） |
-| 仓库默认分支 `main` | 合并前历史基准为 `60befa604287d941dc75ffde03a4c52ab80a93ad`；经 PR #1 正常合并后，默认分支 `main` 同步包含最新 M2 成果、T.87 Part 1 路线、CI 黄金回归与复审入口 |
-| 原 Windows 工作区 | `D:\Program Files\GPT_project\moon_jpegls` 原有未提交修改及草稿文件保持原样保留；本轮全部审计、CI 补强与文档定稿在独立工作树完成 |
+| **当前 M3-A 受测核心/CLI/SDK 提交** | [`36bb9e6a77bd38db6806a0cc5047885b694276b5`](https://github.com/ZSY2221/moon_jpegls/commit/36bb9e6a77bd38db6806a0cc5047885b694276b5)（`core/`、`cmd/`、`sdk/`、`tests/conformance/m3a_golden/`） |
+| 历史 M2 受测基线 | [`fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44) / [`a7d8c39`](https://github.com/ZSY2221/moon_jpegls/commit/a7d8c391b7af0d88bc5c912ed62c78eaf4c79565)（已通过 [PR #1](https://github.com/ZSY2221/moon_jpegls/pull/1) 合入 `main`） |
+| **M3-A 交付分支与默认分支 `main`** | 从 `origin/main` 切出 `antigravity/t87-m3a-20261125` 完成 M3-A 功能升级与全套独立验收，经 CI 通过后以 `--no-ff` 合入默认分支 `main` |
+| 原 Windows 实验工作区 | `D:\Program Files\GPT_project\moon_jpegls` 原有未提交实验与草稿完整保留，不混入复审版本 |
 
-## 2. 里程碑完成状态（M0–M2 已完成，M3-A–M5 为后续目标）
+## 2. 里程碑完成状态（M0–M3-A 已完成，M3-B–M5 为后续目标）
 
 - **M0（已完成）**：纯 MoonBit 核心、Native/JS/Wasm GC 三后端、流式状态机、CLI/Worker/工作台与 `16a7b49` 三处正确性修复。 [M0 复验证据](reports/review-fix-20261125/README.md)
-- **M1（已完成）**：原有满量程 8/12/16 位（8 位 `NEAR=0–127`、12/16 位 `NEAR=0–255`）全部 **640 组**在三后端完成固定 CharLS 双向验证（640/640）。**注：该 640 组是历史满量程 NEAR 回归，不是当前 M2 全参数空间笛卡尔积。** [M1 证据](reports/review-near-20261125/README.md)
-- **M2（已完成，2026-11-25）**：实现单帧、单分量、单扫描（`ILV=0`、`Pt=0`）的 **`P=2–16`、独立 `MAXVAL`、基于有效 MAXVAL 的合法 `NEAR`、以及 `LSE ID=1` 自定义 `T1/T2/T3/RESET`**；工作台交付 Precision Lab、Streaming Lab、Compatibility Lab。受测源码 [`fc43bc2`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44)。 [M2 验收汇总](reports/t87-m2-20261125/README.md) · [逐项 Annex E](docs/CONFORMANCE_RESULTS.md)
-- **最终标准终点与后续开发目标（M3-A 至 M5）**：最终目标是完整实现 **ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1** 编码、解码与数据格式能力（`M3-A` 目标 2026-12-10、`M3-B` 目标 2026-12-25、`M4` 目标 2027-01-10、`M5` 目标 2027-01-20；均为内部开发目标，实际赛事验收节点待组委会确认）。 [唯一标准能力矩阵](docs/T87_CONFORMANCE_PLAN.md) · [分阶段兼容路线](docs/ROADMAP.md)
+- **M1（已完成）**：满量程 8/12/16 位全部 **640 组**在三后端完成 CharLS 双向验证（640/640）。 [M1 证据](reports/review-near-20261125/README.md)
+- **M2（已完成，2026-11-25）**：单帧、单分量、单扫描下支持 **`P=2–16`、独立 `MAXVAL`、合法 `NEAR`、`LSE ID=1` 自定义预设**及 Precision/Streaming/Compatibility Labs。 [M2 验收汇总](reports/t87-m2-20261125/README.md)
+- **M3-A（已完成，2026-11-25，受测源码 `36bb9e6`）**：单帧 **1–255 分量**、`H=V=1`、**非交错多扫描（`ILV=0`, `Ns=1`）**、`Pt=0`、跨扫描 `LSE1` 继承与零字段默认重算、非连续 ID 与合法重排扫描、Native planar 流式入口、SDK/Worker 多扫描支持、多通道工作台与 Scan Structure Inspector。 [M3-A 验收汇总](reports/t87-m3a-20261125/README.md) · [逐项 Annex E](docs/CONFORMANCE_RESULTS.md)
+- **最终标准终点与后续开发目标（M3-B 至 M5）**：最终目标是完整实现 **ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1** 编码、解码与数据格式能力（`M3-B` 目标 2026-12-25、`M4` 目标 2027-01-10、`M5` 目标 2027-01-20；均为内部开发目标，实际赛事验收节点待组委会确认）。 [唯一标准能力矩阵](docs/T87_CONFORMANCE_PLAN.md) · [分阶段兼容路线](docs/ROADMAP.md)
 
-## 3. 当前验证与复审材料补强
+## 3. M3-A 验证与复审材料汇总
 
-- **三后端核心与固定源码 `fc43bc2` 归档实测**：核心测试 Native/JS/Wasm GC 各 **15/15**；基于固定受测源码 `fc43bc2` 的本机独立矩阵 **388 组 M2 正例** + **18 个 LSE 变体** + **7 个非法编码** + **6 项 Native PGM 检查**通过；官方 Annex E **`E.2-9`–`E.2-12`** 三后端编码与解码通过且 12 次候选编码逐字节一致，**`E.2-1`–`E.2-8`** 按当前未实现能力返回 `UnsupportedFeature`（编码未运行）；历史 640/640 满量程 NEAR 复跑通过；NASA LOLA **1,036,800** 样本及 Chrome 工作台通过（以上重型实验作为 `fc43bc2` 归档证据留存，仅文档修订未重复执行）。
-- **CI 新增独立参考黄金回归**：在 `.github/workflows/verification.yml` 新增 `scripts/verify_m2_golden.mjs`，固定校验来自官方 HP V.1.00 与 T.87 Annex A 向量的 **12 组代表性合成 M2 黄金正例 + 18 个 LSE 变体 + 7 个非法编码边界 + 4 项 Native PGM 检查**（JS / Wasm GC / Native），与历史 640 组 NEAR 矩阵及清单校验共同随每次推送运行（注：该 12 组合成黄金用例不等同于官方 Annex E 全部 12 项通过）。
-- **MoonBit 原生实现地图与黑客松复审材料**：已补齐 [docs/MOONBIT_IMPLEMENTATION_MAP.md](docs/MOONBIT_IMPLEMENTATION_MAP.md)（`.mbt` 源码 16 文件 4,528 行详细模块与 LOC 统计）、[docs/REVIEWER_GUIDE.md](docs/REVIEWER_GUIDE.md) 及 [`submission/2026-11/`](submission/2026-11/02_FORM_FIELDS.md) 复审参考材料包。
-- **Mooncakes 包消费边界**：`0.1.0` 本地归档回环 registry 消费通过三后端验证，**不等于 Mooncakes 公开发布成功**；Mooncakes 线上查询仍返回 HTTP 404，未经明确授权不执行线上发布。 [Mooncakes 准备记录](docs/MOONCAKES_RELEASE.md)
+- **三后端核心与 `36bb9e6` 全量实测**：核心测试 Native / JS / Wasm GC 各 **18/18**（`--deny-warn` 0 警告）；官方 Annex E **6/12**（`E.2-1`、`E.2-4`、`E.2-9`–`E.2-12`）通过 HP 1.00 与 CharLS Wasm 0.10.0 双参考双向验收（18 次候选编码与官方流逐字节一致，`E.2-2, 3, 5, 6, 7, 8` 返回 `UnsupportedFeature`）；M3-A 黄金回归（7 正例 + 7 负例）、M2 388 正例全量矩阵（含 `lse-after-scan` 更新为 `InvalidData`）、640 组 NEAR 矩阵、Native 多扫描首分量实时行交付与 Chrome 158 工作台全项通过。
+- **CI 自动运行范围**：每次推送运行三后端 18/18 核心测试、Native 逐行/多扫描/尾部回归、Worker/SDK/TS 严格检查、Annex E 清单检查、`verify_m2_golden.mjs`、`verify_m3a_golden.mjs` 与 640 组 NEAR 矩阵。
+- **MoonBit 原生实现统计与包消费边界**：17 个 `.mbt` 文件共 **6,764 行**（[docs/MOONBIT_IMPLEMENTATION_MAP.md](docs/MOONBIT_IMPLEMENTATION_MAP.md)）；`moon package --frozen` 打包无警告通过，Mooncakes 在线查询返回 HTTP 404 / `not found`（未线上发布）。 [Mooncakes 准备记录](docs/MOONCAKES_RELEASE.md)
 
 ## 4. 历史本地候选版归档（仅供追溯，保持原貌）
 

@@ -1,0 +1,316 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Frozen deterministic M3-A multi-component golden suite (eligible 3-component P=8/P=16 cases independently cross-verified by CharLS Wasm 0.10.0; custom scan orders, 2/4-comp, LSE1 cross-scan rules, inter-scan markers and negative cases verified across JS, Wasm GC, and Native).",
+  "cases": [
+    {
+      "id": "mc-2comp-p2-m3-n0",
+      "kind": "roundtrip_and_reference",
+      "oracleVerified": false,
+      "frame": {
+        "width": 4,
+        "height": 3,
+        "bits": 2,
+        "near": 0,
+        "maxval": 3,
+        "components": [
+          {
+            "id": 1
+          },
+          {
+            "id": 2
+          }
+        ]
+      },
+      "input": "mc-2comp-p2-m3-n0.input.raw",
+      "reference": "mc-2comp-p2-m3-n0.reference.jls",
+      "sha256": {
+        "mc-2comp-p2-m3-n0.input.raw": "05bae5e966eba4c2562148251dd68609e2c11226baa5f70e685f62177a1fce20",
+        "mc-2comp-p2-m3-n0.reference.jls": "751a996278091456c83fd257a8d4cc43699e4584a17c1a6ea3a12d4d77f04fd4"
+      }
+    },
+    {
+      "id": "mc-3comp-8b-n0-charls",
+      "kind": "roundtrip_and_reference",
+      "oracleVerified": true,
+      "frame": {
+        "width": 8,
+        "height": 6,
+        "bits": 8,
+        "near": 0,
+        "maxval": 255,
+        "components": [
+          {
+            "id": 1
+          },
+          {
+            "id": 2
+          },
+          {
+            "id": 3
+          }
+        ]
+      },
+      "input": "mc-3comp-8b-n0-charls.input.raw",
+      "reference": "mc-3comp-8b-n0-charls.reference.jls",
+      "sha256": {
+        "mc-3comp-8b-n0-charls.input.raw": "cce223d41aee37c1b087794ae46627d50887ffafacaf69cb4fdc2064ffc7b0fa",
+        "mc-3comp-8b-n0-charls.reference.jls": "c960e0dcb6656c76d3062781927532a15803153763bd0c0e08cafcbe45d24309"
+      }
+    },
+    {
+      "id": "mc-3comp-16b-n3-charls",
+      "kind": "roundtrip_and_reference",
+      "oracleVerified": true,
+      "frame": {
+        "width": 8,
+        "height": 6,
+        "bits": 16,
+        "near": 3,
+        "maxval": 65535,
+        "components": [
+          {
+            "id": 1
+          },
+          {
+            "id": 2
+          },
+          {
+            "id": 3
+          }
+        ]
+      },
+      "input": "mc-3comp-16b-n3-charls.input.raw",
+      "reference": "mc-3comp-16b-n3-charls.reference.jls",
+      "sha256": {
+        "mc-3comp-16b-n3-charls.input.raw": "84b279ef92ff9f4318ff2bf6d3283937d087044acb355382591e5c22a2bb6f38",
+        "mc-3comp-16b-n3-charls.reference.jls": "62b7d6233462488f2140a249a06c050c791e193c721f9ef289a7467f8011b9f6"
+      }
+    },
+    {
+      "id": "mc-3comp-8b-reorder-ids",
+      "kind": "roundtrip_and_reference",
+      "oracleVerified": false,
+      "frame": {
+        "width": 6,
+        "height": 4,
+        "bits": 8,
+        "near": 0,
+        "maxval": 255,
+        "components": [
+          {
+            "id": 10
+          },
+          {
+            "id": 42
+          },
+          {
+            "id": 7
+          }
+        ],
+        "scans": [
+          {
+            "componentId": 42,
+            "near": 0
+          },
+          {
+            "componentId": 7,
+            "near": 0
+          },
+          {
+            "componentId": 10,
+            "near": 0
+          }
+        ]
+      },
+      "expectedScanOrder": [
+        42,
+        7,
+        10
+      ],
+      "expectedComponentIndices": [
+        1,
+        2,
+        0
+      ],
+      "input": "mc-3comp-8b-reorder-ids.input.raw",
+      "reference": "mc-3comp-8b-reorder-ids.reference.jls",
+      "sha256": {
+        "mc-3comp-8b-reorder-ids.input.raw": "bf21346b1db4c65609204f8715d98f299f4e6b647cd94c15c1ccc4fcf5d44f5a",
+        "mc-3comp-8b-reorder-ids.reference.jls": "5c16426137974f60bfb53b54df721d79e4910caa4795315de31fd20fd2d4e536"
+      }
+    },
+    {
+      "id": "mc-3comp-p12-lse1-per-scan",
+      "kind": "decode_reference",
+      "oracleVerified": false,
+      "frame": {
+        "width": 6,
+        "height": 4,
+        "bits": 12,
+        "maxval": 3000,
+        "near": 0,
+        "components": [
+          {
+            "id": 1
+          },
+          {
+            "id": 2
+          },
+          {
+            "id": 3
+          }
+        ]
+      },
+      "expectedScanNears": [
+        0,
+        2,
+        5
+      ],
+      "expectedScanPresets": [
+        {
+          "maxval": 3000,
+          "t1": 10,
+          "t2": 20,
+          "t3": 40,
+          "reset": 64
+        },
+        {
+          "maxval": 3000,
+          "t1": 10,
+          "t2": 20,
+          "t3": 40,
+          "reset": 64
+        },
+        {
+          "maxval": 3000,
+          "t1": 29,
+          "t2": 76,
+          "t3": 243,
+          "reset": 64
+        }
+      ],
+      "input": "mc-3comp-p12-lse1-per-scan.input.raw",
+      "reference": "mc-3comp-p12-lse1-per-scan.reference.jls",
+      "sha256": {
+        "mc-3comp-p12-lse1-per-scan.input.raw": "ba63aacfd0067d4750679ce73f15a76db72cfb45d25cd6f86410be440c0343a8",
+        "mc-3comp-p12-lse1-per-scan.reference.jls": "872855ef80fd54aa0c04a75fe4be9d6e7bec7991eedfc70cc9d8c64060c01bea"
+      }
+    },
+    {
+      "id": "mc-3comp-interscan-com-dri0",
+      "kind": "decode_reference_samples",
+      "oracleVerified": false,
+      "frame": {
+        "width": 8,
+        "height": 6,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "components": [
+          {
+            "id": 1
+          },
+          {
+            "id": 2
+          },
+          {
+            "id": 3
+          }
+        ]
+      },
+      "expectedMarkerCodes": [
+        216,
+        247,
+        248,
+        218,
+        254,
+        221,
+        218,
+        218,
+        217
+      ],
+      "reference": "mc-3comp-interscan-com-dri0.reference.jls",
+      "referenceSamples": "mc-3comp-interscan-com-dri0.reference.raw",
+      "sha256": {
+        "mc-3comp-interscan-com-dri0.reference.jls": "b870642959b02c68e9c4eb55ce881fbe8216a6524d1cfeea221fc02123f91372",
+        "mc-3comp-interscan-com-dri0.reference.raw": "cce223d41aee37c1b087794ae46627d50887ffafacaf69cb4fdc2064ffc7b0fa"
+      }
+    },
+    {
+      "id": "mc-4comp-p12-n2",
+      "kind": "roundtrip_and_reference",
+      "oracleVerified": false,
+      "frame": {
+        "width": 4,
+        "height": 4,
+        "bits": 12,
+        "near": 2,
+        "maxval": 4095,
+        "components": [
+          {
+            "id": 5
+          },
+          {
+            "id": 11
+          },
+          {
+            "id": 20
+          },
+          {
+            "id": 99
+          }
+        ]
+      },
+      "input": "mc-4comp-p12-n2.input.raw",
+      "reference": "mc-4comp-p12-n2.reference.jls",
+      "sha256": {
+        "mc-4comp-p12-n2.input.raw": "3b5d221d3783d1e14c74a2e74cee1283800dbf69ccaa36cde656e3d842f3bc8e",
+        "mc-4comp-p12-n2.reference.jls": "9e8746056d8502112ea5dd2dcbb9f44d98c0ff844626f3819cd6440e578e6c5d"
+      }
+    }
+  ],
+  "invalidStreams": [
+    {
+      "id": "neg-duplicate-comp-scan",
+      "input": "neg-duplicate-comp-scan.jls",
+      "sha256": "9caa8d660b3f39bdc74ea03c97ebcd3dff7a442e2c49b437b87ab468e4524d52",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "neg-missing-comp-before-eoi",
+      "input": "neg-missing-comp-before-eoi.jls",
+      "sha256": "2410de0eb0414521b1e2d879c60121a51e268d71cdec951a5daf7199fbfa3ccf",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "neg-unknown-comp-id-sos",
+      "input": "neg-unknown-comp-id-sos.jls",
+      "sha256": "c606266b553d168fd000a099c0c4416b120c408c03cc33457af975513d770a69",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "neg-premature-eoi",
+      "input": "neg-premature-eoi.jls",
+      "sha256": "eb0dd50e261c2176547f177b0377a7daa710786a7f843a72b681847fa6b0aa0b",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "neg-interleaved-ilv1",
+      "input": "neg-interleaved-ilv1.jls",
+      "sha256": "2ce7411469dd7f8f2049150effbe22dca354a39f69ce8febefdc252cc6d9f8e3",
+      "expectedCode": "UnsupportedFeature"
+    },
+    {
+      "id": "neg-interleaved-ilv2",
+      "input": "neg-interleaved-ilv2.jls",
+      "sha256": "ff46f8cefcc3dc46af57afa2e2f2a2888d17d30a485d58be36f78bbbfb739943",
+      "expectedCode": "UnsupportedFeature"
+    },
+    {
+      "id": "neg-invalid-inherited-lse1",
+      "input": "neg-invalid-inherited-lse1.jls",
+      "sha256": "7db30819a090d1873a61dcd914533272c135db20ad9b456b2ccdf8482f4da73a",
+      "expectedCode": "InvalidData"
+    }
+  ]
+}

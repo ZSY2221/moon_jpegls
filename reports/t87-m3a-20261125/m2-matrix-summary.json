@@ -1,0 +1,42 @@
+{
+  "sourceRevision": "36bb9e6a77bd38db6806a0cc5047885b694276b5",
+  "referenceArchiveSha256": "085285f0552ef0b6ebcf29bc5a6d3bc0d6bda0408e9f2f1c138be2e55200814f",
+  "artifactSha256": {
+    "native": "6d39a0fcf824f535064994fbc88aa44ed44c2575e39741bd13a5e225d30c9cd2",
+    "js": "44a78b528bf73263e40bb6090ab4cd01eff2738435c7d69431385444f152751a",
+    "wasm-gc": "ecdfceff8dec9b0984a9bb776ac4203027189cd355bf370448420e1a6b0e908c"
+  },
+  "pass": true,
+  "counts": {
+    "positiveCases": 388,
+    "wireVariants": 18,
+    "invalidEncodes": 7,
+    "sdkResultEntries": 826,
+    "nativeResultEntries": 413,
+    "nativePgmChecks": 6,
+    "bidirectionalReciprocalCases": 388
+  },
+  "lseAfterScanReclassification": {
+    "expectedCode": "InvalidData",
+    "sdk": [
+      {
+        "id": "lse-after-scan",
+        "backend": "js",
+        "code": "InvalidData"
+      },
+      {
+        "id": "lse-after-scan",
+        "backend": "wasm-gc",
+        "code": "InvalidData"
+      }
+    ],
+    "native": [
+      {
+        "id": "lse-after-scan",
+        "backend": "native",
+        "code": "InvalidData",
+        "stderr": "ZSY2221/moon_jpegls/core.CodecError.InvalidData"
+      }
+    ]
+  }
+}

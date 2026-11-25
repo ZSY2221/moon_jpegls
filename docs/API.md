@@ -11,7 +11,12 @@ let compressed = @jls.encode(frame, samples)
 let (decoded_frame, reconstructed) = @jls.decode(compressed)
 ```
 
-`encode(frame, pixels, limits?)` and `decode(bytes, limits?)` raise `CodecError` and allocate the entire result. The latter rejects input after EOI. For a bound independent of height, call `Encoder::new(frame, limits)` or `Decoder::new(limits)` and advance the state explicitly.
+`encode(frame, pixels, limits?)` and `decode(bytes, limits?)` raise `CodecError` and allocate the entire result. The latter rejects input after EOI; single-component `decode` rejects multi-component streams with `UnsupportedFeature` for backward compatibility. For a row-bounded stream independent of height, call `Encoder::new(frame, limits)`, `Encoder::new_multicomponent(frame_info, scans, limits?)`, or `Decoder::new(limits)` and advance explicitly. Multi-component non-interleaved (`ILV=0`, `H=V=1`, `Pt=0`) callers use `FrameInfo`, `ComponentSpec`, `ScanSpec`, `encode_multicomponent`, `decode_multicomponent`, and `inspect(bytes, limits?)`, which expose `ScanInfo`, `StreamStructure`, and `ErrorLocation`.
+
+### Native CLI (`cmd/moonjls`)
+
+- Single-component: `encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT ...`, `encode-pgm NEAR INPUT OUTPUT [CHUNK] [preset flags]`
+- Multi-component non-interleaved (`ILV=0`): `encode-planar WIDTH HEIGHT BITS COMPONENTS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--comp-ids LIST] [--scan-order LIST] [--scan-near LIST] [--maxval N] [preset flags]` (streams with `host_conversion_buffer_bytes=0`), `encode-pgms NEAR OUTPUT [--chunk N] [preset flags] IN1 [IN2 ...]`, `encode-ppm NEAR INPUT OUTPUT` (P6 RGB with explicit host planar conversion), `decode INPUT OUTPUT [raw-le|raw-be|pgm|ppm] [CHUNK]`, `decode-pgms [--chunk N] INPUT OUT1 [OUT2 ...]`, `inspect|verify INPUT [CHUNK] [--json]` (emits full `components`, `scans`, `markers`, and `eoiOffset`).
 
 | Operation | Input and results |
 | --- | --- |
@@ -47,11 +52,11 @@ const result = await decodeStream(core, {
 console.log(result.frame, result.stats);
 ```
 
-`encodeStream` pulls a source and awaits `onBytes`. `decodeStream` awaits `onRow`. The `encodeImage` and `decodeImage` helpers aggregate all output. Each stream accepts an `AbortSignal`, honors configured chunk ceilings, and updates the `Stats` fields defined in [index.d.mts](../sdk/index.d.mts). Decode's `trailing: 'allow'` reports consumption at EOI, while `'reject'` checks for a suffix and probes the source for EOF. Keep track of the most recently supplied block if you need its unconsumed tail. Host and codec errors are surfaced as rejected promises.
+`encodeStream` pulls a source and awaits `onBytes`. `decodeStream` awaits `onRow` and optional `onScanComplete(scan, stats, structure)`; `row` events carry `rowMeta` (`scanIndex`, `componentIndex`, `componentId`, `rowIndex`, `near`, `preset`, `layout`, `stride`, `sampleBytes`, `endianness`). Whole-image multi-component helpers `encodePlanarImage`, `decodePlanarImage`, and `inspectStream` are documented in [index.d.mts](../sdk/index.d.mts). Decode's `trailing: 'allow'` reports consumption at EOI, while `'reject'` checks for a suffix and probes the source for EOF. Host and codec errors are surfaced as rejected promises with optional `error.location` (`scanIndex`, `componentId`, `marker`, `offset`).
 
 ## Worker protocol
 
-`startWorker` in `sdk/worker-client.mjs` accepts the same options, a pull source, and `onEvent`. It returns `{ result, pause, resume, cancel }`. Options and events are typed in [worker-client.d.mts](../sdk/worker-client.d.mts).
+`startWorker` in `sdk/worker-client.mjs` accepts the same options, a pull source, and `onEvent`. It returns `{ result, pause, resume, cancel }`. Options and events are typed in [worker-client.d.mts](../sdk/worker-client.d.mts). Worker decode flushes any pending row batch at scan boundaries and emits `scanComplete` with updated `structure`.
 
 | Message | Ownership and sequencing |
 | --- | --- |

@@ -22,7 +22,7 @@
 | 7 | **身份证照片** | `*` | 仅第 1 题选「否」时显示 | 沿用本人身份证正反面照片（可加参赛水印） |
 | 8 | **身份证号码** | `*` | 始终显示 | 沿用本人真实身份证号 |
 | 9 | **项目名称** | `*` | 始终显示 | `MoonJLS——纯 MoonBit JPEG-LS Part 1 编解码内核与符合性验证工具链`（若字符长度受限，可用 `MoonJLS` 或 `MoonJLS: MoonBit-Native JPEG-LS Part 1 Codec`） |
-| 10 | **项目的GitHub仓库链接** | `*` | 始终显示 | **填写仓库默认主页**：`https://github.com/ZSY2221/moon_jpegls`（PR #1 合入 `main` 后首页即直接展示最新 M2 README、T.87 Part 1 标准目标与分阶段路线；可在备注中一并附上 PR #1 链接） |
+| 10 | **项目的GitHub仓库链接** | `*` | 始终显示 | **填写仓库默认主页**：`https://github.com/ZSY2221/moon_jpegls`（M3-A 最新成果已合入 `main`，首页即直接展示最新 M3-A README、Annex E `6/12`、完整 T.87 Part 1 标准目标与分阶段路线；可在备注中一并附上核心审查/提交链接） |
 | 11 | **项目申报书** | `*` | 第 2 题选「新项目申报-*」时显示 | **文件上传（需由参赛者本人独立撰写的一页 Markdown 文件）**。表单下方明确要求 **`请使用 markdown 格式，长度控制在一页以内，不要使用 AI 编写。`**<br>**重要口径**：本目录既有 [`03_ONE_PAGE_PROPOSAL.md`](03_ONE_PAGE_PROPOSAL.md) 与历史 [`04_ONE_PAGE_PROPOSAL.pdf`](04_ONE_PAGE_PROPOSAL.pdf) **仅作为核对技术事实与版式的内部参考归档保留，均不属于可直接上传且已符合要求的一页正式申报书成稿**；请您依据下文或最终回复中的“事实核对清单”由本人独立撰写 1 页 Markdown 后再上传。 |
 | 12 | **银行卡账号** | `*` | 始终显示 | 沿用原填写账号（无空格） |
 | 13 | **银行卡所属分行** | `*` | 始终显示 | 沿用原填写开户支行全称 |
@@ -42,17 +42,17 @@
 | 内容维度 | 可直接复制使用的标准内容 |
 | --- | --- |
 | **项目名称** | MoonJLS——纯 MoonBit JPEG-LS Part 1 编解码内核与符合性验证工具链（`MoonJLS: MoonBit-Native JPEG-LS Part 1 Codec and Conformance Verification Toolkit`） |
-| **项目简介** | MoonJLS 面向高精度整数图像的数据交换，提供纯 MoonBit JPEG-LS 编解码核心、Native／JS／Wasm GC 流式接入及可复现的符合性验证工具链。当前 M2 阶段支持单帧、单分量、单扫描的 P=2–16、独立 MAXVAL、合法 NEAR 和自定义 LSE ID 1 预置参数。项目最终目标是完整实现 ITU-T T.87（06/1998）／ISO/IEC 14495-1 JPEG-LS Part 1 的编码、解码和数据格式能力，并通过官方 Annex E、§8 符合性测试和独立参考实现逐阶段验收。 |
+| **项目简介** | MoonJLS 面向高精度整数图像与多通道科研图像的数据交换，提供纯 MoonBit JPEG-LS 编解码核心、Native／JS／Wasm GC 流式接入及可复现的符合性验证工具链。当前已完成 M3-A 阶段，支持单分量与多分量非交错多扫描（`ILV=0, Ns=1, H=V=1, Pt=0`）、`P=2–16`、独立 `MAXVAL`、合法 `NEAR` 与跨扫描 `LSE ID 1` 预置重载。项目最终目标是完整实现 ITU-T T.87（06/1998）／ISO/IEC 14495-1 JPEG-LS Part 1 的编码、解码和数据格式能力，并通过官方 Annex E、§8 符合性测试和独立参考实现逐阶段验收。 |
 | **项目目标** | 完整实现 ITU-T T.87（06/1998）／ISO/IEC 14495-1 JPEG-LS Part 1 编解码及全部交换/简略/表规范格式，覆盖 Native、JS、Wasm GC 三后端，并提供有界流式传输与逐项独立验证闭环。 |
-| **真实应用场景** | ① **高精度科研与遥感数据无损/可控近无损保存**（如 NASA LOLA 16 位月面高程图、工业/显微灰度栅格，支持逐样本校验与精确误差界）；② **大图有界流式管道处理**（CLI/管道/Browser Worker 分块输入输出、逐行确认背压与取消，不在核心缓存整图）；③ **MoonBit 生态图像工具集成**（提供 `ZSY2221/moon_jpegls` 核心包及 `MoonImage Gray16` 适配示例）。 |
-| **核心交付物** | 纯 MoonBit 核心库 `core/*.mbt`（2,807 行）、Native 流式 CLI `cmd/moonjls`（622 行）、JS/Wasm GC FFI 桥接 `cmd/bridge`（477 行）、SDK 与背压 Worker（`sdk/`）、浏览器科学工作台 Precision/Streaming/Compatibility Lab（`web/`）、独立参考验证工具链与黄金回归（`scripts/`、`tests/conformance/`）。 |
-| **技术路线** | 以单一纯 MoonBit 核心驱动三后端（Native 直接链接；JS/Wasm GC 经标量/打包 FFI 端口导出，零编解码逻辑在宿主 JS 中），通过 `Encoder::step` / `Decoder::step` 有界状态机实现分块无关流式处理、严格 EOI 尾随检测及外部参考对拍。 |
-| **当前完成度** | **M0（基线与修复）、M1（满量程 8/12/16 位 NEAR 640/640）、M2（P=2–16、独立 MAXVAL、合法 NEAR、LSE ID=1 自定义预置）均已完成**。当前 M2 为阶段性交付，**不是最终标准范围**。 |
+| **真实应用场景** | ① **高精度科研、遥感与多通道图像无损/可控近无损保存**（如 NASA LOLA 16 位月面高程图、16 位多通道 PPM/科研栅格，支持逐样本校验与精确误差界）；② **大图与多扫描有界流式管道处理**（CLI/Native planar 流式/Browser Worker 分块输入输出、已解分量行立即交付、背压与取消）；③ **MoonBit 生态图像工具集成**（提供 `ZSY2221/moon_jpegls` 纯 MoonBit 包及本地源码集成方案；注：当前尚未发布到在线 `mooncakes.io` 注册表）。 |
+| **核心交付物** | 纯 MoonBit 核心库 `core/` 非测试源码 `3,556` 行（含 `*_wbtest.mbt` 共 `4,486` 行）、CLI 与三后端桥接 `cmd/`（`cmd/moonjls` + `cmd/bridge` 共 `2,129` 行；17 个受跟踪 `.mbt` 文件总计 `6,764` 行）、SDK 与背压 Worker（`sdk/`，`1,486` 行）、浏览器多通道工作台与扫描结构检查器（`web/`，`2,848` 行）、独立参考验证工具链与黄金回归（`scripts/`、`tests/conformance/`）。 |
+| **技术路线** | 以单一纯 MoonBit 核心驱动三后端（Native 直接链接；JS/Wasm GC 经标量/打包 FFI 端口导出，零编解码逻辑在宿主 JS 中），通过帧级/扫描级分离的 `Encoder::step` / `Decoder::step` 有界状态机实现分块无关流式处理、严格 EOI 尾随检测及外部参考对拍（注：交错 PPM/预览转换的宿主缓冲成本也在接口与工作台中显式披露）。 |
+| **当前完成度** | **M0（基线与修复）、M1（满量程 8/12/16 位 NEAR 640/640）、M2（P=2–16、独立 MAXVAL、合法 NEAR、LSE ID=1）、M3-A（多分量 `ILV=0` 多扫描、Native planar 流式、多通道工作台与扫描结构检查器）均已完成**。当前 M3-A 为阶段性交付，**不是最终标准范围**。 |
 | **标准最终目标** | 完整覆盖 **ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1**：基础交换格式（SOF55/SOS/EOI、P=2–16、Regular/Run/Run interruption、Golomb/填充、LSE1、多分量多扫描、ILV=0/1/2、采样与 MCU、Pt、LSE2/3、DRI/RST、DNL、LSE4）+ 简略与表规范格式（§7(b)(c)、LSE2/3 外部表生命周期）+ §8/Annex E 符合性。T.870 Part 2 与 DICOM 属独立扩展，SPIFF 为单独说明的可选容器。 |
-| **阶段兼容路线** | M0–M2 已完成；**M3-A**（目标 2026-12-10）：多分量与 `ILV=0` 多扫描（验收 E.2-1/E.2-4）；**M3-B**（目标 2026-12-25）：`ILV=1/2`、采样、MCU、点变换 `Pt`（验收 E.2-2/3/5–8）；**M4**（目标 2027-01-10）：`LSE2/3`、表规范与简略格式、`DRI/RST`、`DNL`、`LSE4` 与剩余标记；**M5**（目标 2027-01-20）：完整 Part 1 符合性闭环与发布候选。（以上均为内部开发目标，赛事验收节点以组委会为准。） |
-| **测试与独立验证** | 三后端核心单元测试各 15/15；固定受测源码 `fc43bc2` 归档证据含 M2 独立合成矩阵 388 正例 + 18 LSE 变体 + 7 非法编码 + 6 Native PGM、官方 Annex E `E.2-9–12` 双向通过（12 次编码逐字节一致；`E.2-1–8` 对应未实现多分量返回 `UnsupportedFeature`）、NASA LOLA 1,036,800 样本与 Chrome 158 工作台实测；CI 每次运行 12 组独立合成 HP/Annex A 黄金用例 + 18 变体 + 7 非法编码 + 4 PGM + 历史 640 满量程 NEAR 矩阵（注：12 组合成黄金用例不等同于官方 Annex E 12 项全部通过；640 组为特定范围 NEAR 回归，非 M2 全参数穷举）。 |
-| **GitHub** | 仓库主页（已通过 PR #1 合入 `main`）：`https://github.com/ZSY2221/moon_jpegls`；开发/复审同步分支：`codex/moonjls-reappeal-20261125`、`antigravity/t87-m2-20261125`；固定受测源码：`fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44` |
-| **PR** | `https://github.com/ZSY2221/moon_jpegls/pull/1`（已合并至 `main` 的唯一审查 PR） |
+| **阶段兼容路线** | M0–M3-A 已完成（Annex E 已通过 E.2-1、E.2-4 与 E.2-9–12 共 6/12）；**M3-B**（目标 2026-12-25）：`ILV=1/2`、采样、MCU、点变换 `Pt`（验收 E.2-2/3/5–8）；**M4**（目标 2027-01-10）：`LSE2/3`、表规范与简略格式、`DRI/RST`、`DNL`、`LSE4` 与剩余标记；**M5**（目标 2027-01-20）：完整 Part 1 符合性闭环与发布候选。（以上均为内部开发目标，赛事验收节点以组委会为准。） |
+| **测试与独立验证** | 三后端核心单元测试各 18/18（Native WSL `--deny-warn` 0 警告 / JS / Wasm GC）；Worker 协议 20/20、Node 测试 21/21、`tsc --noEmit` 通过；M3-A 黄金回归（7 正例 + 7 负例）三后端与 CharLS Wasm 通过；官方 Annex E 对 HP 1.00 与 CharLS Wasm 实测 **6/12 通过**（`E.2-1`、`E.2-4` 与 `E.2-9–12`，18 次候选编码逐字节一致；`E.2-2/3/5–8` 返回 `expected_unsupported`）；M2 388 正例 + 18 变体 + 7 非法 + 6 PGM 通过；NEAR 640/640（`8,320` 次核对，限特定单分量满量程范围）；Native 多扫描流式交付与 Chrome 158 工作台冒烟、NASA LOLA 1,036,800 样本实测已归档于 `reports/t87-m3a-20261125/`；CI 每次实跑 M2 黄金 + M3-A 黄金 + Native 流式/尾部 + NEAR 640 矩阵（注：黄金回归不等同于 Annex E 12 项全过）。 |
+| **GitHub** | 仓库主页（M3-A 已合入 `main`）：`https://github.com/ZSY2221/moon_jpegls`；M3-A 分支：`antigravity/t87-m3a-20261125`；受测源码基线：`36bb9e6a77bd38db6806a0cc5047885b694276b5`（历史 M2 基线 `fc43bc2` 完整保留） |
+| **PR / 审查链接** | 历史 M2 审查 PR：[PR #1](https://github.com/ZSY2221/moon_jpegls/pull/1)；M3-A 最新验证归档：[reports/t87-m3a-20261125/README.md](../../reports/t87-m3a-20261125/README.md) |
 | **评审指南** | `https://github.com/ZSY2221/moon_jpegls/blob/main/docs/REVIEWER_GUIDE.md` |
 | **推荐人** | 留空或保持原报名填写（若由赛事推荐人推荐，填写其已报名成功的 GitHub ID；已有项目维护赛道填“无”） |
 
@@ -61,5 +61,5 @@
 ## 三、字段 18「备注」精简版备选文本（如字数受限时使用）
 
 ```text
-【初审意见复审补充】针对“需补明最终标准范围与分阶段兼容路径”，项目已明确最终目标是完整实现 ITU-T T.87(06/1998)/ISO/IEC 14495-1 JPEG-LS Part 1 编解码与数据格式能力（含交换格式、表规范与简略格式、§8/Annex E）。当前 M2（P=2–16、独立 MAXVAL、合法 NEAR、LSE1 自定义预置）为阶段版本，非最终范围。后续路线（内部目标）：M3-A 多分量与 ILV=0 多扫描（12-10，验收 E.2-1/4）→ M3-B ILV=1/2、采样与 Pt（12-25，验收 E.2-2/3/5–8）→ M4 映射表/简略格式/DRI/DNL/LSE4（01-10）→ M5 完整 Part 1 闭环（01-20）。最新成果已合入 main（PR #1：https://github.com/ZSY2221/moon_jpegls/pull/1 ）。评审指南：https://github.com/ZSY2221/moon_jpegls/blob/main/docs/REVIEWER_GUIDE.md ；能力矩阵：https://github.com/ZSY2221/moon_jpegls/blob/main/docs/T87_CONFORMANCE_PLAN.md
+【初审意见复审补充】针对“需补明最终标准范围与分阶段兼容路径”，项目已明确最终目标是完整实现 ITU-T T.87(06/1998)/ISO/IEC 14495-1 JPEG-LS Part 1 编解码与数据格式能力（含交换格式、表规范与简略格式、§8/Annex E）。当前已完成 M3-A（在单分量 P=2–16/MAXVAL/NEAR/LSE1 基础上新增多分量非交错多扫描 ILV=0, Ns=1，原生支持 2/3/4+ 分量、跨扫描 LSE1 重载、Native planar 流式与扫描结构检查器），官方 Annex E 对 HP 1.00 与 CharLS Wasm 已通过 6/12（E.2-1/4/9–12），仍为阶段交付而非最终范围。后续路线（内部目标）：M3-B ILV=1/2、采样与 Pt（12-25，验收 E.2-2/3/5–8）→ M4 映射表/简略格式/DRI/DNL/LSE4（01-10）→ M5 完整 Part 1 闭环（01-20）。M3-A 最新成果与完整复测收据已合入 main（https://github.com/ZSY2221/moon_jpegls ）。评审指南：https://github.com/ZSY2221/moon_jpegls/blob/main/docs/REVIEWER_GUIDE.md ；能力矩阵：https://github.com/ZSY2221/moon_jpegls/blob/main/docs/T87_CONFORMANCE_PLAN.md
 ```

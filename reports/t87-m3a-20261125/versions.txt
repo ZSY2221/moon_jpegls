@@ -1,0 +1,8 @@
+Commit: 36bb9e6a77bd38db6806a0cc5047885b694276b5
+Node: v24.20.0
+Python: Python 3.12.10
+MoonBit (Windows):
+moon 0.1.20261119 (738607b 2026-11-19) ~\.moon\bin\moon.exe
+moonc v0.10.22+124d61d05 (2026-11-19) ~\.moon\bin\moonc.exe
+moonrun 0.1.20261119 (738607b 2026-11-19) ~\.moon\bin\moonrun.exe
+

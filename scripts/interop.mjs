@@ -64,17 +64,28 @@ async function decode(core, stream, options = {}) {
     trailing: options.trailing ?? 'reject',
     onRow: async (row, i, metadata) => {
       assert.ok(row instanceof Uint16Array, 'original integer samples must remain uint16');
-      assert.equal(i, rows.length, 'row numbering');
-      if (frame) assert.equal(row.length, frame.width, 'row width');
       frame = metadata;
+      assert.equal(i, rows.length % frame.height, 'row numbering');
+      assert.equal(row.length, frame.width, 'row width');
       rows.push(row.slice());
     }
   });
   assert.ok(frame, 'frame metadata');
-  assert.equal(rows.length, frame.height, 'row count');
+  const comps = frame.components?.length ?? 1;
+  assert.equal(rows.length, frame.height * comps, 'row count');
   if (!options.trailing) assert.equal(stats.inputConsumed, stream.length, 'decoder input consumption');
-  const pixels = new Uint16Array(frame.width * frame.height);
-  for (let i = 0; i < rows.length; i++) pixels.set(rows[i], i * frame.width);
+  const pixels = new Uint16Array(frame.width * frame.height * (frame.components?.length ?? 1));
+  const planeSize = frame.width * frame.height;
+  let rowIndex = 0;
+  let componentIndex = 0;
+  for (let i = 0; i < rows.length; i++) {
+    pixels.set(rows[i], componentIndex * planeSize + rowIndex * frame.width);
+    rowIndex++;
+    if (rowIndex === frame.height) {
+      rowIndex = 0;
+      componentIndex++;
+    }
+  }
   return { pixels, frame, stats };
 }
 
