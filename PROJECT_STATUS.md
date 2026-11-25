@@ -7,6 +7,10 @@
 - 当前 P1 已扩展现有位深的合法 NEAR，8 位为 0–127、12/16 位为 0–255。640 组参数在 WSL Native、JS、Wasm GC 双向对照通过，实际 Chrome 核验了误差热图、原始整数读数、下载和取消重启。 [P1 本机实跑证据](reports/review-near-20261125/README.md)
 - 项目终点是完整的 JPEG-LS Part 1。阶段范围、编码与解码缺口和验收口径见 [T.87 能力矩阵](docs/T87_CONFORMANCE_PLAN.md) 与 [兼容路线](docs/ROADMAP.md)。完整实现的赛事验收日期待组委会确认。
 
+## M2 复审冲刺
+
+从公开 `27f045d` 建立独立分支 `antigravity/t87-m2-20261125`。本轮实现当前单扫描 profile 的 2–16 位编码精度、独立 MAXVAL 和 LSE ID 1 预置参数。原工作区中的本地核心改动保存在原处。 [基线审计](docs/ANTIGRAVITY_AUDIT_20261125.md) · [评审入口](docs/REVIEWER_GUIDE.md) · [逐项验收](docs/CONFORMANCE_RESULTS.md)
+
 ## 高精度验证工具链
 
 工作台、SDK CLI 和 Native 验证适配器支持同一运行报告。NASA LOLA 固定样例已在 JS 和 Wasm GC 各实测四档 NEAR。独立消费者用固定源码构建的包归档，在无主工作区的临时模块核验高位深 API。 [报告契约](docs/VERIFICATION_REPORT.md) · [NASA 实跑](reports/lunar-budget-20261125/README.md) · [独立消费证据](reports/review-consumer-20261125/README.md)

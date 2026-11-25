@@ -1,0 +1,81 @@
+name: Verification
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      MOONJLS_MOON_VERSION: '0.1.20261119'
+      MOONJLS_ARCHIVE_VERSION: '0.10.22%2B124d61d05'
+      MOONJLS_LINUX_SHA256: 'aeb78ded1d5e25185ed788328cacef5e843a9ab923145523b7652e8d082f74fb'
+      MOONJLS_CORE_SHA256: 'a22977f3d346e4a189fe521b2d265b2fbb6c00e3ff80342246fb6f8f26c9f156'
+      NATIVE_BINARY: '_build/native/release/build/cmd/moonjls/moonjls.exe'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.20.0'
+      - uses: actions/cache@v4
+        id: moonbit-cache
+        with:
+          path: ~/.moon
+          key: moonjls-moonbit-${{ runner.os }}-${{ runner.arch }}-${{ env.MOONJLS_MOON_VERSION }}-738607b
+      - name: Install and pin MoonBit
+        shell: bash
+        run: |
+          export PATH="$HOME/.moon/bin:$PATH"
+          if [[ '${{ steps.moonbit-cache.outputs.cache-hit }}' != 'true' ]]; then
+            moonjls_linux_archive="$RUNNER_TEMP/moonjls-linux.tar.gz"
+            moonjls_core_archive="$RUNNER_TEMP/moonjls-core.tar.gz"
+            curl -fsSL "https://cli.moonbitlang.com/binaries/$MOONJLS_ARCHIVE_VERSION/moonbit-linux-x86_64.tar.gz" -o "$moonjls_linux_archive"
+            curl -fsSL "https://cli.moonbitlang.com/cores/core-$MOONJLS_ARCHIVE_VERSION.tar.gz" -o "$moonjls_core_archive"
+            printf '%s  %s\n' "$MOONJLS_LINUX_SHA256" "$moonjls_linux_archive" "$MOONJLS_CORE_SHA256" "$moonjls_core_archive" | sha256sum -c -
+            mkdir -p "$HOME/.moon/lib"
+            tar -xzf "$moonjls_linux_archive" -C "$HOME/.moon"
+            tar -xzf "$moonjls_core_archive" -C "$HOME/.moon/lib"
+            chmod +x "$HOME/.moon"/bin/* "$HOME/.moon/bin/internal/tcc"
+            ln -sfn moon "$HOME/.moon/bin/moonx"
+            moon -C "$HOME/.moon/lib/core" bundle --warn-list -a --all
+            moon -C "$HOME/.moon/lib/core" bundle --warn-list -a --target wasm-gc --quiet
+          fi
+          toolchain=$(moon version --all)
+          printf '%s\n' "$toolchain"
+          grep -F "moon $MOONJLS_MOON_VERSION (738607b" <<< "$toolchain"
+          grep -F 'moonc v0.10.22+124d61d05' <<< "$toolchain"
+          printf '%s\n' "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Build and test codecs
+        run: |
+          moon test core --target js --deny-warn
+          moon test core --target wasm-gc --deny-warn
+          CC=clang moon test core --target native --deny-warn
+          CC=clang moon build cmd/moonjls --target native --release
+          node sdk/build.mjs
+          node web/build.mjs
+      - name: Check Native streams, Worker, reports and declarations
+        run: |
+          python3 REVIEW_EVIDENCE/native_row_delivery_regression.py "$NATIVE_BINARY" --output .evidence/ci/native-row-delivery.json
+          python3 REVIEW_EVIDENCE/native_tail_matrix.py "$NATIVE_BINARY"
+          printf '\x00\x00\xff\x00' > .evidence/ci/input.raw
+          node sdk/cli.mjs encode --input .evidence/ci/input.raw --output .evidence/ci/coded.jls --width 2 --height 1 --bits 8 --report .evidence/ci/sdk-encode.json
+          node sdk/cli.mjs decode --input .evidence/ci/coded.jls --output .evidence/ci/decoded.raw --report .evidence/ci/sdk-decode.json
+          cmp .evidence/ci/input.raw .evidence/ci/decoded.raw
+          node scripts/native_report.mjs "$NATIVE_BINARY" verify .evidence/ci/coded.jls > .evidence/ci/native-verify.json
+          node -e 'for (const file of process.argv.slice(1)) { const value = require(file); if (value.schemaVersion !== "moonjls.verification/1" || value.status !== "passed") process.exit(1); }' ./.evidence/ci/{sdk-encode,sdk-decode,native-verify}.json
+          node --experimental-vm-modules --test scripts/test_worker_protocol.mjs
+          node --test scripts/test_worker_codec.mjs scripts/test_verification_report.mjs web/pgm.test.mjs web/preview.test.mjs
+          npx --yes --package typescript@7.0.2 tsc --noEmit --strict --module nodenext --target es2022 --lib es2022,dom sdk/*.d.mts
+          node scripts/validate_annex_e.mjs --check-manifest
+      - name: Run the existing three-backend NEAR matrix
+        run: |
+          python3 -m venv .tools/oracle-venv
+          .tools/oracle-venv/bin/python -m pip install --only-binary=:all: -r scripts/oracle-requirements.txt
+          npm install --prefix .tools/oracle-npm --ignore-scripts --save-exact @team-charls/charls-wasm@0.10.0
+          .tools/oracle-venv/bin/python scripts/validate.py --near-matrix --native-exe "$NATIVE_BINARY"

@@ -68,7 +68,7 @@
       ],
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
-      "source_revision": null,
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
     {
@@ -84,7 +84,7 @@
       ],
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
-      "source_revision": null,
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
     {
@@ -115,7 +115,7 @@
       ],
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
-      "source_revision": null,
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
     {
@@ -150,7 +150,7 @@
       ],
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
-      "source_revision": null,
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
     {
@@ -167,7 +167,7 @@
       ],
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
       "target_milestone": "M3",
-      "source_revision": null,
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
     {
@@ -186,7 +186,7 @@
       ],
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
       "target_milestone": "M3",
-      "source_revision": null,
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
     {
@@ -203,7 +203,7 @@
       ],
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
       "target_milestone": "M3",
-      "source_revision": null,
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
     {
@@ -374,7 +374,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 2,
@@ -424,7 +425,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 3,
@@ -471,7 +473,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 4,
@@ -521,7 +524,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 5,
@@ -571,7 +575,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 6,
@@ -618,7 +623,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 7,
@@ -667,7 +673,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 8,
@@ -716,7 +723,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 9,
@@ -768,7 +776,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 10,
@@ -820,7 +829,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 11,
@@ -867,7 +877,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     },
     {
       "id": 12,
@@ -914,7 +925,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json"
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
     }
   ],
   "officialReference": {

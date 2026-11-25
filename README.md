@@ -2,11 +2,11 @@
 
 [简体中文](README.zh-CN.md)
 
-**A native MoonBit JPEG-LS codec and verification toolkit**
+**Native MoonBit JPEG-LS Codec & Scientific Verification Toolkit**
 
 MoonJLS serves high-precision integer image interchange with a pure MoonBit codec, Native, JS and Wasm GC interfaces, and reproducible interoperability checks. The scientific image workbench shows original sample precision, compression error, streaming behavior and validation evidence. PGM, raw rasters and MoonImage are the first integration paths. [High-precision image interfaces](docs/HIGH_PRECISION_INTERFACES.md)
 
-The current implementation streams full-range 8-, 12- and 16-bit grayscale images with one frame, one component and one scan (ILV=0). `NEAR=0` preserves every sample. Positive integer `NEAR` bounds absolute error in the original sample scale, with a maximum of 127 at 8 bits and 255 at 12 or 16 bits. The streaming core keeps two prediction lines for this profile. [Support matrix](docs/SCOPE.md) · [Published NEAR validation](reports/review-near-20261125/README.md)
+The current implementation streams grayscale images with one frame, one component and one scan (ILV=0). It supports coded precision 2–16, an independent MAXVAL and default or custom LSE ID 1 thresholds and RESET. `NEAR=0` preserves every sample. Positive integer NEAR is at most `min(255, floor(MAXVAL/2))`. The streaming core keeps two prediction lines for this profile. [Support scope](docs/SCOPE.md) · [Two-minute reviewer guide](docs/REVIEWER_GUIDE.md)
 
 The final target is the full JPEG-LS Part 1 codec and data-format capabilities in ITU-T T.87 (06/1998) / ISO/IEC 14495-1. The roadmap expands parameter, scan and marker support in phases, with separate acceptance criteria for encoding and decoding. [T.87 capability matrix](docs/T87_CONFORMANCE_PLAN.md) · [Compatibility roadmap](docs/ROADMAP.md)
 
@@ -21,7 +21,7 @@ moon test core --target native --deny-warn
 moon build cmd/moonjls --target native --release
 ```
 
-Each test command runs 11 core tests, including the original 12 precision/NEAR combinations and high-NEAR boundary checks, exhaustive single-split replay, bounded output, long runs, cancellation, truncation and marker validation. [Independent validation](docs/VALIDATION.md)
+Each test command runs 15 core tests, including the original 12 precision/NEAR combinations and high-NEAR boundary checks, exhaustive single-split replay, bounded output, long runs, cancellation, truncation and marker validation. [Independent validation](docs/VALIDATION.md)
 
 ## Native file and pipe use
 
@@ -33,7 +33,7 @@ moon run --target native cmd/moonjls -- inspect lola.jls
 moon run --target native cmd/moonjls -- verify lola.jls 17
 ```
 
-`encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK]` reads one raw byte per 8-bit sample or two per 12/16-bit sample. Binary `P5` PGM stores high-depth samples big-endian. Use `-` for standard input or output. File outputs use exclusive creation. A failed operation can leave a partial output. `inspect` and `verify` decode through EOI and reject trailing data. Use the [native pipeline example](examples/stream_pipeline.sh) to send compressed bytes directly to a decoder while saving a copy.
+`encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--maxval N] [preset flags]` reads one raw byte through 8-bit coded precision and two above it. The preset flags are `--t1`, `--t2`, `--t3` and `--reset`. `encode-pgm` takes MAXVAL from the P5 header. Binary `P5` PGM stores high-depth samples big-endian. Use `-` for standard input or output. File outputs use exclusive creation. A failed operation can leave a partial output. `inspect` and `verify` decode through EOI and reject trailing data. Use the [native pipeline example](examples/stream_pipeline.sh) to send compressed bytes directly to a decoder while saving a copy.
 
 ## Browser and SDK
 
@@ -55,4 +55,4 @@ The SDK CLI, Native verification adapter and browser workbench export a shared [
 
 External validation uses prebuilt CharLS 2.4.5 and official CharLS Wasm stably pinned by version and source revision. The original corpus covers every 16-bit integer in a full-range ramp, NEAR 0–3 and adverse run and stuffing patterns. A separate comparison covers all 640 legal precision and NEAR combinations in the current profile. [NEAR expansion results](reports/review-near-20261125/README.md) The fixed-width benchmark measures payload, process peak RSS, time to first row and sink backpressure with synthetic and public-data results reported separately. [Validation](docs/VALIDATION.md) · [Benchmark](docs/BENCHMARK.md)
 
-The current profile leaves multiple components, custom presets, mapping tables, restart intervals and deferred or extended dimensions for later Part 1 phases. T.870 Part 2 and DICOM containers are separate extensions. The codec's error checks do not replace an application checksum. See the current local candidate status and handoff for reproducibility, browser coverage and release boundaries. [Status](PROJECT_STATUS.md) · [Ecosystem audit](docs/ECOSYSTEM_AUDIT.md) · [Antigravity handoff](docs/ANTIGRAVITY_HANDOFF.md)
+The current profile leaves multiple components and scans, mapping tables, restart intervals and deferred or extended dimensions for later Part 1 phases. T.870 Part 2 and DICOM containers are separate extensions. The codec's error checks do not replace an application checksum. See the current local candidate status and handoff for reproducibility, browser coverage and release boundaries. [Status](PROJECT_STATUS.md) · [Ecosystem audit](docs/ECOSYSTEM_AUDIT.md) · [Antigravity handoff](docs/ANTIGRAVITY_HANDOFF.md)

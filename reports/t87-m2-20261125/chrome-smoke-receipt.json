@@ -1,0 +1,66 @@
+{
+  "browser": "158.0.8127.37",
+  "node": "v24.20.0",
+  "responses": {
+    "/web/style.css": {
+      "sha256": "8c9a38f317d916ff4eef2663545676b1086f4b7eb9323958d3a6da8b70cface4",
+      "bytes": 26353
+    },
+    "/web/app.mjs": {
+      "sha256": "382cb656e0cde2f1ac2f3e40ebefbb9717a736400902a130e0a81ea595bcca57",
+      "bytes": 36015
+    },
+    "/sdk/index.mjs": {
+      "sha256": "f9e9bfc15c8103a84a3b103331887e627d963bfbdeb326474e9aa2185de197c4",
+      "bytes": 16989
+    },
+    "/sdk/worker-client.mjs": {
+      "sha256": "c4d38894bce929ddbf8755f33f60093f4dd3e933adcd067664bc492f4947b995",
+      "bytes": 5023
+    },
+    "/sdk/lunar.mjs": {
+      "sha256": "9b63d807462c0176cb9d0e38a369f688c4c7d192122c7963d20764b89b02b957",
+      "bytes": 1259
+    },
+    "/sdk/verification-report.mjs": {
+      "sha256": "b01d91b940275214eacec8aa135786268981221f273fd4d6f42e17059b6346c0",
+      "bytes": 3614
+    },
+    "/web/run-report.mjs": {
+      "sha256": "7d30aac1066a49938b0f20d373e7e88984731b9bc267fe8bfdcbac6cf404ce57",
+      "bytes": 4072
+    },
+    "/web/labels.mjs": {
+      "sha256": "38838a0f86bbaf83190250d74b52a0ad50be61aec75985d8d232c4f50955d121",
+      "bytes": 16877
+    },
+    "/web/pgm.mjs": {
+      "sha256": "4f8fdf96bb184ee97dce809a3188bce87cb5f9ed79b4aa43878a3d8b137b27c1",
+      "bytes": 7038
+    },
+    "/web/preview.mjs": {
+      "sha256": "470bc5b813feb730c8ffded40475ad66e3b36ab143794c3368102c0f273ca664",
+      "bytes": 10875
+    },
+    "/web/transport.mjs": {
+      "sha256": "7e490fabef71bee19c11115bba11e09b83182c9e9cbe071e5f3e4e458792be8f",
+      "bytes": 3288
+    },
+    "/web/compatibility.mjs": {
+      "sha256": "50375ef8e902136d789552018c7abf66c2aaf7a50184a6b23a3497878f09464d",
+      "bytes": 2925
+    },
+    "/sdk/worker.mjs": {
+      "sha256": "e882cc579f345509b1ec59cb2a94e7ddc1af6744244a69e2b0318216da85e2ec",
+      "bytes": 6323
+    },
+    "/sdk/generated/core.wasm": {
+      "sha256": "4a05e6042816d1759146cc8e0e4978880ab9d77693e66abc8d209579d83717e6",
+      "bytes": 28448
+    },
+    "/sdk/generated/core.mjs": {
+      "sha256": "62435532b700c008c3fe80e3ed994bdc4aaf6f5b65064554e524f054b31d2f68",
+      "bytes": 179142
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 ## MoonBit
 
-Import package `ZSY2221/moon_jpegls/core` as `@jls`. `Frame` holds `width`, `height`, `bits` and `near`. `Frame::maxval()` derives MAXVAL from a valid coded `bits`. For the supported full-range profile, integer `near` runs from 0 to 127 at 8 bits and from 0 to 255 at 12 or 16 bits. An out-of-range encode argument yields `InvalidArgument`; a coded NEAR beyond the legal MAXVAL bound yields `InvalidData`. `Limits::default()` allows up to 65535 on either axis, 100 million pixels and 1 MiB of APPn/COM marker segments. Applications may choose lower limits before accepting a stream.
+Import package `ZSY2221/moon_jpegls/core` as `@jls`. `Frame` holds `width`, `height`, `bits` and `near`. `Frame::maxval()` derives MAXVAL from a valid coded `bits`. For the current profile, coded precision is 2–16 and integer `near` runs through min(255, floor(effective MAXVAL/2)). Pass optional `preset~` to `Encoder::new` or `encode` for non-default MAXVAL, T1/T2/T3 or RESET. Accessors and `decode_with_preset` return the resolved preset. An out-of-range encode argument yields `InvalidArgument`; a coded NEAR beyond the legal MAXVAL bound yields `InvalidData`. `Limits::default()` allows up to 65535 on either axis, 100 million pixels and 1 MiB of APPn/COM marker segments. Applications may choose lower limits before accepting a stream.
 
 ```moonbit
 let frame : @jls.Frame = { width: 3, height: 2, bits: 16, near: 0 }

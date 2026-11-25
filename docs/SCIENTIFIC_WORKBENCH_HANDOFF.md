@@ -2,6 +2,10 @@
 
 从 [固定源码提交 `da0b52d`](https://github.com/ZSY2221/moon_jpegls/commit/da0b52d9992c956608039ce0d29060b5eeed2e84) 检出，使用报告中的 `source.revision` 和 `artifact.sha256` 核对实际构建。标准兼容基线为 [P1 9667375](https://github.com/ZSY2221/moon_jpegls/commit/9667375c42dd5d20aba832c1c07ebcd0fdfad214)。[当前范围](SCOPE.md) 与 [T.87 验收路线](T87_CONFORMANCE_PLAN.md) 记录各项能力的状态。
 
+## M2 交接基线
+
+从 [M2 产品源码 `fc43bc2`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44) 开始。Precision Lab 显示实际 P、MAXVAL、NEAR、T1/T2/T3/RESET，并以有界预览网格采样 7×7 放大区域。Streaming Lab 使用宿主实际 ACK 以及已交付和暂定行计数。Compatibility Lab 从 [能力清单](../tests/conformance/manifest.json) 读取实际状态。下一阶段 M3 将扩展分量和扫描组织，需要分别定义 SOF 组件布局、活动扫描参数与逐扫描 LSE 继承。Gray16 接入和旧灰度行 API 仍是现有消费者入口。 [M2 运行证据](../reports/t87-m2-20261125/README.md)
+
 ## 可用数据
 
 | 入口 | 字段及用途 |
