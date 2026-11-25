@@ -57,8 +57,10 @@ console.log(result.frame, result.stats);
 | --- | --- |
 | `start` | Main thread sends mode, limits, backend, chunk ceilings and encoder frame. One job per Worker. |
 | `needInput(seq, maxElements)` → `input(seq, chunk)` | Worker asks for one block. Host supplies `Uint8Array`, `Uint16Array`, or `null` for EOF. A subview is copied before transfer to prevent retaining or detaching a larger buffer. Full, owned input buffers are transferred and detached from the sender. |
-| `bytes`, `row`, `progress` → `ack(seq)` | Worker waits for the sink promise before proceeding. Byte and row buffers transfer ownership to the host. Rows are `Uint16Array`, accompanied by frame fields and zero-based row index. |
+| `bytes`, `row`, `rows`, `progress` → `ack(seq)` | Worker waits for the sink promise before proceeding. Byte and row buffers transfer ownership to the host. Rows are `Uint16Array`, accompanied by frame fields and zero-based row index. A `rows` event carries `startIndex`, `count` and a `samples` view of exactly `count * frame.width` elements. |
 | `pause`, `resume`, `cancel` | Pause stops new source reads and Worker requests at the next boundary. At most one already requested pull or event can be in flight. Cancel rejects the session. |
 | `done`, `error` | Terminal frame/metrics or error code and message. The client terminates its Worker. |
 
 Metrics expose rows, input and output units, consumed/produced totals, live and peak queue bytes, core and bridge payload, elapsed time, and first-row timing. A sink can block acknowledgements to impose backpressure. The demo's fixed preview and file download choices are host policy.
+
+Worker decode batching is optional: `maxBatchBytes` is an integer in `0..1048576`, with `0` disabling batching. The first row is immediate; wider-than-budget rows remain atomic. This is a batch-buffer budget, not a total memory ceiling. `outputQueueBytes` reports the allocated batch or the full backing buffer of an unacknowledged output; short views can therefore have a smaller `byteLength`. `outputPeakBytes` additionally counts the source row while copying into a batch, remains monotonic across progress/data/terminal records, and is retained after `done` clears the live queue. These are explicit output payloads, not JavaScript heap or browser RSS. See [SDK ownership and metrics](../sdk/README.md).

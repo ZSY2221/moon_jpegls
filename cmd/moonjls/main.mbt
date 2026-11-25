@@ -161,6 +161,17 @@ async fn buffer_row(
       out_len = 0
     }
   }
+  // RowReady is a delivery boundary. A producer can withhold more input or
+  // EOI until it receives this row, so do not retain a partial output block
+  // while the decoder waits for another input byte or the host checks EOF.
+  if out_len > 0 {
+    let written = Bytes::from_array(buffer[:out_len])
+    sink.write(written[:])
+    if out_len > high_water {
+      high_water = out_len
+    }
+    out_len = 0
+  }
   (row_len * stride, out_len, high_water)
 }
 

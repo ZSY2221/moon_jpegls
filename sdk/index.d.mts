@@ -62,8 +62,17 @@ export interface Stats {
   coreWorkspaceBytes: number;
   bridgeBufferPeakBytes: number;
   inputQueueBytes: number;
+  /**
+   * SDK: current output chunk. Worker: allocated batch / unacknowledged output
+   * ArrayBuffer payload (a short transferred view still owns its full buffer).
+   * Excludes output retained by the consumer after ACK and JS object overhead.
+   */
   outputQueueBytes: number;
   inputPeakBytes: number;
+  /**
+   * Monotonic output-payload high water. Worker batching also includes the
+   * source row while copying it into the batch. This is not total heap/RSS.
+   */
   outputPeakBytes: number;
   firstRowInputConsumed: number | null;
   firstRowMs: number | null;
@@ -87,7 +96,12 @@ export interface DecodeOptions extends StreamOptions<Uint8Array> {
   onRow?(row: Uint16Array, index: number, frame: Frame, stats: Stats): Awaitable<void>;
 }
 
-export function loadCore(options?: { backend?: Backend; url?: string | URL }): Promise<Core>;
+export function loadCore(options?: {
+  backend?: Backend;
+  url?: string | URL;
+  module?: WebAssembly.Module;
+  bytes?: BufferSource;
+}): Promise<Core>;
 export function encodeStream(core: Core, options: EncodeOptions): Promise<{ frame: Frame; stats: Stats }>;
 export function decodeStream(core: Core, options: DecodeOptions): Promise<{ frame: Frame; stats: Stats }>;
 export function encodeImage(core: Core, frame: Frame, samples: Uint16Array,

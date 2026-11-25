@@ -47,8 +47,13 @@ fn Scan::new(width : Int32, params : Parameters) -> Scan {
 
 ///|
 fn Scan::workspace_bytes(self : Scan) -> Int32 {
-  // Logical 32-bit sample and context counter payload, excluding object overhead.
-  8 * self.width + 4 * (365 * 4 + 2 * 3)
+  // Owned 32-bit array payload, including the per-scan gradient lookup table.
+  // Shared module tables, scalar fields, references and object overhead are excluded.
+  4 *
+  (self.previous.length() + self.current.length() +
+   self.ctx_a.length() + self.ctx_b.length() + self.ctx_c.length() +
+   self.ctx_n.length() + self.run_a.length() + self.run_n.length() +
+   self.run_neg.length() + self.params.q_lut.length())
 }
 
 ///|
