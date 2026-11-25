@@ -70,18 +70,18 @@ async function run(message) {
   };
   const flushBatch = () => {
     if (!batch || batch.count === 0) return;
-    const { startIndex, count, samples, frame: info, stats } = batch;
+    const { startIndex, count, samples, frame: info, preset, stats } = batch;
     batch = null;
     lastBatchFlush = stats.elapsedMs;
     const used = count * info.width;
     // Keep a short view for the final/time-limited batch without a second copy.
     const payload = used === samples.length ? samples : samples.subarray(0, used);
-    return sendOutput('rows', { startIndex, count, samples: payload, frame: info }, payload, stats);
+    return sendOutput('rows', { startIndex, count, samples: payload, frame: info, preset }, payload, stats);
   };
   const settings = {
     frame, inputChunkSize, outputChunkSize, limits, trailing, signal: abort.signal,
     read: (maxElements) => request('needInput', { maxElements }),
-    onProgress: (stats, info) => {
+    onProgress: (stats, info, preset) => {
       if (deliveredRow) {
         deliveredRow = false;
         return;
@@ -89,26 +89,26 @@ async function run(message) {
       if ((reportedRows === 0 && stats.rows > 0) || stats.elapsedMs - lastProgress >= 50) {
         reportedRows = stats.rows;
         lastProgress = stats.elapsedMs;
-        return request('progress', { stats: outputStats(stats), frame: info });
+        return request('progress', { stats: outputStats(stats), frame: info, preset });
       }
     },
-    onBytes: (chunk, stats) => sendOutput('bytes', { chunk }, chunk, stats),
-    onRow: (row, index, info, stats) => {
+    onBytes: (chunk, stats, preset) => sendOutput('bytes', { chunk, preset }, chunk, stats),
+    onRow: (row, index, info, stats, preset) => {
       deliveredRow = true;
       reportedRows = stats.rows;
       lastProgress = stats.elapsedMs;
       if (index === 0 || maxBatchBytes <= 0) {
         lastBatchFlush = stats.elapsedMs;
-        return sendOutput('row', { row, index, frame: info }, row, stats);
+        return sendOutput('row', { row, index, frame: info, preset }, row, stats);
       }
       const maxRows = Math.max(1, Math.floor(maxBatchBytes / (info.width * 2)));
       if (maxRows <= 1) {
         lastBatchFlush = stats.elapsedMs;
-        return sendOutput('row', { row, index, frame: info }, row, stats);
+        return sendOutput('row', { row, index, frame: info, preset }, row, stats);
       }
       if (!batch) {
         const capacityRows = Math.min(maxRows, info.height - index);
-        batch = { startIndex: index, count: 0, samples: new Uint16Array(capacityRows * info.width), frame: info, stats };
+        batch = { startIndex: index, count: 0, samples: new Uint16Array(capacityRows * info.width), frame: info, preset, stats };
       }
       recordOutput(stats, row.buffer.byteLength);
       batch.samples.set(row, batch.count * info.width);

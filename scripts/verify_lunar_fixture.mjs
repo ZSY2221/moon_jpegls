@@ -81,6 +81,7 @@ for (const backend of ['js', 'wasm-gc']) {
       input: { name: basename(inputPath), format: 'pgm', bytes: source.length, sha256: inputSha256, provenance },
       output: { name: 'lola.jls', format: 'jls', bytes: encoded.bytes.byteLength, sha256: jlsSha256, retained: true, complete: true },
       frame,
+      preset: decoded.preset,
       stages: { encode: 'passed', decode: 'passed', compare: 'passed' },
       samples: { verified: samples.length, maxError },
       status: 'passed',

@@ -24,7 +24,7 @@
         <h1 id="workbench" class="brand-title" data-label="workbench">Sample-verifiable JPEG-LS Workbench</h1>
       </div>
       <div class="masthead-meta">
-        <span class="scope-pill" data-label="scopeBits">8 / 12 / 16-bit grayscale</span>
+        <span class="scope-pill" data-label="scopeBits">2-16-bit grayscale</span>
         <span class="scope-pill" data-label="scopeNear">NEAR up to 255</span>
         <span class="local" data-label="local">Local processing</span>
         <label class="language">
@@ -109,6 +109,16 @@
         <details id="advanced" class="advanced">
           <summary data-label="advanced">Advanced controls</summary>
           <div class="advanced-inner">
+            <fieldset class="preset-settings">
+              <legend data-label="presetInputs">LSE preset overrides</legend>
+              <div class="preset-grid">
+                <label>T1 <input id="preset-t1" type="number" min="0" max="65535" step="1" value="0"></label>
+                <label>T2 <input id="preset-t2" type="number" min="0" max="65535" step="1" value="0"></label>
+                <label>T3 <input id="preset-t3" type="number" min="0" max="65535" step="1" value="0"></label>
+                <label>RESET <input id="preset-reset" type="number" min="0" max="65535" step="1" value="0"></label>
+              </div>
+              <p class="microcopy" data-label="presetHelp">Zero uses the codec default; JLS inputs use the codestream.</p>
+            </fieldset>
             <label class="setting">
               <span class="field-label" data-label="chunk">Input chunk size</span>
               <input id="chunk" type="number" min="1" max="1048576" value="32768" aria-describedby="chunk-help">
@@ -141,6 +151,11 @@
     </aside>
 
     <div class="stage-column">
+      <nav class="scientific-nav panel" aria-label="Scientific workbench" data-aria-label="scientificNav">
+        <a href="#precision-view" data-label="precisionView">Precision</a>
+        <a href="#resource-details" data-label="streamingView">Streaming</a>
+        <a href="#compatibility-view" data-label="compatibilityView">Compatibility</a>
+      </nav>
       <section class="workspace-bar panel" aria-label="Task status and view selector" data-aria-label="ariaWorkspaceBar">
         <div class="bar-top">
           <div class="status-lead">
@@ -168,8 +183,17 @@
         <progress id="progress" value="0" max="1" aria-label="Decoded rows"></progress>
       </section>
 
-      <section class="preview-panel" aria-labelledby="previews-title">
+      <section id="precision-view" class="preview-panel" aria-labelledby="previews-title">
         <h2 id="previews-title" class="visually-hidden" data-label="previewsTitle">Image preview</h2>
+        <dl class="panel precision-grid" aria-label="Resolved codec parameters" data-aria-label="resolvedParameters">
+          <div><dt>P</dt><dd id="precision-bits"></dd></div>
+          <div><dt>MAXVAL</dt><dd id="precision-maxval"></dd></div>
+          <div><dt>NEAR</dt><dd id="precision-near"></dd></div>
+          <div><dt>T1</dt><dd id="precision-t1"></dd></div>
+          <div><dt>T2</dt><dd id="precision-t2"></dd></div>
+          <div><dt>T3</dt><dd id="precision-t3"></dd></div>
+          <div><dt>RESET</dt><dd id="precision-reset"></dd></div>
+        </dl>
         <div class="previews">
           <figure class="panel preview-card" data-pane="original">
             <figcaption class="pane-head">
@@ -266,6 +290,14 @@
           </div>
         </div>
         <p id="pixel-physical" class="microcopy" hidden></p>
+        <div id="magnifier" class="magnifier" hidden>
+          <p class="microcopy" data-label="magnifierScope">Magnified neighborhood on the sampled preview grid</p>
+          <div class="magnifier-images">
+            <figure><figcaption data-label="original">Original</figcaption><canvas id="zoom-original" width="7" height="7"></canvas></figure>
+            <figure><figcaption data-label="reconstruction">Reconstruction</figcaption><canvas id="zoom-reconstruction" width="7" height="7"></canvas></figure>
+            <figure><figcaption data-label="difference">Absolute error</figcaption><canvas id="zoom-difference" width="7" height="7"></canvas></figure>
+          </div>
+        </div>
         <p id="pixel" class="visually-hidden" aria-live="polite" data-label="pickPixel">Select a pixel to read its integer samples.</p>
       </section>
 
@@ -327,6 +359,13 @@
           <summary data-label="resourcesTitle">Streaming resources</summary>
           <div class="disclosure-body">
             <dl class="resources">
+              <div class="resource-item"><dt data-label="streamChunk">Input cap / output cap (elements / bytes)</dt><dd id="stream-chunk"></dd></div>
+              <div class="resource-item"><dt data-label="streamInput">Bytes staged to encode / decode Workers</dt><dd id="stream-input"></dd></div>
+              <div class="resource-item"><dt data-label="streamOutput">Output bytes accepted by sink</dt><dd id="stream-output"></dd></div>
+              <div class="resource-item"><dt data-label="streamRows">Delivered / provisional rows</dt><dd id="stream-rows"></dd></div>
+              <div class="resource-item"><dt data-label="streamFirstRow">Worker first-row time</dt><dd id="stream-first-row"></dd></div>
+              <div class="resource-item"><dt data-label="streamAcks">Worker event ACKs sent</dt><dd id="stream-acks"></dd></div>
+              <div class="resource-item"><dt data-label="streamPeakAck">Longest host callback through ACK</dt><dd id="stream-peak-ack"></dd></div>
               <div class="resource-item">
                 <dt>
                   <span data-label="workspace">Core logical payload · encode / decode</span>
@@ -369,6 +408,26 @@
               </div>
             </div>
             <p class="microcopy" data-label="resourceHelp">Byte counts describe logical payloads. Bounded verification discards output after processing.</p>
+          </div>
+        </details>
+
+        <details id="compatibility-view" class="panel disclosure">
+          <summary data-label="compatibilityView">Compatibility</summary>
+          <div class="disclosure-body">
+            <p id="compatibility-standard" class="microcopy"></p>
+            <a href="./conformance-manifest.json" data-label="compatibilityManifest">Machine-readable conformance manifest</a>
+            <div class="compatibility-scroll">
+              <table class="compatibility-table">
+                <thead><tr>
+                  <th scope="col" data-label="compatibilityFeature">Feature</th>
+                  <th scope="col" data-label="compatibilityClause">Clause</th>
+                  <th scope="col" data-label="compatibilityStatus">Encode / decode / format</th>
+                  <th scope="col" data-label="compatibilityEvidence">Tests and evidence</th>
+                </tr></thead>
+                <tbody id="compatibility-features"></tbody>
+              </table>
+            </div>
+            <ul id="compatibility-cases" class="microcopy"></ul>
           </div>
         </details>
 

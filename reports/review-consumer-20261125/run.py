@@ -200,12 +200,13 @@ def verify(args, work, report):
         result = run("public-moon-add", [moon, "add", coord], public, public_env, require_success=False)
         report["publicInstallSucceeded"] |= result.returncode == 0
 
-    commit = run("resolve-source", ["git", "-C", ROOT, "rev-parse", args.commit + "^{commit}"], work).stdout.strip()
+    git_root = args.git_root.resolve() if args.git_root else ROOT
+    commit = run("resolve-source", ["git", "-C", git_root, "rev-parse", args.commit + "^{commit}"], work).stdout.strip()
     report["sourceCommit"] = commit
     with TemporaryDirectory(prefix="pack-", dir=work) as building:
         source = Path(building)
         snapshot = work / "snapshot.zip"
-        run("archive-source", ["git", "-C", ROOT, "archive", "--format=zip", f"--output={snapshot}", commit], work)
+        run("archive-source", ["git", "-C", git_root, "archive", "--format=zip", f"--output={snapshot}", commit], work)
         with ZipFile(snapshot) as archive:
             archive.extractall(source)
         snapshot.unlink()
@@ -269,6 +270,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--commit", default=PIN)
     parser.add_argument("--moon", default="moon")
+    parser.add_argument("--git-root", type=Path, help="Repository holding the commit when the worktree .git uses host-specific paths")
     parser.add_argument("--m2", action="store_true", help="Exercise non-default MAXVAL and active LSE metadata")
     parser.add_argument("--archive", type=Path, help="Retain the Moon archive at this path")
     parser.add_argument("--output", type=Path, default=Path(__file__).with_name("result.json"))

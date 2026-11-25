@@ -11,6 +11,8 @@ const help = `Usage: node sdk/cli.mjs encode|decode --input FILE --output FILE [
   --output-chunk N        Encoded bytes per sink call
   --width --height --bits Required on encode
   --near N                Default: 0
+  --maxval N              Effective MAXVAL, default: full coded range
+  --t1 --t2 --t3 --reset  Optional LSE thresholds and reset interval
   --report FILE           Write a verification JSON report to a new file
 All raw input/output samples use unsigned 16-bit little-endian storage, including 8-bit images.`;
 
@@ -18,7 +20,7 @@ function parse(args) {
   const [mode, ...flags] = args;
   if (!['encode', 'decode'].includes(mode)) throw new Error(help);
   const allowed = new Set(['--input', '--output', '--backend', '--chunk', '--output-chunk', '--report']);
-  if (mode === 'encode') for (const key of ['--width', '--height', '--bits', '--near']) allowed.add(key);
+  if (mode === 'encode') for (const key of ['--width', '--height', '--bits', '--near', '--maxval', '--t1', '--t2', '--t3', '--reset']) allowed.add(key);
   const values = new Map();
   for (let i = 0; i < flags.length; i += 2) {
     const [name, value] = [flags[i], flags[i + 1]];
@@ -34,7 +36,11 @@ function parse(args) {
   return {
     mode, input, output, report, backend: values.get('--backend'),
     inputChunkSize: number('--chunk'), outputChunkSize: number('--output-chunk'),
-    frame: { width: number('--width'), height: number('--height'), bits: number('--bits'), near: number('--near') ?? 0 },
+    frame: {
+      width: number('--width'), height: number('--height'), bits: number('--bits'), near: number('--near') ?? 0,
+      maxval: number('--maxval'),
+      preset: { t1: number('--t1'), t2: number('--t2'), t3: number('--t3'), reset: number('--reset') },
+    },
   };
 }
 
@@ -144,11 +150,13 @@ async function main(args) {
   let started;
   let elapsedMs;
   let observedFrame;
+  let observedPreset;
   let observedStats;
   let rowsDelivered = 0;
-  const observe = reportFile ? (stats, frame) => {
+  const observe = reportFile ? (stats, frame, preset) => {
     observedStats = stats;
     observedFrame = frame ?? observedFrame;
+    observedPreset = preset ?? observedPreset;
   } : undefined;
   const writeRow = (row) => writeChunk(output, rawBytes(row), outputTracking);
   try {
@@ -160,8 +168,8 @@ async function main(args) {
       ? await encodeStream(core, {
           ...options, onProgress: observe,
           read: async (size) => readRaw(await readChunk(input, size * 2, inputTracking)),
-          onBytes: (bytes, stats) => {
-            observe?.(stats, options.frame);
+          onBytes: (bytes, stats, preset) => {
+            observe?.(stats, options.frame, preset);
             return writeChunk(output, bytes, outputTracking);
           },
         })
@@ -206,6 +214,7 @@ async function main(args) {
           retained: Boolean(output), complete: Boolean(result && outputClosed),
         },
         frame: result?.frame ?? observedFrame,
+        preset: result?.preset ?? observedPreset,
         stages: { [options.mode]: stage },
         status: failure ? 'failed' : 'passed',
         error: failure ? { code: failure.code ?? failure.name, message: failure.message } : null,

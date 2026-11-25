@@ -18,12 +18,13 @@ export function codecMeasurements(stats, scope) {
   };
 }
 
-function describeFrame(frame) {
+function describeFrame(frame, preset) {
   if (!frame) return null;
   const { width, height, bits, near } = frame;
   return {
     width, height, bits, near,
-    maxval: frame.maxval ?? (2 ** bits - 1),
+    maxval: preset?.maxval ?? frame.maxval ?? (2 ** bits - 1),
+    preset: preset ?? null,
     components: 1,
     scans: 1,
     interleave: 0,
@@ -38,7 +39,7 @@ export function createVerificationReport(fields) {
       !['passed', 'failed', 'cancelled'].includes(fields.status)) {
     throw new TypeError('Invalid verification state');
   }
-  const frame = describeFrame(fields.frame);
+  const frame = describeFrame(fields.frame, fields.preset);
   const samples = {
     total: frame ? frame.width * frame.height : null,
     verified: fields.samples?.verified ?? null,
@@ -79,6 +80,7 @@ export function createVerificationReport(fields) {
     memory: { encode: null, decode: null, host: null, ...fields.memory },
     stream: {
       rowsDecoded: null, rowsDelivered: null, provisionalRows: null, firstRowMs: null, firstRowInputConsumed: null,
+      acknowledgedEvents: null, peakHostAckMs: null,
       trailingPolicy: null, strictEoi: null, ...fields.stream,
     },
     limits: fields.limits ?? null,

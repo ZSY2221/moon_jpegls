@@ -13,7 +13,9 @@ const { samples } = await decodeImage(core, bytes);
 console.log(Array.from(samples));
 ```
 
-`frame.near` is an integer from 0 to 127 for 8-bit frames and from 0 to 255 for 12- or 16-bit frames. Encoding rejects values outside the frame's range with `InvalidArgument`.
+`frame.bits` is the coded precision from 2 through 16. Set `frame.maxval` to an effective value from 1 through `2 ** bits - 1`, or omit it for full range. Set `frame.near` from 0 through `min(255, floor(MAXVAL / 2))`. Optional `frame.preset` fields `t1`, `t2`, `t3` and `reset` select LSE thresholds and the reset interval. Omitted or zero threshold fields use the default for the effective MAXVAL and NEAR. Invalid values return `InvalidArgument` on encode.
+
+Sessions, stream results and Worker events expose the resolved `preset` with `maxval`, `t1`, `t2`, `t3` and `reset`. The legacy four-field `Frame` shape remains available for default-parameter runs. An effective MAXVAL different from full range appears in `frame.maxval`, and non-default thresholds appear in `frame.preset`.
 
 `encodeImage` and `decodeImage` collect an entire result. For a bounded pipeline, use `encodeStream` and `decodeStream` with a `read(maxElements)` source and an awaited sink. Encode input uses `Uint16Array`, decode input and encode output use `Uint8Array`, and decoded rows use `Uint16Array`. An empty array is a chunk. Return `null` to end the source. A decode checks for trailing data by default, including a one-byte source pull after EOI if necessary. Set `trailing: 'allow'` to stop at EOI and report the actual consumed offset. File adapters that need the unread suffix must retain or seek the underlying source.
 
@@ -25,6 +27,8 @@ node sdk/cli.mjs decode --backend wasm-gc --input out.jls --output reconstructed
 ```
 
 For browser isolation, import `startWorker` from `sdk/worker-client.mjs`. Pass the same bounded `read` source, a mode, and `onEvent`. The Worker hands the host at most one input request, output chunk, row, row batch or progress message at a time. It waits for `input` or `ack` with the corresponding sequence before advancing. The `pause()`, `resume()` and `cancel()` controls can run while an acknowledgement is pending. One already-started source read can finish after a pause. An output event receives its own transferred buffer. A source chunk is transferred and detached if it owns its whole buffer. Otherwise, the client first copies the selected range to a standalone buffer.
+
+Use the optional `onAck(event, hostElapsedMs)` callback to observe actual acknowledgement sends. Its measured host interval includes the awaited event callback. Transport delivery and total Worker wait are separate.
 
 Decode accepts `maxBatchBytes`, an integer in `0..1048576`; the default `0` disables batching. The first row is delivered immediately. A `rows` event contains `samples: Uint16Array`, `startIndex`, `count`, `frame` and `stats`; its sample view contains exactly `count * frame.width` elements. The host must await consumption of the entire event before its ACK. The budget limits each batch buffer, not total Worker memory: copying also holds one source row, and a row wider than the budget remains one atomic `row` event. The final batch is capped by the remaining image rows. A time-limited batch can transfer a short view backed by a larger buffer.
 

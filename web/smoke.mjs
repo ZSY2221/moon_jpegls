@@ -447,6 +447,68 @@ async function expandedNear() {
   console.log(JSON.stringify({ test: 'browser precision-specific NEAR limits and calibrated legend', results }));
 }
 
+async function verifyM2Workbench() {
+  await page.goto(`${origin}/web/`);
+  const frame = { width: 2, height: 2, bits: 9, near: 0, maxval: 300 };
+  const preset = { maxval: 300, t1: 5, t2: 9, t3: 23, reset: 42 };
+  const raster = Buffer.alloc(8);
+  [0, 300, 128, 255].forEach((sample, i) => raster.writeUInt16BE(sample, i * 2));
+  const original = Buffer.concat([Buffer.from('P5\n2 2\n300\n'), raster]);
+  await upload('custom.pgm', original);
+  await select('near', '0');
+  await page.locator('#advanced').evaluate((details) => { details.open = true; });
+  for (const key of ['t1', 't2', 't3', 'reset']) await page.locator(`#preset-${key}`).fill(String(preset[key]));
+  await click('run');
+  await phase('complete');
+  for (const [field, expected] of Object.entries({ ...preset, bits: frame.bits, near: frame.near })) {
+    assert.equal(await text(`precision-${field}`), String(expected));
+  }
+  await page.locator('#reconstruction').press('Enter');
+  await page.locator('#reconstruction').press('ArrowRight');
+  assert.equal(await text('inspect-reconstructed'), '300');
+  assert.equal(await page.locator('#magnifier').isVisible(), true);
+  const zoom = await page.locator('#zoom-reconstruction').evaluate((canvas) =>
+    [...canvas.getContext('2d').getImageData(3, 3, 1, 1).data]);
+  assert.deepEqual(zoom, [255, 255, 255, 255]);
+  await page.locator('.scientific-nav a[href="#resource-details"]').click();
+  assert.equal(await page.locator('#resource-details').evaluate((details) => details.open), true);
+  assert.equal(await text('stream-rows'), '2 / 0');
+  assert.ok(Number(await text('stream-acks')) >= 2);
+  assert.match(await text('stream-peak-ack'), /ms/);
+  const getDownload = async (id) => {
+    const pending = page.waitForEvent('download');
+    await click(id);
+    return readFile(await (await pending).path());
+  };
+  const report = JSON.parse(await getDownload('export-report'));
+  assert.deepEqual(report.frame.preset, preset);
+  assert.equal(report.frame.maxval, 300);
+  assert.equal(report.samples.maxError, 0);
+  assert.ok(report.stream.acknowledgedEvents >= 2);
+  assert.equal(report.stream.provisionalRows, 0);
+  const jls = await getDownload('download');
+  await upload('custom.jls', jls);
+  await select('backend', 'js');
+  await click('run');
+  await phase('complete');
+  assert.equal(await page.locator('#preset-t1').isDisabled(), true);
+  assert.deepEqual(await getDownload('download'), original);
+  const decode = JSON.parse(await getDownload('export-report'));
+  assert.deepEqual(decode.frame.preset, preset);
+  assert.equal(decode.stages.compare, 'not_run');
+  const manifest = await (await page.request.get(`${origin}/web/conformance-manifest.json`)).json();
+  await page.locator('.scientific-nav a[href="#compatibility-view"]').click();
+  assert.equal(await page.locator('#compatibility-view').evaluate((details) => details.open), true);
+  await page.waitForFunction((count) => document.querySelector('#compatibility-features').rows.length === count, manifest.features.length);
+  for (const feature of manifest.features) {
+    const row = page.locator(`#compatibility-features tr[data-feature="${feature.feature_id}"]`);
+    assert.equal(await row.locator('td').nth(1).getAttribute('data-decode'), feature.decode_status);
+  }
+  assert.equal(await page.locator('#compatibility-cases li').count(), manifest.cases.length);
+  console.log(JSON.stringify({ test: 'M2 preset, MAXVAL, magnifier, stream accounting and compatibility views', frame, preset,
+    features: manifest.features.length, annexCases: manifest.cases.length, acknowledgedEvents: report.stream.acknowledgedEvents }));
+}
+
 async function verifyLunarDownload(sourcePath) {
   const source = await readFile(sourcePath);
   const fingerprint = (value) => createHash('sha256').update(value).digest('hex');
@@ -553,10 +615,10 @@ try {
   await select('sink', 'bounded');
   await click('run');
   await status('Truncated');
-  await upload('unsupported.pgm', Buffer.from('P5\n1 1\n63\n\0'));
+  await upload('invalid-maxval.pgm', Buffer.from('P5\n1 1\n65536\n\0'));
   await click('run');
-  await status('UnsupportedFeature');
-  console.log(JSON.stringify({ test: 'browser malformed/unsupported status', cases: 2 }));
+  await status('InvalidData');
+  console.log(JSON.stringify({ test: 'browser truncated stream and invalid PGM MAXVAL', cases: 2 }));
 
   await click('example');
   await chunkSize('1024');
@@ -670,6 +732,7 @@ try {
   console.log(JSON.stringify({ test: 'worker ACK, manual resume and one-byte reads', ...flow }));
 
   await expandedNear();
+  await verifyM2Workbench();
   if (process.env.MOONJLS_LOLA) await verifyLunarDownload(process.env.MOONJLS_LOLA);
 
   assert.deepEqual(pageErrors, []);

@@ -89,7 +89,7 @@ function hideOverlay(canvas) {
   if (layer) layer.hidden = true;
 }
 
-export function createPreview(canvases, reportPixel) {
+export function createPreview(canvases, reportPixel, magnifiers = []) {
   let state;
   let overlaysVisible = false;
 
@@ -181,7 +181,7 @@ export function createPreview(canvases, reportPixel) {
     const { frame, width, height, xMap, contexts, scanlines, nextY, errorLut, overflowOffset } = state;
     if (nextY === height || index !== Math.floor(nextY * frame.height / height)) return;
     const base = nextY * width;
-    const brightest = 2 ** frame.bits - 1;
+    const brightest = frame.maxval ?? (2 ** frame.bits - 1);
     const nearLimit = frame.near;
     const recData = scanlines[1].data;
     const origData = scanlines[0].data;
@@ -218,6 +218,7 @@ export function createPreview(canvases, reportPixel) {
     const reconstructed = state.reconstruction[position];
     const original = state.original?.[position];
     syncOverlays();
+    drawMagnifiers(x, y);
     reportPixel({
       x: state.xMap[x],
       y: Math.floor(y * state.frame.height / state.height),
@@ -225,6 +226,39 @@ export function createPreview(canvases, reportPixel) {
       reconstructed,
       error: original === undefined ? undefined : Math.abs(original - reconstructed),
     });
+  }
+
+  function drawMagnifiers(x, y) {
+    const { frame, width, nextY, original, reconstruction } = state;
+    const maxval = frame.maxval ?? (2 ** frame.bits - 1);
+    const size = 7;
+    const center = Math.floor(size / 2);
+    for (const [plane, canvas] of magnifiers.entries()) {
+      if (!canvas) continue;
+      const available = plane === 1 || original !== null;
+      if (canvas.parentElement) canvas.parentElement.hidden = !available;
+      if (!available) continue;
+      const context = canvas.getContext('2d');
+      const image = context.createImageData(size, size);
+      for (let dy = 0; dy < size; dy++) {
+        const row = y + dy - center;
+        if (row < 0 || row >= nextY) continue;
+        for (let dx = 0; dx < size; dx++) {
+          const column = x + dx - center;
+          if (column < 0 || column >= width) continue;
+          const source = row * width + column;
+          const pixel = (dy * size + dx) * 4;
+          if (plane === 2) {
+            color(image.data, pixel, ...errorColor(Math.abs(original[source] - reconstruction[source]), frame.near));
+          } else {
+            const sample = plane === 0 ? original[source] : reconstruction[source];
+            const gray = Math.round(sample * 255 / maxval);
+            color(image.data, pixel, gray, gray, gray);
+          }
+        }
+      }
+      context.putImageData(image, 0, 0);
+    }
   }
 
   const directions = new Map([

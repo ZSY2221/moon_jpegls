@@ -290,6 +290,53 @@ button:disabled, select:disabled {
 .near-note {
   color: var(--pending);
 }
+
+.preset-settings {
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.preset-grid,
+.precision-grid {
+  display: grid;
+  gap: 0.55rem;
+}
+.preset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.preset-grid label { display: grid; gap: 0.2rem; }
+.preset-grid input { min-width: 0; width: 100%; }
+.precision-grid {
+  grid-template-columns: repeat(auto-fit, minmax(3.6rem, 1fr));
+  margin: 0 0 0.6rem;
+  padding: 0.6rem 0.8rem;
+}
+.precision-grid dt { color: var(--muted); font-size: 0.75rem; }
+.precision-grid dd { margin: 0.15rem 0 0; font-family: var(--mono); }
+.scientific-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.2rem;
+  padding: 0.45rem 0.8rem;
+}
+.magnifier-images { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+.magnifier-images figure { margin: 0; }
+.magnifier-images figcaption { color: var(--muted); font-size: 0.75rem; }
+.magnifier-images canvas {
+  display: block;
+  width: 70px;
+  height: 70px;
+  background: var(--stage);
+  image-rendering: pixelated;
+}
+.compatibility-scroll { max-width: 100%; overflow: auto; }
+.compatibility-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.compatibility-table th, .compatibility-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.45rem;
+  border-bottom: 1px solid var(--border);
+}
+.compatibility-table small { display: block; color: var(--muted); }
 .advanced {
   margin-top: 0.55rem;
 }

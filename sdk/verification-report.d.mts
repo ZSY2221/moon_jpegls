@@ -1,4 +1,4 @@
-import type { Frame, Stats } from './index.mjs';
+import type { Frame, Preset, Stats } from './index.mjs';
 
 type Status = 'passed' | 'failed' | 'cancelled';
 type Stage = Status | 'not_run' | 'incomplete';
@@ -24,8 +24,9 @@ export interface VerificationReport {
   artifact: { name: string; sha256: string } | null;
   input: Input | null;
   output: Output | null;
-  frame: (Frame & {
+  frame: (Omit<Frame, 'maxval' | 'preset'> & {
     maxval: number; components: 1; scans: 1; interleave: 0; pointTransform: 0; mapping: false;
+    preset: Preset | null;
   }) | null;
   stages: Record<'encode' | 'decode' | 'compare', Stage>;
   samples: { total: number | null; verified: number | null; maxError: number | null; errorBound: number | null; unit: 'sample' };
@@ -38,6 +39,7 @@ export interface VerificationReport {
   stream: {
     rowsDecoded: number | null; rowsDelivered: number | null; provisionalRows: number | null; firstRowMs: number | null;
     firstRowInputConsumed: number | null; trailingPolicy: 'allow' | 'reject' | null; strictEoi: boolean | null;
+    acknowledgedEvents: number | null; peakHostAckMs: number | null;
   };
   limits: object | null;
   physical: {
@@ -49,7 +51,8 @@ export interface VerificationReport {
 type ReportFields = Omit<Partial<VerificationReport>, 'schemaVersion' | 'frame' | 'stages' | 'samples' | 'timing' | 'memory' | 'stream'> & {
   host: string;
   status: Status;
-  frame?: (Frame & { maxval?: number }) | null;
+  frame?: Frame | null;
+  preset?: Preset | null;
   stages?: Partial<VerificationReport['stages']>;
   samples?: Partial<Pick<VerificationReport['samples'], 'verified' | 'maxError'>>;
   timing?: Partial<VerificationReport['timing']>;

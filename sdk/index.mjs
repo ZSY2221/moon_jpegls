@@ -32,6 +32,26 @@ function limits(options) {
     ? -1 : integer(options.limits[name], name, 0));
 }
 
+function requestedPreset(frame) {
+  const thresholds = frame.preset ?? {};
+  if (typeof thresholds !== 'object' || Array.isArray(thresholds)) {
+    throw new CodecError('InvalidArgument', 'preset must be an object');
+  }
+  return [
+    integer(frame.maxval ?? 0, 'maxval', 0, 65535),
+    ...['t1', 't2', 't3', 'reset'].map((field) => integer(thresholds[field] ?? 0, field, 0, 65535)),
+  ];
+}
+
+function resolvedFrame(frame, read, port) {
+  if (!read) return { frame: Object.freeze({ ...frame }), preset: null };
+  const [maxval, t1, t2, t3, reset, custom] = Array.from({ length: 6 }, (_, field) => read(port, frame.near, field));
+  const { maxval: _requestedMaxval, preset: _requestedThresholds, ...resolved } = frame;
+  if (maxval !== 2 ** frame.bits - 1) resolved.maxval = maxval;
+  if (custom) resolved.preset = Object.freeze({ t1, t2, t3, reset });
+  return { frame: Object.freeze(resolved), preset: Object.freeze({ maxval, t1, t2, t3, reset }) };
+}
+
 async function wasmBytes(url) {
   if (url.protocol === 'file:' && globalThis.process?.versions?.node) {
     return (await import('node:fs/promises')).readFile(url);
@@ -72,6 +92,7 @@ class Session {
   #backend;
   #port;
   #frame;
+  #preset = null;
   #encoding;
   #capacity;
   #outputCapacity;
@@ -92,16 +113,26 @@ class Session {
     if (this.#encoding) {
       const frameValues = ['width', 'height', 'bits'].map((key) => integer(frame[key], key, 0));
       const near = integer(frame.near, 'near', 0, 255);
-      this.#port = bindings.encoder_new(...frameValues, near, inputChunkSize, outputChunkSize, ...budget);
+      const preset = requestedPreset(frame);
+      const args = [...frameValues, near, inputChunkSize, outputChunkSize, ...budget];
+      if (bindings.encoder_new_with_preset) {
+        this.#port = bindings.encoder_new_with_preset(...args, ...preset);
+      } else {
+        if (preset.some(Boolean)) throw new CodecError('UnsupportedFeature', 'Codec artifact does not support custom presets');
+        this.#port = bindings.encoder_new(...args);
+      }
       const code = bindings.encoder_status(this.#port);
       if (code < 0) throw new CodecError(errors[-code], bindings.encoder_message(this.#port));
-      this.#frame = Object.freeze({ ...frame });
+      const resolved = resolvedFrame(frame, bindings.encoder_preset, this.#port);
+      this.#frame = resolved.frame;
+      this.#preset = resolved.preset;
     } else {
       this.#port = bindings.decoder_new(inputChunkSize, ...budget);
     }
   }
 
   get frame() { return this.#frame; }
+  get preset() { return this.#preset; }
   get remaining() { return this.#length - this.#offset; }
   get coreWorkspaceBytes() {
     return this.#encoding
@@ -192,10 +223,12 @@ class Session {
     if (!this.#encoding && this.#frame === null) {
       const width = bindings.decoder_frame(port, 0);
       if (width !== 0) {
-        this.#frame = Object.freeze({
+        const resolved = resolvedFrame({
           width, height: bindings.decoder_frame(port, 1),
           bits: bindings.decoder_frame(port, 2), near: bindings.decoder_frame(port, 3),
-        });
+        }, bindings.decoder_preset, port);
+        this.#frame = resolved.frame;
+        this.#preset = resolved.preset;
       }
     }
     let chunk;
@@ -317,12 +350,12 @@ async function stream(core, options, encoding) {
         stats.rows++;
       }
       if (next.chunk !== undefined) {
-        if (encoding) await wait(() => options.onBytes(next.chunk, snapshot()));
-        else if (options.onRow) await wait(() => options.onRow(next.chunk, stats.rows - 1, session.frame, snapshot()));
+        if (encoding) await wait(() => options.onBytes(next.chunk, snapshot(), session.preset));
+        else if (options.onRow) await wait(() => options.onRow(next.chunk, stats.rows - 1, session.frame, snapshot(), session.preset));
       }
       checkedAbort(options.signal, session);
       stats.outputQueueBytes = 0;
-      if (options.onProgress) await wait(() => options.onProgress(snapshot(), session.frame));
+      if (options.onProgress) await wait(() => options.onProgress(snapshot(), session.frame, session.preset));
       if (next.status === 'Done') {
         if (!encoding && options.trailing !== 'allow') {
           if (session.remaining !== 0) throw new CodecError('TrailingData', 'Unexpected data after EOI');
@@ -333,7 +366,7 @@ async function stream(core, options, encoding) {
           } while (tail !== null && tail.length === 0);
           if (tail !== null) throw new CodecError('TrailingData', 'Unexpected data after EOI');
         }
-        return { frame: session.frame, stats: snapshot() };
+        return { frame: session.frame, preset: session.preset, stats: snapshot() };
       }
       if (next.status === 'NeedInput') {
         const chunk = await wait(() => options.read(inputChunkSize));

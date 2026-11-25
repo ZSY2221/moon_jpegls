@@ -31,7 +31,7 @@ async function getWasmAsset() {
 
 export function startWorker(options) {
   const worker = new Worker(new URL('./worker.mjs', import.meta.url), { type: 'module' });
-  const { read, onEvent, signal, ...settings } = options;
+  const { read, onEvent, onAck, signal, ...settings } = options;
   const Input = settings.mode === 'encode' ? Uint16Array : Uint8Array;
   let paused = false;
   let stopped = false;
@@ -81,10 +81,15 @@ export function startWorker(options) {
         case 'progress':
         case 'bytes':
         case 'row':
-        case 'rows':
+        case 'rows': {
+          const receivedAt = onAck ? performance.now() : 0;
           if (onEvent) await onEvent(data);
-          if (!stopped) worker.postMessage({ type: 'ack', seq: data.seq });
+          if (!stopped) {
+            worker.postMessage({ type: 'ack', seq: data.seq });
+            onAck?.(data, performance.now() - receivedAt);
+          }
           break;
+        }
         case 'done':
           stop();
           complete(data);

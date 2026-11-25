@@ -83,10 +83,36 @@ pub fn encoder_new(
   max_pixels : Int32,
   max_metadata : Int32,
 ) -> EncodePort {
+  encoder_new_with_preset(
+    width, height, bits, near, input_capacity, output_capacity,
+    max_width, max_height, max_pixels, max_metadata, 0, 0, 0, 0, 0,
+  )
+}
+
+///|
+#export_name("encoder_new_with_preset")
+pub fn encoder_new_with_preset(
+  width : Int32,
+  height : Int32,
+  bits : Int32,
+  near : Int32,
+  input_capacity : Int32,
+  output_capacity : Int32,
+  max_width : Int32,
+  max_height : Int32,
+  max_pixels : Int32,
+  max_metadata : Int32,
+  maxval : Int32,
+  t1 : Int32,
+  t2 : Int32,
+  t3 : Int32,
+  reset : Int32,
+) -> EncodePort {
   let frame : @jls.Frame = { width, height, bits, near, }
   let budget = limits(max_width, max_height, max_pixels, max_metadata)
+  let preset : @jls.Preset = { maxval, t1, t2, t3, reset, }
   try {
-    let codec = @jls.Encoder::new(frame, budget)
+    let codec = @jls.Encoder::new(frame, budget, preset~)
     {
       codec: Some(codec),
       input: FixedArray::make(input_capacity, 0),
@@ -105,6 +131,27 @@ pub fn encoder_new(
         produced: 0,
         status: Failed(error),
       }
+  }
+}
+
+///|
+fn get_preset_field(preset : @jls.Preset, near : Int32, field : Int32) -> Int32 {
+  match field {
+    0 => preset.maxval
+    1 => preset.t1
+    2 => preset.t2
+    3 => preset.t3
+    4 => preset.reset
+    _ => if preset.has_custom_thresholds(near) { 1 } else { 0 }
+  }
+}
+
+///|
+#export_name("encoder_preset")
+pub fn encoder_preset(port : EncodePort, near : Int32, field : Int32) -> Int32 {
+  match port.codec {
+    Some(codec) => get_preset_field(codec.preset(), near, field)
+    None => 0
   }
 }
 
@@ -383,6 +430,15 @@ pub fn decoder_frame(port : DecodePort, field : Int32) -> Int32 {
         2 => frame.bits
         _ => frame.near
       }
+  }
+}
+
+///|
+#export_name("decoder_preset")
+pub fn decoder_preset(port : DecodePort, near : Int32, field : Int32) -> Int32 {
+  match port.codec.preset() {
+    Some(preset) => get_preset_field(preset, near, field)
+    None => 0
   }
 }
 
