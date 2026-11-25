@@ -9,9 +9,9 @@
 | 公开仓库 | `https://github.com/ZSY2221/moon_jpegls` |
 | 受测 M2 产品源码提交 | [`fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44)（`core/`、`cmd/`、`sdk/`、`web/` 自此提交后未变动） |
 | M2 证据冻结基线提交 | [`a7d8c391b7af0d88bc5c912ed62c78eaf4c79565`](https://github.com/ZSY2221/moon_jpegls/commit/a7d8c391b7af0d88bc5c912ed62c78eaf4c79565)（原有 CI run [`45566033737`](https://github.com/ZSY2221/moon_jpegls/actions/runs/45566033737) 通过） |
-| 现有开放 PR | [PR #1](https://github.com/ZSY2221/moon_jpegls/pull/1)（Open、可无冲突合并；head 分支为 `codex/moonjls-reappeal-20261125`，base 为 `main`） |
-| 复审与同步分支 | `codex/moonjls-reappeal-20261125` 与 `antigravity/t87-m2-20261125`（本轮复审文档、CI 黄金回归与报名材料均同步推送至此二分支最新 HEAD） |
-| 仓库默认分支 `main` | `60befa604287d941dc75ffde03a4c52ab80a93ad`（仍为 M2 之前旧版；本轮不自动合并 `main`，需项目负责人审核 PR #1 后决定是否合并） |
+| 现有开放/目标合并 PR | [PR #1](https://github.com/ZSY2221/moon_jpegls/pull/1)（`codex/moonjls-reappeal-20261125` → `main`，在最新 CI 通过后合入 `main`） |
+| 复审与同步分支 | `codex/moonjls-reappeal-20261125` 与 `antigravity/t87-m2-20261125`（本轮复审文档、CI 黄金回归与报名材料均同步推送至此二分支最新 HEAD，并通过 PR #1 正常合入 `main`） |
+| 仓库默认分支 `main` | 合并前历史基准为 `60befa604287d941dc75ffde03a4c52ab80a93ad`；经 PR #1 正常合并后，默认分支 `main` 同步包含最新 M2 成果、T.87 Part 1 路线、CI 黄金回归与复审入口 |
 | 原 Windows 工作区 | `D:\Program Files\GPT_project\moon_jpegls` 原有未提交修改及草稿文件保持原样保留；本轮全部审计、CI 补强与文档定稿在独立工作树完成 |
 
 ## 2. 里程碑完成状态（M0–M2 已完成，M3-A–M5 为后续目标）
@@ -23,10 +23,10 @@
 
 ## 3. 当前验证与复审材料补强
 
-- **三后端核心与本机独立 M2 验收（基于 `fc43bc2`）**：核心测试 Native/JS/Wasm GC 各 **15/15**；本机独立矩阵 **388 组 M2 正例** + **18 个 LSE 变体** + **7 个非法编码** + **6 项 Native PGM 检查**通过；官方 Annex E **`E.2-9`–`E.2-12`** 三后端编码与解码通过且 12 次候选编码逐字节一致，**`E.2-1`–`E.2-8`** 按当前能力返回 `UnsupportedFeature`；历史 640/640 复跑通过；NASA LOLA **1,036,800** 样本及 Chrome 工作台通过。
-- **CI 新增独立参考黄金回归**：在 `.github/workflows/verification.yml` 新增 `scripts/verify_m2_golden.mjs`，固定校验来自官方 HP V.1.00 与 T.87 Annex A 向量的 **12 组代表性黄金正例 + 18 个 LSE 变体 + 7 个非法编码边界 + 4 项 Native PGM 检查**（JS / Wasm GC / Native），与历史 640 组 NEAR 矩阵及清单校验共同随每次推送运行。
-- **MoonBit 原生实现地图与黑客松复审材料**：已补齐 [docs/MOONBIT_IMPLEMENTATION_MAP.md](docs/MOONBIT_IMPLEMENTATION_MAP.md)（`.mbt` 源码 16 文件 4,528 行详细模块与 LOC 统计）、[docs/REVIEWER_GUIDE.md](docs/REVIEWER_GUIDE.md) 及 [`submission/2026-11/`](submission/2026-11/02_FORM_FIELDS.md) 全套复审与表单填报材料。
-- **Mooncakes 包消费状态**：`0.1.0` 本地归档回环 registry 消费通过三后端验证；Mooncakes 线上查询仍返回 HTTP 404，未经明确授权不执行线上发布。 [Mooncakes 准备记录](docs/MOONCAKES_RELEASE.md)
+- **三后端核心与固定源码 `fc43bc2` 归档实测**：核心测试 Native/JS/Wasm GC 各 **15/15**；基于固定受测源码 `fc43bc2` 的本机独立矩阵 **388 组 M2 正例** + **18 个 LSE 变体** + **7 个非法编码** + **6 项 Native PGM 检查**通过；官方 Annex E **`E.2-9`–`E.2-12`** 三后端编码与解码通过且 12 次候选编码逐字节一致，**`E.2-1`–`E.2-8`** 按当前未实现能力返回 `UnsupportedFeature`（编码未运行）；历史 640/640 满量程 NEAR 复跑通过；NASA LOLA **1,036,800** 样本及 Chrome 工作台通过（以上重型实验作为 `fc43bc2` 归档证据留存，仅文档修订未重复执行）。
+- **CI 新增独立参考黄金回归**：在 `.github/workflows/verification.yml` 新增 `scripts/verify_m2_golden.mjs`，固定校验来自官方 HP V.1.00 与 T.87 Annex A 向量的 **12 组代表性合成 M2 黄金正例 + 18 个 LSE 变体 + 7 个非法编码边界 + 4 项 Native PGM 检查**（JS / Wasm GC / Native），与历史 640 组 NEAR 矩阵及清单校验共同随每次推送运行（注：该 12 组合成黄金用例不等同于官方 Annex E 全部 12 项通过）。
+- **MoonBit 原生实现地图与黑客松复审材料**：已补齐 [docs/MOONBIT_IMPLEMENTATION_MAP.md](docs/MOONBIT_IMPLEMENTATION_MAP.md)（`.mbt` 源码 16 文件 4,528 行详细模块与 LOC 统计）、[docs/REVIEWER_GUIDE.md](docs/REVIEWER_GUIDE.md) 及 [`submission/2026-11/`](submission/2026-11/02_FORM_FIELDS.md) 复审参考材料包。
+- **Mooncakes 包消费边界**：`0.1.0` 本地归档回环 registry 消费通过三后端验证，**不等于 Mooncakes 公开发布成功**；Mooncakes 线上查询仍返回 HTTP 404，未经明确授权不执行线上发布。 [Mooncakes 准备记录](docs/MOONCAKES_RELEASE.md)
 
 ## 4. 历史本地候选版归档（仅供追溯，保持原貌）
 

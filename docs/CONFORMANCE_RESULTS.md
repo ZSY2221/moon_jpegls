@@ -34,7 +34,7 @@
 - **GitHub Actions CI（[verification.yml](../.github/workflows/verification.yml)）每次运行**：
   - 三后端 15/15 核心白盒测试、Native 行交付与尾部矩阵、Worker/SDK/TS 严格类型检查；
   - `node scripts/validate_annex_e.mjs --check-manifest`（**仅校验清单字段与哈希格式，不在 CI 上运行 ITU 12 条官方流编解码**）；
-  - `node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY"`（在三后端实际运行固定 SHA-256 的 **12 组独立 HP/Annex A 黄金正例 + 18 个 LSE 变体 + 7 个非法编码 + 4 项 Native PGM 检查**，夹具来源 [`tests/conformance/m2_golden/`](../tests/conformance/m2_golden/README.md)）；
+  - `node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY"`（在三后端实际运行固定 SHA-256 的 **12 组独立合成 HP/Annex A M2 黄金正例 + 18 个 LSE 变体 + 7 个非法编码 + 4 项 Native PGM 检查**，夹具来源 [`tests/conformance/m2_golden/`](../tests/conformance/m2_golden/README.md)；注意该 12 组合成黄金用例验证 M2 单分量边界，**不等同于官方 Annex E 全部 12 项通过**）；
   - `scripts/validate.py --near-matrix`（历史 **640 组**满量程 NEAR 双向互操作）。
 - **需在本机额外获取 ITU 官方附件后复跑**：
   - 完整 12 条官方 Annex E 编解码验证（需要从 [ITU-T T.87 页面](https://www.itu.int/rec/T-REC-T.87-199806-I/en) 下载的 `jlsimgV100.zip` 与 `jlsrefV100.zip`）；

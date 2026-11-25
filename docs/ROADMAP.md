@@ -32,7 +32,7 @@
   3. 历史 **640/640** 满量程 NEAR 在 M2 冻结二进制上复跑通过；
   4. 官方 Annex E `E.2-9` 至 `E.2-12` 在三后端完成编码与解码验收，12 次候选编码与官方流逐字节一致；`E.2-1` 至 `E.2-8` 按范围返回 `UnsupportedFeature`；
   5. NASA LOLA **1,036,800** 样本实测及 Chrome 工作台 M2 验证通过；
-  6. GitHub Actions CI 已新增 [`scripts/verify_m2_golden.mjs`](../scripts/verify_m2_golden.mjs) 固定运行 12 组独立黄金正例、18 个 LSE 变体、7 个非法编码及 4 项 Native PGM 检查。
+  6. GitHub Actions CI 已新增 [`scripts/verify_m2_golden.mjs`](../scripts/verify_m2_golden.mjs) 固定运行 12 组独立合成 M2 黄金正例、18 个 LSE 变体、7 个非法编码及 4 项 Native PGM 检查（注：该 12 组合成黄金用例不等同于官方 Annex E 全部 12 项通过；第 2、4、5 项重型测试沿用受测源码 `fc43bc2` 归档证据）。
   详见 [M2 验收总结](../reports/t87-m2-20261125/README.md) · [Annex E 逐项结果](CONFORMANCE_RESULTS.md) · [合成矩阵说明](../reports/t87-m2-20261125/synthetic-matrix.md)。
 
 ---

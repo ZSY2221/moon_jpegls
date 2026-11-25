@@ -57,5 +57,5 @@ flowchart LR
 ## 5. GitHub Linguist 语言栏说明
 
 - GitHub 语言检测支持识别 MoonBit（`MoonBit: 64,773` 字节已出现在 GitHub `/languages` API 统计中）。
-- 当前仓库默认分支 `main` 仍停留在 M2 之前旧版本（`60befa6`），且仓库内保留了早期多轮浏览器工作台截图、RC2/RC3/Presentation 验证快照与浏览器/Python 验收脚本（见仓库历史 `reports/` 与 `REVIEW_EVIDENCE/`），因此 GitHub 默认统计显示 JavaScript 占比较高。
-- 本仓库仅通过合法的 [`.gitattributes`](../.gitattributes) 将真正属于文档/归档报告和构建产物的路径标记为 `linguist-documentation`（`reports/**`、`REVIEW_EVIDENCE/**`、`submission/**`）与 `linguist-generated=true`（`sdk/generated/**`、`web/dist/**`），绝不将生成文件伪装为 MoonBit 源码，也不改变 `scripts/` 与 `web/` 等真实 JS/Python 代码的语言分类。
+- 在合入 PR #1 之前，仓库默认分支 `main` 处于 M2 之前的旧基线（`60befa6`），尚无 `.gitattributes` 与 M2 MoonBit 增量；且仓库内保留了多轮浏览器工作台截图、RC2/RC3/Presentation 验证快照与浏览器/Python 验收脚本（见 `reports/` 与 `REVIEW_EVIDENCE/`），因此合并前默认页显示的 JavaScript 占比较高。
+- 本仓库通过合法的 [`.gitattributes`](../.gitattributes) 仅将真正属于文档/归档报告和构建产物的路径标记为 `linguist-documentation`（`reports/**`、`REVIEW_EVIDENCE/**`、`submission/**`）与 `linguist-generated=true`（`sdk/generated/**`、`web/dist/**`），合入 `main` 后由 GitHub Linguist 依法重新计算，绝不将生成文件伪装为 MoonBit 源码，也不改变 `scripts/` 与 `web/` 等真实 JS/Python 代码的语言分类。

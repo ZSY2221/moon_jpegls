@@ -6,8 +6,9 @@
 
 ## 当前 M2 能力与最终 T.87 Part 1 目标
 
-- **当前已交付版本（M2 — 2026-11-25 完成，不是最终标准范围）**：单帧、单分量、单扫描（`ILV=0`、`Pt=0`），支持已知尺寸（`1..65,535`）、**`P=2–16` 编码精度**、**独立 `MAXVAL`（`1..2^P−1`）**、**按有效 `MAXVAL` 约束的合法 `NEAR`（`0..min(255, floor(MAXVAL/2))`）**，以及 **`LSE ID=1` 默认或自定义 `T1/T2/T3/RESET`** 参数。流式编解码保持分块无关，并在 `EOI` 后严格拒绝尾随字节。 [当前支持范围](docs/SCOPE.md) · [两分钟评审指南](docs/REVIEWER_GUIDE.md)
-- **最终标准目标（完整 ITU-T T.87 Part 1）**：**MoonJLS 的最终目标是完整实现 ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1 的编码、解码和数据格式能力**，涵盖基础交换格式、多分量与多扫描、`ILV=0/1/2`、采样因子与边缘 MCU、点变换 `Pt`、`LSE ID=2/3` 映射表及续表、表规范数据与简略图像格式（`§7(b)(c)`）、`DRI/RST0–RST7`、`DNL`、`LSE ID=4` 扩展尺寸及剩余标记语法，并通过 `§8` 与 Annex E 逐阶段验收。**T.870 Part 2** 与 **DICOM 容器**属于独立扩展，**SPIFF**（`§4.8`/`Annex H.5`）按标准可选容器单独说明。 [T.87 能力矩阵与符合性计划](docs/T87_CONFORMANCE_PLAN.md)
+- **① 最终目标**：完整实现 **ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1** 的编码、解码和数据格式能力（基础交换格式、表规范与简略格式、`§8` 与 Annex E 符合性），并按标准要求分阶段验证；**T.870 Part 2** 与 **DICOM 容器**属于独立扩展，**SPIFF**（`§4.8` / `Annex H.5`）按可选容器单列。 [T.87 能力矩阵与符合性计划](docs/T87_CONFORMANCE_PLAN.md)
+- **② 当前已完成（M2 阶段版本，非最终范围）**：单帧、单分量、单扫描（`ILV=0`、`Pt=0`），支持已知尺寸（`1..65,535`）、**`P=2–16`**、**独立 `MAXVAL`（`1..2^P−1`）**、**合法 `NEAR`（`0..min(255, floor(MAXVAL/2))`）**、**自定义 `LSE ID=1`（`T1/T2/T3/RESET`）预置参数**，以及 Native / JS / Wasm GC、流式 CLI/SDK/Worker 接口与科学工作台。流式编解码保持分块无关，并在 `EOI` 后严格拒绝尾随字节（核心“两条预测行”内存结论仅适用于当前单分量 `ILV=0, Pt=0` profile）。 [当前支持范围](docs/SCOPE.md) · [两分钟评审指南](docs/REVIEWER_GUIDE.md)
+- **③ 后续实现路径**：多分量与多扫描（`M3-A`）→ 交错、采样和点变换（`M3-B`）→ 其余格式与标记能力（`M4`）→ 完整符合性验收（`M5`）。下表未来日期均为内部开发目标，不代表赛事已认可的期限。 [完整兼容路线](docs/ROADMAP.md)
 
 ## 构建与运行
 
@@ -48,13 +49,13 @@ node scripts/verify_m2_golden.mjs --native-exe _build/native/release/build/cmd/m
 ```
 
 - **三后端核心测试**：Native、JS、Wasm GC 各通过 **15/15** 项 MoonBit 核心白盒回归。
-- **GitHub Actions CI 自动执行**（[CI 配置](.github/workflows/verification.yml)）：运行三后端 15/15 核心测试、Native 逐行交付与尾部矩阵、Worker/SDK/TS 严格类型检查、Annex E 清单检查、**12 组独立 HP/Annex A 黄金正例 + 18 个 LSE 变体 + 7 个非法编码边界 + 4 项 Native PGM 检查**（`scripts/verify_m2_golden.mjs`）以及**历史 640 组满量程 NEAR 矩阵**（`scripts/validate.py --near-matrix`）。说明：CI 的 `--check-manifest` 仅检查清单完整性，**不会**在云端运行全部 12 条 ITU Annex E 官方流。
-- **本机完整 M2 独立验收**（受测产品源码 [`fc43bc2`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44)，M2 冻结证据 [`a7d8c39`](https://github.com/ZSY2221/moon_jpegls/commit/a7d8c391b7af0d88bc5c912ed62c78eaf4c79565)）：
+- **GitHub Actions CI 自动执行**（[CI 配置](.github/workflows/verification.yml)）：运行三后端 15/15 核心测试、Native 逐行交付与尾部矩阵、Worker/SDK/TS 严格类型检查、Annex E 清单检查、**12 组独立合成 HP/Annex A M2 黄金正例 + 18 个 LSE 变体 + 7 个非法编码边界 + 4 项 Native PGM 检查**（`scripts/verify_m2_golden.mjs`）以及**历史 640 组满量程 NEAR 矩阵**（`scripts/validate.py --near-matrix`）。说明：CI 的 `--check-manifest` 仅校验清单格式，且 12 组合成黄金用例用于核验 M2 单分量数值与 `LSE1` 边界，**不等于官方 Annex E 全部 12 项通过**。
+- **固定受测源码归档实证**（受测产品源码 [`fc43bc2`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44)，M2 证据冻结 [`a7d8c39`](https://github.com/ZSY2221/moon_jpegls/commit/a7d8c391b7af0d88bc5c912ed62c78eaf4c79565)；仅更新文档时沿用该固定源码证据，不代表在文档提交上重新跑过以下全部重型测试）：
   - **388 组 M2 新增正例** + **18 个 LSE 码流变体**（5 有效 / 13 拒绝）+ **7 个非法编码用例** + **6 项 Native PGM 检查**在三后端完成 HP JPEG-LS V.1.00 与独立 Annex A 向量（`MAXVAL=1,2`）对照。 [M2 合成矩阵](reports/t87-m2-20261125/synthetic-matrix.md)
   - **官方 Annex E Table E.2**：**`E.2-9` 至 `E.2-12`** 在三后端通过编码与解码验收，12 次 MoonJLS 候选编码与官方流逐字节一致；**`E.2-1` 至 `E.2-8`**（多分量/交错/子采样）解码按预期返回 `UnsupportedFeature`，对应编码尚未运行。 [Annex E 逐项结果](docs/CONFORMANCE_RESULTS.md)
-  - **历史 M1 满量程 NEAR 回归**：**640/640**（满量程 8 位 `NEAR=0–127`、12/16 位 `NEAR=0–255`；**明确说明：这不是当前 M2 `P=2–16` × 任意 `MAXVAL` × 所有自定义预设的完整笛卡尔积**）。 [独立验证说明](docs/VALIDATION.md) · [M1 NEAR 报告](reports/review-near-20261125/README.md)
+  - **历史 M1 满量程 NEAR 回归**：**640/640**（特定满量程 8 位 `NEAR=0–127`、12/16 位 `NEAR=0–255` 回归；**明确说明：这不是当前 M2 `P=2–16` × 任意 `MAXVAL` × 所有自定义预设的完整穷举**）。 [独立验证说明](docs/VALIDATION.md) · [M1 NEAR 报告](reports/review-near-20261125/README.md)
   - **NASA LOLA 与 Chrome 实测**：**1,036,800** 个 16 位月面高程样本在 JS/Wasm GC（`NEAR=0–3`）及 Chrome 工作台完成真实逐样本核对、下载与取消重启检查。 [NASA 误差预算实测](reports/lunar-budget-20261125/README.md)
-  - **包消费与发布状态**：`0.1.0` 归档在本地回环 registry 通过三后端消费验证；Mooncakes 在线查询返回 HTTP 404（尚未执行线上发布）。 [Mooncakes 发布准备](docs/MOONCAKES_RELEASE.md)
+  - **包消费与发布边界**：`0.1.0` 归档在本地回环 registry 通过三后端消费验证，**不等于 Mooncakes 公开发布成功**（Mooncakes 在线查询返回 HTTP 404）。 [Mooncakes 发布准备](docs/MOONCAKES_RELEASE.md) · 实测性能与内存数据均绑定对应实验条件，不扩写为所有配置保证。 [性能基准](docs/BENCHMARK.md)
 
 ## 分阶段兼容路线（已完成 M0–M2 与后续开发目标）
 

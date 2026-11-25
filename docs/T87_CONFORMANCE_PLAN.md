@@ -63,7 +63,7 @@
 - **核心验证与历史回归边界（严禁混淆口径）**：
   1. 三后端核心 MoonBit 白盒测试各 **15/15** 通过（Native / JS / Wasm GC）。
   2. M2 本机独立合成矩阵：**388 组 M2 新增正例**（HP JPEG-LS 1.00 及 `MAXVAL=1/2` 独立 Annex A 推导向量）+ **18 个 LSE 码流变体**（5 有效 + 13 拒绝）+ **7 个非法编码用例** + **6 项 Native PGM 检查**，三后端全部通过。
-  3. GitHub Actions CI 固定独立参考黄金回归（[`scripts/verify_m2_golden.mjs`](../scripts/verify_m2_golden.mjs)）：每次 push/PR 在三后端实跑 **12 组独立 HP/Annex A 黄金正例**（覆盖 `P=2/MAXVAL=1`、`P=2/MAXVAL=2`、`P=9/MAXVAL=255`、非满量程 `MAXVAL`、自定义 `LSE1`）+ **18 个 LSE 变体**（含零默认字段）+ **7 个非法编码边界** + **4 项 Native PGM 检查**；全量 388 组矩阵与需官方 HP 附件的 12 条 Annex E 作为本机可复跑证据保留。
+  3. GitHub Actions CI 固定独立参考黄金回归（[`scripts/verify_m2_golden.mjs`](../scripts/verify_m2_golden.mjs)）：每次 push/PR 在三后端实跑 **12 组独立合成 HP/Annex A M2 黄金正例**（覆盖 `P=2/MAXVAL=1`、`P=2/MAXVAL=2`、`P=9/MAXVAL=255`、非满量程 `MAXVAL`、自定义 `LSE1`）+ **18 个 LSE 变体**（含零默认字段）+ **7 个非法编码边界** + **4 项 Native PGM 检查**（注：该 12 组合成黄金用例验证 M2 单分量数值/LSE1 边界，**不等于官方 Annex E 全部 12 项通过**）；全量 388 组矩阵与需官方 HP 附件的 12 条 Annex E 作为固定受测源码 `fc43bc2` 的本机可复跑证据留存。
   4. **640 组 NEAR 回归口径澄清**：历史 M1 的 **640/640** 双向回归仅覆盖**满量程 8 位（`NEAR=0–127`）与 12/16 位（`NEAR=0–255`）**的合法 `NEAR` 组合，**不是**当前 M2 `P=2–16 × 任意 MAXVAL × 所有自定义 LSE1 预设` 全部参数空间的完整笛卡尔积。
   5. **Annex E Table E.2 口径澄清**：`E.2-9` 至 `E.2-12` 在三后端完成编码与解码验收，12 次 MoonJLS 候选编码与官方码流逐字节一致；`E.2-1` 至 `E.2-8` 涉及多分量/交错/子采样，当前解码均按预期返回 `UnsupportedFeature`，对应多分量编码 `not_run`。
   6. **NASA LOLA 与浏览器实测**：1,036,800 个 16 位月面高程样本在 JS/Wasm GC（`NEAR=0–3`）及 Chrome 工作台完成真实逐样本核对、下载与取消重启验证。

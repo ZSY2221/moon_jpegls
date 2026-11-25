@@ -1,5 +1,7 @@
 # MoonJLS——纯 MoonBit JPEG-LS Part 1 编解码内核与符合性验证工具链
 
+> **内部参考文档标识**：本文档（及历史版式归档 [`04_ONE_PAGE_PROPOSAL.pdf`](04_ONE_PAGE_PROPOSAL.pdf)）仅作为参赛者核对技术事实与结构的**内部参考材料**保留，**不作为满足飞书报名表字段 11“不要使用 AI 编写”要求的直接上传成稿**。正式上传的一页 Markdown 申报书请由参赛者本人独立撰写。
+
 ## 1. 项目名称
 **MoonJLS**（`MoonJLS: MoonBit-Native JPEG-LS Part 1 Codec and Conformance Verification Toolkit`）
 
@@ -18,7 +20,7 @@ MoonJLS 面向高精度整数图像的数据交换，提供**纯 MoonBit** 编�
 
 ## 5. 拟实现核心功能、现状与分阶段兼容路线
 - **纯 MoonBit 核心模块（4,528 行 `.mbt`，100% 编解码数学与状态机位于 MoonBit）**：`core/{parameters,model,bits,markers,encoder,decoder,image}.mbt` + `cmd/{moonjls,bridge}` + 15 项三后端白盒测试。
-- **已完成阶段（M0–M2）与实证**：M0（三后端基线与 3 处正确性修复）、M1（满量程 8/12/16 位 NEAR 640/640 互操作）、M2（2026-11-25 完成，`P=2–16`/独立 `MAXVAL`/自定义 `LSE1` 与科学工作台 3 大 Lab）。三后端核心测试各 15/15；M2 独立合成矩阵 388 正例 + 18 LSE 变体 + 7 非法编码 + 6 Native PGM 通过；CI 固定运行 12 组独立 HP/Annex A 黄金用例及 640 历史回归；Annex E `E.2-9`–`12` 三后端双向通过（12 次编码逐字节一致），`E.2-1`–`8` 多分量按当前范围返回 `UnsupportedFeature`（编码未运行）。
+- **已完成阶段（M0–M2）与实证**：M0（三后端基线与 3 处正确性修复）、M1（满量程 8/12/16 位 NEAR 640/640 互操作，非 M2 全参数穷举）、M2（2026-11-25 完成，`P=2–16`/独立 `MAXVAL`/自定义 `LSE1` 与科学工作台 3 大 Lab；核心两条预测行内存结论仅适用于当前单分量 profile）。三后端核心测试各 15/15；固定受测源码 `fc43bc2` 归档证据含 M2 独立合成矩阵 388 正例 + 18 LSE 变体 + 7 非法编码 + 6 Native PGM、Annex E `E.2-9`–`12` 三后端双向通过（12 次编码逐字节一致，`E.2-1`–`8` 对应未实现多分量返回 `UnsupportedFeature`）、NASA 1,036,800 样本与 Chrome 158 验收；CI 每次运行 12 组独立合成 HP/Annex A 黄金用例（不等同于官方 Annex E 12 项全部通过）及 640 历史回归；`0.1.0` 本地回环 registry 消费通过不等于 Mooncakes 公开发布（线上仍为 404）。
 - **后续分阶段兼容路线（内部开发目标，赛事最终节点待组委会确认）**：
   - **M3-A（目标 2026-12-10）**：多分量与 `ILV=0` 多扫描、跨扫描 LSE 继承（验收 `E.2-1`、`E.2-4`）。
   - **M3-B（目标 2026-12-25）**：`ILV=1/2`、合法采样与边缘 MCU、`Pt` 及双尺度误差（验收 `E.2-2/3/5–8`）。
@@ -26,12 +28,11 @@ MoonJLS 面向高精度整数图像的数据交换，提供**纯 MoonBit** 编�
   - **M5（目标 2027-01-20）**：完整 Part 1 符合性验收（Annex E 12/12、`§8.2`/`§8.3`、三后端一致、干净环境复现）。
 
 ## 6. 原创性与 AI 协作说明
-编解码内核与流式状态机由项目自主用 MoonBit 实现。开发过程中曾借助 AI 工具辅助代码审查、测试矩阵编写与文档校对；所有标准范围决策、技术边界与测试核验均由参赛者本人理解并负责（详见 `submission/2026-11/07_AI_DEVELOPMENT_DISCLOSURE.md`）。
+本项目依托 ITU-T T.87 标准自行构建，**AI 编程助手（早期 Codex 与当前 Antigravity）直接参与了纯 MoonBit 编解码核心（`core/*.mbt`）、Native CLI、JS/Wasm GC 桥接、SDK、Worker、科学工作台、测试与验证脚本及文档的编写**。参赛者（`ZSY2221`）确定项目目标与标准路线，并对提交的最终成果承担质量责任；其中本人尚未逐项独立复核的代码细节与测试日志，待本人核对确认，不提前宣称已全部逐项人工审毕（详见 `submission/2026-11/07_AI_DEVELOPMENT_DISCLOSURE.md`）。
 
 ## 7. 参考来源与开源许可证
 以 **ITU-T T.87（06/1998）** 英文正文为规范基线；外部独立验证采用 ITU 附件 **HP JPEG-LS 1.00**（`jlsrefV100.zip`）与 **CharLS 2.4.5 / Wasm 0.10.0**（仅测试对拍，运行时不链接 CharLS）。项目采用 **`BSD-3-Clause`** 许可证，详见 `LICENSE` 与 `THIRD_PARTY_NOTICES`。
 
 ## 8. GitHub 公开仓库、有效提交与复审入口
-- 公开仓库：`https://github.com/ZSY2221/moon_jpegls`（包含连续、可追溯的公开提交历史，远超 10 个有效 commits）
-- 复审最新分支与 PR #1：`https://github.com/ZSY2221/moon_jpegls/tree/codex/moonjls-reappeal-20261125` · `https://github.com/ZSY2221/moon_jpegls/pull/1`
+- 公开仓库（`main`）与审查 PR #1：`https://github.com/ZSY2221/moon_jpegls` · `https://github.com/ZSY2221/moon_jpegls/pull/1`（保留连续可追踪提交历史，远超 10 个有效 commits）
 - 评审指南与标准矩阵：`docs/REVIEWER_GUIDE.md` · `docs/T87_CONFORMANCE_PLAN.md` · `docs/CONFORMANCE_RESULTS.md` · `docs/MOONBIT_IMPLEMENTATION_MAP.md`
