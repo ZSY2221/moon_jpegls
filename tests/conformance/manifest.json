@@ -64,7 +64,8 @@
       "format_status": "passed",
       "reference_support": "HP JPEG-LS 1.00 for applicable configurations and independent Annex A vectors at MAXVAL 1 and 2",
       "test_ids": [
-        "scripts/test_m2.py"
+        "scripts/test_m2.py",
+        "scripts/verify_m2_golden.mjs"
       ],
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
@@ -80,7 +81,8 @@
       "format_status": "passed",
       "reference_support": "HP JPEG-LS 1.00 for applicable configurations and independent Annex A vectors at MAXVAL 1 and 2",
       "test_ids": [
-        "scripts/test_m2.py"
+        "scripts/test_m2.py",
+        "scripts/verify_m2_golden.mjs"
       ],
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
@@ -111,7 +113,8 @@
       "format_status": "passed",
       "reference_support": "HP JPEG-LS 1.00 for applicable configurations and independent Annex A vectors at MAXVAL 1 and 2",
       "test_ids": [
-        "scripts/test_m2.py"
+        "scripts/test_m2.py",
+        "scripts/verify_m2_golden.mjs"
       ],
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
@@ -146,7 +149,8 @@
       "test_ids": [
         "E.2-9",
         "E.2-10",
-        "scripts/test_m2.py"
+        "scripts/test_m2.py",
+        "scripts/verify_m2_golden.mjs"
       ],
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
@@ -166,7 +170,7 @@
         "E.2-4"
       ],
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
-      "target_milestone": "M3",
+      "target_milestone": "M3-A",
       "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
@@ -185,7 +189,7 @@
         "E.2-6"
       ],
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
-      "target_milestone": "M3",
+      "target_milestone": "M3-B",
       "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
@@ -202,7 +206,7 @@
         "E.2-8"
       ],
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
-      "target_milestone": "M3",
+      "target_milestone": "M3-B",
       "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
       "evidence_ref": "antigravity/t87-m2-20261125"
     },
@@ -216,7 +220,7 @@
       "reference_support": "Reference not selected",
       "test_ids": [],
       "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
-      "target_milestone": "M3",
+      "target_milestone": "M3-B",
       "source_revision": null
     },
     {

@@ -73,6 +73,7 @@ jobs:
           node --test scripts/test_worker_codec.mjs scripts/test_verification_report.mjs web/pgm.test.mjs web/preview.test.mjs
           npx --yes --package typescript@7.0.2 tsc --noEmit --strict --module nodenext --target es2022 --lib es2022,dom sdk/*.d.mts
           node scripts/validate_annex_e.mjs --check-manifest
+          node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY"
       - name: Run the existing three-backend NEAR matrix
         run: |
           python3 -m venv .tools/oracle-venv

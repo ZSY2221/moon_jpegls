@@ -1,0 +1,780 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Frozen representative subset of independent HP JPEG-LS V.1.00 and T.87 Annex A 1x1 vectors extracted from reports/t87-m2-20261125/synthetic-matrix-manifest.json (not MoonJLS-generated).",
+  "referenceArchiveSha256": "085285f0552ef0b6ebcf29bc5a6d3bc0d6bda0408e9f2f1c138be2e55200814f",
+  "referenceBinariesSha256": {
+    "locoe.exe": "20c3e1f2e61464438c6e348bdb187d17d1ea25d44c5a429bca948fad0426c699",
+    "locod.exe": "36516cba57c7706a76d9ae3f21c4e35f2b3bd1a7a0ef7ca0f0124f18b78015c0",
+    "nlocoe.exe": "706a81309493b6a8edeb3cb1cbfce810282aa05daeca22ae58af296bcf7ee3c3",
+    "nlocod.exe": "7cbc4c9506c9031a53b863793ad27c6bcb90f83c7fa257c53a90e83c5a6d5e86",
+    "loco16e.exe": "a0573719d3b76d980d80c50fe51fdaf806267c54c58eacf720dc8f79fd4c2766",
+    "loco16d.exe": "f080d7cd7722ffbbd4e8887a229cb023e2c7ca471a69f6730d2ac41a09a6e7f5",
+    "nloco16e.exe": "516ca3ca2093e62e8c9596c5f9927933a442af1305dbea0cd7921842ad0ce32e",
+    "nloco16d.exe": "84682e13e6a12cd60e758cfd8d4c1c4c82d49bd415b76ae0c58a745bc71e4b00"
+  },
+  "cases": [
+    {
+      "id": "p2-m1-n0",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 2,
+        "near": 0,
+        "maxval": 1
+      },
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "bits": 2,
+        "near": 0,
+        "maxval": 1
+      },
+      "effectivePreset": {
+        "maxval": 1,
+        "t1": 1,
+        "t2": 1,
+        "t3": 1,
+        "reset": 64
+      },
+      "source": "T.87 Annex A 1x1 vector",
+      "input": "p2-m1-n0.input.raw",
+      "reference": "p2-m1-n0.reference.jls",
+      "referenceSamples": "p2-m1-n0.reference.raw",
+      "referenceMaxAbsoluteError": 0,
+      "sha256": {
+        "p2-m1-n0.input.raw": "47dc540c94ceb704a23875c11273e16bb0b8a87aed84de911f2133568115f254",
+        "p2-m1-n0.reference.jls": "5e41e86f047deda901f7fd7b18b3dcf628cbac0a1a96df2475495b54d469353e",
+        "p2-m1-n0.reference.raw": "47dc540c94ceb704a23875c11273e16bb0b8a87aed84de911f2133568115f254"
+      }
+    },
+    {
+      "id": "tiny-p2-m1-n0-s0",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 2,
+        "near": 0,
+        "maxval": 1
+      },
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "bits": 2,
+        "near": 0,
+        "maxval": 1
+      },
+      "effectivePreset": {
+        "maxval": 1,
+        "t1": 1,
+        "t2": 1,
+        "t3": 1,
+        "reset": 64
+      },
+      "source": "T.87 Annex A 1x1 vector",
+      "input": "tiny-p2-m1-n0-s0.input.raw",
+      "reference": "tiny-p2-m1-n0-s0.reference.jls",
+      "referenceSamples": "tiny-p2-m1-n0-s0.reference.raw",
+      "referenceMaxAbsoluteError": 0,
+      "sha256": {
+        "tiny-p2-m1-n0-s0.input.raw": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7",
+        "tiny-p2-m1-n0-s0.reference.jls": "7091618428f17704e9fe6f71760e18ee7f6e6f0c89ae0ac8b793c8b831648a29",
+        "tiny-p2-m1-n0-s0.reference.raw": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+      }
+    },
+    {
+      "id": "p2-m2-n0",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 2,
+        "near": 0,
+        "maxval": 2
+      },
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "bits": 2,
+        "near": 0,
+        "maxval": 2
+      },
+      "effectivePreset": {
+        "maxval": 2,
+        "t1": 2,
+        "t2": 2,
+        "t3": 2,
+        "reset": 64
+      },
+      "source": "T.87 Annex A 1x1 vector",
+      "input": "p2-m2-n0.input.raw",
+      "reference": "p2-m2-n0.reference.jls",
+      "referenceSamples": "p2-m2-n0.reference.raw",
+      "referenceMaxAbsoluteError": 0,
+      "sha256": {
+        "p2-m2-n0.input.raw": "99be5efb88ca2013bd8e4eb035fd42d5245468fe9afa70d8ba9c1c419a48c4e8",
+        "p2-m2-n0.reference.jls": "0d77c32b6f5e9e37243e5c0598d8ad4d241565b8d691b26bdd336ca948e6bf8b",
+        "p2-m2-n0.reference.raw": "99be5efb88ca2013bd8e4eb035fd42d5245468fe9afa70d8ba9c1c419a48c4e8"
+      }
+    },
+    {
+      "id": "p2-m2-n1",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 2,
+        "near": 1,
+        "maxval": 2
+      },
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "bits": 2,
+        "near": 1,
+        "maxval": 2
+      },
+      "effectivePreset": {
+        "maxval": 2,
+        "t1": 2,
+        "t2": 2,
+        "t3": 2,
+        "reset": 64
+      },
+      "source": "T.87 Annex A 1x1 vector",
+      "input": "p2-m2-n1.input.raw",
+      "reference": "p2-m2-n1.reference.jls",
+      "referenceSamples": "p2-m2-n1.reference.raw",
+      "referenceMaxAbsoluteError": 0,
+      "sha256": {
+        "p2-m2-n1.input.raw": "99be5efb88ca2013bd8e4eb035fd42d5245468fe9afa70d8ba9c1c419a48c4e8",
+        "p2-m2-n1.reference.jls": "3660d52f6a5cdb771fcdb49ec1823136406ecc75f03f4e7c195497e873c3622b",
+        "p2-m2-n1.reference.raw": "99be5efb88ca2013bd8e4eb035fd42d5245468fe9afa70d8ba9c1c419a48c4e8"
+      }
+    },
+    {
+      "id": "p9-m255-n0",
+      "frame": {
+        "width": 31,
+        "height": 9,
+        "bits": 9,
+        "near": 0,
+        "maxval": 255
+      },
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 9,
+        "near": 0,
+        "maxval": 255
+      },
+      "effectivePreset": {
+        "maxval": 255,
+        "t1": 3,
+        "t2": 7,
+        "t3": 21,
+        "reset": 64
+      },
+      "source": "HP V.1.00, SOF precision adapted with explicit effective LSE",
+      "input": "p9-m255-n0.input.raw",
+      "reference": "p9-m255-n0.reference.jls",
+      "referenceSamples": "p9-m255-n0.reference.raw",
+      "referenceMaxAbsoluteError": 0,
+      "sha256": {
+        "p9-m255-n0.input.raw": "67f7d2f381641f32b291375d6ce47916c6c8e3b6e6e1df8c90f61ec381ec756b",
+        "p9-m255-n0.reference.jls": "0f7c841ad90a48742c0b1e464f1f2f7f1b4e80d8d3f6a17f01b979e0590b4168",
+        "p9-m255-n0.reference.raw": "67f7d2f381641f32b291375d6ce47916c6c8e3b6e6e1df8c90f61ec381ec756b"
+      }
+    },
+    {
+      "id": "p9-m255-n1",
+      "frame": {
+        "width": 31,
+        "height": 9,
+        "bits": 9,
+        "near": 1,
+        "maxval": 255
+      },
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 9,
+        "near": 1,
+        "maxval": 255
+      },
+      "effectivePreset": {
+        "maxval": 255,
+        "t1": 6,
+        "t2": 12,
+        "t3": 28,
+        "reset": 64
+      },
+      "source": "HP V.1.00, SOF precision adapted with explicit effective LSE",
+      "input": "p9-m255-n1.input.raw",
+      "reference": "p9-m255-n1.reference.jls",
+      "referenceSamples": "p9-m255-n1.reference.raw",
+      "referenceMaxAbsoluteError": 1,
+      "sha256": {
+        "p9-m255-n1.input.raw": "679080c16530390890ece6c9bb67b52fc52bf20b1f6a0aa170e2bea4ce577fd5",
+        "p9-m255-n1.reference.jls": "deebeeee8668936bf557346035b0c0595a1ee2b6e0d6c848632e349e2524de7c",
+        "p9-m255-n1.reference.raw": "bc215ce76ad6f635ec25fcd3b78725da1eea4e0de04a7baad4d8a2d0bed3d315"
+      }
+    },
+    {
+      "id": "p8-m255-n0",
+      "frame": {
+        "width": 31,
+        "height": 9,
+        "bits": 8,
+        "near": 0
+      },
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 8,
+        "near": 0,
+        "maxval": 255
+      },
+      "effectivePreset": {
+        "maxval": 255,
+        "t1": 3,
+        "t2": 7,
+        "t3": 21,
+        "reset": 64
+      },
+      "source": "HP V.1.00 direct",
+      "input": "p8-m255-n0.input.raw",
+      "reference": "p8-m255-n0.reference.jls",
+      "referenceSamples": "p8-m255-n0.reference.raw",
+      "referenceMaxAbsoluteError": 0,
+      "sha256": {
+        "p8-m255-n0.input.raw": "55f53a53faf0acd8c523bf698a0f6332a5d5c237921948321fdc584f84d53317",
+        "p8-m255-n0.reference.jls": "b2e60aa63b78525047f2fb7ec74b73c73194581fcec507903baffb24ae74193f",
+        "p8-m255-n0.reference.raw": "55f53a53faf0acd8c523bf698a0f6332a5d5c237921948321fdc584f84d53317"
+      }
+    },
+    {
+      "id": "custom-p3-m5-n1",
+      "frame": {
+        "width": 31,
+        "height": 9,
+        "bits": 3,
+        "near": 1,
+        "maxval": 5,
+        "preset": {
+          "t1": 2,
+          "t2": 3,
+          "t3": 4,
+          "reset": 3
+        }
+      },
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 3,
+        "near": 1,
+        "maxval": 5,
+        "preset": {
+          "t1": 2,
+          "t2": 3,
+          "t3": 4,
+          "reset": 3
+        }
+      },
+      "effectivePreset": {
+        "maxval": 5,
+        "t1": 2,
+        "t2": 3,
+        "t3": 4,
+        "reset": 3
+      },
+      "source": "HP V.1.00 direct",
+      "input": "custom-p3-m5-n1.input.raw",
+      "reference": "custom-p3-m5-n1.reference.jls",
+      "referenceSamples": "custom-p3-m5-n1.reference.raw",
+      "referenceMaxAbsoluteError": 1,
+      "sha256": {
+        "custom-p3-m5-n1.input.raw": "b2f2ee8b79989f41e47bb9e7953cd755d3a79d7ad7adfdf1f1e250529b6b074f",
+        "custom-p3-m5-n1.reference.jls": "a7e64f34675586ff6b96d427ad8b9ee8e4df677a02e787fedf74ef13434c580c",
+        "custom-p3-m5-n1.reference.raw": "b273fb213fbb7cac4bac2d10dff53c5c2fdce5b09684eee0ec5178d688999cea"
+      }
+    },
+    {
+      "id": "custom-p7-m97-n3",
+      "frame": {
+        "width": 31,
+        "height": 9,
+        "bits": 7,
+        "near": 3,
+        "maxval": 97,
+        "preset": {
+          "t1": 10,
+          "t2": 10,
+          "t3": 10,
+          "reset": 31
+        }
+      },
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 7,
+        "near": 3,
+        "maxval": 97,
+        "preset": {
+          "t1": 10,
+          "t2": 10,
+          "t3": 10,
+          "reset": 31
+        }
+      },
+      "effectivePreset": {
+        "maxval": 97,
+        "t1": 10,
+        "t2": 10,
+        "t3": 10,
+        "reset": 31
+      },
+      "source": "HP V.1.00 direct",
+      "input": "custom-p7-m97-n3.input.raw",
+      "reference": "custom-p7-m97-n3.reference.jls",
+      "referenceSamples": "custom-p7-m97-n3.reference.raw",
+      "referenceMaxAbsoluteError": 3,
+      "sha256": {
+        "custom-p7-m97-n3.input.raw": "3be26adbe6e359e78a991ffb0d474fcadf90e91e09c2edbf48cc4a0afd73fffa",
+        "custom-p7-m97-n3.reference.jls": "e681fac971228cdead8b2afcb27dcf0d63cc99141132a1b5a6b7e53460d05dd9",
+        "custom-p7-m97-n3.reference.raw": "31c6de09d9417ba0797286a9401558c324efceaff7cdfc167bd9cdca12d77cfc"
+      }
+    },
+    {
+      "id": "custom-p9-m256-n2",
+      "frame": {
+        "width": 31,
+        "height": 9,
+        "bits": 9,
+        "near": 2,
+        "maxval": 256,
+        "preset": {
+          "t1": 4,
+          "t2": 7,
+          "t3": 40,
+          "reset": 255
+        }
+      },
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 9,
+        "near": 2,
+        "maxval": 256,
+        "preset": {
+          "t1": 4,
+          "t2": 7,
+          "t3": 40,
+          "reset": 255
+        }
+      },
+      "effectivePreset": {
+        "maxval": 256,
+        "t1": 4,
+        "t2": 7,
+        "t3": 40,
+        "reset": 255
+      },
+      "source": "HP V.1.00 direct",
+      "input": "custom-p9-m256-n2.input.raw",
+      "reference": "custom-p9-m256-n2.reference.jls",
+      "referenceSamples": "custom-p9-m256-n2.reference.raw",
+      "referenceMaxAbsoluteError": 2,
+      "sha256": {
+        "custom-p9-m256-n2.input.raw": "0976ada5a5ae6e79d8a75e2c96164ea8082195279999001591659db66fb0ac19",
+        "custom-p9-m256-n2.reference.jls": "08d9486560461d69f136eba07db1994c520c9696fe3cd0ba4e832248643ece53",
+        "custom-p9-m256-n2.reference.raw": "b9ee2e731d72e2a02e9a35ab97cb3b139c32ad17a5d43c839056339aeabd8fef"
+      }
+    },
+    {
+      "id": "custom-p12-m1000-n3",
+      "frame": {
+        "width": 31,
+        "height": 9,
+        "bits": 12,
+        "near": 3,
+        "maxval": 1000,
+        "preset": {
+          "t1": 10,
+          "t2": 20,
+          "t3": 90,
+          "reset": 333
+        }
+      },
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 12,
+        "near": 3,
+        "maxval": 1000,
+        "preset": {
+          "t1": 10,
+          "t2": 20,
+          "t3": 90,
+          "reset": 333
+        }
+      },
+      "effectivePreset": {
+        "maxval": 1000,
+        "t1": 10,
+        "t2": 20,
+        "t3": 90,
+        "reset": 333
+      },
+      "source": "HP V.1.00, SOF precision adapted with explicit effective LSE",
+      "input": "custom-p12-m1000-n3.input.raw",
+      "reference": "custom-p12-m1000-n3.reference.jls",
+      "referenceSamples": "custom-p12-m1000-n3.reference.raw",
+      "referenceMaxAbsoluteError": 3,
+      "sha256": {
+        "custom-p12-m1000-n3.input.raw": "233a9623330d9fd5fba695f664ef2593a396f81acba11cc61655d541dfa8de13",
+        "custom-p12-m1000-n3.reference.jls": "3e36acd7ee29ead4b73dfdb379a74e081edfbd4c1b2775845f1554f21b628a40",
+        "custom-p12-m1000-n3.reference.raw": "592bb2b70ccd96d187e188fcfa556349ec2dd5860117db970fb4e88f5bf1ba96"
+      }
+    },
+    {
+      "id": "custom-p16-m65534-n255",
+      "frame": {
+        "width": 31,
+        "height": 9,
+        "bits": 16,
+        "near": 255,
+        "maxval": 65534,
+        "preset": {
+          "t1": 256,
+          "t2": 1024,
+          "t3": 4096,
+          "reset": 65534
+        }
+      },
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 16,
+        "near": 255,
+        "maxval": 65534,
+        "preset": {
+          "t1": 256,
+          "t2": 1024,
+          "t3": 4096,
+          "reset": 65534
+        }
+      },
+      "effectivePreset": {
+        "maxval": 65534,
+        "t1": 256,
+        "t2": 1024,
+        "t3": 4096,
+        "reset": 65534
+      },
+      "source": "HP V.1.00 direct",
+      "input": "custom-p16-m65534-n255.input.raw",
+      "reference": "custom-p16-m65534-n255.reference.jls",
+      "referenceSamples": "custom-p16-m65534-n255.reference.raw",
+      "referenceMaxAbsoluteError": 255,
+      "sha256": {
+        "custom-p16-m65534-n255.input.raw": "cba934529d98e907ff830b5e59754fd1f023db341009c3874d36f57ffaa5b2d9",
+        "custom-p16-m65534-n255.reference.jls": "5fd1e69730f5f0c9630e045dd1a7dac315e6dfe1ff425e9521fc0d38d50619ff",
+        "custom-p16-m65534-n255.reference.raw": "715a71934d4dcb7bd8690db9c48928b99a976ab34a1929fd3c7181c466b45763"
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "lse-before-sof",
+      "input": "lse-before-sof.jls",
+      "sha256": "dcf0e22eb4e38687e73b686a42a9d9fa5183f192160634afc3cd0b191da487ea",
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 7,
+        "near": 3,
+        "maxval": 97,
+        "preset": {
+          "t1": 10,
+          "t2": 10,
+          "t3": 10,
+          "reset": 31
+        }
+      },
+      "effectivePreset": {
+        "maxval": 97,
+        "t1": 10,
+        "t2": 10,
+        "t3": 10,
+        "reset": 31
+      },
+      "referenceSamples": "custom-p7-m97-n3.reference.raw"
+    },
+    {
+      "id": "lse-last-definition-wins",
+      "input": "lse-last-definition-wins.jls",
+      "sha256": "707bd1b3fd1787d3e13dd670d9f9a0f85324a44ba08608822a7d799dfa799858",
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 7,
+        "near": 3,
+        "maxval": 97,
+        "preset": {
+          "t1": 10,
+          "t2": 10,
+          "t3": 10,
+          "reset": 31
+        }
+      },
+      "effectivePreset": {
+        "maxval": 97,
+        "t1": 10,
+        "t2": 10,
+        "t3": 10,
+        "reset": 31
+      },
+      "referenceSamples": "custom-p7-m97-n3.reference.raw"
+    },
+    {
+      "id": "lse-zero-resets-prior-definition",
+      "input": "lse-zero-resets-prior-definition.jls",
+      "sha256": "8b0666f7f6854cb0c655821d9848cf99847b5b7b4f7ef99befb5889ae08c42b8",
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 8,
+        "near": 0,
+        "maxval": 255
+      },
+      "effectivePreset": {
+        "maxval": 255,
+        "t1": 3,
+        "t2": 7,
+        "t3": 21,
+        "reset": 64
+      },
+      "referenceSamples": "p8-m255-n0.reference.raw"
+    },
+    {
+      "id": "lse-explicit-defaults",
+      "input": "lse-explicit-defaults.jls",
+      "sha256": "b2e60aa63b78525047f2fb7ec74b73c73194581fcec507903baffb24ae74193f",
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 8,
+        "near": 0,
+        "maxval": 255
+      },
+      "effectivePreset": {
+        "maxval": 255,
+        "t1": 3,
+        "t2": 7,
+        "t3": 21,
+        "reset": 64
+      },
+      "referenceSamples": "p8-m255-n0.reference.raw"
+    },
+    {
+      "id": "lse-mixed-zero-fields",
+      "input": "lse-mixed-zero-fields.jls",
+      "sha256": "21141838190efb7e536b38b13c5013b5bab1a2f4e7907c8c641e4eac4b6769c1",
+      "expected": {
+        "width": 31,
+        "height": 9,
+        "bits": 8,
+        "near": 0,
+        "maxval": 255
+      },
+      "effectivePreset": {
+        "maxval": 255,
+        "t1": 3,
+        "t2": 7,
+        "t3": 21,
+        "reset": 64
+      },
+      "referenceSamples": "p8-m255-n0.reference.raw"
+    },
+    {
+      "id": "lse-maxval-over-precision",
+      "input": "lse-maxval-over-precision.jls",
+      "sha256": "5dc8641a27ca58948b7ff1d080389db4bfb7d3143ccb8d9e73948fe76df26b5e",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-near-over-maxval",
+      "input": "lse-near-over-maxval.jls",
+      "sha256": "bd1f0baccff771f6cf8247b158e9acff4f2fbee7f20bf1e48be5b3c87688ab3b",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-t1-under-near",
+      "input": "lse-t1-under-near.jls",
+      "sha256": "eed8797581d5fd63771cf7f10f499eee1dd950768c3740bd8080ac1dc9616953",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-t2-under-t1",
+      "input": "lse-t2-under-t1.jls",
+      "sha256": "1a12b74aee3361f2d36372aa320261397ce86a9bc1689a83b2c69cf2f94d8c99",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-t3-under-t2",
+      "input": "lse-t3-under-t2.jls",
+      "sha256": "a77d169f8c7ee94d7334c7a12583f64e2b1eeaa32a1e87b8d9861c016030c09c",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-t3-over-maxval",
+      "input": "lse-t3-over-maxval.jls",
+      "sha256": "c2ca31ea1cb523238b77e4a4899bc9697f94638f9bb8f8bf89929099c8457502",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-reset-under-3",
+      "input": "lse-reset-under-3.jls",
+      "sha256": "00418d5c940631003a0ad4bd9959f013aba5d17d7e3b15029ea50fc733a76d7f",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-reset-over-limit",
+      "input": "lse-reset-over-limit.jls",
+      "sha256": "3290ec8b41be94e7063c9d611857a7b3b8d9abca0f60812a9e175c9ffd16806e",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-truncated-payload",
+      "input": "lse-truncated-payload.jls",
+      "sha256": "959bf28ccbee0375559fdcca2544cf56f3950148a4bae4961f1827c2ae8d96ee",
+      "expectedCode": "Truncated"
+    },
+    {
+      "id": "lse-invalid-length",
+      "input": "lse-invalid-length.jls",
+      "sha256": "9ecabb15e32ecbe3203b3d9b8e995598b2ddcfbc27f5b1ad1fa9822a4b09de44",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-inside-entropy",
+      "input": "lse-inside-entropy.jls",
+      "sha256": "77d0ed76ef5e2252f0c92bc0a6c4291d80f01b6662cc68d97b8ab0198e6b87c4",
+      "expectedCode": "InvalidData"
+    },
+    {
+      "id": "lse-after-scan",
+      "input": "lse-after-scan.jls",
+      "sha256": "030d60ea08d23f85eefa3eb4a7a860427c8ff14d66bd4fd776f88a8377ad438c",
+      "expectedCode": "UnsupportedFeature"
+    },
+    {
+      "id": "lse-after-eoi",
+      "input": "lse-after-eoi.jls",
+      "sha256": "d2be18565a1ed0a779c8388ac39df1089006a3a91f25c693662297e3a06ef367",
+      "expectedCode": "TrailingData"
+    }
+  ],
+  "invalidEncodes": [
+    {
+      "id": "encode-p-below-min",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 1,
+        "near": 3,
+        "maxval": 97
+      },
+      "sample": 1,
+      "expectedCode": "InvalidArgument"
+    },
+    {
+      "id": "encode-p-above-max",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 17,
+        "near": 3,
+        "maxval": 97
+      },
+      "sample": 1,
+      "expectedCode": "InvalidArgument"
+    },
+    {
+      "id": "encode-maxval-over-precision",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 7,
+        "near": 3,
+        "maxval": 128
+      },
+      "sample": 1,
+      "expectedCode": "InvalidArgument"
+    },
+    {
+      "id": "encode-near-over-maxval",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 7,
+        "near": 49,
+        "maxval": 97
+      },
+      "sample": 1,
+      "expectedCode": "InvalidArgument"
+    },
+    {
+      "id": "encode-sample-over-maxval",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 7,
+        "near": 3,
+        "maxval": 97
+      },
+      "sample": 98,
+      "expectedCode": "InvalidArgument"
+    },
+    {
+      "id": "encode-threshold-order",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 7,
+        "near": 3,
+        "maxval": 97,
+        "preset": {
+          "t1": 10,
+          "t2": 9,
+          "t3": 10,
+          "reset": 31
+        }
+      },
+      "sample": 1,
+      "expectedCode": "InvalidArgument"
+    },
+    {
+      "id": "encode-reset-over-limit",
+      "frame": {
+        "width": 1,
+        "height": 1,
+        "bits": 7,
+        "near": 3,
+        "maxval": 97,
+        "preset": {
+          "t1": 10,
+          "t2": 10,
+          "t3": 10,
+          "reset": 256
+        }
+      },
+      "sample": 1,
+      "expectedCode": "InvalidArgument"
+    }
+  ],
+  "pgmChecks": [
+    "p2-m1-n0",
+    "p9-m255-n1",
+    "custom-p9-m256-n2",
+    "custom-p16-m65534-n255"
+  ]
+}
