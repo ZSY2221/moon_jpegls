@@ -14,11 +14,11 @@ T.870／ISO/IEC 14495-2 定义 Part 2 扩展，DICOM 容器是应用层工作。
 
 ## 2. 当前版本与证据边界
 
-复审前公开 `main` 的核查点为 `60befa604287d941dc75ffde03a4c52ab80a93ad`。本文件所在的 P0 复审版本基于 `e3a3e5c6f33df98df98f84e4d8e06dfe118ef263`，包含 Native 逐行交付、Worker 输出载荷统计和核心 `q_lut` 载荷计数三处修复。
+复审前公开 `main` 的核查点为 `60befa604287d941dc75ffde03a4c52ab80a93ad`。P0 复审提交 [9ffa66c](https://github.com/ZSY2221/moon_jpegls/commit/9ffa66c2069885519b2727bb05c6c4acd04b67ab) 基于 `e3a3e5c6f33df98df98f84e4d8e06dfe118ef263`，包含 Native 逐行交付、Worker 输出载荷统计和核心 `q_lut` 载荷计数三处修复。
 
-当前 profile：单帧、单分量、单扫描、ILV=0；8/12/16 位、默认满量程 MAXVAL、NEAR=0–3；默认或默认等价 LSE 编码参数；已知且受资源限制的尺寸；Native、JS、Wasm GC。
+当前 profile：单帧、单分量、单扫描、ILV=0；8/12/16 位、默认满量程 MAXVAL，8 位 NEAR=0–127、12/16 位 NEAR=0–255；默认或默认等价 LSE 编码参数；已知且受资源限制的尺寸；Native、JS、Wasm GC。
 
-三处修复的构建、用例和实跑结果见[正确性复验记录](../reports/review-fix-20261125/README.md)。既有灰度子集的互操作证据见[验证说明](VALIDATION.md)和[报告](../reports/validation.json)。P1 的扩展 NEAR 范围在本基线中仍为计划。
+三处修复的构建、用例和实跑结果见[正确性复验记录](../reports/review-fix-20261125/README.md)。既有灰度子集的互操作证据见[验证说明](VALIDATION.md)和[报告](../reports/validation.json)。P1 已在 Native、JS 和 Wasm GC 双向验证现有子集下全部 640 组位深与 NEAR 配置。 [P1 实跑记录](../reports/review-near-20261125/README.md)
 
 ## 3. 功能与符合性矩阵
 
@@ -28,7 +28,7 @@ T.870／ISO/IEC 14495-2 定义 Part 2 扩展，DICOM 容器是应用层工作。
 | --- | --- | --- | --- | --- |
 | 单分量常规模式、游程及中断、位填充 | 已支持当前 profile | 已支持当前 profile | 原能力回归与独立码流重建一致 | Annex A；全阶段保持 |
 | 样本精度 P=2–16 | 仅 8/12/16 | 仅 8/12/16 | 各精度端到端参数、样本容器、最大值及非法值验证 | §4.3.2；M2 |
-| MAXVAL 与合法 NEAR | 仅满量程、NEAR 0–3 | 同左 | 非零 MAXVAL 为 1..2^P−1；LSE 中 0 表示默认。NEAR 为整数 0..min(255,floor(MAXVAL/2))；合法组合与越界分别验证 | C.2.3、Table C.1；M1/M2 |
+| MAXVAL 与合法 NEAR | 满量程，8 位 NEAR 0–127、12/16 位 0–255 | 同左 | 非零 MAXVAL 为 1..2^P−1；LSE 中 0 表示默认。NEAR 为整数 0..min(255,floor(MAXVAL/2))；合法组合与越界分别验证 | C.2.3、Table C.1；M1/M2 |
 | LSE ID=1 编码参数 | 默认 | 默认等价类 | MAXVAL/T1/T2/T3/RESET 的实际计算、SOI 复位、零哨兵和跨扫描继承。默认阈值按当前 MAXVAL 与 NEAR 计算 | C.2.4.1.1、Tables C.1–C.2；M2 |
 | 多分量、多个扫描、混合扫描组织 | 待实现 | 待实现 | 完整分量集合、扫描顺序、重复／遗漏检查及状态隔离；不把三个独立灰度文件称作多分量 JPEG-LS | Annex B、D；M3 |
 | ILV=0/1/2 | 单分量 ILV=0 | 同左 | 非交错、行交错、样本交错分别实现；共享上下文、游程和分量状态按各模式处理 | Annex B；M3 |

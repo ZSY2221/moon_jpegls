@@ -7,11 +7,11 @@ The current implementation covers a single-component profile of the procedures a
 | Image | One frame, one component, one scan, ILV=0, known dimensions in 1–65535 and subject to caller limits |
 | Coded sample precision and MAXVAL | 8/255, 12/4095, 16/65535 |
 | Sample storage | Core uses unsigned values in MoonBit `Int` slots. Raw and JS adapters use 8-bit or 16-bit containers. A 16-bit container can hold 12-bit samples. |
-| NEAR | 0, 1, 2, 3, measured in coded sample units |
+| NEAR | Integers 0–127 at 8 bits and 0–255 at 12 or 16 bits, in coded sample units. [640-configuration validation](../reports/review-near-20261125/README.md) |
 | Entropy | Regular mode, run mode, run interruption and JPEG-LS one-bit stuffing |
 | Markers | SOI, SOF55, SOS and EOI. APPn and COM before SOF55 or SOS are skipped under a cumulative budget. |
 | Preset | LSE ID 1 with absent, zero or explicit default values. Valid custom settings return `UnsupportedFeature`. |
-| Planned Part 1 capabilities | Other legal precisions and NEAR values, non-default MAXVAL and presets, multiple components and scans, interleave, sampling and point transforms, mapping and abbreviated formats, restart intervals, DNL, extended dimensions and remaining marker syntax |
+| Planned Part 1 capabilities | Other legal precisions, non-default MAXVAL and presets, multiple components and scans, interleave, sampling and point transforms, mapping and abbreviated formats, restart intervals, DNL, extended dimensions and remaining marker syntax |
 | Separate extensions | T.870 Part 2 and DICOM container parsing |
 | Targets | Native, Wasm GC and JS. See `VALIDATION.md` for executed checks. |
 

@@ -25,7 +25,7 @@
       </div>
       <div class="masthead-meta">
         <span class="scope-pill" data-label="scopeBits">8 / 12 / 16-bit grayscale</span>
-        <span class="scope-pill" data-label="scopeNear">NEAR 0–3</span>
+        <span class="scope-pill" data-label="scopeNear">NEAR up to 255</span>
         <span class="local" data-label="local">Local processing</span>
         <label class="language">
           <span class="visually-hidden" data-label="language">Language</span>
@@ -79,14 +79,14 @@
         <div class="settings">
           <label class="setting">
             <span class="field-label" data-label="near">NEAR</span>
-            <select id="near">
+            <select id="near" aria-describedby="near-note">
               <option value="0">0</option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
             </select>
+            <span id="near-note" class="microcopy near-note" hidden></span>
           </label>
-          <p id="near-note" class="microcopy near-note" hidden data-label="nearFromHeader">NEAR from JLS header</p>
 
           <label class="setting">
             <span class="field-label" data-label="backend">Backend</span>
@@ -368,7 +368,7 @@
         <details id="scope-details" class="panel disclosure">
           <summary data-label="scopeAndNotes">Format scope &amp; measurement notes</summary>
           <div class="disclosure-body notes-body">
-            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset · grayscale, single frame, single component and single scan · 8/12/16 bit · NEAR 0–3.</p>
+            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset · grayscale, single frame, single component and single scan · NEAR 0–127 for 8-bit and 0–255 for 12- and 16-bit.</p>
             <p class="microcopy" data-label="timingHelp">Starts after the sink opens. Includes validation and output close. Excludes file and save-location selection and sink setup. First Canvas update is when the first reconstruction draw returns.</p>
             <p class="microcopy" data-label="ratioHelp">Raw storage uses 1 byte per 8-bit sample and 2 bytes per 12- or 16-bit sample.</p>
           </div>

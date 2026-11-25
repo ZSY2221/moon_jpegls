@@ -90,8 +90,9 @@ class Session {
     this.#outputCapacity = outputChunkSize;
     const budget = limits(options);
     if (this.#encoding) {
-      const frameValues = ['width', 'height', 'bits', 'near'].map((key) => integer(frame[key], key, 0));
-      this.#port = bindings.encoder_new(...frameValues, inputChunkSize, outputChunkSize, ...budget);
+      const frameValues = ['width', 'height', 'bits'].map((key) => integer(frame[key], key, 0));
+      const near = integer(frame.near, 'near', 0, 255);
+      this.#port = bindings.encoder_new(...frameValues, near, inputChunkSize, outputChunkSize, ...budget);
       const code = bindings.encoder_status(this.#port);
       if (code < 0) throw new CodecError(errors[-code], bindings.encoder_message(this.#port));
       this.#frame = Object.freeze({ ...frame });

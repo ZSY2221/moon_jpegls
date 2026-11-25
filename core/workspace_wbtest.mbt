@@ -46,3 +46,29 @@ test "workspace follows width and profile rather than frame height" {
   let wider : Frame = { width: 513, height: 1, bits: 16, near: 0, }
   assert_eq(Encoder::new(wider, Limits::default()).workspace_bytes(), 12212)
 }
+
+///|
+test "high NEAR thresholds fall back and workspace counts the resulting table" {
+  let thresholds = [
+    (33, 102, 172, 252),
+    (34, 105, 177, 177),
+    (49, 150, 252, 252),
+    (50, 153, 153, 153),
+    (84, 255, 255, 255),
+    (85, 86, 86, 86),
+    (127, 128, 128, 128),
+  ]
+  for (near, t1, t2, t3) in thresholds {
+    let params = default_parameters(255, near)
+    assert_eq((params.t1, params.t2, params.t3), (t1, t2, t3))
+    assert_eq(params.q_lut.length(), 2 * t3 + 1)
+  }
+  let frame : Frame = { width: 512, height: 1, bits: 16, near: 255, }
+  let encoder = Encoder::new(frame, Limits::default())
+  assert_eq(encoder.workspace_bytes(), 26484)
+  let coded = encode(frame, FixedArray::make(frame.width, 0))
+  let decoder = Decoder::new(Limits::default())
+  assert_eq(decoder.step(coded, 0, coded.length(), true).status, RowReady)
+  assert_eq(decoder.workspace_bytes(), 27243)
+  assert_eq(default_parameters(65535, 244).wrap, 66504)
+}

@@ -6,7 +6,7 @@ const whitespace = (byte) => byte === 32 || (byte >= 9 && byte <= 13);
 const invalid = (message) => new CodecError('InvalidData', message);
 const maxvals = new Map([[255, 8], [4095, 12], [65535, 16]]);
 
-export async function openPgm(file, near, signal) {
+export async function readPgmHeader(file) {
   const prefix = new Uint8Array(await file.slice(0, maxHeader + 1).arrayBuffer());
   let position = 0;
   const token = () => {
@@ -41,6 +41,11 @@ export async function openPgm(file, near, signal) {
   position++;
   if (position > maxHeader) throw new CodecError('ResourceLimit', 'PGM header exceeds 64 KiB');
   if (file.size !== position + count * sampleBytes) throw invalid('PGM raster byte length differs from the frame size');
+  return { width, height, bits, sampleBytes, count, position };
+}
+
+export async function openPgm(file, near, signal, header) {
+  const { width, height, bits, sampleBytes, count, position } = header ?? await readPgmHeader(file);
 
   const readRange = async (start, size) => {
     const offset = position + start * sampleBytes;

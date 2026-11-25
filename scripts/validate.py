@@ -3,7 +3,7 @@
 import argparse
 from collections import defaultdict
 from datetime import datetime, timezone
-from hashlib import file_digest
+from hashlib import file_digest, sha256
 import json
 import os
 from pathlib import Path
@@ -29,26 +29,48 @@ def check_samples(name, output, expected, tolerance):
     return int(delta.max(initial=0))
 
 
-def prepare(directory, with_conformance, match):
+def near_matrix_fixtures(bits):
+    maximum = (1 << bits) - 1
+    width, height = 31, 9
+    x = np.arange(width)
+    rng = np.random.Generator(np.random.PCG64(SEED + bits))
+    base = rng.integers(0, maximum + 1, (height, width), dtype=np.uint16)
+    base[0] = 0
+    base[1] = np.where(x < 21, 0, maximum)
+    base[2] = x % 2 * maximum
+    base[3] = x * maximum // (width - 1)
+    base[4] = np.where(x < 16, maximum, 0)
+    for near in range(min(255, maximum // 2) + 1):
+        pixels = base.copy()
+        edges = [0, max(0, near - 1), near, near + 1, maximum - near - 1, maximum - near, maximum]
+        pixels[5] = np.resize(edges, width)
+        yield "near-matrix", near, pixels
+
+
+def prepare(directory, with_conformance, match, near_matrix):
     cases = []
     inputs = []
     for bits in (8, 12, 16):
-        for pattern, pixels in fixtures(bits):
-            for near in range(4):
-                name = f"b{bits}-n{near}-{pattern}"
-                if match and match not in name:
-                    continue
-                case = {"name": name, "width": pixels.shape[1], "height": pixels.shape[0], "bits": bits, "near": near}
-                raw = directory / f"{name}.raw"
-                save_raw(raw, pixels)
-                inputs.append(raw)
-                if bits != 12:
-                    native = encode_native(pixels, bits, near)
-                    check_samples(name, decode_native(native), pixels, near)
-                    reference = directory / f"{name}.native.jls"
-                    reference.write_bytes(native)
-                    inputs.append(reference)
-                cases.append(case)
+        images = near_matrix_fixtures(bits) if near_matrix else (
+            (pattern, near, pixels) for pattern, pixels in fixtures(bits) for near in range(4)
+        )
+        for pattern, near, pixels in images:
+            name = f"b{bits}-n{near}-{pattern}"
+            if match and match not in name:
+                continue
+            case = {"name": name, "width": pixels.shape[1], "height": pixels.shape[0], "bits": bits, "near": near}
+            if near_matrix and bits == 16:
+                case["charlsWasmImplicit"] = True
+            raw = directory / f"{name}.raw"
+            save_raw(raw, pixels)
+            inputs.append(raw)
+            if bits != 12:
+                native = encode_native(pixels, bits, near)
+                check_samples(name, decode_native(native), pixels, near)
+                reference = directory / f"{name}.native.jls"
+                reference.write_bytes(native)
+                inputs.append(reference)
+            cases.append(case)
 
     official = []
     if with_conformance:
@@ -83,6 +105,8 @@ def prepare(directory, with_conformance, match):
     manifest = {"seed": SEED, "charlsNativeCommit": CHARLS, "revision": revision, "trackedDiff": tracked_diff,
                 "fixtureSha256": fixture_hashes,
                 "command": [str(Path(sys.executable)), *sys.argv], "cases": cases, "conformance": official}
+    if near_matrix:
+        manifest["nearMatrix"] = True
     (directory / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf8")
     return manifest
 
@@ -90,17 +114,23 @@ def prepare(directory, with_conformance, match):
 def check_native(directory, suite, backends, native_cli):
     checks = 0
     maximum_errors = defaultdict(int)
+    case_results = []
+    near_matrix = suite.get("nearMatrix", False)
     for case in suite["cases"]:
         name, near = case["name"], case["near"]
         pixels = read_raw(directory / f"{name}.raw")
         source_names = ["charls-wasm"]
+        if case.get("charlsWasmImplicit"):
+            source_names.append("charls-wasm-implicit")
         if case["bits"] != 12:
             source_names.append("native")
         decoders = backends + (["native-cli"] if native_cli else [])
+        streams = {}
         for source in source_names + decoders:
             stream = (directory / f"{name}.{source}.jls").read_bytes()
             reconstruction = decode_native(stream)
-            check_samples(f"{name}/{source}/native error", reconstruction, pixels, near)
+            max_error = check_samples(f"{name}/{source}/native error", reconstruction, pixels, near)
+            matched = []
             for backend in decoders:
                 if source == "native-cli" and backend != "native-cli":
                     continue
@@ -109,14 +139,27 @@ def check_native(directory, suite, backends, native_cli):
                 observed = check_samples(f"{name}/{source}/{backend} precision", backend_reconstructed, pixels, near)
                 key = f"{case['bits']}/{near}"
                 maximum_errors[key] = max(maximum_errors[key], observed)
+                matched.append(backend)
                 checks += 1
-    return {"nativeOracleSameStreamComparisons": checks, "maxAbsoluteErrorByBitsAndNear": dict(maximum_errors)}
+            if near_matrix:
+                streams[source] = {"bytes": len(stream), "sha256": sha256(stream).hexdigest(),
+                                   "reconstructionSha256": sha256(reconstruction.tobytes()).hexdigest(),
+                                   "maxAbsoluteError": max_error, "sameStreamDecoders": matched}
+        if near_matrix:
+            case_results.append({**case, "inputSha256": suite["fixtureSha256"][f"{name}.raw"], "streams": streams})
+    result = {"nativeOracleSameStreamComparisons": checks, "maxAbsoluteErrorByBitsAndNear": dict(maximum_errors)}
+    if near_matrix:
+        filename = "near-matrix-cases.json"
+        (directory / filename).write_text(json.dumps(case_results, indent=2) + "\n", encoding="utf8")
+        result["nearMatrixCases"] = filename
+    return result
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--directory", type=Path, default=EVIDENCE / "validation")
+    parser.add_argument("--directory", type=Path)
     parser.add_argument("--conformance", action="store_true")
+    parser.add_argument("--near-matrix", action="store_true", help="Check every legal NEAR value at 8, 12 and 16 bits")
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--match", default="", help="Filter base image IDs to reproduce a failure")
     parser.add_argument("--backend", action="append", choices=["js", "wasm-gc"])
@@ -124,16 +167,17 @@ def main():
     parser.add_argument("--native-wsl", metavar="DISTRO", help="Run the native CLI inside this WSL distribution")
     args = parser.parse_args()
     verify_version()
-    directory = args.directory.resolve()
+    directory = (args.directory or EVIDENCE / ("validation-near-matrix" if args.near_matrix else "validation")).resolve()
     directory.mkdir(parents=True, exist_ok=True)
-    suite = prepare(directory, args.conformance, args.match)
+    suite = prepare(directory, args.conformance, args.match, args.near_matrix)
     print(f"Prepared {len(suite['cases'])} base cases and {len(suite['conformance'])} conformance streams in {directory}", flush=True)
     if args.prepare_only:
         return
     backends = args.backend or ["js", "wasm-gc"]
     command = ["node", "scripts/interop.mjs", str(directory), *backends]
     try:
-        proc = subprocess.run(command, cwd=ROOT, timeout=180, text=True, encoding="utf8", capture_output=True, check=True)
+        proc = subprocess.run(command, cwd=ROOT, timeout=360 if args.near_matrix else 180,
+                              text=True, encoding="utf8", capture_output=True, check=True)
         summary = json.loads(proc.stdout)
         if args.native_exe:
             native_exe = args.native_exe.resolve()
@@ -142,7 +186,8 @@ def main():
                            directory.relative_to(ROOT).as_posix(), native_exe.relative_to(ROOT).as_posix(), *backends]
             else:
                 command = [sys.executable, "scripts/native_validate.py", str(directory), str(native_exe), *backends]
-            proc = subprocess.run(command, cwd=ROOT, timeout=240, text=True, encoding="utf8", errors="replace",
+            proc = subprocess.run(command, cwd=ROOT, timeout=900 if args.near_matrix else 240,
+                                  text=True, encoding="utf8", errors="replace",
                                   capture_output=True, check=True)
             summary.update(json.loads(proc.stdout))
         summary.update(check_native(directory, suite, backends, args.native_exe is not None))

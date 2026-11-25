@@ -1,0 +1,79 @@
+{
+  "images": 6,
+  "encodes": 24,
+  "sameStreamComparisons": 48,
+  "backendByteMatches": 6,
+  "outputQuantumByteMatches": 12,
+  "allSingleCuts": 160,
+  "wholeImageMatches": 24,
+  "truncationPrefixes": 162,
+  "supportedOfficial": 0,
+  "unsupportedOfficial": 0,
+  "explicitPresetVariants": 8,
+  "pauseResume": 4,
+  "cancellation": 4,
+  "negativeStructures": 26,
+  "trailingAllow": 2,
+  "entropyMutationAccepted": 6,
+  "entropyMutationRejected": 90,
+  "entropyMutationDistinctInputs": 48,
+  "entropyMutationReports": [
+    "js-entropy-mutations.json",
+    "wasm-gc-entropy-mutations.json"
+  ],
+  "mostStuffed": {
+    "name": "b16-n255-column",
+    "entropyFF": 6,
+    "entropyBytes": 68
+  },
+  "node": "v24.20.0",
+  "wasmOracle": "@team-charls/charls-wasm 0.10.0",
+  "nativeCLIImages": 6,
+  "nativeCLIEncodeQuantumMatches": 6,
+  "nativeCrossBackendBytes": 12,
+  "nativeCLISameStreamComparisons": 30,
+  "nativeCLIPgmPipeChecks": 0,
+  "nativeCLIOfficialPass": 0,
+  "nativeCLIOfficialUnsupported": 0,
+  "nativeCLIDecodeQuantumMatches": 6,
+  "nativeCLINearBoundaryRejections": 5,
+  "nativeOracleSameStreamComparisons": 78,
+  "maxAbsoluteErrorByBitsAndNear": {
+    "8/127": 127,
+    "12/255": 13,
+    "16/255": 127
+  },
+  "nearMatrixCases": "near-matrix-cases.json",
+  "sourceRevision": "9ffa66c2069885519b2727bb05c6c4acd04b67ab",
+  "trackedDiff": [
+    " M core/encoder.mbt",
+    " M core/markers.mbt",
+    " M core/parameters.mbt",
+    " M core/stream_wbtest.mbt",
+    " M core/workspace_wbtest.mbt",
+    " M scripts/interop.mjs",
+    " M scripts/native_validate.py",
+    " M scripts/validate.py",
+    " M sdk/index.mjs",
+    " M web/app.mjs",
+    " M web/index.html",
+    " M web/labels.mjs",
+    " M web/pgm.mjs",
+    " M web/preview.mjs",
+    " M web/preview.test.mjs",
+    " M web/smoke.mjs",
+    " M web/style.css"
+  ],
+  "seed": 141648163,
+  "backends": [
+    "js",
+    "wasm-gc",
+    "native"
+  ],
+  "python": "3.12.10",
+  "nativeOracle": "imagecodecs 2026.11.11 / CharLS 2.4.5",
+  "runtime": {
+    "platform": "win32",
+    "cpuCount": 32
+  }
+}

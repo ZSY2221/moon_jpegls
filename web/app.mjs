@@ -1,8 +1,8 @@
 import { CodecError } from '../sdk/index.mjs';
 import { startWorker } from '../sdk/worker-client.mjs';
 import { strings } from './labels.mjs';
-import { openPgm, pgmHeader, pgmRow, samplePgm } from './pgm.mjs';
-import { createPreview, errorPalette, previewIds } from './preview.mjs';
+import { openPgm, pgmHeader, pgmRow, readPgmHeader, samplePgm } from './pgm.mjs';
+import { createPreview, errorLegendStops, previewIds } from './preview.mjs';
 import { createPipe, openSink, readBlob } from './transport.mjs';
 
 const get = (id) => document.getElementById(id);
@@ -32,6 +32,7 @@ const isNarrow = () => Boolean(narrowQuery?.matches);
 
 let locale = 'en';
 let source;
+let sourcePgm;
 let active;
 let artifactUrl;
 let sequence = 0;
@@ -50,6 +51,18 @@ function translate(key, ...args) {
 
 const formatInt = (value) => value === undefined || value === null ? '—' : value.toLocaleString(locale);
 const bytes = (value) => value === undefined ? '—' : `${value.toLocaleString(locale)} B`;
+const nearLimit = (bits) => bits === 8 ? 127 : 255;
+
+function setNearOptions(limit) {
+  const select = get('near');
+  if (!select?.options) return;
+  const selected = Number(select.value);
+  for (let value = select.options.length; value <= limit; value++) {
+    select.add(new Option(String(value), String(value)));
+  }
+  select.options.length = limit + 1;
+  select.value = String(Math.min(selected, limit));
+}
 
 function effectiveDecodeOnly() {
   return presented ? presented.decodeOnly : isJls(source);
@@ -149,7 +162,7 @@ function renderErrorLegend() {
     container.textContent = '';
     return;
   }
-  const stops = errorPalette(frame.near);
+  const stops = errorLegendStops(frame.near);
   const items = stops.map((stop) => {
     const chip = document.createElement('span');
     chip.className = 'legend-chip';
@@ -198,7 +211,10 @@ function renderIdentity() {
     sinkText,
   ].join(' · '));
 
-  setHidden('near-note', !isJls(source));
+  const sourceBits = sourcePgm?.header?.bits;
+  setHidden('near-note', !formDecodeOnly && sourceBits === undefined);
+  if (formDecodeOnly) setText('near-note', translate('nearFromHeader'));
+  else if (sourceBits !== undefined) setText('near-note', translate('nearRange', nearLimit(sourceBits)));
   setAttr('workspace-view', 'data-reference', decodeOnly ? 'none' : 'available');
   setAttr('workspace-view', 'data-near', frame?.near ?? '');
 
@@ -269,12 +285,12 @@ function transition(phase, message = phase, ...args) {
 function lock(running) {
   for (const id of controls) {
     const control = get(id);
-    if (control) control.disabled = running || (id === 'near' && isJls(source));
+    if (control) control.disabled = running || (id === 'near' && (isJls(source) || Boolean(sourcePgm?.pending)));
   }
   const filePick = get('file')?.parentElement;
   if (filePick?.setAttribute) filePick.setAttribute('data-disabled', String(running));
   const runBtn = get('run');
-  if (runBtn) runBtn.disabled = running || source === undefined;
+  if (runBtn) runBtn.disabled = running || source === undefined || Boolean(sourcePgm?.pending);
   const pauseBtn = get('pause');
   if (pauseBtn) pauseBtn.disabled = !running || Boolean(active?.closing);
   const cancelBtn = get('cancel');
@@ -334,6 +350,20 @@ function clearOutput() {
 function setSource(file) {
   if (active) return;
   source = file;
+  const pgm = file && !isJls(file) ? {} : undefined;
+  sourcePgm = pgm;
+  if (pgm) {
+    pgm.pending = readPgmHeader(file).then(
+      (header) => { pgm.header = header; },
+      (error) => { pgm.error = error; },
+    ).then(() => {
+      pgm.pending = undefined;
+      if (sourcePgm !== pgm) return;
+      setNearOptions(nearLimit(pgm.header?.bits));
+      lock(false);
+      renderIdentity();
+    });
+  }
   presented = undefined;
   clearOutput();
   lock(false);
@@ -429,7 +459,7 @@ async function decodeFile(job, file, settings, sink) {
 }
 
 async function roundTrip(job, file, near, settings, sink) {
-  const input = await openPgm(file, near, job.abort.signal);
+  const input = await openPgm(file, near, job.abort.signal, job.pgmHeader);
   requireActive(job);
   setFrame(job, input.frame);
   const pipe = createPipe();
@@ -492,6 +522,11 @@ async function roundTrip(job, file, near, settings, sink) {
 
 async function run() {
   if (active || !source) return;
+  const pgm = sourcePgm;
+  if (pgm?.pending) {
+    await pgm.pending;
+    if (active || sourcePgm !== pgm) return;
+  }
   clearOutput();
   presented = undefined;
   const chunk = Number(get('chunk').value);
@@ -508,7 +543,7 @@ async function run() {
   const outputName = file.name.replace(/\.[^.]+$/, '') + (decodeOnly ? '.pgm' : '.jls');
   const settings = { backend: get('backend').value, inputChunkSize: chunk, outputChunkSize: Math.min(chunk, 32 * 1024) };
   const job = {
-    id: ++sequence, backend: settings.backend, near, decodeOnly,
+    id: ++sequence, backend: settings.backend, near, decodeOnly, pgmHeader: pgm?.header,
     abort: new AbortController(), paused: false, workers: [],
   };
   active = job;
@@ -524,6 +559,7 @@ async function run() {
   renderProgress(job);
   let sink;
   try {
+    if (pgm?.error) throw pgm.error;
     sink = await openSink(sinkMode, outputName, decodeOnly ? 'image/x-portable-graymap' : 'image/jls');
     requireActive(job);
     job.started = performance.now();
@@ -740,5 +776,6 @@ get('language').addEventListener('change', (event) => {
 const fileSinkOption = get('sink').querySelector?.('[value="file"]');
 if (!globalThis.showSaveFilePicker && fileSinkOption) fileSinkOption.disabled = true;
 
+setNearOptions(255);
 setViewMode(viewMode);
 applyLocale();

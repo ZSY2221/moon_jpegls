@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { createPreview, errorColor, errorPalette, ERROR_OVERFLOW_RGB } from './preview.mjs';
+import { createPreview, errorColor, errorLegendStops, errorPalette, ERROR_OVERFLOW_RGB } from './preview.mjs';
 
 function makeLayer() {
   const mkNode = () => ({ style: {} });
@@ -144,6 +144,27 @@ test('errorPalette and errorColor provide calibrated monotonic discrete stops an
   assert.deepEqual(errorColor(3, 3), p3[3].rgb);
   assert.deepEqual(errorColor(4, 3), ERROR_OVERFLOW_RGB);
   assert.deepEqual(errorColor(1, 0), ERROR_OVERFLOW_RGB);
+});
+
+test('high NEAR uses the same calibrated colors in the legend and canvas', () => {
+  const luminance = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  for (const near of [4, 127, 255]) {
+    const palette = errorPalette(near);
+    const legend = errorLegendStops(near);
+    assert.equal(palette.length, near + 1);
+    assert.deepEqual(palette[0].rgb, errorColor(0, 3));
+    assert.deepEqual(palette[near].rgb, errorColor(3, 3));
+    assert.ok(palette.every((stop, index) => index === 0 || luminance(stop.rgb) >= luminance(palette[index - 1].rgb)));
+    assert.deepEqual(legend.map(({ value }) => value), [0, Math.round(near / 4), Math.round(near / 2), Math.round(near * 3 / 4), near]);
+    assert.deepEqual(legend, legend.map(({ value }) => palette[value]));
+
+    const { preview, difference } = surfaces(100, 100);
+    const diffs = [0, Math.round(near / 2), near, near + 1];
+    preview.configure({ width: diffs.length, height: 1, bits: 16, near }, true);
+    preview.drawRow(0, new Uint16Array(diffs.length), Uint16Array.from(diffs));
+    assert.deepEqual([...difference.draws[0].data], diffs.flatMap(value => [...errorColor(value, near), 255]));
+    assert.deepEqual(errorColor(near + 1, near), ERROR_OVERFLOW_RGB);
+  }
 });
 
 test('synchronized reticle overlays stay inside content area across resize and clear', () => {

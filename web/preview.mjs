@@ -13,17 +13,40 @@ function rgbToHex([r, g, b]) {
   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
 }
 
+function normalizeNear(near) {
+  return Math.max(0, Math.min(255, Math.trunc(Number(near) || 0)));
+}
+
+function colorWithinBound(value, near) {
+  if (near <= 3) return ERROR_STOPS[near][value];
+  const anchors = ERROR_STOPS[3];
+  const position = value * (anchors.length - 1) / near;
+  const left = Math.floor(position);
+  const right = Math.min(left + 1, anchors.length - 1);
+  return anchors[left].map((channel, index) =>
+    Math.round(channel + (anchors[right][index] - channel) * (position - left)));
+}
+
+function paletteStop(value, near) {
+  const rgb = [...colorWithinBound(value, near)];
+  return { value, rgb, hex: rgbToHex(rgb) };
+}
+
 export function errorPalette(near) {
-  const safeNear = Math.max(0, Math.min(3, Math.trunc(Number(near) || 0)));
-  const stops = ERROR_STOPS[safeNear] ?? ERROR_STOPS[3];
-  return stops.map((rgb, value) => ({ value, rgb: [...rgb], hex: rgbToHex(rgb) }));
+  const safeNear = normalizeNear(near);
+  return Array.from({ length: safeNear + 1 }, (_, value) => paletteStop(value, safeNear));
+}
+
+export function errorLegendStops(near) {
+  const safeNear = normalizeNear(near);
+  if (safeNear <= 3) return errorPalette(safeNear);
+  return Array.from({ length: 5 }, (_, index) => paletteStop(Math.round(safeNear * index / 4), safeNear));
 }
 
 export function errorColor(difference, near) {
-  const safeNear = Math.max(0, Math.min(3, Math.trunc(Number(near) || 0)));
-  const stops = ERROR_STOPS[safeNear] ?? ERROR_STOPS[3];
-  if (difference < 0 || difference > safeNear) return ERROR_OVERFLOW_RGB;
-  return stops[difference] ?? ERROR_OVERFLOW_RGB;
+  const safeNear = normalizeNear(near);
+  if (!Number.isInteger(difference) || difference < 0 || difference > safeNear) return ERROR_OVERFLOW_RGB;
+  return colorWithinBound(difference, safeNear);
 }
 
 function color(data, index, r, g, b) {

@@ -92,15 +92,10 @@ fn validate_dimensions(
 }
 
 ///|
-fn validate_profile(
-  bits : Int32,
-  near : Int32,
-  maxval : Int32,
-) -> Unit raise CodecError {
+fn validate_profile(bits : Int32, maxval : Int32) -> Unit raise CodecError {
   guard bits == 8 || bits == 12 || bits == 16 else {
     raise UnsupportedFeature("sample precision")
   }
-  guard near <= 3 else { raise UnsupportedFeature("NEAR greater than 3") }
   guard maxval == (1 << bits) - 1 else {
     raise UnsupportedFeature("custom MAXVAL")
   }

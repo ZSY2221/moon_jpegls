@@ -52,7 +52,7 @@ function smallPgm(samples) {
   return { bytes, headerLength: header.length };
 }
 
-async function cancelRestart(kind, oldStream) {
+async function cancelRestart(kind, oldStream, oldNear = 0) {
   const oldPgm = smallPgm([1000, 1000, 2000, 2000, 5000, 5000]);
   const expected = [3000, 3000, 4000, 4000];
   const nextPgm = smallPgm(expected);
@@ -130,10 +130,11 @@ async function cancelRestart(kind, oldStream) {
 
   await upload(oldName, kind === 'read' ? oldPgm.bytes : oldStream);
   await chunkSize('4096');
-  if (kind === 'read') await select('near', '0');
+  if (kind === 'read') await select('near', String(oldNear));
   await select('sink', kind === 'read' ? 'bounded' : 'file');
   await click('run');
   await waitForBarrier('old');
+  if (kind === 'read') assert.equal(await text('frame'), `2 × 3 · 16-bit · NEAR ${oldNear}`);
   await click('cancel');
   await phase('cancelled');
   assert.equal(await text('preview-state'), 'Incomplete');
@@ -190,7 +191,8 @@ async function cancelRestart(kind, oldStream) {
     return [...(await decodeImage(core, Uint8Array.from(bytes))).samples];
   }, [...downloaded]);
   assert.deepEqual(reconstructed, expected);
-  console.log(JSON.stringify({ test: 'browser cancel/restart with pending host operation', blocked: kind, reads, newPixel: 4000, reconstructed, download: download.suggestedFilename() }));
+  console.log(JSON.stringify({ test: 'browser cancel/restart with pending host operation', blocked: kind,
+    oldNear: kind === 'read' ? oldNear : undefined, reads, newPixel: 4000, reconstructed, download: download.suggestedFilename() }));
 }
 
 async function gatedEnding() {
@@ -355,6 +357,94 @@ async function narrowSettingsSummary(jlsStream) {
   } finally {
     await page.setViewportSize({ width: 1440, height: 900 });
   }
+}
+
+async function expandedNear() {
+  await page.goto(`${origin}/web/`);
+  const rejected = await page.evaluate(async () => {
+    const { loadCore } = await import('/sdk/index.mjs');
+    const invalid = [[8, 128], [12, 256], [16, 256], [16, -1], [16, 1.5], [16, '4']];
+    return Promise.all(['js', 'wasm-gc'].map(async (backend) => {
+      const core = await loadCore({ backend });
+      return { backend, cases: invalid.map(([bits, near]) => {
+        try {
+          core.createEncoder({ width: 1, height: 1, bits, near });
+          return null;
+        } catch (error) {
+          return error.code;
+        }
+      }) };
+    }));
+  });
+  for (const { cases } of rejected) assert.deepEqual(cases, Array(6).fill('InvalidArgument'));
+  console.log(JSON.stringify({ test: 'browser SDK rejects invalid NEAR arguments', rejected }));
+
+  const results = [];
+  let encoded;
+  for (const [bits, near, backend] of [[16, 4, 'wasm-gc'], [16, 255, 'wasm-gc'], [8, 127, 'js'], [12, 255, 'wasm-gc']]) {
+    const maxval = 2 ** bits - 1;
+    const limit = bits === 8 ? 127 : 255;
+    const samples = [0, maxval, 12, 60, maxval - 1, 128, 75, maxval];
+    const raster = Buffer.alloc(samples.length * (bits === 8 ? 1 : 2));
+    samples.forEach((sample, index) => {
+      if (bits === 8) raster[index] = sample;
+      else raster.writeUInt16BE(sample, index * 2);
+    });
+    await upload(`expanded-${bits}.pgm`, Buffer.concat([Buffer.from(`P5\n4 2\n${maxval}\n`), raster]));
+    await page.waitForFunction((limit) => {
+      const input = document.getElementById('near');
+      return !input.disabled && input.options.length === limit + 1;
+    }, limit);
+    assert.equal(await text('near-note'), `NEAR 0–${limit}`);
+    if (bits === 8) assert.equal(await page.locator('#near').inputValue(), '127');
+    await select('near', String(near));
+    await select('backend', backend);
+    await click('run');
+    await phase('complete');
+    assert.equal(await text('frame'), `4 × 2 · ${bits}-bit · NEAR ${near}`);
+    const maxError = Number(await text('error'));
+    assert.ok(maxError > 0 && maxError <= near);
+    const legend = await page.locator('#error-legend-swatches .legend-chip-label').allTextContents();
+    assert.deepEqual(legend, ['0 · exact', ...[1, 2, 3].map(index => `${Math.round(near * index / 4)} · in bound`), `${near} · NEAR limit`]);
+    const pending = page.waitForEvent('download');
+    await click('download');
+    encoded = await readFile(await (await pending).path());
+    const reconstructed = await page.evaluate(async (bytes) => {
+      const { loadCore, decodeImage } = await import('/sdk/index.mjs');
+      const core = await loadCore({ backend: 'js' });
+      return [...(await decodeImage(core, Uint8Array.from(bytes))).samples];
+    }, [...encoded]);
+    const differences = samples.map((value, index) => Math.abs(value - reconstructed[index]));
+    assert.equal(Math.max(...differences), maxError);
+    const index = differences.indexOf(maxError);
+    const x = index % 4;
+    const y = Math.floor(index / 4);
+    const canvas = page.locator('#reconstruction');
+    await canvas.press('Enter');
+    for (let step = 0; step < x; step++) await canvas.press('ArrowRight');
+    if (y) await canvas.press('ArrowDown');
+    assert.equal(await text('pixel'), `(${x}, ${y}) · original ${samples[index]} · reconstructed ${reconstructed[index]} · error ${maxError}`);
+    assert.equal(await text('inspect-original'), samples[index].toLocaleString('en'));
+    assert.equal(await text('inspect-reconstructed'), reconstructed[index].toLocaleString('en'));
+    assert.equal(await text('inspect-error'), String(maxError));
+    const heatmap = await page.evaluate(async ({ x, y, error, near }) => {
+      const { errorColor } = await import('/web/preview.mjs');
+      const { data } = document.getElementById('difference').getContext('2d').getImageData(x, y, 1, 1);
+      return { rendered: [...data], expected: [...errorColor(error, near), 255] };
+    }, { x, y, error: maxError, near });
+    assert.deepEqual(heatmap.rendered, heatmap.expected);
+    results.push({ bits, backend, near, maxError,
+      pixel: { x, y, original: samples[index], reconstructed: reconstructed[index], rgba: heatmap.rendered } });
+  }
+  await upload('expanded-12.jls', encoded);
+  assert.equal(await page.locator('#near').isDisabled(), true);
+  assert.equal(await text('near-note'), 'NEAR from JLS header');
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('frame'), '4 × 2 · 12-bit · NEAR 255');
+  assert.equal(await text('error'), 'Not compared');
+  assert.equal(await page.locator('#error-legend-swatches .legend-chip').count(), 0);
+  console.log(JSON.stringify({ test: 'browser precision-specific NEAR limits and calibrated legend', results }));
 }
 
 async function verifyLunarDownload(sourcePath) {
@@ -524,6 +614,7 @@ try {
   console.log(JSON.stringify({ test: 'browser UI pause, resume and cancel', inputChunkSize: 1 }));
 
   await cancelRestart('read', byteStream);
+  await cancelRestart('read', byteStream, 255);
   await cancelRestart('write', byteStream);
   await cancelRestart('close', byteStream);
   await gatedEnding();
@@ -578,6 +669,7 @@ try {
   assert.equal(flow.stats.outputPeakBytes, 8);
   console.log(JSON.stringify({ test: 'worker ACK, manual resume and one-byte reads', ...flow }));
 
+  await expandedNear();
   if (process.env.MOONJLS_LOLA) await verifyLunarDownload(process.env.MOONJLS_LOLA);
 
   assert.deepEqual(pageErrors, []);

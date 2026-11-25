@@ -297,3 +297,27 @@ test "legal fill and unsupported features remain distinct from malformed markers
     (Ok(decode(sof57)) catch { e => Err(e) }) is Err(UnsupportedFeature(_)),
   )
 }
+
+///|
+test "high NEAR streams and out-of-range arguments preserve error categories" {
+  for (bits, upper) in [(8, 127), (12, 255), (16, 255)] {
+    let frame : Frame = { width: 19, height: 3, bits, near: upper, }
+    let original = pattern(frame)
+    let coded = encode_chunks(frame, original, 1, 1)
+    assert_eq(coded, encode(frame, original))
+    let (info, reconstructed) = decode(coded)
+    assert_eq(info, frame)
+    for i in 0..<original.length() {
+      assert_true((original[i] - reconstructed[i]).abs() <= upper)
+    }
+    let single_bytes = Array::makei(coded.length(), i => i + 1)
+    decode_chunks(coded, single_bytes, frame, reconstructed)
+    for near in [-1, upper + 1] {
+      let invalid : Frame = { ..frame, near, }
+      assert_true(
+        (Ok(Encoder::new(invalid, Limits::default())) catch { e => Err(e) })
+        is Err(InvalidArgument(_)),
+      )
+    }
+  }
+}

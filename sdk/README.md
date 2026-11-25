@@ -13,6 +13,8 @@ const { samples } = await decodeImage(core, bytes);
 console.log(Array.from(samples));
 ```
 
+`frame.near` is an integer from 0 to 127 for 8-bit frames and from 0 to 255 for 12- or 16-bit frames. Encoding rejects values outside the frame's range with `InvalidArgument`.
+
 `encodeImage` and `decodeImage` collect an entire result. For a bounded pipeline, use `encodeStream` and `decodeStream` with a `read(maxElements)` source and an awaited sink. Encode input uses `Uint16Array`, decode input and encode output use `Uint8Array`, and decoded rows use `Uint16Array`. An empty array is a chunk. Return `null` to end the source. A decode checks for trailing data by default, including a one-byte source pull after EOI if necessary. Set `trailing: 'allow'` to stop at EOI and report the actual consumed offset. File adapters that need the unread suffix must retain or seek the underlying source.
 
 The Node CLI exercises the same streaming driver with bounded file reads and writes. Raw samples use unsigned 16-bit little-endian storage even if the effective bit depth is 8 or 12. Use new output paths. An interrupted or failed run may leave an output prefix.

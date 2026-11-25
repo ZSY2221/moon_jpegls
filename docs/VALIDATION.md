@@ -2,6 +2,10 @@
 
 MoonJLS uses one MoonBit codec across Native, JS and Wasm GC. The external oracle exercises both directions. Each decoder is compared sample by sample against the CharLS decoder for the same byte stream. For lossless frames each reconstruction also equals the original. For near-lossless frames each sample satisfies `abs(original - reconstructed) <= NEAR`.
 
+## Verified NEAR expansion
+
+For the current full-range, single-component profile, the expansion matrix covers 8-bit NEAR 0–127 and 12- and 16-bit NEAR 0–255. It uses independently encoded CharLS Wasm input for all 640 configurations and checks Native, JS and Wasm GC in both directions. The older corpus and Annex E subset remain separately reproducible. [Matrix results and reproduction commands](../reports/review-near-20261125/README.md)
+
 ## Reproduce
 
 From the repository root in PowerShell, using Python 3.12 and Node 24:

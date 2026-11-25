@@ -23,7 +23,7 @@ pub fn Encoder::new(frame : Frame, limits : Limits) -> Encoder raise CodecError 
   guard frame.near <= maxval / 2 else {
     raise InvalidArgument("NEAR exceeds MAXVAL / 2")
   }
-  validate_profile(frame.bits, frame.near, maxval)
+  validate_profile(frame.bits, maxval)
   let params = default_parameters(maxval, frame.near)
   let bits = BitWriter::new()
   bits.header(frame, params)

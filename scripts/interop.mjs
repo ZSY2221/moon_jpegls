@@ -189,8 +189,8 @@ async function invalidTests(core, initial, directory, label, counts) {
   const large = Buffer.from(source);
   large.writeUInt16BE(65535, 7);
   large.writeUInt16BE(65535, 9);
-  const near = Buffer.from(source);
-  near[scanStart(source) - 3] = 4;
+  const unsupportedPrecision = Buffer.from(source);
+  unsupportedPrecision[6] = 9;
   const illegalNear = Buffer.from(source);
   illegalNear[scanStart(source) - 3] = 128;
   const badLength = Buffer.from(source);
@@ -204,7 +204,7 @@ async function invalidTests(core, initial, directory, label, counts) {
     ['missing-eoi', source.subarray(0, source.length - 1), 'Truncated'],
     ['wrong-eoi', badEnd, 'InvalidData'],
     ['unsupported-dnl', zeroHeight, 'UnsupportedFeature'],
-    ['unsupported-near-four', near, 'UnsupportedFeature'],
+    ['unsupported-precision-nine', unsupportedPrecision, 'UnsupportedFeature'],
     ['invalid-near-128', illegalNear, 'InvalidData'],
     ['invalid-preset-thresholds', withPreset(source, [255, 8, 3, 21, 64]), 'InvalidData'],
     ['unsupported-preset-thresholds', withPreset(source, [255, 4, 8, 21, 64]), 'UnsupportedFeature'],
@@ -325,6 +325,12 @@ async function main(directory, backends) {
       await writeFile(join(directory, `${name}.charls-wasm.jls`), external);
 
       const streams = new Map([['charls-wasm', external]]);
+      if (frame.charlsWasmImplicit) {
+        const implicit = Buffer.from(oracle.encode(pixels, frame, 0));
+        assert.equal(scanStart(external) - scanStart(implicit), 15, `${name} explicit LSE marker size`);
+        await writeFile(join(directory, `${name}.charls-wasm-implicit.jls`), implicit);
+        streams.set('charls-wasm-implicit', implicit);
+      }
       if (bits !== 12) streams.set('native', await readFile(join(directory, `${name}.native.jls`)));
       let prior;
       for (const [backend, core] of loaded) {
@@ -333,7 +339,8 @@ async function main(directory, backends) {
         const whole = await encodeImage(core, frame, pixels);
         compareBytes(Buffer.from(whole.bytes), baseline, `${name}/${backend} whole-image encode`);
         counts.wholeImageMatches++;
-        const splitOptions = { chunk: 23, output: 3, seed: manifest.seed, empty: true };
+        const splitOptions = { chunk: manifest.nearMatrix ? 1 : 23, output: manifest.nearMatrix ? 1 : 3,
+          seed: manifest.seed, empty: true };
         const split = await encode(core, frame, pixels, splitOptions);
         if (!baseline.equals(split)) await writeFile(join(directory, `${name}.${backend}.split.jls`), split);
         compareBytes(split, baseline, `${name}/${backend} output/input quantum`);
@@ -352,7 +359,7 @@ async function main(directory, backends) {
         compareFrame(reference.frame, frame);
         checkSamples(reference.pixels, pixels, near, `${name}/${source} reference precision`);
         for (const [backend, core] of loaded) {
-          const chunk = name.includes('stuffing-runs') ? 1 : 37;
+          const chunk = manifest.nearMatrix || name.includes('stuffing-runs') ? 1 : 37;
           const got = await decode(core, stream, { chunk, seed: manifest.seed, empty: true });
           const output = join(directory, `${name}.${source}.${backend}.raw`);
           await writeFile(output, writeRaw(got.pixels));

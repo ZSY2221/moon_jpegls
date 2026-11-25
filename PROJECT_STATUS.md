@@ -3,7 +3,8 @@
 ## 十一月复审版本
 
 - 2026-11-25 复审前，GitHub 默认分支的核查提交为 [60befa6](https://github.com/ZSY2221/moon_jpegls/commit/60befa604287d941dc75ffde03a4c52ab80a93ad)。本复审分支以 `e3a3e5c` 为基线，[16a7b49](https://github.com/ZSY2221/moon_jpegls/commit/16a7b492242cf3c85c133e0c4ae311acee0463e7) 纳入 Native 逐行交付、Worker 批次峰值及核心 `q_lut` 计数修复。
-- 当前编解码范围为 8/12/16 位、满量程 MAXVAL、单分量单扫描及 `NEAR=0–3`。WSL Native、Windows JS 和 Wasm GC 各通过 9 项核心测试，Native 定向与尾部回归及真实 Chrome Worker 验收通过。 [本机实跑证据](reports/review-fix-20261125/README.md)
+- P0 的编解码范围为 8/12/16 位、满量程 MAXVAL、单分量单扫描及 `NEAR=0–3`。WSL Native、Windows JS 和 Wasm GC 各通过 9 项核心测试，Native 定向与尾部回归及真实 Chrome Worker 验收通过。 [本机实跑证据](reports/review-fix-20261125/README.md)
+- 当前 P1 已扩展现有位深的合法 NEAR，8 位为 0–127、12/16 位为 0–255。640 组参数在 WSL Native、JS、Wasm GC 双向对照通过，实际 Chrome 核验了误差热图、原始整数读数、下载和取消重启。 [P1 本机实跑证据](reports/review-near-20261125/README.md)
 - 项目终点是完整的 JPEG-LS Part 1。阶段范围、编码与解码缺口和验收口径见 [T.87 能力矩阵](docs/T87_CONFORMANCE_PLAN.md) 与 [兼容路线](docs/ROADMAP.md)。完整实现的赛事验收日期待组委会确认。
 
 ## 历史本地候选版

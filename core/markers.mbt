@@ -188,7 +188,7 @@ fn HeaderParser::scan_segment(
       raise UnsupportedFeature("custom LSE preset")
     }
   }
-  validate_profile(self.bits, near, maxval)
+  validate_profile(self.bits, maxval)
   guard mapping == 0 && transform == 0 else {
     raise UnsupportedFeature("mapping selector or point transform")
   }
