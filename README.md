@@ -4,6 +4,8 @@
 
 MoonJLS is a pure MoonBit streaming JPEG-LS codec for 8-, 12- and 16-bit grayscale images. It implements a single-frame, single-component and single-scan T.87 baseline profile. `NEAR=0` preserves every sample. `NEAR=1–3` bounds the absolute error of each reconstructed sample in its original integer scale. The core keeps two prediction lines and operates on Native, Wasm GC and JS. [Support matrix](docs/SCOPE.md)
 
+MoonJLS's final target is the full JPEG-LS Part 1 codec and data-format capabilities in ITU-T T.87 (06/1998) / ISO/IEC 14495-1. The grayscale profile above is the current implementation stage. The [T.87 capability matrix and acceptance plan](docs/T87_CONFORMANCE_PLAN.md) separates verified capabilities from upcoming work, and the [compatibility roadmap](docs/ROADMAP.md) gives the phases and their exit criteria.
+
 ## Build and test
 
 The verified SDK is Moon `0.1.20261119` and `moonc v0.10.22+124d61d05`. Node `24.20.0` runs the SDK. Native ran on Ubuntu 22.04 in WSL2. Use MoonBit with a system C compiler and shell on Linux for the native commands.
@@ -15,7 +17,7 @@ moon test core --target native --deny-warn
 moon build cmd/moonjls --target native --release
 ```
 
-Each test command runs seven core groups, including the 12 precision/NEAR combinations, exhaustive single-split replay, bounded output, long runs, cancellation, truncation and marker validation. [Independent validation](docs/VALIDATION.md)
+Each test command runs nine core test groups, including the 12 precision/NEAR combinations, exhaustive single-split replay, bounded output, long runs, cancellation, truncation and marker validation. [Independent validation](docs/VALIDATION.md)
 
 ## Native file and pipe use
 
@@ -45,4 +47,4 @@ The SDK exports `Uint16Array` decoded rows, typed declarations, chunk and pause 
 
 External validation uses prebuilt CharLS 2.4.5 and official CharLS Wasm stably pinned by version and source revision. The corpus covers every 16-bit integer in a full-range ramp, NEAR 0–3 and adverse run and stuffing patterns. The fixed-width benchmark measures payload, process peak RSS, time to first row and sink backpressure with synthetic and public-data results reported separately. [Validation](docs/VALIDATION.md) · [Benchmark](docs/BENCHMARK.md)
 
-The profile excludes color, custom presets, mapping tables, restart intervals, deferred/extended dimensions, Part 2 and DICOM containers. The codec's error checks do not replace an application checksum. See the current local candidate status and handoff for reproducibility, browser coverage and release boundaries. [Status](PROJECT_STATUS.md) · [Ecosystem audit](docs/ECOSYSTEM_AUDIT.md) · [Antigravity handoff](docs/ANTIGRAVITY_HANDOFF.md)
+The current profile leaves multiple components, custom presets, mapping tables, restart intervals and deferred or extended dimensions for later Part 1 phases. T.870 Part 2 and DICOM containers are separate extensions. The codec's error checks do not replace an application checksum. See the current local candidate status and handoff for reproducibility, browser coverage and release boundaries. [Status](PROJECT_STATUS.md) · [Ecosystem audit](docs/ECOSYSTEM_AUDIT.md) · [Antigravity handoff](docs/ANTIGRAVITY_HANDOFF.md)

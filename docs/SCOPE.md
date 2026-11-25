@@ -1,6 +1,6 @@
 # JPEG-LS support scope
 
-The implementation targets the single-component procedures and interchange format of ITU-T T.87 Annexes A and C. See the [ITU recommendation and normative text](https://www.itu.int/rec/T-REC-T.87-199806-I/en).
+The current implementation covers a single-component profile of the procedures and interchange format in ITU-T T.87 Annexes A and C. The project targets complete JPEG-LS Part 1 codec and data-format capabilities in [ITU-T T.87 (06/1998)](https://www.itu.int/rec/T-REC-T.87-199806-I/en) / ISO/IEC 14495-1. See the [T.87 capability matrix and acceptance plan](T87_CONFORMANCE_PLAN.md) and the [compatibility roadmap](ROADMAP.md).
 
 | Field | Scope |
 | --- | --- |
@@ -11,7 +11,8 @@ The implementation targets the single-component procedures and interchange forma
 | Entropy | Regular mode, run mode, run interruption and JPEG-LS one-bit stuffing |
 | Markers | SOI, SOF55, SOS and EOI. APPn and COM before SOF55 or SOS are skipped under a cumulative budget. |
 | Preset | LSE ID 1 with absent, zero or explicit default values. Valid custom settings return `UnsupportedFeature`. |
-| Beyond scope | Other precisions, custom presets, mapping tables, restart intervals, DNL, extended dimensions, additional scans, multiple components, Part 2, DICOM container parsing |
+| Planned Part 1 capabilities | Other legal precisions and NEAR values, non-default MAXVAL and presets, multiple components and scans, interleave, sampling and point transforms, mapping and abbreviated formats, restart intervals, DNL, extended dimensions and remaining marker syntax |
+| Separate extensions | T.870 Part 2 and DICOM container parsing |
 | Targets | Native, Wasm GC and JS. See `VALIDATION.md` for executed checks. |
 
 The streaming decoder returns the exact position after EOI. A host can reject trailing bytes or use the position to split a larger input. The whole-image decoder requires one complete frame. Samples delivered before EOI are provisional until `Done`.

@@ -4,6 +4,8 @@
 
 MoonJLS 是纯 MoonBit 的高位深 JPEG-LS 流式编解码器，支持单通道、单帧、单扫描的 T.87 子集。有效位深支持 8、12、16 位。`NEAR=0` 逐样本无损，`NEAR=1–3` 对原始整数样本给出绝对误差上界。Native、Wasm GC 和 JS 共用两个预测行和同一状态机。 [支持范围](docs/SCOPE.md)
 
+项目最终目标是实现 ITU-T T.87（06/1998）／ISO/IEC 14495-1 的完整 JPEG-LS Part 1 编解码与数据格式能力。上文的灰度子集是当前阶段成果。[标准能力矩阵与验收计划](docs/T87_CONFORMANCE_PLAN.md) 逐项列出已验证能力和待实现项，[分阶段兼容路线](docs/ROADMAP.md) 给出各阶段的交付物和通过条件。
+
 ## 构建与测试
 
 实测使用 Moon `0.1.20261119`、`moonc v0.10.22+124d61d05` 和 Node `24.20.0`。Native 在 Ubuntu 22.04 WSL2 上运行。原生构建需要系统 C 编译器。
@@ -15,7 +17,7 @@ moon test core --target native --deny-warn
 moon build cmd/moonjls --target native --release
 ```
 
-三个后端各运行 7 组核心测试，包含 12 组位深与 NEAR 组合、全部单切分位置、逐字节输入、单字节输出、长游程、结束标记和错误边界。外部验证另行执行 CharLS 双向互操作及同一码流逐样本对比。 [验证报告与复跑](docs/VALIDATION.md)
+三个后端各运行 9 组核心测试，包含 12 组位深与 NEAR 组合、全部单切分位置、逐字节输入、单字节输出、长游程、结束标记和错误边界。外部验证另行执行 CharLS 双向互操作及同一码流逐样本对比。 [验证报告与复跑](docs/VALIDATION.md)
 
 ## CLI 与流式管道
 
@@ -47,4 +49,4 @@ python -m http.server 8000 --bind 127.0.0.1 --directory web/dist
 
 对照预构建 CharLS 2.4.5 与官方 CharLS Wasm，覆盖满量程 16 位整数、合成边界与近无损条件。资源实验固定宽度并增加高度，分别记录核心分配载荷、进程峰值、首行时机与慢消费。压缩效果另用公开显微图和月面高程数据。 [基准与复现](docs/BENCHMARK.md)
 
-当前范围不含彩色、自定义 preset、映射表、重启间隔、DNL、扩展尺寸、Part 2 或 DICOM 容器。公开范围查重、未验证路径和下一步都随本地候选版本记录。 [查重证据](docs/ECOSYSTEM_AUDIT.md) · [项目状态](PROJECT_STATUS.md) · [Antigravity 交接](docs/ANTIGRAVITY_HANDOFF.md)
+多分量、自定义预置参数、映射表、重启间隔、DNL 和扩展尺寸属于后续 Part 1 阶段。T.870 Part 2 与 DICOM 容器分别列为独立扩展。公开范围查重、未验证路径和下一步都随本地候选版本记录。 [查重证据](docs/ECOSYSTEM_AUDIT.md) · [项目状态](PROJECT_STATUS.md) · [Antigravity 交接](docs/ANTIGRAVITY_HANDOFF.md)

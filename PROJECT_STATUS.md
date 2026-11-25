@@ -1,6 +1,12 @@
 # MoonJLS 工程状态
 
-## 当前本地候选版
+## 十一月复审版本
+
+- 2026-11-25 复审前，GitHub 默认分支的核查提交为 [60befa6](https://github.com/ZSY2221/moon_jpegls/commit/60befa604287d941dc75ffde03a4c52ab80a93ad)。本复审分支以 `e3a3e5c` 为基线，[16a7b49](https://github.com/ZSY2221/moon_jpegls/commit/16a7b492242cf3c85c133e0c4ae311acee0463e7) 纳入 Native 逐行交付、Worker 批次峰值及核心 `q_lut` 计数修复。
+- 当前编解码范围为 8/12/16 位、满量程 MAXVAL、单分量单扫描及 `NEAR=0–3`。WSL Native、Windows JS 和 Wasm GC 各通过 9 项核心测试，Native 定向与尾部回归及真实 Chrome Worker 验收通过。 [本机实跑证据](reports/review-fix-20261125/README.md)
+- 项目终点是完整的 JPEG-LS Part 1。阶段范围、编码与解码缺口和验收口径见 [T.87 能力矩阵](docs/T87_CONFORMANCE_PLAN.md) 与 [兼容路线](docs/ROADMAP.md)。完整实现的赛事验收日期待组委会确认。
+
+## 历史本地候选版
 
 2026-11-24（新加坡时间）完成 RC3。固定受测源码为 `2feb00b8ef657b7259ba70bccf1ff0ceaf08765b`，本地交接分支 `antigravity/rc3-20261124`。真实工作台保留 64 KiB 参考行窗口。原 Native 极小块慢消费在 20 秒预算内仍为历史超时，同一二进制的正常和受控暂停对照已通过。保持本地，未对外发布。 [RC3 实测证据](reports/rc3/README.md) · [Antigravity 固定版本交接](docs/RC3_HANDOFF.md)
 
@@ -20,7 +26,7 @@ RC2 洁净受测源码为 `a146998f31675769fb6c3bc9055ef7798f254b1d`。RC2 的�
 | E | Native 文件和管道、JS/TS SDK、Worker、浏览器工作台、独立 MoonBit 模块和 Gray16 消费示例已运行。 |
 | F | 独立核对公开生态、标准标记和跨后端验证。源码 `bcca320ff2fd3d36cbfa10b5e3138f2887256251` 从干净检出通过构建、核心测试、浏览器和包验证。 |
 
-## 实跑与可复验的状态
+## rc.1 历史实跑与可复验的状态
 
 - Windows 工具链为 Moon `0.1.20261119`、`moonc v0.10.22+124d61d05`、Node `24.20.0`、npm `11.19.0`、Python `3.12.10`。Windows Native check 通过。Windows Native run 缺可见的系统 C 编译器。Ubuntu 22.04 WSL2 使用相同 Moon 工具链，GCC 11.4、Clang 14、CMake 3.22.1 可用，Native 测试、命令行及独立消费模块已实跑。
 - 7 个核心测试组分别在 JS、Wasm GC 和 WSL Native 通过。独立套件含 100 张合成图及声明范围内的官方流，两种 CharLS 构建的参考解码一致。固定配置下同一 MoonJLS 编码在各已验证后端和分块间一致。跨后端、截断与失败记录见 [VALIDATION.md](docs/VALIDATION.md)。
@@ -29,4 +35,4 @@ RC2 洁净受测源码为 `a146998f31675769fb6c3bc9055ef7798f254b1d`。RC2 的�
 
 范围内已运行的门槛见 [VALIDATION.md](docs/VALIDATION.md)。未支持项包括彩色及交错、超出默认等价类的 LSE preset、映射表、重启恢复、DNL、扩展尺寸、T.870 Part 2 和 DICOM 容器。未观察到第三方采用。
 
-下一次复核应从 16 位 NEAR=3、完全单字节分块、Worker 背压和文件保存失败恢复开始，再为性能热点建立可归因的同边界基准。 [干净检出记录](reports/RELEASE_CHECK.md) · [Antigravity 交接](docs/ANTIGRAVITY_HANDOFF.md)
+rc.1 交接时的后续复核重点是 16 位 NEAR=3、完全单字节分块、Worker 背压和文件保存失败恢复。 [干净检出记录](reports/RELEASE_CHECK.md) · [Antigravity 交接](docs/ANTIGRAVITY_HANDOFF.md)
