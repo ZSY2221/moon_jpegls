@@ -5,7 +5,7 @@ import { mkdtemp, readFile, rmdir, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { decodeImage, encodeImage, loadCore } from '../sdk/index.mjs';
+import { decodePlanarImage, encodePlanarImage, inspectStream, loadCore } from '../sdk/index.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const manifest = JSON.parse(await readFile(join(root, 'tests/conformance/manifest.json'), 'utf8'));
@@ -16,6 +16,7 @@ const backends = ['js', 'wasm-gc'];
 function checkManifest() {
   const digest = /^[0-9a-f]{64}$/;
   const states = new Set(['passed', 'unsupported', 'recognized_only', 'not_run', 'planned', 'blocked', 'failed']);
+  const supportedCases = new Set([1, 4, 9, 10, 11, 12]);
   assert.equal(manifest.schemaVersion, 1);
   assert.match(manifest.fixtureArchive.sha256, digest);
   assert.match(manifest.officialReference.sha256, digest);
@@ -24,7 +25,7 @@ function checkManifest() {
     assert.equal(item.test_id, `E.2-${item.id}`);
     assert.match(item.sha256, digest);
     assert.ok(item.bytes > 0 && item.sourceFiles.length > 0);
-    assert.equal(item.expected, item.id < 9 ? 'unsupported' : 'supported');
+    assert.equal(item.expected, supportedCases.has(item.id) ? 'supported' : 'unsupported');
     for (const name of item.sourceFiles) assert.match(manifest.sourceFiles[name].sha256, digest);
   }
   const ids = manifest.features.map((feature) => feature.feature_id);
@@ -76,15 +77,31 @@ async function knownBytes(directory, name, metadata) {
   return bytes;
 }
 
-function samplesFromPgm(bytes, expected) {
-  const header = /^P5\s+(\d+)\s+(\d+)\s+(\d+)(\r?\n| )/.exec(bytes.subarray(0, 120).toString('ascii'));
-  assert.ok(header, 'Expected a binary P5 image');
+function samplesFromPnm(bytes, expected, magic = 'P5', comps = 1) {
+  const header = new RegExp(`^${magic}\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)(\\r?\\n| )`).exec(bytes.subarray(0, 120).toString('ascii'));
+  assert.ok(header, `Expected a binary ${magic} image`);
   const [width, height, maxval] = header.slice(1, 4).map(Number);
   assert.deepEqual([width, height, maxval], [expected.width, expected.height, 2 ** expected.bits - 1]);
   const body = bytes.subarray(header[0].length);
   const wide = expected.bits > 8;
-  assert.equal(body.length, width * height * (wide ? 2 : 1));
-  return Uint16Array.from({ length: width * height }, (_, i) => wide ? body.readUInt16BE(i * 2) : body[i]);
+  assert.equal(body.length, width * height * comps * (wide ? 2 : 1));
+  return Uint16Array.from({ length: width * height * comps }, (_, i) => wide ? body.readUInt16BE(i * 2) : body[i]);
+}
+
+function samplesFromPgm(bytes, expected) {
+  return samplesFromPnm(bytes, expected, 'P5', 1);
+}
+
+function planarFromPpm(bytes, expected) {
+  const interleaved = samplesFromPnm(bytes, expected, 'P6', expected.components);
+  const planeSize = expected.width * expected.height;
+  const planar = new Uint16Array(planeSize * expected.components);
+  for (let i = 0; i < planeSize; i++) {
+    for (let c = 0; c < expected.components; c++) {
+      planar[c * planeSize + i] = interleaved[i * expected.components + c];
+    }
+  }
+  return planar;
 }
 
 function nativeRaw(pixels, bits) {
@@ -107,6 +124,8 @@ function compare(actual, expected, tolerance = 0) {
 
 function checkFrame(actual, item) {
   for (const key of ['width', 'height', 'bits', 'near']) assert.equal(actual[key], item[key], key);
+  const actualComps = Array.isArray(actual.components) ? actual.components.length : (actual.components ?? 1);
+  assert.equal(actualComps, item.components, 'components');
 }
 
 function checkPreset(bytes, item) {
@@ -152,7 +171,7 @@ async function createReference(hpDirectory) {
   }
   const work = await mkdtemp(join(tmpdir(), 'moonjls-annex-e-'));
   const input = join(work, 'stream.jls');
-  const output = join(work, 'result.pgm');
+  const createdOutputs = new Set();
   const remove = (file) => unlink(file).catch((error) => { if (error.code !== 'ENOENT') throw error; });
   return {
     identity: { name: 'HP JPEG-LS reference software', version: '1.00', officialSoftware: true,
@@ -160,13 +179,26 @@ async function createReference(hpDirectory) {
     async decode(bytes, item) {
       const name = `${item.near ? 'n' : ''}loco${item.bits > 8 ? '16' : ''}d.exe`;
       await writeFile(input, bytes);
-      await remove(output);
-      const result = child(join(path, name), ['stream.jls', 'result.pgm'], { cwd: work });
+      const outNames = item.components === 1
+        ? ['result.pgm']
+        : Array.from({ length: item.components }, (_, idx) => `comp${idx}.pgm`);
+      const outPaths = outNames.map((n) => join(work, n));
+      outPaths.forEach((p) => createdOutputs.add(p));
+      await Promise.all(outPaths.map(remove));
+      const result = child(join(path, name), ['stream.jls', ...outNames], { cwd: work });
       assert.equal(result.status, 0, `${name}: ${result.stderr}\n${result.stdout}`);
-      return samplesFromPgm(await readFile(output), item);
+      if (item.components === 1) {
+        return samplesFromPgm(await readFile(outPaths[0]), item);
+      }
+      const planeSize = item.width * item.height;
+      const planar = new Uint16Array(planeSize * item.components);
+      for (let c = 0; c < item.components; c++) {
+        planar.set(samplesFromPgm(await readFile(outPaths[c]), item), c * planeSize);
+      }
+      return planar;
     },
     async close() {
-      await Promise.all([remove(input), remove(output)]);
+      await Promise.all([remove(input), ...[...createdOutputs].map(remove)]);
       await rmdir(work);
     },
   };
@@ -193,11 +225,28 @@ async function run(args) {
       let original;
       let expected;
       if (!outside) {
-        const name = item.sourceFiles[0];
-        original = samplesFromPgm(await knownBytes(fixtures, name, manifest.sourceFiles[name]), item);
+        if (item.components === 1) {
+          const name = item.sourceFiles[0];
+          original = samplesFromPgm(await knownBytes(fixtures, name, manifest.sourceFiles[name]), item);
+        } else {
+          const ppmName = item.sourceFiles.find((n) => n.endsWith('.PPM'));
+          const pgmNames = item.sourceFiles.filter((n) => n.endsWith('.PGM'));
+          assert.equal(pgmNames.length, item.components, `${item.test_id} source PGM planes`);
+          const planeSize = item.width * item.height;
+          original = new Uint16Array(planeSize * item.components);
+          for (let c = 0; c < item.components; c++) {
+            const pName = pgmNames[c];
+            original.set(samplesFromPgm(await knownBytes(fixtures, pName, manifest.sourceFiles[pName]), item), c * planeSize);
+          }
+          if (ppmName) {
+            const fromPpm = planarFromPpm(await knownBytes(fixtures, ppmName, manifest.sourceFiles[ppmName]), item);
+            compare(fromPpm, original, 0);
+          }
+        }
         expected = await reference.decode(official, item);
         row.reference = { status: 'passed', samples: expected.length, maxAbsoluteError: compare(expected, original, item.near) };
       }
+      let canonicalEncoded = null;
       for (const backend of [...backends, 'native']) {
         const core = cores.get(backend);
         if (!core && !native) {
@@ -206,7 +255,7 @@ async function run(args) {
         }
         const decode = await classified(async () => {
           if (outside) {
-            if (core) await assert.rejects(decodeImage(core, official), { code: 'UnsupportedFeature' });
+            if (core) await assert.rejects(decodePlanarImage(core, official), { code: 'UnsupportedFeature' });
             else {
               const result = native.run(['decode', '-', '-', 'raw-le', '4096'], official);
               assert.ok(result.status && /\bUnsupportedFeature\b/.test(result.stderr), result.stderr);
@@ -215,8 +264,9 @@ async function run(args) {
             return { status: 'expected_unsupported', code: 'UnsupportedFeature' };
           }
           if (core) {
-            const result = await decodeImage(core, official);
+            const result = await decodePlanarImage(core, official);
             checkFrame(result.frame, item);
+            assert.equal(result.scans?.length ?? 1, item.scans);
             compare(result.samples, expected);
           } else {
             const result = native.run(['decode', '-', '-', 'raw-le', '4096'], official);
@@ -225,19 +275,30 @@ async function run(args) {
           }
           return { status: 'passed', samples: expected.length, maxAbsoluteError: row.reference.maxAbsoluteError };
         });
-        const encode = outside ? { status: 'not_run', reason: 'outside current multicomponent scope' } : await classified(async () => {
+        const encode = outside ? { status: 'not_run', reason: 'outside current interleave/subsampling scope' } : await classified(async () => {
           let bytes;
           if (core) {
-            const { width, height, bits, near, preset } = item;
-            bytes = Buffer.from((await encodeImage(core, { width, height, bits, near, ...(preset && { preset }) }, original)).bytes);
+            const { width, height, bits, near, preset, components } = item;
+            const frame = components > 1
+              ? { width, height, bits, near, ...(preset && { preset }), components: Array.from({ length: components }, (_, i) => ({ id: i + 1 })) }
+              : { width, height, bits, near, ...(preset && { preset }) };
+            bytes = Buffer.from((await encodePlanarImage(core, frame, original)).bytes);
           } else {
             const flags = item.preset ? Object.entries(item.preset).flatMap(([name, value]) => [`--${name}`, String(value)]) : [];
-            const result = native.run(['encode', ...[item.width, item.height, item.bits, item.near].map(String),
-              '-', '-', 'raw-le', '4096', ...flags], nativeRaw(original, item.bits));
+            const cmdArgs = item.components > 1
+              ? ['encode-planar', ...[item.width, item.height, item.bits, item.components, item.near].map(String), '-', '-', 'raw-le', '4096', ...flags]
+              : ['encode', ...[item.width, item.height, item.bits, item.near].map(String), '-', '-', 'raw-le', '4096', ...flags];
+            const result = native.run(cmdArgs, nativeRaw(original, item.bits));
             assert.equal(result.status, 0, result.stderr);
             bytes = result.stdout;
           }
+          if (canonicalEncoded === null) canonicalEncoded = bytes;
+          else assert.ok(bytes.equals(canonicalEncoded), `${item.test_id} ${backend}: cross-backend encoded byte mismatch`);
           checkPreset(bytes, item);
+          if (core) {
+            const inspected = await inspectStream(core, bytes);
+            assert.equal(inspected.scans?.length ?? 1, item.scans);
+          }
           const actual = await reference.decode(bytes, item);
           compare(actual, item.near ? expected : original);
           return { status: 'passed', samples: actual.length, maxAbsoluteError: compare(actual, original, item.near),

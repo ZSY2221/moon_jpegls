@@ -4,8 +4,10 @@ import { lunarElevationMeters, lunarErrorMeters } from '../sdk/lunar.mjs';
 import { createRunId, serializeVerificationReport } from '../sdk/verification-report.mjs';
 import { finishWorkbenchReport, lunarIdentity, workbenchReport } from './run-report.mjs';
 import { strings } from './labels.mjs';
-import { openPgm, pgmHeader, pgmRow, readPgmHeader, sampleByteWidth, sampleMaximum, samplePgm } from './pgm.mjs';
+import { openPgm, pgmHeader, pgmRow, sampleByteWidth, sampleMaximum, samplePgm } from './pgm.mjs';
+import { encodePpmFromPlanes, openPpm, readPnmHeader, sampleMulti16Ppm, sampleRgb8Ppm } from './ppm.mjs';
 import { createPreview, errorLegendStops, previewIds } from './preview.mjs';
+import { renderScanInspector } from './scan-inspector.mjs';
 import { createPipe, openSink, readBlob } from './transport.mjs';
 import { mountCompatibility } from './compatibility.mjs';
 
@@ -28,9 +30,11 @@ const setHidden = (id, hidden) => {
 
 const presetFields = ['t1', 't2', 't3', 'reset'];
 const encodeControls = new Set(['near', ...presetFields.map((field) => `preset-${field}`)]);
-const controls = ['example', 'file', 'backend', 'chunk', 'sink', ...encodeControls];
-const measures = ['frame', 'raw-size', 'encoded', 'ratio', 'error', 'latency', 'first-canvas', 'workspace', 'queues'];
+const controls = ['example', 'sample-rgb8', 'sample-multi16', 'file', 'backend', 'chunk', 'sink', ...encodeControls];
+const measures = ['frame', 'raw-size', 'encoded', 'ratio', 'error', 'latency', 'first-canvas', 'workspace', 'queues', 'host-conv-buffer', 'preview-buffer'];
 const isJls = (file) => /\.jls$/i.test(file?.name ?? '');
+const isPpm = (file) => /\.ppm$/i.test(file?.name ?? '');
+const compCountOf = (frame) => frame?.components?.length ?? 1;
 const onPaint = (callback) => globalThis.requestAnimationFrame
   ? globalThis.requestAnimationFrame(callback) : queueMicrotask(callback);
 const narrowQuery = globalThis.matchMedia?.('(max-width: 640px)');
@@ -120,6 +124,113 @@ function setViewMode(mode, { focus = false } = {}) {
   onPaint(() => preview.syncOverlays?.());
 }
 
+function channelLabelsFor(job) {
+  const count = compCountOf(job?.frame);
+  if (job?.decodeOnly) {
+    return Array.from({ length: count }, (_, idx) => `C${idx}`);
+  }
+  const roles = job?.file?.moonjlsMeta?.channelRoles;
+  if (Array.isArray(roles) && roles.length >= count) {
+    return roles.slice(0, count);
+  }
+  if (job?.inputFormat === 'ppm' && count === 3) {
+    return ['R', 'G', 'B'];
+  }
+  return Array.from({ length: count }, (_, idx) => `C${idx}`);
+}
+
+function provenanceKeyFor(job) {
+  const metaKey = job?.file?.moonjlsMeta?.labelKey;
+  if (metaKey === 'sampleRgb8Desc') return 'provenanceRgb8';
+  if (metaKey === 'sampleMulti16Desc') return 'provenanceMulti16';
+  if (job?.decodeOnly) return 'provenanceJlsUnknown';
+  if (job?.inputFormat === 'ppm') return 'provenancePpm';
+  return 'provenancePgm';
+}
+
+function renderMulticomponent(job) {
+  const count = compCountOf(job?.frame);
+  const show = Boolean(job?.frame && count > 1);
+  setHidden('multicomponent-panel', !show);
+  if (!show) return;
+  const labels = channelLabelsFor(job);
+  setText('mc-provenance-badge', translate(provenanceKeyFor(job)));
+
+  const btnWrap = get('channel-buttons');
+  if (btnWrap && typeof document.createElement === 'function') {
+    const options = count === 3
+      ? [{ id: 'composite', label: translate('channelComposite'), compAttr: 'composite' },
+         ...labels.map((label, idx) => ({ id: idx, label, compAttr: String(idx) }))]
+      : labels.map((label, idx) => ({ id: idx, label, compAttr: String(idx) }));
+    const activeCh = job.activeChannel ?? (count === 3 ? 'composite' : 0);
+    btnWrap.replaceChildren(...options.map((opt) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'channel-pill';
+      btn.dataset.comp = opt.compAttr;
+      btn.textContent = opt.label;
+      btn.setAttribute('aria-pressed', String(activeCh === opt.id));
+      btn.addEventListener('click', () => {
+        job.activeChannel = opt.id;
+        preview.setChannel(opt.id);
+        renderMulticomponent(job);
+      });
+      return btn;
+    }));
+  }
+
+  const progWrap = get('multicomponent-progress');
+  if (progWrap && typeof document.createElement === 'function') {
+    const height = job.frame.height;
+    const scans = job.structure?.scans ?? [];
+    const eoiDone = job.status === 'passed';
+    progWrap.replaceChildren(...labels.map((label, idx) => {
+      const scan = scans.find((entry) => entry.componentIndex === idx);
+      const delivered = job.compRows?.[idx] ?? 0;
+      let statusKey = 'mcWait';
+      let stateAttr = 'wait';
+      if (eoiDone) {
+        statusKey = 'mcVerified';
+        stateAttr = 'verified';
+      } else if (scan?.completed || job.completedScans?.has?.(scan?.scanIndex)) {
+        statusKey = 'mcScanProvisional';
+        stateAttr = 'provisional';
+      } else if (delivered > 0) {
+        statusKey = 'mcActive';
+        stateAttr = 'active';
+      }
+      const chip = document.createElement('span');
+      chip.className = 'mc-progress-chip';
+      chip.dataset.comp = String(idx);
+      chip.dataset.scanState = stateAttr;
+      chip.textContent = `${label}: ${delivered}/${height} · ${translate(statusKey)}`;
+      return chip;
+    }));
+  }
+}
+
+function renderInspector(job) {
+  renderScanInspector({
+    structure: job?.structure ?? null,
+    selectedScanIndex: job?.selectedScanIndex ?? -1,
+    channelNames: job ? channelLabelsFor(job) : null,
+    errorLocation: job?.errorLocation ?? null,
+    errorMessage: job?.errorMessage ?? null,
+    translate,
+    onSelectScan(scan) {
+      if (!job) return;
+      job.selectedScanIndex = scan.scanIndex;
+      if (compCountOf(job.frame) > 1) {
+        job.activeChannel = scan.componentIndex;
+        preview.setChannel(scan.componentIndex);
+      }
+      renderPrecision(job);
+      renderMulticomponent(job);
+      renderInspector(job);
+    },
+  });
+}
+
 function renderPixel() {
   setHidden('magnifier', !selectedPixel);
   setText('pixel', selectedPixel ? translate('pixel', selectedPixel) : translate('pickPixel'));
@@ -132,15 +243,20 @@ function renderPixel() {
       formatInt(lunarElevationMeters(selectedPixel.reconstructed)),
       formatInt(lunarErrorMeters(selectedPixel.error))));
   }
-  const near = frame?.near ?? presented?.near;
+  const near = selectedPixel?.near ?? frame?.near ?? presented?.near;
   const nearText = near === undefined || near === null ? '—' : String(near);
   setText('inspect-near', selectedPixel || frame ? nearText : '—');
+  const compWrap = get('inspect-components');
   if (!selectedPixel) {
     setText('inspect-coord', '—');
     setText('inspect-original', '—');
     setText('inspect-reconstructed', '—');
     setText('inspect-error', '—');
     setAttr('inspect-error', 'data-error-level', 'none');
+    if (compWrap) {
+      compWrap.replaceChildren();
+      compWrap.hidden = true;
+    }
     return;
   }
   setText('inspect-coord', `(${selectedPixel.x}, ${selectedPixel.y})`);
@@ -155,6 +271,24 @@ function renderPixel() {
     const level = selectedPixel.error === 0 ? 'exact'
       : (near !== undefined && selectedPixel.error > near ? 'exceeded' : 'within');
     setAttr('inspect-error', 'data-error-level', level);
+  }
+  if (compWrap && typeof document.createElement === 'function') {
+    const comps = selectedPixel.components;
+    if (Array.isArray(comps) && comps.length > 1) {
+      compWrap.hidden = false;
+      compWrap.replaceChildren(...comps.map((c) => {
+        const card = document.createElement('span');
+        card.className = 'inspect-comp-card';
+        card.dataset.compIndex = String(c.index);
+        card.textContent = c.original === undefined
+          ? `${c.label}: ${formatInt(c.reconstructed)} (NEAR ${c.near ?? 0})`
+          : `${c.label}: ${formatInt(c.original)} -> ${formatInt(c.reconstructed)} (|e|=${formatInt(c.error)}, NEAR ${c.near ?? 0})`;
+        return card;
+      }));
+    } else {
+      compWrap.replaceChildren();
+      compWrap.hidden = true;
+    }
   }
 }
 
@@ -206,11 +340,14 @@ function renderIdentity() {
 
   setText('selected', name);
   setText('source-name', name);
-  setText('source-spec', !source ? translate('noSourceSpec') : (decodeOnly ? 'JLS' : 'PGM'));
+  const specLabel = !source ? translate('noSourceSpec')
+    : (decodeOnly ? 'JLS' : ((isPpm(source) || sourcePgm?.header?.magic === 'P6') ? 'PPM' : 'PGM'));
+  setText('source-spec', specLabel);
   setText('task-id', presented ? `#${presented.id}` : '—');
+  const compCount = compCountOf(frame);
   setText('task-meta', [
     backendLabel,
-    frame ? `${frame.bits}-bit` : translate('precisionPending'),
+    frame ? (compCount > 1 ? `${compCount}ch ${frame.bits}-bit` : `${frame.bits}-bit`) : translate('precisionPending'),
     near === null ? translate('nearFromHeader') : `NEAR ${near}`,
   ].join(' · '));
 
@@ -243,10 +380,15 @@ function renderIdentity() {
   renderErrorScope();
 
   if (frame) {
-    const spec = `${frame.width} × ${frame.height} · ${frame.bits}-bit · NEAR ${frame.near}`;
+    const spec = compCount > 1
+      ? `${frame.width} × ${frame.height} · ${compCount} ch · ${frame.bits}-bit · NEAR ${frame.near}`
+      : `${frame.width} × ${frame.height} · ${frame.bits}-bit · NEAR ${frame.near}`;
+    const paneScale = compCount > 1
+      ? `${frame.width} × ${frame.height} · ${compCount} ch · ${frame.bits}-bit`
+      : `${frame.width} × ${frame.height} · ${frame.bits}-bit`;
     setText('frame', spec);
-    setText('original-scale', decodeOnly ? '' : `${frame.width} × ${frame.height} · ${frame.bits}-bit`);
-    setText('reconstruction-scale', `${frame.width} × ${frame.height} · ${frame.bits}-bit`);
+    setText('original-scale', decodeOnly ? '' : paneScale);
+    setText('reconstruction-scale', paneScale);
   } else {
     setText('original-scale', '');
     setText('reconstruction-scale', '');
@@ -263,13 +405,20 @@ function renderIdentity() {
   renderErrorLegend();
   renderPixel();
   renderPrecision(presented);
+  renderMulticomponent(presented);
+  renderInspector(presented);
 }
 
 function renderPrecision(job) {
-  const { frame, preset } = job ?? {};
+  const selectedIdx = job?.selectedScanIndex ?? -1;
+  const selectedScan = selectedIdx >= 0 ? job?.structure?.scans?.[selectedIdx] : null;
+  const frame = job?.frame;
+  const preset = selectedScan?.preset ?? job?.preset;
+  const effectiveNear = selectedScan?.near ?? frame?.near;
+  const effectiveMaxval = preset?.maxval ?? (frame ? sampleMaximum(frame) : undefined);
   setText('precision-bits', formatInt(frame?.bits));
-  setText('precision-maxval', formatInt(frame ? sampleMaximum(frame) : undefined));
-  setText('precision-near', formatInt(frame?.near));
+  setText('precision-maxval', formatInt(effectiveMaxval));
+  setText('precision-near', formatInt(effectiveNear));
   for (const field of presetFields) setText(`precision-${field}`, formatInt(preset?.[field]));
 }
 
@@ -325,14 +474,15 @@ function lock(running) {
 function renderProgress(job) {
   const { frame, stats } = job ?? {};
   const rows = stats?.rows ?? 0;
+  const totalRows = frame ? frame.height * compCountOf(frame) : 1;
   const progress = get('progress');
   if (progress) {
-    progress.max = frame?.height ?? 1;
-    progress.value = rows;
+    progress.max = totalRows;
+    progress.value = Math.min(rows, totalRows);
   }
   const key = state.phase === 'complete' ? 'rowsComplete'
     : ['failed', 'cancelled'].includes(state.phase) ? 'rowsIncomplete' : 'rowsProvisional';
-  setText('progress-copy', frame ? translate(key, rows, frame.height) : '—');
+  setText('progress-copy', frame ? translate(key, rows, totalRows) : '—');
   if (stats) {
     setText('workspace', `${bytes(job.encodeWorkspace)} / ${bytes(stats.coreWorkspaceBytes)}`);
     setText('queues', translate('queueValues', bytes(stats.inputQueueBytes), bytes(stats.outputQueueBytes),
@@ -345,12 +495,16 @@ function renderProgress(job) {
   setText('stream-first-row', stats?.firstRowMs == null ? formatInt() : `${stats.firstRowMs.toFixed(2)} ms`);
   setText('stream-acks', formatInt(job?.acknowledgedEvents));
   setText('stream-peak-ack', job?.peakHostAckMs == null ? formatInt() : `${job.peakHostAckMs.toFixed(2)} ms`);
+  setText('host-conv-buffer', job ? bytes(job.hostConversionBufferBytes ?? 0) : '—');
+  setText('preview-buffer', job ? bytes(job.previewBufferBytes ?? preview.bufferBytes()) : '—');
+  renderMulticomponent(job);
+  renderInspector(job);
 }
 
 function renderResult(job) {
   if (!job?.result) return;
   const { frame, jlsBytes, maxError } = job.result;
-  const raw = frame.width * frame.height * sampleByteWidth(sampleMaximum(frame));
+  const raw = frame.width * frame.height * compCountOf(frame) * sampleByteWidth(sampleMaximum(frame));
   setText('raw-size', bytes(raw));
   setText('encoded', bytes(jlsBytes));
   setText('ratio', `${(raw / jlsBytes).toFixed(2)}×`);
@@ -359,7 +513,11 @@ function renderResult(job) {
   setText('error-scope', translate(job.decodeOnly ? 'streamOnlyCheck' : 'fullSampleCheck'));
   setText('latency', `${job.elapsed.toFixed(1)} ms`);
   if (job.firstCanvas !== undefined) setText('first-canvas', `${(job.firstCanvas - job.started).toFixed(1)} ms`);
+  setText('host-conv-buffer', bytes(job.hostConversionBufferBytes ?? 0));
+  setText('preview-buffer', bytes(job.previewBufferBytes ?? preview.bufferBytes()));
   renderErrorLegend();
+  renderMulticomponent(job);
+  renderInspector(job);
 }
 
 function renderPhysicalBudget(job) {
@@ -392,6 +550,8 @@ function clearOutput() {
   artifactUrl = undefined;
   renderPixel();
   renderErrorLegend();
+  setHidden('multicomponent-panel', true);
+  renderInspector(null);
 }
 
 function setSource(file) {
@@ -406,7 +566,7 @@ function setSource(file) {
       renderPixel();
       renderPhysicalBudget(presented);
     });
-    pgm.pending = readPgmHeader(file).then(
+    pgm.pending = readPnmHeader(file).then(
       (header) => { pgm.header = header; },
       (error) => { pgm.error = error; },
     ).then(() => {
@@ -435,15 +595,20 @@ function requireActive(job) {
 function setFrame(job, frame) {
   if (!frame || job.frame) return;
   job.frame = frame;
+  const count = compCountOf(frame);
+  job.compRows ??= Array(count).fill(0);
+  if (job.activeChannel === undefined) job.activeChannel = count === 3 ? 'composite' : 0;
   renderIdentity();
   renderPhysicalBudget(job);
 }
 
-function recordStats(job, stats, frame) {
+function recordStats(job, stats, frame, structure) {
   requireActive(job);
   setFrame(job, frame);
+  if (structure) job.structure = structure;
   job.stats = stats;
-  if (job.frame && stats.rows === job.frame.height && !job.rowsArrived) {
+  const totalRows = job.frame ? job.frame.height * compCountOf(job.frame) : 0;
+  if (totalRows > 0 && stats.rows === totalRows && !job.rowsArrived) {
     job.rowsArrived = true;
     if (!job.paused) transition('finalizing', 'finishingStream');
     renderProgress(job);
@@ -461,9 +626,13 @@ function scheduleProgress(job) {
   });
 }
 
-function draw(job, index, reconstructed, original) {
-  const firstCanvas = preview.drawRow(index, reconstructed, original);
+function draw(job, index, reconstructed, original, meta) {
+  const firstCanvas = preview.drawRow(index, reconstructed, original, meta);
   job.rowsDelivered++;
+  const compIdx = meta?.componentIndex ?? 0;
+  job.compRows ??= Array(compCountOf(job.frame)).fill(0);
+  if (compIdx >= 0 && compIdx < job.compRows.length) job.compRows[compIdx]++;
+  job.previewBufferBytes = preview.bufferBytes();
   if (firstCanvas !== undefined && job.firstCanvas === undefined) job.firstCanvas = firstCanvas;
   if (!job.hasImageShown && firstCanvas !== undefined) {
     job.hasImageShown = true;
@@ -491,6 +660,11 @@ function launch(job, options) {
     },
     async onEvent(event) {
       requireActive(job);
+      if (event.structure) job.structure = event.structure;
+      if (event.type === 'scanComplete' && event.scan) {
+        job.completedScans ??= new Set();
+        job.completedScans.add(event.scan.scanIndex);
+      }
       if (!job.preset && event.preset) {
         job.preset = event.preset;
         renderPrecision(job);
@@ -510,6 +684,7 @@ function launch(job, options) {
     if (!job.status) {
       job.stages[options.mode] = 'passed';
       job.preset ??= result.preset;
+      if (result.structure) job.structure = result.structure;
       renderPrecision(job);
     }
     return result;
@@ -520,42 +695,102 @@ function launch(job, options) {
 }
 
 async function decodeFile(job, file, settings, sink) {
-  const handleRow = async (frame, index, row) => {
-    if (index === 0) {
-      preview.configure(frame, false);
-      await writeOutput(job, sink, pgmHeader(frame));
+  let configured = false;
+  let planes = null;
+  let componentCount = 1;
+  const baseName = file.name.replace(/\.[^.]+$/, '');
+  const handleRow = async (frame, index, row, meta) => {
+    if (!configured) {
+      configured = true;
+      componentCount = compCountOf(frame);
+      setFrame(job, frame);
+      preview.configure(frame, false, {
+        componentCount,
+        componentLabels: channelLabelsFor(job),
+        initialChannel: componentCount === 3 ? 'composite' : 0,
+      });
+      if (componentCount === 1) {
+        job.outputName = `${baseName}.pgm`;
+        job.outputFormat = 'pgm';
+        job.hostConversionBufferBytes = 0;
+        await writeOutput(job, sink, pgmHeader(frame));
+      } else if (componentCount === 3) {
+        job.outputName = `${baseName}.ppm`;
+        job.outputFormat = 'ppm';
+        const px = frame.width * frame.height;
+        planes = [new Uint16Array(px), new Uint16Array(px), new Uint16Array(px)];
+        job.hostConversionBufferBytes = planes.reduce((acc, p) => acc + p.byteLength, 0);
+      } else {
+        job.outputName = `${baseName}.planar.raw`;
+        job.outputFormat = 'planar-raw';
+        job.hostConversionBufferBytes = 0;
+      }
     }
-    draw(job, index, row, null);
-    await writeOutput(job, sink, pgmRow(row, frame));
+    draw(job, index, row, null, meta);
+    if (planes) {
+      const compIdx = meta?.componentIndex ?? 0;
+      planes[compIdx].set(row, index * frame.width);
+    } else {
+      await writeOutput(job, sink, pgmRow(row, frame));
+    }
   };
   const result = await launch(job, {
     ...settings, mode: 'decode', read: readBlob(file),
     maxBatchBytes: settings.inputChunkSize >= 256 ? 16384 : 0,
     async onEvent(event) {
-      recordStats(job, event.stats, event.frame);
+      recordStats(job, event.stats, event.frame, event.structure);
+      const rowMeta = {
+        scanIndex: event.scanIndex ?? 0,
+        componentIndex: event.componentIndex ?? 0,
+        componentId: event.componentId ?? 1,
+        near: event.near ?? event.frame?.near,
+        preset: event.preset,
+      };
       if (event.type === 'row') {
-        await handleRow(event.frame, event.index, event.row);
+        await handleRow(event.frame, event.index, event.row, rowMeta);
       } else if (event.type === 'rows') {
         const w = event.frame.width;
         for (let i = 0; i < event.count; i++) {
-          await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w));
+          await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w), rowMeta);
         }
       }
     },
   });
   requireActive(job);
+  if (planes) {
+    const ppmOut = encodePpmFromPlanes(result.frame, planes);
+    job.hostConversionBufferBytes = planes.reduce((acc, p) => acc + p.byteLength, 0) + ppmOut.hostConversionBufferBytes;
+    await writeOutput(job, sink, ppmOut.bytes);
+  }
   return { ...result, jlsBytes: result.stats.inputConsumed, maxError: null };
 }
 
 async function roundTrip(job, file, near, settings, sink) {
-  const input = await openPgm(file, near, job.abort.signal, job.pgmHeader);
+  const isPpmInput = job.pgmHeader?.magic === 'P6' || isPpm(file);
+  job.inputFormat = isPpmInput ? 'ppm' : 'pgm';
+  job.outputFormat = 'jls';
+  const input = isPpmInput
+    ? await openPpm(file, near, job.abort.signal, job.pgmHeader, file.moonjlsMeta?.channelRoles ?? ['R', 'G', 'B'])
+    : await openPgm(file, near, job.abort.signal, job.pgmHeader);
   requireActive(job);
+  job.hostConversionBufferBytes = input.hostConversionBufferBytes ?? 0;
   setFrame(job, input.frame);
+  const componentCount = compCountOf(input.frame);
   const pipe = createPipe();
+  let configured = false;
   let maxError = 0;
-  const handleRow = async (frame, index, row) => {
-    if (index === 0) preview.configure(frame, true);
-    const original = await input.row(index);
+  const handleRow = async (frame, index, row, meta) => {
+    if (!configured) {
+      configured = true;
+      preview.configure(frame, true, {
+        componentCount,
+        componentLabels: channelLabelsFor(job),
+        initialChannel: componentCount === 3 ? 'composite' : 0,
+      });
+    }
+    const compIdx = meta?.componentIndex ?? 0;
+    const allowedNear = meta?.near ?? near;
+    const original = await input.row(index, compIdx);
     requireActive(job);
     job.stages.compare = 'incomplete';
     for (let i = 0; i < row.length; i++) {
@@ -564,23 +799,30 @@ async function roundTrip(job, file, near, settings, sink) {
     }
     job.verifiedSamples = (job.verifiedSamples ?? 0) + row.length;
     job.observedError = maxError;
-    if (maxError > near) {
+    if (maxError > allowedNear) {
       job.stages.compare = 'failed';
-      throw new Error(`Round-trip error ${maxError} exceeds NEAR ${near} at row ${index}`);
+      throw new Error(`Round-trip error ${maxError} exceeds NEAR ${allowedNear} at row ${index}`);
     }
-    draw(job, index, row, original);
+    draw(job, index, row, original, meta);
   };
   const decoded = launch(job, {
     ...settings, mode: 'decode', read: pipe.read,
     maxBatchBytes: settings.inputChunkSize >= 256 ? 16384 : 0,
     async onEvent(event) {
-      recordStats(job, event.stats, event.frame);
+      recordStats(job, event.stats, event.frame, event.structure);
+      const rowMeta = {
+        scanIndex: event.scanIndex ?? 0,
+        componentIndex: event.componentIndex ?? 0,
+        componentId: event.componentId ?? 1,
+        near: event.near ?? event.frame?.near ?? near,
+        preset: event.preset,
+      };
       if (event.type === 'row') {
-        await handleRow(event.frame, event.index, event.row);
+        await handleRow(event.frame, event.index, event.row, rowMeta);
       } else if (event.type === 'rows') {
         const w = event.frame.width;
         for (let i = 0; i < event.count; i++) {
-          await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w));
+          await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w), rowMeta);
         }
       }
     },
@@ -607,7 +849,7 @@ async function roundTrip(job, file, near, settings, sink) {
   try {
     const [fromEncode, fromDecode] = await Promise.all([encoded, decoded]);
     requireActive(job);
-    if (job.verifiedSamples !== input.frame.width * input.frame.height) {
+    if (job.verifiedSamples !== input.frame.width * input.frame.height * componentCount) {
       job.stages.compare = 'failed';
       throw new Error('Round-trip comparison did not verify every sample');
     }
@@ -641,12 +883,17 @@ async function run() {
   const sinkMode = get('sink').value;
   const file = source;
   const decodeOnly = isJls(file);
-  const outputName = file.name.replace(/\.[^.]+$/, '') + (decodeOnly ? '.pgm' : '.jls');
+  const defaultOutExt = decodeOnly ? '.pgm' : '.jls';
+  const outputName = file.name.replace(/\.[^.]+$/, '') + defaultOutExt;
   const settings = { backend: get('backend').value, inputChunkSize: chunk, outputChunkSize: Math.min(chunk, 32 * 1024) };
   const requestedPreset = Object.fromEntries(presetFields.map((field) => [field, Number(get(`preset-${field}`)?.value ?? 0)]));
   const job = {
     id: ++sequence, runId: createRunId(), backend: settings.backend, near, decodeOnly, pgmHeader: pgm?.header,
+    inputFormat: decodeOnly ? 'jls' : (pgm?.header?.magic === 'P6' || isPpm(file) ? 'ppm' : 'pgm'),
+    outputFormat: decodeOnly ? 'pgm' : 'jls',
     file, outputName, sinkMode, settings, pgm, rowsDelivered: 0,
+    hostConversionBufferBytes: 0, previewBufferBytes: 0, selectedScanIndex: -1,
+    completedScans: new Set(), errorLocation: null, errorMessage: null,
     requestedPreset, inputBytes: { encode: 0, decode: 0 }, acknowledgedEvents: 0,
     stages: { encode: 'not_run', decode: 'not_run', compare: 'not_run' },
     abort: new AbortController(), paused: false, workers: [],
@@ -676,6 +923,7 @@ async function run() {
     job.paused = false;
     setFrame(job, result.frame);
     job.stats = result.stats;
+    job.structure = result.structure ?? job.structure;
     lock(true);
     transition('finalizing', 'closingOutput');
     renderProgress(job);
@@ -689,7 +937,7 @@ async function run() {
       const download = get('download');
       if (download) {
         download.href = artifactUrl;
-        download.download = outputName;
+        download.download = job.outputName;
         download.hidden = false;
       }
     }
@@ -703,6 +951,8 @@ async function run() {
     const cancelled = job.abort.signal.aborted || error.code === 'Cancelled' || error.name === 'AbortError';
     job.abort.abort();
     if (active === job) {
+      job.errorLocation = error.location ?? null;
+      job.errorMessage = error.message ?? null;
       finishWorkbenchReport(job, cancelled ? 'cancelled' : 'failed', error);
       setHidden('export-report', false);
       renderPhysicalBudget(job);
@@ -732,6 +982,8 @@ get('file').addEventListener('change', (event) => {
   if (file) setSource(file);
 });
 get('example').addEventListener('click', () => { get('file').value = ''; setSource(samplePgm()); });
+get('sample-rgb8')?.addEventListener('click', () => { get('file').value = ''; setSource(sampleRgb8Ppm()); });
+get('sample-multi16')?.addEventListener('click', () => { get('file').value = ''; setSource(sampleMulti16Ppm()); });
 
 let dragDepth = 0;
 const setDropActive = (on) => setAttr('workspace-view', 'data-drop-active', on ? 'true' : 'false');
@@ -903,6 +1155,8 @@ function applyLocale() {
   renderPhysicalBudget(presented);
   renderResult(presented);
   renderPixel();
+  renderMulticomponent(presented);
+  renderInspector(presented);
   get('progress').setAttribute('aria-label', translate('reconstruction'));
 }
 

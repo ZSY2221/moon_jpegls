@@ -1,7 +1,19 @@
 ///|
+priv struct ResolvedScan {
+  component_index : Int32
+  component_id : Int32
+  near : Int32
+  params : Parameters
+  lse_marker : Preset?
+}
+
+///|
 pub struct Encoder {
-  priv frame : Frame
-  priv scan : Scan
+  priv mut frame : Frame
+  priv frame_info : FrameInfo
+  priv scans : Array[ResolvedScan]
+  priv mut scan_index : Int32
+  priv mut scan : Scan
   priv bits : BitWriter
   priv mut scan_header : Bool
   priv mut trailer : Bool
@@ -10,31 +22,140 @@ pub struct Encoder {
 }
 
 ///|
-pub fn Encoder::new(
-  frame : Frame,
+/// Creates a multi-component non-interleaved (ILV=0, Ns=1 per scan) encoder.
+pub fn Encoder::new_multicomponent(
+  frame_info : FrameInfo,
+  scans : Array[ScanSpec],
   limits : Limits,
-  preset~ : Preset = Preset::defaults(),
 ) -> Encoder raise CodecError {
   validate_limits(limits)
-  validate_dimensions(frame.width, frame.height, limits)
-  let effective = resolve_preset(frame, preset)
-  let params = Parameters::new(effective, frame.near)
-  let bits = BitWriter::new()
-  let marker = if preset != Preset::defaults() || frame.bits > 12 {
-    Some(effective)
-  } else {
-    None
+  let count = frame_info.components.length()
+  guard frame_info.bits >= 2 && frame_info.bits <= 16 else {
+    raise InvalidArgument("sample precision must be in 2..16")
   }
-  bits.header(frame, marker)
+  validate_frame_dimensions(frame_info.width, frame_info.height, count, limits)
+  for index in 0..<count {
+    let comp = frame_info.components[index]
+    guard comp.id >= 0 && comp.id <= 255 else {
+      raise InvalidArgument("component id must be in 0..255")
+    }
+    guard comp.h_sampling == 1 && comp.v_sampling == 1 else {
+      raise UnsupportedFeature("component sampling factors must be 1x1")
+    }
+    for earlier in 0..<index {
+      guard comp.id != frame_info.components[earlier].id else {
+        raise InvalidArgument("duplicate frame component id")
+      }
+    }
+  }
+  guard scans.length() == count else {
+    raise InvalidArgument("non-interleaved scan count must equal component count")
+  }
+  let seen = Array::make(count, false)
+  let resolved : Array[ResolvedScan] = []
+  let mut last_emitted_lse : Preset? = None
+  for i in 0..<scans.length() {
+    let spec = scans[i]
+    guard frame_info.find_component(spec.component_id) is Some(comp_idx) else {
+      raise InvalidArgument("scan references an undeclared component id")
+    }
+    guard !seen[comp_idx] else {
+      raise InvalidArgument("duplicate scan for component id")
+    }
+    seen[comp_idx] = true
+    let scan_frame : Frame = {
+      width: frame_info.width,
+      height: frame_info.height,
+      bits: frame_info.bits,
+      near: spec.near,
+    }
+    let effective = resolve_preset(scan_frame, spec.preset)
+    let needs_lse = spec.preset != Preset::defaults() ||
+      (i == 0 && frame_info.bits > 12) ||
+      last_emitted_lse is Some(_)
+    let lse_marker = if needs_lse && last_emitted_lse != Some(effective) {
+      last_emitted_lse = Some(effective)
+      Some(effective)
+    } else {
+      None
+    }
+    resolved.push({
+      component_index: comp_idx,
+      component_id: spec.component_id,
+      near: spec.near,
+      params: Parameters::new(effective, spec.near),
+      lse_marker,
+    })
+  }
+  let cap = if count == 1 { 32 } else { max(32, 16 + 3 * count) }
+  let bits = BitWriter::with_capacity(cap)
+  bits.frame_header(frame_info)
+  let first = resolved[0]
   {
-    frame,
-    scan: Scan::new(frame.width, params),
+    frame: {
+      width: frame_info.width,
+      height: frame_info.height,
+      bits: frame_info.bits,
+      near: first.near,
+    },
+    frame_info,
+    scans: resolved,
+    scan_index: 0,
+    scan: Scan::new(frame_info.width, first.params),
     bits,
     scan_header: false,
     trailer: false,
     run: -1,
     terminal: None,
   }
+}
+
+///|
+pub fn Encoder::new(
+  frame : Frame,
+  limits : Limits,
+  preset~ : Preset = Preset::defaults(),
+) -> Encoder raise CodecError {
+  Encoder::new_multicomponent(
+    {
+      width: frame.width,
+      height: frame.height,
+      bits: frame.bits,
+      components: [{ id: 1, h_sampling: 1, v_sampling: 1 }],
+    },
+    [{ component_id: 1, near: frame.near, preset }],
+    limits,
+  )
+}
+
+///|
+pub fn Encoder::frame_info(self : Encoder) -> FrameInfo {
+  self.frame_info
+}
+
+///|
+pub fn Encoder::scan_index(self : Encoder) -> Int32 {
+  self.scan_index
+}
+
+///|
+pub fn Encoder::scan_count(self : Encoder) -> Int32 {
+  self.scans.length()
+}
+
+///|
+pub fn Encoder::component_index(self : Encoder) -> Int32 {
+  self.scans[self.scan_index].component_index
+}
+
+///|
+pub fn Encoder::component_id(self : Encoder) -> Int32 {
+  self.scans[self.scan_index].component_id
+}
+
+///|
+pub fn Encoder::row_index(self : Encoder) -> Int32 {
+  self.scan.rows
 }
 
 ///|
@@ -177,7 +298,11 @@ pub fn Encoder::step(
       }
       if !self.scan_header {
         self.scan_header = true
-        self.bits.scan_header(self.frame.near)
+        let cur = self.scans[self.scan_index]
+        if cur.lse_marker is Some(marker_preset) {
+          self.bits.lse1(marker_preset)
+        }
+        self.bits.scan_header_for(cur.component_id, cur.near)
         continue
       }
       if self.trailer {
@@ -189,6 +314,21 @@ pub fn Encoder::step(
         break RowReady
       }
       if self.scan.rows == self.frame.height {
+        if self.scan_index + 1 < self.scans.length() {
+          self.bits.finish_scan()
+          self.scan_index += 1
+          let next_cfg = self.scans[self.scan_index]
+          self.scan = Scan::new(self.frame_info.width, next_cfg.params)
+          self.frame = {
+            width: self.frame_info.width,
+            height: self.frame_info.height,
+            bits: self.frame_info.bits,
+            near: next_cfg.near,
+          }
+          self.run = -1
+          self.scan_header = false
+          continue
+        }
         guard consumed == length else {
           raise InvalidArgument("extra samples after the declared frame")
         }

@@ -326,7 +326,7 @@ def make_variants(directory, cases):
     reject("lse-truncated-payload", source[:lse_position + 11], "Truncated")
     reject("lse-invalid-length", source[:lse_position + 3] + bytes((12,)) + source[lse_position + 4:])
     reject("lse-inside-entropy", source[:entropy_position] + lse(effective) + source[entropy_position:])
-    reject("lse-after-scan", source[:-2] + lse(effective) + source[-2:], "UnsupportedFeature")
+    reject("lse-after-scan", source[:-2] + lse(effective) + source[-2:], "InvalidData")
     reject("lse-after-eoi", source + lse(effective), "TrailingData")
 
     variants = []

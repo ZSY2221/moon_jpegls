@@ -79,6 +79,7 @@ export function startWorker(options) {
           break;
         }
         case 'progress':
+        case 'scanComplete':
         case 'bytes':
         case 'row':
         case 'rows': {
@@ -95,7 +96,7 @@ export function startWorker(options) {
           complete(data);
           break;
         case 'error':
-          reject(new CodecError(data.code, data.message));
+          reject(new CodecError(data.code, data.message, undefined, data.location ?? undefined));
           break;
         default:
           break;

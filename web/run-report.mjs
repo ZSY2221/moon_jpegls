@@ -42,7 +42,7 @@ export async function workbenchReport(job) {
     blobSha256(job.artifact),
     deployedBuild(),
   ]);
-  const inputFormat = job.decodeOnly ? 'jls' : 'pgm';
+  const inputFormat = job.inputFormat ?? (job.decodeOnly ? 'jls' : 'pgm');
   const provenance = lunarMetadataFor({ sha256: inputSha, bytes: job.file.size, format: inputFormat });
   const outputRetained = job.status === 'passed' && job.sinkMode !== 'bounded';
   const physical = provenance && job.frame ? {
@@ -61,7 +61,7 @@ export async function workbenchReport(job) {
     artifact: build?.artifacts?.[job.backend] ?? null,
     input: { name: job.file.name, format: inputFormat, bytes: job.file.size, sha256: inputSha, provenance },
     output: {
-      name: job.outputName, format: job.decodeOnly ? 'pgm' : 'jls', bytes: job.outputBytes ?? null,
+      name: job.outputName, format: job.outputFormat ?? (job.decodeOnly ? 'pgm' : 'jls'), bytes: job.outputBytes ?? null,
       sha256: outputSha, retained: outputRetained, complete: outputRetained,
     },
     frame: job.frame,
@@ -71,11 +71,16 @@ export async function workbenchReport(job) {
     physical,
     timing: {
       elapsedMs: job.elapsed,
-      boundary: 'From sink open to successful close or failure/cancellation. Includes Worker load and host callbacks. Excludes PGM preflight and report hashing.',
+      boundary: 'From sink open to successful close or failure/cancellation. Includes Worker load and host callbacks. Excludes preflight, host PPM planar conversion, and report hashing.',
     },
     memory: {
       encode: codecMeasurements(job.encodedStats, 'worker'), decode: codecMeasurements(job.stats, 'worker'),
-      host: { sink: job.sinkMode, retainedOutputBytes: job.artifact?.size ?? (job.sinkMode === 'bounded' ? 0 : null) },
+      host: {
+        sink: job.sinkMode,
+        retainedOutputBytes: job.artifact?.size ?? (job.sinkMode === 'bounded' ? 0 : null),
+        hostConversionBufferBytes: job.hostConversionBufferBytes ?? 0,
+        previewBufferBytes: job.previewBufferBytes ?? 0,
+      },
     },
     stream: {
       rowsDecoded: job.stats?.rows ?? null,

@@ -664,7 +664,7 @@
       "id": "lse-after-scan",
       "input": "lse-after-scan.jls",
       "sha256": "030d60ea08d23f85eefa3eb4a7a860427c8ff14d66bd4fd776f88a8377ad438c",
-      "expectedCode": "UnsupportedFeature"
+      "expectedCode": "InvalidData"
     },
     {
       "id": "lse-after-eoi",

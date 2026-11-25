@@ -191,3 +191,41 @@ test('synchronized reticle overlays stay inside content area across resize and c
   assert.equal(reconstructed.overlay.hidden, true);
   assert.equal(difference.overlay.hidden, true);
 });
+
+test('multicomponent preview preserves >255 raw integers, switches composite/channels and reports bufferBytes', () => {
+  const { original, reconstructed, difference, pixels, preview } = surfaces(240, 160);
+  const frame = {
+    width: 2,
+    height: 1,
+    bits: 16,
+    near: 0,
+    maxval: 65535,
+    components: [
+      { id: 10, hSampling: 1, vSampling: 1 },
+      { id: 20, hSampling: 1, vSampling: 1 },
+      { id: 30, hSampling: 1, vSampling: 1 },
+    ],
+  };
+  preview.configure(frame, true, { componentCount: 3, componentLabels: ['Band 0', 'Band 1', 'Band 2'], initialChannel: 'composite' });
+  assert.equal(preview.bufferBytes(), 3 * 2 * 1 * 2 * 2);
+  preview.drawRow(0, Uint16Array.of(65535, 1025), Uint16Array.of(65535, 1025), { componentIndex: 0, near: 0 });
+  preview.drawRow(0, Uint16Array.of(32768, 512), Uint16Array.of(32768, 513), { componentIndex: 1, near: 2 });
+  preview.drawRow(0, Uint16Array.of(4095, 65000), Uint16Array.of(4095, 65000), { componentIndex: 2, near: 0 });
+
+  reconstructed.click(120, 80); // x=1, y=0
+  assert.equal(pixels.at(-1).x, 1);
+  assert.equal(pixels.at(-1).channel, 'composite');
+  assert.deepEqual(pixels.at(-1).components.map((c) => [c.label, c.original, c.reconstructed, c.error, c.near]), [
+    ['Band 0', 1025, 1025, 0, 0],
+    ['Band 1', 513, 512, 1, 2],
+    ['Band 2', 65000, 65000, 0, 0],
+  ]);
+
+  preview.setChannel(1);
+  assert.equal(pixels.at(-1).channel, 1);
+  assert.equal(pixels.at(-1).original, 513);
+  assert.equal(pixels.at(-1).reconstructed, 512);
+  assert.equal(pixels.at(-1).error, 1);
+  assert.equal(pixels.at(-1).near, 2);
+  assert.deepEqual([...original.draws.at(-1).data.subarray(0, 3)], [...reconstructed.draws.at(-1).data.subarray(0, 3)]);
+});

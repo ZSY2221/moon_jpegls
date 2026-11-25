@@ -94,17 +94,47 @@ async fn PgmHeader::token(self : PgmHeader) -> String {
 }
 
 ///|
-async fn read_pgm(source : Source, near : Int32) -> (@jls.Frame, Int32) {
+async fn read_pnm_header(
+  source : Source,
+  magic : String,
+  label : String,
+) -> (Int32, Int32, Int32, Int32) {
   let header : PgmHeader = { source, bytes: 0, }
-  guard header.token() == "P5" else { raise Input("expected a binary P5 PGM") }
+  guard header.token() == magic else {
+    raise Input("expected a binary \{magic} \{label}")
+  }
   let width = @string.parse_int(header.token()[:])
   let height = @string.parse_int(header.token()[:])
   let maxval = @string.parse_int(header.token()[:])
   guard maxval >= 1 && maxval <= 65535 else {
-    raise Input("PGM MAXVAL must be in 1..65535")
+    raise Input("\{label} MAXVAL must be in 1..65535")
   }
-  let bits = 32 - maxval.clz()
-  let frame : @jls.Frame = { width, height, bits: if bits < 2 { 2 } else { bits }, near }
+  let raw_bits = 32 - maxval.clz()
+  let bits = if raw_bits < 2 { 2 } else { raw_bits }
+  (width, height, bits, maxval)
+}
+
+///|
+async fn read_pgm(source : Source, near : Int32) -> (@jls.Frame, Int32) {
+  let (width, height, bits, maxval) = read_pnm_header(source, "P5", "PGM")
+  let frame : @jls.Frame = { width, height, bits, near }
+  (frame, maxval)
+}
+
+///|
+async fn read_ppm(source : Source, near : Int32) -> (@jls.FrameInfo, Int32) {
+  ignore(near)
+  let (width, height, bits, maxval) = read_pnm_header(source, "P6", "PPM")
+  let frame : @jls.FrameInfo = {
+    width,
+    height,
+    bits,
+    components: [
+      { id: 1, h_sampling: 1, v_sampling: 1 },
+      { id: 2, h_sampling: 1, v_sampling: 1 },
+      { id: 3, h_sampling: 1, v_sampling: 1 },
+    ],
+  }
   (frame, maxval)
 }
 
@@ -183,6 +213,7 @@ enum Format {
   RawLittle
   RawBig
   Pgm
+  Ppm
 }
 
 ///|
@@ -191,6 +222,7 @@ fn parse_format(arg : String) -> Format raise CommandError {
     "raw-le" => RawLittle
     "raw-be" => RawBig
     "pgm" => Pgm
-    _ => raise Usage("expected raw-le, raw-be or pgm")
+    "ppm" => Ppm
+    _ => raise Usage("expected raw-le, raw-be, pgm or ppm")
   }
 }

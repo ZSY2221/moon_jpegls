@@ -24,7 +24,7 @@
         <h1 id="workbench" class="brand-title" data-label="workbench">Sample-verifiable JPEG-LS Workbench</h1>
       </div>
       <div class="masthead-meta">
-        <span class="scope-pill" data-label="scopeBits">2-16-bit grayscale</span>
+        <span class="scope-pill" data-label="scopeBits">2-16-bit Grayscale &amp; ILV=0 Multi-scan</span>
         <span class="scope-pill" data-label="scopeNear">NEAR up to 255</span>
         <span class="local" data-label="local">Local processing</span>
         <label class="language">
@@ -57,9 +57,9 @@
               <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M2.5 5.5v7a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H8L6.5 3.5h-3a1 1 0 0 0-1 1Z"/>
               </svg>
-              <span data-label="file">Choose PGM or JLS</span>
+              <span data-label="file">Choose PGM, PPM, or JLS</span>
             </label>
-            <input id="file" class="visually-hidden" type="file" accept=".pgm,.jls,image/x-portable-graymap,image/jls">
+            <input id="file" class="visually-hidden" type="file" accept=".pgm,.ppm,.jls,image/x-portable-graymap,image/x-portable-pixmap,image/jls">
           </div>
           <button type="button" id="example" class="sample-button">
             <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -68,6 +68,14 @@
             </svg>
             <span data-label="example">Load 16-bit sample</span>
           </button>
+          <div class="sample-pair">
+            <button type="button" id="sample-rgb8" class="sample-button sample-secondary">
+              <span data-label="sampleRgb8">Synthetic 8-bit RGB</span>
+            </button>
+            <button type="button" id="sample-multi16" class="sample-button sample-secondary">
+              <span data-label="sampleMulti16">Synthetic 16-bit 3-Ch</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -153,6 +161,7 @@
     <div class="stage-column">
       <nav class="scientific-nav panel" aria-label="Scientific workbench" data-aria-label="scientificNav">
         <a href="#precision-view" data-label="precisionView">Precision</a>
+        <a href="#scan-inspector-view" data-label="scanInspectorNav">Scan Structure</a>
         <a href="#resource-details" data-label="streamingView">Streaming</a>
         <a href="#compatibility-view" data-label="compatibilityView">Compatibility</a>
       </nav>
@@ -194,6 +203,16 @@
           <div><dt>T3</dt><dd id="precision-t3"></dd></div>
           <div><dt>RESET</dt><dd id="precision-reset"></dd></div>
         </dl>
+        <section id="multicomponent-panel" class="panel multicomponent-bar" aria-label="Multicomponent channel selector" hidden>
+          <div class="mc-top">
+            <div class="mc-title-wrap">
+              <strong data-label="multicomponentTitle">Multicomponent view</strong>
+              <span id="mc-provenance-badge" class="inspector-badge"></span>
+            </div>
+            <div id="channel-buttons" class="channel-buttons" role="group" aria-label="Component display channels"></div>
+          </div>
+          <div id="multicomponent-progress" class="mc-progress-list"></div>
+        </section>
         <div class="previews">
           <figure class="panel preview-card" data-pane="original">
             <figcaption class="pane-head">
@@ -290,6 +309,7 @@
           </div>
         </div>
         <p id="pixel-physical" class="microcopy" hidden></p>
+        <div id="inspect-components" class="inspect-components" hidden></div>
         <div id="magnifier" class="magnifier" hidden>
           <p class="microcopy" data-label="magnifierScope">Magnified neighborhood on the sampled preview grid</p>
           <div class="magnifier-images">
@@ -382,6 +402,20 @@
               </div>
               <div class="resource-item">
                 <dt>
+                  <span data-label="hostConvBuffer">Host whole-image / PPM conversion buffer</span>
+                  <span class="res-tag res-observed" data-label="observedMetric">Observed</span>
+                </dt>
+                <dd id="host-conv-buffer">—</dd>
+              </div>
+              <div class="resource-item">
+                <dt>
+                  <span data-label="previewBufferLabel">Preview integer sample buffer</span>
+                  <span class="res-tag res-observed" data-label="observedMetric">Observed</span>
+                </dt>
+                <dd id="preview-buffer">—</dd>
+              </div>
+              <div class="resource-item">
+                <dt>
                   <span data-label="referenceLimit">Reference window configuration limit</span>
                   <span class="res-tag res-config" data-label="configBound">Config limit</span>
                 </dt>
@@ -411,9 +445,54 @@
           </div>
         </details>
 
+        <details id="scan-inspector-view" class="panel disclosure" open>
+          <summary data-label="scanInspectorTitle">Scan Structure Inspector</summary>
+          <div class="disclosure-body">
+            <p id="scan-inspector-summary" class="microcopy mono">—</p>
+            <p id="scan-error-location" class="scan-error-banner" hidden></p>
+            <div class="scan-inspector-grid">
+              <div>
+                <h3 class="subhead" data-label="sofTableTitle">SOF55 component table</h3>
+                <div class="compatibility-scroll">
+                  <table class="compatibility-table scan-table">
+                    <thead><tr>
+                      <th>#</th>
+                      <th data-label="compIdCol">ID</th>
+                      <th data-label="compRoleCol">Label / Role</th>
+                      <th data-label="compSamplingCol">H×V</th>
+                    </tr></thead>
+                    <tbody id="sof-components-body"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div>
+                <h3 class="subhead" data-label="scanTableTitle">Parsed scans (click to inspect component)</h3>
+                <div class="compatibility-scroll">
+                  <table class="compatibility-table scan-table">
+                    <thead><tr>
+                      <th data-label="scanCol">Scan</th>
+                      <th data-label="compRoleCol">Component</th>
+                      <th>NEAR</th>
+                      <th>MAXVAL / T1..T3 / RESET</th>
+                      <th data-label="scanRangeCol">Byte range</th>
+                      <th data-label="scanStatusCol">Status</th>
+                    </tr></thead>
+                    <tbody id="scan-table-body"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="subhead" data-label="markerTimelineTitle">Marker stream layout</h3>
+              <div id="marker-timeline" class="marker-timeline"></div>
+            </div>
+          </div>
+        </details>
+
         <details id="compatibility-view" class="panel disclosure">
           <summary data-label="compatibilityView">Compatibility</summary>
           <div class="disclosure-body">
+            <p id="compatibility-scope-note" class="microcopy" data-label="compatibilityBoundaryNote">In-page runs reflect current workbench execution; table rows below read archived independent reference verification (tests/conformance/manifest.json).</p>
             <p id="compatibility-standard" class="microcopy"></p>
             <a href="./conformance-manifest.json" data-label="compatibilityManifest">Machine-readable conformance manifest</a>
             <div class="compatibility-scroll">

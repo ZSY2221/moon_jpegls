@@ -4,11 +4,12 @@ const maximumCapacity = 1024 * 1024;
 const usualChunk = 32 * 1024;
 
 export class CodecError extends Error {
-  constructor(code, message, progress = undefined) {
+  constructor(code, message, progress = undefined, location = undefined) {
     super(message);
     this.name = 'CodecError';
     this.code = code;
     this.progress = progress;
+    if (location) this.location = location;
   }
 }
 
@@ -32,15 +33,106 @@ function limits(options) {
     ? -1 : integer(options.limits[name], name, 0));
 }
 
-function requestedPreset(frame) {
-  const thresholds = frame.preset ?? {};
-  if (typeof thresholds !== 'object' || Array.isArray(thresholds)) {
+function normalizePresetObj(thresholds) {
+  if (thresholds === undefined) return {};
+  if (typeof thresholds !== 'object' || thresholds === null || Array.isArray(thresholds)) {
     throw new CodecError('InvalidArgument', 'preset must be an object');
   }
+  return thresholds;
+}
+
+function requestedPreset(frame) {
+  const thresholds = normalizePresetObj(frame.preset);
   return [
     integer(frame.maxval ?? 0, 'maxval', 0, 65535),
     ...['t1', 't2', 't3', 'reset'].map((field) => integer(thresholds[field] ?? 0, field, 0, 65535)),
   ];
+}
+
+function normalizeMultiEncode(frame) {
+  const rawComps = frame.components;
+  const components = rawComps.map((entry, idx) => {
+    const obj = typeof entry === 'number' ? { id: entry } : entry;
+    if (!obj || typeof obj !== 'object') {
+      throw new CodecError('InvalidArgument', `components[${idx}] must be an object or component ID`);
+    }
+    const id = integer(obj.id, `components[${idx}].id`, 0, 255);
+    const hSampling = integer(obj.hSampling ?? 1, `components[${idx}].hSampling`, 1, 4);
+    const vSampling = integer(obj.vSampling ?? 1, `components[${idx}].vSampling`, 1, 4);
+    return Object.freeze({ id, hSampling, vSampling });
+  });
+  const baseNear = integer(frame.near ?? 0, 'near', 0, 255);
+  const rawScans = frame.scans ?? components.map((comp) => ({ componentId: comp.id }));
+  if (!Array.isArray(rawScans)) {
+    throw new CodecError('InvalidArgument', 'frame.scans must be an array');
+  }
+  const scans = rawScans.map((scan, idx) => {
+    const obj = typeof scan === 'number' ? { componentId: scan } : scan;
+    if (!obj || typeof obj !== 'object') {
+      throw new CodecError('InvalidArgument', `scans[${idx}] must be an object`);
+    }
+    const componentId = integer(obj.componentId, `scans[${idx}].componentId`, 0, 255);
+    const near = integer(obj.near ?? baseNear, `scans[${idx}].near`, 0, 255);
+    const presetSource = {
+      maxval: obj.maxval ?? frame.maxval,
+      preset: obj.preset ?? frame.preset,
+    };
+    const presetValues = requestedPreset(presetSource);
+    return { componentId, near, presetValues };
+  });
+  return { components: Object.freeze(components), scans };
+}
+
+function readErrorLocation(bindings, port) {
+  if (!bindings.decoder_error_int || !bindings.decoder_error_int(port, 0)) return undefined;
+  return Object.freeze({
+    scanIndex: bindings.decoder_error_int(port, 1),
+    componentId: bindings.decoder_error_int(port, 2),
+    marker: bindings.decoder_error_int(port, 3),
+    offset: bindings.decoder_error_offset ? bindings.decoder_error_offset(port) : -1,
+  });
+}
+
+function readScanRecord(bindings, port, scanIndex) {
+  const g = (field) => bindings.decoder_scan_int(port, scanIndex, field);
+  const o = (which) => bindings.decoder_scan_offset ? bindings.decoder_scan_offset(port, scanIndex, which) : -1;
+  return Object.freeze({
+    scanIndex: g(0),
+    componentIndex: g(1),
+    componentId: g(2),
+    near: g(3),
+    interleave: g(4),
+    pointTransform: g(5),
+    preset: Object.freeze({ maxval: g(6), t1: g(7), t2: g(8), t3: g(9), reset: g(10) }),
+    rows: g(11),
+    completed: g(12) === 1,
+    headerOffset: o(0),
+    entropyOffset: o(1),
+    endOffset: o(2),
+  });
+}
+
+function readStructure(bindings, port, frameInfo) {
+  if (!frameInfo || !bindings.decoder_scan_count || !bindings.decoder_structure_offset) return null;
+  const scanCount = bindings.decoder_scan_count(port);
+  const scans = Object.freeze(Array.from({ length: scanCount }, (_, i) => readScanRecord(bindings, port, i)));
+  const markerCount = bindings.decoder_marker_count ? bindings.decoder_marker_count(port) : 0;
+  const markers = Object.freeze(Array.from({ length: markerCount }, (_, i) => Object.freeze({
+    code: bindings.decoder_marker_int(port, i, 0),
+    length: bindings.decoder_marker_int(port, i, 1),
+    scanIndex: bindings.decoder_marker_int(port, i, 2),
+    detail: bindings.decoder_marker_int(port, i, 3),
+    offset: bindings.decoder_marker_offset(port, i),
+  })));
+  return Object.freeze({
+    soiOffset: bindings.decoder_structure_offset(port, 0),
+    sofOffset: bindings.decoder_structure_offset(port, 1),
+    sofLength: bindings.decoder_structure_offset(port, 2),
+    eoiOffset: bindings.decoder_structure_offset(port, 3),
+    frame: frameInfo,
+    scans,
+    markers,
+  });
 }
 
 function resolvedFrame(frame, read, port) {
@@ -92,6 +184,12 @@ class Session {
   #backend;
   #port;
   #frame;
+  #frameInfo = null;
+  #components = null;
+  #scans = null;
+  #currentScan = null;
+  #structure = null;
+  #rowMeta = null;
   #preset = null;
   #encoding;
   #capacity;
@@ -112,26 +210,70 @@ class Session {
     const budget = limits(options);
     if (this.#encoding) {
       const frameValues = ['width', 'height', 'bits'].map((key) => integer(frame[key], key, 0));
-      const near = integer(frame.near, 'near', 0, 255);
-      const preset = requestedPreset(frame);
-      const args = [...frameValues, near, inputChunkSize, outputChunkSize, ...budget];
-      if (bindings.encoder_new_with_preset) {
-        this.#port = bindings.encoder_new_with_preset(...args, ...preset);
+      const near = integer(frame.near ?? 0, 'near', 0, 255);
+      if (frame.components !== undefined) {
+        if (!Array.isArray(frame.components) || frame.components.length === 0) {
+          throw new CodecError('InvalidArgument', 'frame.components must be a non-empty array');
+        }
+        const multi = normalizeMultiEncode(frame);
+        if (!bindings.encoder_builder_new) {
+          throw new CodecError('UnsupportedFeature', 'Codec artifact does not support multi-component encoding');
+        }
+        const builder = bindings.encoder_builder_new(...frameValues, inputChunkSize, outputChunkSize, ...budget);
+        for (const c of multi.components) {
+          bindings.encoder_builder_component(builder, c.id, c.hSampling, c.vSampling);
+        }
+        for (const s of multi.scans) {
+          bindings.encoder_builder_scan(builder, s.componentId, s.near, ...s.presetValues);
+        }
+        this.#port = bindings.encoder_builder_build(builder);
+        const code = bindings.encoder_status(this.#port);
+        if (code < 0) throw new CodecError(errors[-code], bindings.encoder_message(this.#port));
+        this.#components = multi.components;
+        this.#frameInfo = Object.freeze({ width: frameValues[0], height: frameValues[1], bits: frameValues[2], components: multi.components });
+        this.#scans = Object.freeze(multi.scans.map((s, scanIndex) => Object.freeze({
+          scanIndex,
+          componentIndex: multi.components.findIndex((c) => c.id === s.componentId),
+          componentId: s.componentId,
+          near: s.near,
+          interleave: 0,
+          pointTransform: 0,
+        })));
+        const resolved = resolvedFrame({ width: frameValues[0], height: frameValues[1], bits: frameValues[2], near }, bindings.encoder_preset, this.#port);
+        this.#frame = multi.components.length > 1
+          ? Object.freeze({ ...resolved.frame, components: multi.components, scans: this.#scans })
+          : resolved.frame;
+        this.#preset = resolved.preset;
       } else {
-        if (preset.some(Boolean)) throw new CodecError('UnsupportedFeature', 'Codec artifact does not support custom presets');
-        this.#port = bindings.encoder_new(...args);
+        const preset = requestedPreset(frame);
+        const args = [...frameValues, near, inputChunkSize, outputChunkSize, ...budget];
+        if (bindings.encoder_new_with_preset) {
+          this.#port = bindings.encoder_new_with_preset(...args, ...preset);
+        } else {
+          if (preset.some(Boolean)) throw new CodecError('UnsupportedFeature', 'Codec artifact does not support custom presets');
+          this.#port = bindings.encoder_new(...args);
+        }
+        const code = bindings.encoder_status(this.#port);
+        if (code < 0) throw new CodecError(errors[-code], bindings.encoder_message(this.#port));
+        const resolved = resolvedFrame(frame, bindings.encoder_preset, this.#port);
+        this.#frame = resolved.frame;
+        this.#preset = resolved.preset;
+        this.#components = Object.freeze([Object.freeze({ id: 1, hSampling: 1, vSampling: 1 })]);
+        this.#frameInfo = Object.freeze({ width: frameValues[0], height: frameValues[1], bits: frameValues[2], components: this.#components });
+        this.#scans = Object.freeze([Object.freeze({ scanIndex: 0, componentIndex: 0, componentId: 1, near, interleave: 0, pointTransform: 0 })]);
       }
-      const code = bindings.encoder_status(this.#port);
-      if (code < 0) throw new CodecError(errors[-code], bindings.encoder_message(this.#port));
-      const resolved = resolvedFrame(frame, bindings.encoder_preset, this.#port);
-      this.#frame = resolved.frame;
-      this.#preset = resolved.preset;
     } else {
       this.#port = bindings.decoder_new(inputChunkSize, ...budget);
     }
   }
 
   get frame() { return this.#frame; }
+  get frameInfo() { return this.#frameInfo; }
+  get components() { return this.#components; }
+  get scans() { return this.#scans; }
+  get currentScan() { return this.#currentScan; }
+  get structure() { return this.#structure; }
+  get rowMeta() { return this.#rowMeta; }
   get preset() { return this.#preset; }
   get remaining() { return this.#length - this.#offset; }
   get coreWorkspaceBytes() {
@@ -142,6 +284,72 @@ class Session {
 
   get bridgeBufferBytes() {
     return this.#encoding ? this.#capacity * 4 + this.#outputCapacity : this.#capacity + this.#length;
+  }
+
+  #refreshDecodeMetadata(status) {
+    const bindings = this.#bindings;
+    const port = this.#port;
+    const width = bindings.decoder_frame(port, 0);
+    if (width === 0) return;
+    const height = bindings.decoder_frame(port, 1);
+    const bits = bindings.decoder_frame(port, 2);
+    const near = bindings.decoder_current_scan ? bindings.decoder_current_scan(port, 3) : bindings.decoder_frame(port, 3);
+    const activeNear = near >= 0 ? near : bindings.decoder_frame(port, 3);
+    if (this.#components === null) {
+      const compCount = bindings.decoder_component_count ? bindings.decoder_component_count(port) : 1;
+      const comps = bindings.decoder_component_field
+        ? Array.from({ length: compCount }, (_, i) => Object.freeze({
+            id: bindings.decoder_component_field(port, i, 0),
+            hSampling: bindings.decoder_component_field(port, i, 1),
+            vSampling: bindings.decoder_component_field(port, i, 2),
+          }))
+        : [Object.freeze({ id: 1, hSampling: 1, vSampling: 1 })];
+      this.#components = Object.freeze(comps);
+      this.#frameInfo = Object.freeze({ width, height, bits, components: this.#components });
+    }
+    const baseFrame = {
+      width,
+      height,
+      bits,
+      near: activeNear,
+      ...(this.#components.length > 1 ? { components: this.#components } : {}),
+    };
+    const resolved = resolvedFrame(baseFrame, bindings.decoder_preset, port);
+    this.#frame = resolved.frame;
+    this.#preset = resolved.preset;
+
+    if (status === 'RowReady' || status === 'Done') {
+      const st = readStructure(bindings, port, this.#frameInfo);
+      if (st) {
+        this.#structure = st;
+        this.#scans = st.scans;
+      }
+      if (bindings.decoder_current_scan) {
+        const scanIndex = bindings.decoder_current_scan(port, 0);
+        if (scanIndex >= 0) {
+          this.#currentScan = st?.scans[scanIndex] ?? null;
+          if (status === 'RowReady') {
+            this.#rowMeta = Object.freeze({
+              scanIndex,
+              componentIndex: bindings.decoder_current_scan(port, 1),
+              componentId: bindings.decoder_current_scan(port, 2),
+              rowIndex: bindings.decoder_current_scan(port, 4),
+              near: activeNear,
+              preset: this.#preset,
+              layout: 'planar',
+              stride: width,
+              sampleBytes: 2,
+              endianness: 'host-u16',
+            });
+          }
+        }
+      } else if (status === 'RowReady') {
+        this.#rowMeta = Object.freeze({
+          scanIndex: 0, componentIndex: 0, componentId: 1, rowIndex: null,
+          near: activeNear, preset: this.#preset, layout: 'planar', stride: width, sampleBytes: 2, endianness: 'host-u16',
+        });
+      }
+    }
   }
 
   stage(input) {
@@ -217,17 +425,19 @@ class Session {
     if (code < 0) {
       this.#status = 'Error';
       const message = this.#encoding ? bindings.encoder_message(port) : bindings.decoder_message(port);
-      throw new CodecError(errors[-code], message, { consumed, produced });
+      const loc = !this.#encoding ? readErrorLocation(bindings, port) : undefined;
+      throw new CodecError(errors[-code], message, { consumed, produced }, loc);
     }
     this.#status = states[code];
-    if (!this.#encoding && this.#frame === null) {
-      const width = bindings.decoder_frame(port, 0);
-      if (width !== 0) {
-        const resolved = resolvedFrame({
-          width, height: bindings.decoder_frame(port, 1),
-          bits: bindings.decoder_frame(port, 2), near: bindings.decoder_frame(port, 3),
-        }, bindings.decoder_preset, port);
-        this.#frame = resolved.frame;
+    this.#rowMeta = null;
+    if (!this.#encoding) {
+      this.#refreshDecodeMetadata(this.#status);
+    } else if (bindings.encoder_scan_index) {
+      const scanIndex = bindings.encoder_scan_index(port);
+      if (scanIndex >= 0 && this.#scans?.[scanIndex] && bindings.encoder_preset) {
+        const s = this.#scans[scanIndex];
+        const near = s.near;
+        const resolved = resolvedFrame({ width: this.#frameInfo.width, height: this.#frameInfo.height, bits: this.#frameInfo.bits, near }, bindings.encoder_preset, port);
         this.#preset = resolved.preset;
       }
     }
@@ -284,7 +494,7 @@ class Session {
       const getSample = bindings.decoder_sample;
       for (; i < width; i++) chunk[i] = getSample(port, i);
     }
-    return { status: this.#status, consumed, produced: chunk?.length ?? 0, chunk };
+    return { status: this.#status, consumed, produced: chunk?.length ?? 0, chunk, rowMeta: this.#rowMeta ?? undefined };
   }
 
   cancel() {
@@ -333,6 +543,7 @@ async function stream(core, options, encoding) {
     stats.coreWorkspaceBytes = Math.max(stats.coreWorkspaceBytes, session.coreWorkspaceBytes);
     stats.bridgeBufferPeakBytes = Math.max(stats.bridgeBufferPeakBytes, session.bridgeBufferBytes);
   };
+  let lastScanCompleted = -1;
   try {
     for (;;) {
       checkedAbort(options.signal, session);
@@ -351,11 +562,21 @@ async function stream(core, options, encoding) {
       }
       if (next.chunk !== undefined) {
         if (encoding) await wait(() => options.onBytes(next.chunk, snapshot(), session.preset));
-        else if (options.onRow) await wait(() => options.onRow(next.chunk, stats.rows - 1, session.frame, snapshot(), session.preset));
+        else if (options.onRow) {
+          const meta = next.rowMeta ?? next.metadata;
+          const rowIndex = meta?.rowIndex ?? (stats.rows - 1);
+          await wait(() => options.onRow(next.chunk, rowIndex, session.frame, snapshot(), session.preset, meta));
+        }
+      }
+      if (!encoding && options.onScanComplete && session.scans) {
+        while (lastScanCompleted + 1 < session.scans.length && session.scans[lastScanCompleted + 1].completed) {
+          lastScanCompleted++;
+          await wait(() => options.onScanComplete(session.scans[lastScanCompleted], snapshot(), session.structure));
+        }
       }
       checkedAbort(options.signal, session);
       stats.outputQueueBytes = 0;
-      if (options.onProgress) await wait(() => options.onProgress(snapshot(), session.frame, session.preset));
+      if (options.onProgress) await wait(() => options.onProgress(snapshot(), session.frame, session.preset, session.structure));
       if (next.status === 'Done') {
         if (!encoding && options.trailing !== 'allow') {
           if (session.remaining !== 0) throw new CodecError('TrailingData', 'Unexpected data after EOI');
@@ -366,7 +587,15 @@ async function stream(core, options, encoding) {
           } while (tail !== null && tail.length === 0);
           if (tail !== null) throw new CodecError('TrailingData', 'Unexpected data after EOI');
         }
-        return { frame: session.frame, preset: session.preset, stats: snapshot() };
+        return {
+          frame: session.frame,
+          frameInfo: session.frameInfo ?? undefined,
+          components: session.components ?? undefined,
+          scans: session.scans ?? undefined,
+          structure: session.structure ?? undefined,
+          preset: session.preset,
+          stats: snapshot(),
+        };
       }
       if (next.status === 'NeedInput') {
         const chunk = await wait(() => options.read(inputChunkSize));
@@ -410,14 +639,53 @@ export async function encodeImage(core, frame, samples, options = {}) {
   return { ...result, bytes };
 }
 
+export async function encodePlanarImage(core, frame, input, options = {}) {
+  let samples;
+  const comps = frame.components?.length ?? 1;
+  const planeSize = frame.width * frame.height;
+  if (input instanceof Uint16Array) {
+    samples = input;
+  } else if (Array.isArray(input) && input.length === comps && input.every((p) => p instanceof Uint16Array && p.length === planeSize)) {
+    const scanOrder = frame.scans ?? (frame.components ?? [{ id: 1 }]).map((c) => ({ componentId: typeof c === 'number' ? c : c.id }));
+    const compIds = (frame.components ?? [{ id: 1 }]).map((c) => typeof c === 'number' ? c : c.id);
+    samples = new Uint16Array(planeSize * comps);
+    scanOrder.forEach((scan, scanIdx) => {
+      const compId = typeof scan === 'number' ? scan : scan.componentId;
+      const compIdx = compIds.indexOf(compId);
+      if (compIdx < 0) throw new CodecError('InvalidArgument', `Scan references undeclared component ${compId}`);
+      samples.set(input[compIdx], scanIdx * planeSize);
+    });
+  } else {
+    throw new CodecError('InvalidArgument', 'Expected planar Uint16Array or array of per-component Uint16Array planes');
+  }
+  return encodeImage(core, frame, samples, options);
+}
+
 export async function decodeImage(core, bytes, options = {}) {
   if (!(bytes instanceof Uint8Array)) throw new CodecError('InvalidArgument', 'Expected Uint8Array input');
   let samples;
   const result = await decodeStream(core, {
-    ...options, read: readArray(bytes), onRow: (row, index, frame) => {
-      samples ??= new Uint16Array(frame.width * frame.height);
-      samples.set(row, index * frame.width);
+    ...options, read: readArray(bytes), onRow: (row, index, frame, _stats, _preset, meta) => {
+      const compCount = frame.components?.length ?? 1;
+      const compIdx = meta?.componentIndex ?? 0;
+      const rowIdx = meta?.rowIndex ?? index;
+      const planeSize = frame.width * frame.height;
+      samples ??= new Uint16Array(planeSize * compCount);
+      samples.set(row, compIdx * planeSize + rowIdx * frame.width);
     },
   });
   return { ...result, samples };
+}
+
+export async function decodePlanarImage(core, bytes, options = {}) {
+  const result = await decodeImage(core, bytes, options);
+  const compCount = result.frame.components?.length ?? 1;
+  const planeSize = result.frame.width * result.frame.height;
+  const planes = Array.from({ length: compCount }, (_, c) => result.samples.subarray(c * planeSize, (c + 1) * planeSize));
+  return { ...result, planes };
+}
+
+export async function inspectStream(core, bytes, options = {}) {
+  if (!(bytes instanceof Uint8Array)) throw new CodecError('InvalidArgument', 'Expected Uint8Array input');
+  return decodeStream(core, { ...options, read: readArray(bytes) });
 }

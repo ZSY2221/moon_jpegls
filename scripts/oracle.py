@@ -27,9 +27,12 @@ def encode_native(samples, bits, near):
 
 def decode_native(stream):
     result = codecs.jpegls_decode(stream)
-    if result.ndim != 2:
-        raise ValueError("expected a monochrome reference frame")
-    return result.astype("<u2", copy=False)
+    if result.ndim == 2:
+        return result.astype("<u2", copy=False)
+    if result.ndim == 3:
+        # Convert interleaved (H, W, C) to planar (C, H, W) matching T.87 ILV=0
+        return np.ascontiguousarray(np.transpose(result, (2, 0, 1))).astype("<u2", copy=False)
+    raise ValueError("unexpected reference frame rank")
 
 
 def main():

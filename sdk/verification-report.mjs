@@ -21,12 +21,14 @@ export function codecMeasurements(stats, scope) {
 function describeFrame(frame, preset) {
   if (!frame) return null;
   const { width, height, bits, near } = frame;
+  const components = frame.componentCount ?? (Array.isArray(frame.components) ? frame.components.length : 1);
+  const scans = frame.scanCount ?? (Array.isArray(frame.scans) ? frame.scans.length : components);
   return {
     width, height, bits, near,
     maxval: preset?.maxval ?? frame.maxval ?? (2 ** bits - 1),
     preset: preset ?? null,
-    components: 1,
-    scans: 1,
+    components,
+    scans,
     interleave: 0,
     pointTransform: 0,
     mapping: false,
@@ -41,7 +43,7 @@ export function createVerificationReport(fields) {
   }
   const frame = describeFrame(fields.frame, fields.preset);
   const samples = {
-    total: frame ? frame.width * frame.height : null,
+    total: frame ? frame.width * frame.height * frame.components : null,
     verified: fields.samples?.verified ?? null,
     maxError: fields.samples?.maxError ?? null,
     errorBound: frame?.near ?? null,

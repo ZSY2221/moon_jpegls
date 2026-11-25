@@ -19,7 +19,11 @@ function finish(type, data) {
 }
 
 function reportError(error) {
-  finish('error', { code: typeof error.code === 'string' ? error.code : 'RuntimeError', message: error.message });
+  finish('error', {
+    code: typeof error.code === 'string' ? error.code : 'RuntimeError',
+    message: error.message,
+    location: error.location ?? null,
+  });
 }
 
 async function request(type, data, transfer = []) {
@@ -70,18 +74,32 @@ async function run(message) {
   };
   const flushBatch = () => {
     if (!batch || batch.count === 0) return;
-    const { startIndex, count, samples, frame: info, preset, stats } = batch;
+    const { startIndex, count, samples, frame: info, preset, stats, meta } = batch;
     batch = null;
     lastBatchFlush = stats.elapsedMs;
     const used = count * info.width;
     // Keep a short view for the final/time-limited batch without a second copy.
     const payload = used === samples.length ? samples : samples.subarray(0, used);
-    return sendOutput('rows', { startIndex, count, samples: payload, frame: info, preset }, payload, stats);
+    return sendOutput('rows', {
+      startIndex,
+      count,
+      samples: payload,
+      frame: info,
+      preset,
+      scanIndex: meta?.scanIndex ?? 0,
+      componentIndex: meta?.componentIndex ?? 0,
+      componentId: meta?.componentId ?? 1,
+      near: meta?.near ?? info.near,
+      layout: meta?.layout ?? 'planar',
+      stride: meta?.stride ?? info.width,
+      sampleBytes: meta?.sampleBytes ?? 2,
+      endianness: meta?.endianness ?? 'host-u16',
+    }, payload, stats);
   };
   const settings = {
     frame, inputChunkSize, outputChunkSize, limits, trailing, signal: abort.signal,
     read: (maxElements) => request('needInput', { maxElements }),
-    onProgress: (stats, info, preset) => {
+    onProgress: (stats, info, preset, structure) => {
       if (deliveredRow) {
         deliveredRow = false;
         return;
@@ -89,26 +107,53 @@ async function run(message) {
       if ((reportedRows === 0 && stats.rows > 0) || stats.elapsedMs - lastProgress >= 50) {
         reportedRows = stats.rows;
         lastProgress = stats.elapsedMs;
-        return request('progress', { stats: outputStats(stats), frame: info, preset });
+        return request('progress', { stats: outputStats(stats), frame: info, preset, structure: structure ?? null });
       }
     },
+    onScanComplete: async (scan, stats, structure) => {
+      if (batch) await flushBatch();
+      return request('scanComplete', { scan, stats: outputStats(stats), structure: structure ?? null });
+    },
     onBytes: (chunk, stats, preset) => sendOutput('bytes', { chunk, preset }, chunk, stats),
-    onRow: (row, index, info, stats, preset) => {
+    onRow: async (row, index, info, stats, preset, rowMeta) => {
       deliveredRow = true;
       reportedRows = stats.rows;
       lastProgress = stats.elapsedMs;
+      const scanKey = rowMeta ? `${rowMeta.scanIndex}:${rowMeta.componentIndex}` : '0:0';
+      if (batch && batch.scanKey !== scanKey) {
+        await flushBatch();
+      }
+      const metaFields = {
+        scanIndex: rowMeta?.scanIndex ?? 0,
+        componentIndex: rowMeta?.componentIndex ?? 0,
+        componentId: rowMeta?.componentId ?? 1,
+        near: rowMeta?.near ?? info.near,
+        layout: rowMeta?.layout ?? 'planar',
+        stride: rowMeta?.stride ?? info.width,
+        sampleBytes: rowMeta?.sampleBytes ?? 2,
+        endianness: rowMeta?.endianness ?? 'host-u16',
+      };
       if (index === 0 || maxBatchBytes <= 0) {
         lastBatchFlush = stats.elapsedMs;
-        return sendOutput('row', { row, index, frame: info, preset }, row, stats);
+        return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
       }
       const maxRows = Math.max(1, Math.floor(maxBatchBytes / (info.width * 2)));
       if (maxRows <= 1) {
         lastBatchFlush = stats.elapsedMs;
-        return sendOutput('row', { row, index, frame: info, preset }, row, stats);
+        return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
       }
       if (!batch) {
         const capacityRows = Math.min(maxRows, info.height - index);
-        batch = { startIndex: index, count: 0, samples: new Uint16Array(capacityRows * info.width), frame: info, preset, stats };
+        batch = {
+          scanKey,
+          meta: metaFields,
+          startIndex: index,
+          count: 0,
+          samples: new Uint16Array(capacityRows * info.width),
+          frame: info,
+          preset,
+          stats,
+        };
       }
       recordOutput(stats, row.buffer.byteLength);
       batch.samples.set(row, batch.count * info.width);

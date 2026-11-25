@@ -92,7 +92,13 @@ def prepare(directory, with_conformance, match, near_matrix):
         (directory / fixture).write_bytes(stream)
         inputs.extend((directory / fixture, directory / f"{fixture}.raw"))
         official.append({"name": fixture, "expected": "valid", "near": 0, "bits": 8, "sourceMaximum": 255})
-        for fixture in ["t8c0e0.jls", "t8c1e0.jls", "t8c2e0.jls", "t8sse0.jls"]:
+        for fixture in ["t8c0e0.jls"]:
+            stream = download(TOOLS / "conformance" / fixture, CONFORMANCE + fixture, 140_000, CONFORMANCE_HASHES[fixture])
+            save_raw(directory / f"{fixture}.raw", decode_native(stream))
+            (directory / fixture).write_bytes(stream)
+            inputs.extend((directory / fixture, directory / f"{fixture}.raw"))
+            official.append({"name": fixture, "expected": "valid", "near": 0, "bits": 8, "components": 3, "sourceMaximum": 255})
+        for fixture in ["t8c1e0.jls", "t8c2e0.jls", "t8sse0.jls"]:
             stream = download(TOOLS / "conformance" / fixture, CONFORMANCE + fixture, 140_000, CONFORMANCE_HASHES[fixture])
             (directory / fixture).write_bytes(stream)
             inputs.append(directory / fixture)

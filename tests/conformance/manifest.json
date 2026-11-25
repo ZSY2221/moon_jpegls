@@ -350,7 +350,7 @@
       "scans": 3,
       "interleave": 0,
       "feature": "Three components in separate scans",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
@@ -500,7 +500,7 @@
       "scans": 3,
       "interleave": 0,
       "feature": "Three components in separate scans",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {

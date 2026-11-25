@@ -49,6 +49,19 @@ export function errorColor(difference, near) {
   return colorWithinBound(difference, safeNear);
 }
 
+function buildErrorLut(near) {
+  const safeNear = normalizeNear(near);
+  const stops = errorPalette(safeNear);
+  const entries = [...stops.map((stop) => stop.rgb), ERROR_OVERFLOW_RGB];
+  const lut = new Uint8Array(entries.length * 3);
+  for (let s = 0; s < entries.length; s++) {
+    lut[s * 3] = entries[s][0];
+    lut[s * 3 + 1] = entries[s][1];
+    lut[s * 3 + 2] = entries[s][2];
+  }
+  return { near: safeNear, lut, overflowOffset: (entries.length - 1) * 3 };
+}
+
 function color(data, index, r, g, b) {
   data[index] = r;
   data[index + 1] = g;
@@ -92,6 +105,108 @@ function hideOverlay(canvas) {
 export function createPreview(canvases, reportPixel, magnifiers = []) {
   let state;
   let overlaysVisible = false;
+
+  const getLut = (near) => {
+    const safeNear = normalizeNear(near);
+    let cached = state.errorLuts.get(safeNear);
+    if (!cached) {
+      cached = buildErrorLut(safeNear);
+      state.errorLuts.set(safeNear, cached);
+    }
+    return cached;
+  };
+
+  const arrivedLimit = () => {
+    if (!state) return 0;
+    if (state.channel === 'composite') {
+      let m = 0;
+      for (let c = 0; c < state.componentCount; c++) {
+        if (state.nextY[c] > m) m = state.nextY[c];
+      }
+      return m;
+    }
+    return state.nextY[state.channel] ?? 0;
+  };
+
+  const renderCanvasRow = (py) => {
+    const { width, contexts, scanlines, original, reconstruction, componentCount, componentMaxvals, componentNears, nextY, channel } = state;
+    const recData = scanlines[1].data;
+    const origData = scanlines[0].data;
+    const errData = scanlines[2].data;
+    const base = py * width;
+    let hasOrigRow = false;
+
+    if (channel === 'composite' && componentCount >= 3) {
+      const has0 = py < nextY[0];
+      const has1 = py < nextY[1];
+      const has2 = py < nextY[2];
+      const m0 = componentMaxvals[0];
+      const m1 = componentMaxvals[1];
+      const m2 = componentMaxvals[2];
+      hasOrigRow = original !== null && (has0 || has1 || has2);
+      const maxNear = Math.max(componentNears[0], componentNears[1], componentNears[2]);
+      const { lut, overflowOffset } = getLut(maxNear);
+      for (let x = 0; x < width; x++) {
+        const pos = base + x;
+        const i = x * 4;
+        const r = has0 ? Math.round(reconstruction[0][pos] * 255 / m0) : 0;
+        const g = has1 ? Math.round(reconstruction[1][pos] * 255 / m1) : 0;
+        const b = has2 ? Math.round(reconstruction[2][pos] * 255 / m2) : 0;
+        color(recData, i, r, g, b);
+        if (hasOrigRow) {
+          const or0 = has0 ? Math.round(original[0][pos] * 255 / m0) : 0;
+          const og0 = has1 ? Math.round(original[1][pos] * 255 / m1) : 0;
+          const ob0 = has2 ? Math.round(original[2][pos] * 255 / m2) : 0;
+          color(origData, i, or0, og0, ob0);
+          let peakDiff = 0;
+          let exceeded = false;
+          for (let c = 0; c < 3; c++) {
+            if (py < nextY[c]) {
+              const d = Math.abs(original[c][pos] - reconstruction[c][pos]);
+              if (d > componentNears[c]) exceeded = true;
+              if (d > peakDiff) peakDiff = d;
+            }
+          }
+          const offset = exceeded || peakDiff > maxNear ? overflowOffset : peakDiff * 3;
+          color(errData, i, lut[offset], lut[offset + 1], lut[offset + 2]);
+        }
+      }
+    } else {
+      const c = typeof channel === 'number' ? channel : 0;
+      if (py >= nextY[c]) return undefined;
+      const brightest = componentMaxvals[c];
+      const nearLimit = componentNears[c];
+      const { lut, overflowOffset } = getLut(nearLimit);
+      const recPlane = reconstruction[c];
+      const origPlane = original?.[c] ?? null;
+      hasOrigRow = origPlane !== null;
+      for (let x = 0; x < width; x++) {
+        const pos = base + x;
+        const after = recPlane[pos];
+        const i = x * 4;
+        const gray = Math.round(after * 255 / brightest);
+        color(recData, i, gray, gray, gray);
+        if (origPlane !== null) {
+          const before = origPlane[pos];
+          const originalGray = Math.round(before * 255 / brightest);
+          color(origData, i, originalGray, originalGray, originalGray);
+          const difference = before >= after ? before - after : after - before;
+          const offset = difference <= nearLimit ? difference * 3 : overflowOffset;
+          color(errData, i, lut[offset], lut[offset + 1], lut[offset + 2]);
+        }
+      }
+    }
+
+    let firstCanvasAt;
+    for (let i = hasOrigRow ? 0 : 1; i < (hasOrigRow ? contexts.length : 2); i++) {
+      contexts[i].putImageData(scanlines[i], 0, py);
+      if (i === 1 && !state.drewFirst) {
+        state.drewFirst = true;
+        firstCanvasAt = performance.now();
+      }
+    }
+    return firstCanvasAt;
+  };
 
   const syncOverlays = () => {
     let anyVisible = false;
@@ -147,11 +262,13 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     overlaysVisible = false;
   };
 
-  function configure(frame, hasReference) {
+  function configure(frame, hasReference, options = {}) {
     const scale = Math.min(1, 480 / frame.width, 320 / frame.height);
     const width = Math.max(1, Math.floor(frame.width * scale));
     const height = Math.max(1, Math.floor(frame.height * scale));
     const xMap = Uint16Array.from({ length: width }, (_, x) => Math.floor(x * frame.width / width));
+    const componentCount = options.componentCount ?? frame.components?.length ?? 1;
+    const channel = options.initialChannel ?? (componentCount === 3 ? 'composite' : 0);
     for (const [index, canvas] of canvases.entries()) {
       canvas.width = width;
       canvas.height = height;
@@ -160,79 +277,80 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     }
     overlaysVisible = false;
     const contexts = canvases.map((canvas) => canvas.getContext('2d'));
-    const stops = errorPalette(frame.near);
-    const lutEntries = [...stops.map((stop) => stop.rgb), ERROR_OVERFLOW_RGB];
-    const errorLut = new Uint8Array(lutEntries.length * 3);
-    for (let s = 0; s < lutEntries.length; s++) {
-      errorLut[s * 3] = lutEntries[s][0];
-      errorLut[s * 3 + 1] = lutEntries[s][1];
-      errorLut[s * 3 + 2] = lutEntries[s][2];
-    }
+    const defaultMaxval = frame.maxval ?? (2 ** frame.bits - 1);
+    const componentLabels = options.componentLabels
+      ?? Array.from({ length: componentCount }, (_, c) => `C${c}`);
+    const errorLuts = new Map();
+    const initialLut = buildErrorLut(frame.near);
+    errorLuts.set(initialLut.near, initialLut);
     state = {
-      frame, width, height, xMap, contexts, nextY: 0, errorLut,
-      overflowOffset: (lutEntries.length - 1) * 3,
+      frame,
+      width,
+      height,
+      xMap,
+      contexts,
+      componentCount,
+      channel,
+      componentLabels: [...componentLabels],
+      componentNears: Array.from({ length: componentCount }, () => frame.near ?? 0),
+      componentMaxvals: Array.from({ length: componentCount }, () => defaultMaxval),
+      nextY: new Int32Array(componentCount),
+      errorLuts,
+      drewFirst: false,
       scanlines: contexts.map((context) => context.createImageData(width, 1)),
-      original: hasReference ? new Uint16Array(width * height) : null,
-      reconstruction: new Uint16Array(width * height),
+      original: hasReference ? Array.from({ length: componentCount }, () => new Uint16Array(width * height)) : null,
+      reconstruction: Array.from({ length: componentCount }, () => new Uint16Array(width * height)),
     };
   }
 
-  function drawRow(index, reconstructed, original) {
-    const { frame, width, height, xMap, contexts, scanlines, nextY, errorLut, overflowOffset } = state;
-    if (nextY === height || index !== Math.floor(nextY * frame.height / height)) return;
-    const base = nextY * width;
-    const brightest = frame.maxval ?? (2 ** frame.bits - 1);
-    const nearLimit = frame.near;
-    const recData = scanlines[1].data;
-    const origData = scanlines[0].data;
-    const errData = scanlines[2].data;
+  function drawRow(index, reconstructed, original, meta = undefined) {
+    const { frame, width, height, xMap, nextY, componentCount } = state;
+    const c = meta?.componentIndex ?? 0;
+    if (c < 0 || c >= componentCount) return;
+    if (meta?.near !== undefined) state.componentNears[c] = meta.near;
+    if (meta?.preset?.maxval !== undefined) state.componentMaxvals[c] = meta.preset.maxval;
+    const py = nextY[c];
+    if (py === height || index !== Math.floor(py * frame.height / height)) return;
+    const base = py * width;
+    const recPlane = state.reconstruction[c];
+    const origPlane = state.original?.[c] ?? null;
     for (let x = 0; x < width; x++) {
-      const after = reconstructed[xMap[x]];
-      const i = x * 4;
-      const gray = Math.round(after * 255 / brightest);
-      state.reconstruction[base + x] = after;
-      color(recData, i, gray, gray, gray);
-      if (original !== null) {
-        const before = original[xMap[x]];
-        state.original[base + x] = before;
-        const originalGray = Math.round(before * 255 / brightest);
-        color(origData, i, originalGray, originalGray, originalGray);
-        const difference = before >= after ? before - after : after - before;
-        const offset = difference <= nearLimit ? difference * 3 : overflowOffset;
-        color(errData, i, errorLut[offset], errorLut[offset + 1], errorLut[offset + 2]);
+      recPlane[base + x] = reconstructed[xMap[x]];
+      if (original !== null && origPlane !== null) {
+        origPlane[base + x] = original[xMap[x]];
       }
     }
-    let firstCanvasAt;
-    for (let i = original === null ? 1 : 0; i < (original === null ? 2 : contexts.length); i++) {
-      contexts[i].putImageData(scanlines[i], 0, nextY);
-      if (i === 1 && nextY === 0) firstCanvasAt = performance.now();
+    nextY[c] = py + 1;
+    if (state.channel === c || (state.channel === 'composite' && componentCount >= 3)) {
+      return renderCanvasRow(py);
     }
-    state.nextY++;
-    return firstCanvasAt;
+    return undefined;
   }
 
-  function inspect(x, y) {
-    if (y >= state.nextY) return;
-    state.selected = [x, y];
-    const position = y * state.width + x;
-    const reconstructed = state.reconstruction[position];
-    const original = state.original?.[position];
-    syncOverlays();
-    drawMagnifiers(x, y);
-    reportPixel({
-      x: state.xMap[x],
-      y: Math.floor(y * state.frame.height / state.height),
-      original,
-      reconstructed,
-      error: original === undefined ? undefined : Math.abs(original - reconstructed),
-    });
+  function setChannel(channel) {
+    if (!state) return;
+    const nextChannel = channel === 'composite' && state.componentCount >= 3
+      ? 'composite'
+      : Math.max(0, Math.min(state.componentCount - 1, Number(channel) || 0));
+    state.channel = nextChannel;
+    for (const ctx of state.contexts) {
+      ctx?.clearRect?.(0, 0, state.width, state.height);
+    }
+    const maxPy = arrivedLimit();
+    for (let py = 0; py < maxPy; py++) {
+      renderCanvasRow(py);
+    }
+    if (state.selected) {
+      const [sx, sy] = state.selected;
+      if (sy < maxPy) inspect(sx, sy);
+    }
   }
 
   function drawMagnifiers(x, y) {
-    const { frame, width, nextY, original, reconstruction } = state;
-    const maxval = frame.maxval ?? (2 ** frame.bits - 1);
+    const { width, original, reconstruction, componentCount, componentNears, componentMaxvals, nextY, channel } = state;
     const size = 7;
     const center = Math.floor(size / 2);
+    const limitY = arrivedLimit();
     for (const [plane, canvas] of magnifiers.entries()) {
       if (!canvas) continue;
       const available = plane === 1 || original !== null;
@@ -242,18 +360,42 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       const image = context.createImageData(size, size);
       for (let dy = 0; dy < size; dy++) {
         const row = y + dy - center;
-        if (row < 0 || row >= nextY) continue;
+        if (row < 0 || row >= limitY) continue;
         for (let dx = 0; dx < size; dx++) {
           const column = x + dx - center;
           if (column < 0 || column >= width) continue;
           const source = row * width + column;
           const pixel = (dy * size + dx) * 4;
-          if (plane === 2) {
-            color(image.data, pixel, ...errorColor(Math.abs(original[source] - reconstruction[source]), frame.near));
+          if (channel === 'composite' && componentCount >= 3) {
+            if (plane === 2) {
+              let peakDiff = 0;
+              let maxNear = 0;
+              let exceeded = false;
+              for (let c = 0; c < 3; c++) {
+                if (row < nextY[c]) {
+                  const d = Math.abs(original[c][source] - reconstruction[c][source]);
+                  if (d > componentNears[c]) exceeded = true;
+                  if (d > peakDiff) peakDiff = d;
+                  if (componentNears[c] > maxNear) maxNear = componentNears[c];
+                }
+              }
+              color(image.data, pixel, ...errorColor(exceeded ? maxNear + 1 : peakDiff, maxNear));
+            } else {
+              const r = row < nextY[0] ? Math.round((plane === 0 ? original[0][source] : reconstruction[0][source]) * 255 / componentMaxvals[0]) : 0;
+              const g = row < nextY[1] ? Math.round((plane === 0 ? original[1][source] : reconstruction[1][source]) * 255 / componentMaxvals[1]) : 0;
+              const b = row < nextY[2] ? Math.round((plane === 0 ? original[2][source] : reconstruction[2][source]) * 255 / componentMaxvals[2]) : 0;
+              color(image.data, pixel, r, g, b);
+            }
           } else {
-            const sample = plane === 0 ? original[source] : reconstruction[source];
-            const gray = Math.round(sample * 255 / maxval);
-            color(image.data, pixel, gray, gray, gray);
+            const c = typeof channel === 'number' ? channel : 0;
+            if (row >= nextY[c]) continue;
+            if (plane === 2) {
+              color(image.data, pixel, ...errorColor(Math.abs(original[c][source] - reconstruction[c][source]), componentNears[c]));
+            } else {
+              const sample = plane === 0 ? original[c][source] : reconstruction[c][source];
+              const gray = Math.round(sample * 255 / componentMaxvals[c]);
+              color(image.data, pixel, gray, gray, gray);
+            }
           }
         }
       }
@@ -261,13 +403,63 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     }
   }
 
+  function inspect(x, y) {
+    if (y >= arrivedLimit()) return;
+    state.selected = [x, y];
+    const position = y * state.width + x;
+    syncOverlays();
+    drawMagnifiers(x, y);
+    if (state.componentCount === 1) {
+      const reconstructed = state.reconstruction[0][position];
+      const original = state.original?.[0][position];
+      reportPixel({
+        x: state.xMap[x],
+        y: Math.floor(y * state.frame.height / state.height),
+        original,
+        reconstructed,
+        error: original === undefined ? undefined : Math.abs(original - reconstructed),
+      });
+      return;
+    }
+    const components = Array.from({ length: state.componentCount }, (_, idx) => {
+      const arrived = y < state.nextY[idx];
+      const rec = arrived ? state.reconstruction[idx][position] : undefined;
+      const orig = arrived && state.original ? state.original[idx][position] : undefined;
+      return {
+        index: idx,
+        label: state.componentLabels[idx],
+        original: orig,
+        reconstructed: rec,
+        error: orig === undefined || rec === undefined ? undefined : Math.abs(orig - rec),
+        near: state.componentNears[idx],
+      };
+    });
+    const activeComp = typeof state.channel === 'number' ? components[state.channel] : components[0];
+    reportPixel({
+      x: state.xMap[x],
+      y: Math.floor(y * state.frame.height / state.height),
+      channel: state.channel,
+      original: activeComp.original,
+      reconstructed: activeComp.reconstructed,
+      error: activeComp.error,
+      near: activeComp.near,
+      components,
+    });
+  }
+
+  const bufferBytes = () => {
+    if (!state) return 0;
+    const perPlane = state.width * state.height * 2;
+    return state.componentCount * perPlane * (state.original ? 2 : 1);
+  };
+
   const directions = new Map([
     ['ArrowLeft', [-1, 0]], ['ArrowRight', [1, 0]],
     ['ArrowUp', [0, -1]], ['ArrowDown', [0, 1]],
     ['Enter', [0, 0]],
   ]);
   for (const [index, canvas] of canvases.entries()) {
-    const inspectable = () => state && state.nextY > 0 && (index === 1 || state.original);
+    const inspectable = () => state && arrivedLimit() > 0 && (index === 1 || state.original);
     canvas.addEventListener('click', (event) => {
       if (!inspectable()) return;
       const point = imagePoint(canvas, event, state.width, state.height);
@@ -281,12 +473,12 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       const [dx, dy] = direction;
       inspect(
         Math.max(0, Math.min(state.width - 1, x + dx)),
-        Math.max(0, Math.min(state.nextY - 1, y + dy)),
+        Math.max(0, Math.min(arrivedLimit() - 1, y + dy)),
       );
     });
   }
   clear();
-  return { clear, configure, drawRow, syncOverlays };
+  return { clear, configure, drawRow, setChannel, bufferBytes, syncOverlays };
 }
 
 export const previewIds = ids;

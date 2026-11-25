@@ -17,7 +17,14 @@ pub struct Decoder {
   priv bits : BitReader
   priv golomb : GolombReader
   priv mut frame : Frame?
+  priv mut frame_info : FrameInfo?
   priv mut scan : Scan?
+  priv scans : Array[ScanInfo]
+  priv mut current_scan : Int32
+  priv mut bytes_read : Int64
+  priv mut scan_end_offset : Int64
+  priv mut marker_offset : Int64
+  priv mut error_location : ErrorLocation?
   priv mut phase : DecodePhase
   priv mut phase_index : Int32
   priv mut phase_sign : Int32
@@ -41,7 +48,14 @@ pub fn Decoder::new(limits : Limits) -> Decoder {
     bits: BitReader::new(),
     golomb: GolombReader::new(),
     frame: None,
+    frame_info: None,
     scan: None,
+    scans: [],
+    current_scan: -1,
+    bytes_read: 0L,
+    scan_end_offset: -1L,
+    marker_offset: -1L,
+    error_location: None,
     phase: Sample,
     phase_index: 0,
     phase_sign: 0,
@@ -56,6 +70,76 @@ pub fn Decoder::new(limits : Limits) -> Decoder {
 ///|
 pub fn Decoder::frame(self : Decoder) -> Frame? {
   self.frame
+}
+
+///|
+pub fn Decoder::frame_info(self : Decoder) -> FrameInfo? {
+  self.frame_info
+}
+
+///|
+pub fn Decoder::scans(self : Decoder) -> Array[ScanInfo] {
+  self.scans.copy()
+}
+
+///|
+pub fn Decoder::current_scan(self : Decoder) -> ScanInfo? {
+  if self.current_scan >= 0 && self.current_scan < self.scans.length() {
+    Some(self.scans[self.current_scan])
+  } else {
+    None
+  }
+}
+
+///|
+pub fn Decoder::current_scan_index(self : Decoder) -> Int32 {
+  self.current_scan
+}
+
+///|
+pub fn Decoder::current_component_index(self : Decoder) -> Int32 {
+  match self.current_scan() {
+    Some(info) => info.component_index
+    None => -1
+  }
+}
+
+///|
+pub fn Decoder::current_component_id(self : Decoder) -> Int32 {
+  match self.current_scan() {
+    Some(info) => info.component_id
+    None => -1
+  }
+}
+
+///|
+pub fn Decoder::current_row(self : Decoder) -> Int32 {
+  match self.scan {
+    Some(scan) if scan.rows > 0 => scan.rows - 1
+    _ => -1
+  }
+}
+
+///|
+pub fn Decoder::structure(self : Decoder) -> StreamStructure? {
+  match self.frame_info {
+    Some(frame) =>
+      Some({
+        soi_offset: self.header.soi_offset,
+        sof_offset: self.header.sof_offset,
+        sof_length: self.header.sof_length,
+        eoi_offset: self.header.eoi_offset,
+        frame,
+        scans: self.scans.copy(),
+        markers: self.header.markers.copy(),
+      })
+    None => None
+  }
+}
+
+///|
+pub fn Decoder::error_location(self : Decoder) -> ErrorLocation? {
+  self.error_location
 }
 
 ///|
@@ -242,27 +326,99 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
 }
 
 ///|
-fn Decoder::advance_end(self : Decoder, byte : Int32) -> Bool raise CodecError {
+fn Decoder::complete_current_scan(self : Decoder) -> Unit {
+  if self.current_scan >= 0 && self.current_scan < self.scans.length() {
+    let cur = self.scans[self.current_scan]
+    self.scans[self.current_scan] = {
+      ..cur,
+      end_offset: self.scan_end_offset,
+      completed: true,
+    }
+  }
+}
+
+///|
+fn Decoder::record_error_location(self : Decoder) -> Unit {
+  if self.scan is None {
+    let scan_idx = if self.header.bits > 0 {
+      self.header.scanned_count
+    } else {
+      -1
+    }
+    let offset = if self.header.marker_offset >= 0L {
+      self.header.marker_offset
+    } else {
+      self.bytes_read
+    }
+    self.error_location = Some({
+      scan_index: scan_idx,
+      component_id: self.header.last_component_id,
+      marker: self.header.marker,
+      offset,
+    })
+  } else {
+    let comp_id = self.current_component_id()
+    let marker = match self.phase {
+      EndPrefix | EndCode => self.header.marker
+      _ => 0xDA
+    }
+    let offset = match self.phase {
+      EndPrefix | EndCode if self.marker_offset >= 0L => self.marker_offset
+      _ => self.bytes_read
+    }
+    self.error_location = Some({
+      scan_index: self.current_scan,
+      component_id: comp_id,
+      marker,
+      offset,
+    })
+  }
+}
+
+///|
+// Returns 1 on Done (EOI after all scans), 0 while continuing, -1 if transitioned to inter-scan HeaderParser.
+fn Decoder::advance_end(self : Decoder, byte : Int32) -> Int32 raise CodecError {
   match self.phase {
     StuffedPadding => {
       guard byte == 0 else { raise InvalidData("nonzero stuffed pad byte") }
+      self.scan_end_offset = self.bytes_read
       self.phase = EndPrefix
     }
     EndPrefix => {
       guard byte == 0xFF else { raise InvalidData("missing EOI prefix") }
+      self.marker_offset = self.bytes_read - 1L
       self.phase = EndCode
     }
-    EndCode =>
-      match byte {
-        0xD9 => return true
-        0xFF => ()
-        0xDA | 0xDC | 0xF8 | 0xD0..<=0xD7 =>
-          raise UnsupportedFeature("additional scan or marker after entropy")
-        _ => raise InvalidData("missing EOI")
+    EndCode => {
+      if byte == 0xFF {
+        return 0
       }
+      self.complete_current_scan()
+      if byte == 0xD9 {
+        guard self.header.all_components_scanned() else {
+          raise InvalidData("premature EOI: missing frame components")
+        }
+        self.header.eoi_offset = self.marker_offset
+        self.header.record_marker(0xD9, self.marker_offset, 2, -1, 0)
+        return 1
+      }
+      if self.header.all_components_scanned() {
+        match byte {
+          0xDC => raise UnsupportedFeature("DNL marker")
+          0xD0..<=0xD7 => raise UnsupportedFeature("restart marker")
+          _ => raise InvalidData("unexpected marker after final scan")
+        }
+      }
+      self.scan = None
+      self.bits.reset()
+      self.golomb.reset()
+      self.phase = Sample
+      self.header.begin_inter_scan(self.marker_offset)
+      return -1
+    }
     _ => ()
   }
-  false
+  0
 }
 
 ///|
@@ -290,6 +446,10 @@ pub fn Decoder::step(
         (Some(frame), Some(scan)) if scan.rows < frame.height => {
           if scan.x == scan.width {
             scan.next_row()
+            if self.current_scan >= 0 && self.current_scan < self.scans.length() {
+              let cur = self.scans[self.current_scan]
+              self.scans[self.current_scan] = { ..cur, rows_decoded: scan.rows }
+            }
             self.phase = if scan.rows == frame.height {
               Padding
             } else {
@@ -759,7 +919,9 @@ pub fn Decoder::step(
             self.bits.stuffed = stuffed
             scan.x = x
             scan.run_index = run_index
-            consumed = pos - offset
+            let next_consumed = pos - offset
+            self.bytes_read += (next_consumed - consumed).to_int64()
+            consumed = next_consumed
             if self.error is Some(err) {
               self.error = None
               raise err
@@ -783,6 +945,9 @@ pub fn Decoder::step(
           guard self.bits.take(self.bits.left) == 0 else {
             raise InvalidData("nonzero entropy padding")
           }
+          if !self.bits.stuffed {
+            self.scan_end_offset = self.bytes_read
+          }
           self.phase = if self.bits.stuffed {
             StuffedPadding
           } else {
@@ -799,18 +964,35 @@ pub fn Decoder::step(
       }
       let byte = input[offset + consumed].to_int()
       consumed += 1
+      self.bytes_read += 1L
       match self.scan {
         None =>
-          if self.header.accept(byte) is Some((frame, params)) {
+          if self.header.accept(byte, self.bytes_read)
+            is Some((frame, params, scan_info)) {
+            if self.frame_info is None {
+              self.frame_info = Some(self.header.frame_info())
+            }
             self.frame = Some(frame)
+            self.scans.push(scan_info)
+            self.current_scan = self.scans.length() - 1
             self.scan = Some(Scan::new(frame.width, params))
           }
         Some(_) =>
           match self.phase {
-            StuffedPadding | EndPrefix | EndCode =>
-              if self.advance_end(byte) {
+            StuffedPadding | EndPrefix | EndCode => {
+              let end_state = self.advance_end(byte)
+              if end_state > 0 {
                 break Done
+              } else if end_state < 0 {
+                if self.header.accept(byte, self.bytes_read)
+                  is Some((frame, params, scan_info)) {
+                  self.frame = Some(frame)
+                  self.scans.push(scan_info)
+                  self.current_scan = self.scans.length() - 1
+                  self.scan = Some(Scan::new(frame.width, params))
+                }
               }
+            }
             _ => {
               let err_code = self.bits.byte(byte)
               if err_code == 1 {
@@ -825,7 +1007,10 @@ pub fn Decoder::step(
       NeedInput
     }
   } catch {
-    error => Failed(error)
+    error => {
+      self.record_error_location()
+      Failed(error)
+    }
   }
   match status {
     Done | Failed(_) => self.terminal = Some(status)
