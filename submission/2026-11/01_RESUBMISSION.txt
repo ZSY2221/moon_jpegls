@@ -1,0 +1,49 @@
+MoonJLS——纯 MoonBit JPEG-LS Part 1 编解码内核与符合性验证工具链
+（MoonJLS: MoonBit-Native JPEG-LS Part 1 Codec and Conformance Verification Toolkit）
+
+感谢赛事组委会初审在认可“高位深科研图像保存用途、纯 MoonBit 编解码及流式状态管理贡献”的同时，明确指出初版申报材料中最终标准目标与后续完整 T.87 符合性路径不足的问题。本次修改原报名记录，严格逐条补充完整标准范围、已完成增量与可执行、可验收的分阶段路线如下：
+
+一、明确最终标准范围（核心回应）
+MoonJLS 的最终目标是完整实现 ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1 的编码、解码和数据格式能力，并通过 T.87 §8.2/§8.3、Annex E 及独立参考实现逐阶段验收：
+1. 基础交换格式（Interchange Format）：完整帧/分量/扫描组织（SOI/SOF55/SOS/EOI 及标准标记语法）、P=2–16 与 MAXVAL（1..2^P-1）、常规/游程/游程中断、Golomb-Rice 编码与 0xFF 位填充、LSE ID=1 预设参数、多分量与多扫描、ILV=0/1/2、合法 H/V 采样与边缘 MCU、点变换 Pt、DRI/RST0–RST7 重启间隔、DNL 延后高度及 LSE ID=4 扩展尺寸。
+2. 简略格式与表规范数据（§7(b)(c)、Annex C.3–C.4）：LSE ID=2 映射表与 LSE ID=3 续表、表规范数据流、简略图像格式及解码器外部表装载生命周期与对应编解码能力。
+3. 最终符合性验收（§8 & Annex E）：§8.2 编码、§8.3 解码、Annex E Table E.2 全部 12 项官方流双向验证、能力经核实的独立参考、JS/Wasm GC/Native 三后端一致性、异常/截断输入及流式 EOI 严格尾随检查。
+4. 标准边界严格区分：T.870 Part 2 与 DICOM 容器为独立扩展，不混作 Part 1 必需项；SPIFF（§4.8 / Annex H.5）作为标准推荐可选容器单独列示，不替代 Annex C 基础流与格式目标。
+
+当前已交付的 M2 是演进路线上的阶段版本，不是最终标准范围。
+
+二、项目定位与 MoonBit 原生实现证明
+MoonJLS 面向高精度整数图像的数据交换，重点服务于高精度科研图像、遥感高程、工业灰度数据及 MoonBit 图像处理软件的无损与近无损交换。100% JPEG-LS 编解码算法、状态机、Native CLI 与 JS/Wasm GC FFI 桥接端口均由纯 MoonBit 实现（16 个 .mbt 文件共 4,528 行，其中 core 核心 2,807 行、cmd 入口与桥接 1,099 行、测试与示例 622 行）；JS 仅承担宿主加载、Worker 背压协议与工作台界面，不含任何编解码数学逻辑。
+
+三、已完成阶段（M0 / M1 / M2）与真实独立验证记录
+- M0（已完成）：纯 MoonBit 核心、Native/JS/Wasm GC 三后端、流式状态机、CLI/Worker/工作台与三处正确性修复（16a7b49）。
+- M1（已完成）：满量程 8/12/16 位合法 NEAR 扩展（8 位 0–127，12/16 位 0–255），640/640 双向对照通过（明确标注为历史满量程 NEAR 回归，非 M2 全参数空间笛卡尔积）。
+- M2（已完成，2026-11-25；受测核心源码 fc43bc2）：在单帧单分量单扫描（ILV=0, Pt=0）下实现 P=2–16、独立 MAXVAL、按有效 MAXVAL 约束的 NEAR（0..min(255, floor(MAXVAL/2))），以及真正参与编解码的自定义 LSE ID=1（T1/T2/T3/RESET）；科学工作台上线 Precision Lab、Streaming Lab 与 Compatibility Lab。
+- 实测与 CI 证据：
+  1. 三后端（Native / JS / Wasm GC）核心 MoonBit 单元测试各 15/15 通过；
+  2. M2 本机独立合成矩阵 388 组正例 + 18 个 LSE 码流变体（5 有效 / 13 拒绝）+ 7 个非法编码 + 6 项 Native PGM 检查通过（基于官方 HP V.1.00 与 MAXVAL=1/2 的 Annex A 独立推导向量）；
+  3. GitHub Actions CI 新增独立参考黄金回归（scripts/verify_m2_golden.mjs）：每次推送自动于三后端运行 12 组独立 HP/Annex A 黄金正例 + 18 个 LSE 变体 + 7 个非法编码 + 4 项 Native PGM 检查（另保持历史 640/640 满量程 NEAR 矩阵与清单结构校验）；
+  4. 官方 Annex E：E.2-9 至 E.2-12 在三后端通过编码与解码（12 次候选编码均与官方流逐字节一致）；E.2-1 至 E.2-8 涉及多分量/交错/子采样，当前解码均按预期返回 UnsupportedFeature（编码尚未运行）；
+  5. NASA LOLA 1,036,800 个 16 位月面高程样本完成真实逐样本核对（NEAR=0–3）与 Chrome 158 工作台参数/下载/误差/取消重启验证；
+  6. 0.1.0 包归档在本地回环 registry 通过三后端独立消费验证；公开 Mooncakes 查询当前返回 HTTP 404，尚未线上发布。
+
+四、后续分阶段兼容路线与退出条件（内部开发目标，最终赛事验收时间待组委会确认）
+- M3-A（开发目标 2026-12-10）：多分量帧、多 SOS、ILV=0 多扫描与跨扫描 LSE1 参数继承、重复/遗漏/错序检查。首要退出验收：官方 Annex E E.2-1、E.2-4 三后端双向通过。
+- M3-B（开发目标 2026-12-25）：行交错 ILV=1、样本交错 ILV=2、合法 H/V 采样与边缘 MCU、点变换 Pt（严格区分编码域 NEAR 与原始尺度保守误差界 s*NEAR+s-1）。首要退出验收：官方 Annex E E.2-2、E.2-3、E.2-5 至 E.2-8 三后端双向通过。
+- M4（开发目标 2027-01-10）：LSE ID=2/3 映射表与续表、表规范数据与简略图像格式（§7(b)(c)）及外部表生命周期、DRI/RST0–RST7、DNL、LSE ID=4 扩展尺寸与剩余标准标记语法。
+- M5（开发目标 2027-01-20）：完整 Part 1 符合性闭环（官方 Annex E 12/12 编解码、§8.2 & §8.3、适用独立参考、三后端一致性、完整能力矩阵、干净环境独立复现）。
+
+五、公开审查与复现入口
+- GitHub 仓库：https://github.com/ZSY2221/moon_jpegls
+- 审查 Pull Request #1（保留单一 PR）：https://github.com/ZSY2221/moon_jpegls/pull/1
+- 复审最新分支：https://github.com/ZSY2221/moon_jpegls/tree/codex/moonjls-reappeal-20261125
+- 独立 M2 分支：https://github.com/ZSY2221/moon_jpegls/tree/antigravity/t87-m2-20261125
+- 受测 M2 产品源码：https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44
+- 两分钟评审指南：https://github.com/ZSY2221/moon_jpegls/blob/codex/moonjls-reappeal-20261125/docs/REVIEWER_GUIDE.md
+- T.87 能力矩阵与计划：https://github.com/ZSY2221/moon_jpegls/blob/codex/moonjls-reappeal-20261125/docs/T87_CONFORMANCE_PLAN.md
+- 分阶段兼容路线：https://github.com/ZSY2221/moon_jpegls/blob/codex/moonjls-reappeal-20261125/docs/ROADMAP.md
+- Annex E 逐项结果：https://github.com/ZSY2221/moon_jpegls/blob/codex/moonjls-reappeal-20261125/docs/CONFORMANCE_RESULTS.md
+- MoonBit 原生实现地图：https://github.com/ZSY2221/moon_jpegls/blob/codex/moonjls-reappeal-20261125/docs/MOONBIT_IMPLEMENTATION_MAP.md
+- 一页项目说明（MD / PDF）：submission/2026-11/03_ONE_PAGE_PROPOSAL.md 与 submission/2026-11/04_ONE_PAGE_PROPOSAL.pdf
+
+恳请组委会根据以上补明的 ITU-T T.87 Part 1 最终标准目标、M0–M2 实测交付与带明确退出条件的分阶段兼容路线重新审核。
