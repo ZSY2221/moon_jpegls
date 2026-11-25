@@ -59,6 +59,11 @@ pub fn Decoder::frame(self : Decoder) -> Frame? {
 }
 
 ///|
+pub fn Decoder::preset(self : Decoder) -> Preset? {
+  self.scan.map(scan => scan.params.preset())
+}
+
+///|
 /// A read-only borrow by contract. Do not modify it. Copy samples needed beyond `step`.
 pub fn Decoder::row(self : Decoder) -> FixedArray[Int32] {
   match self.scan {
@@ -422,12 +427,7 @@ pub fn Decoder::step(
                 let ca = ctx_a[index]
                 let mut cn = ctx_n[index]
                 let mut cb = ctx_b[index]
-                let k = if cn >= ca {
-                  0
-                } else {
-                  let kk = cn.clz() - ca.clz()
-                  if (cn << kk) < ca { kk + 1 } else { kk }
-                }
+                let k = golomb_order(ca, cn)
                 let zeros = bbuf.clz()
                 if zeros < 31 && zeros < escape_limit && zeros + 1 + k <= bleft {
                   bbuf = bbuf << (zeros + 1)
@@ -457,7 +457,7 @@ pub fn Decoder::step(
                     break
                   }
                   let err_abs = if error < 0 { -error } else { error }
-                  let mut ua = ca + err_abs
+                  let mut ua = ca + err_abs.reinterpret_as_uint()
                   cb = cb + error * step
                   if cn == reset {
                     ua = ua >> 1
@@ -659,7 +659,7 @@ pub fn Decoder::step(
                     let rn = run_n[kind]
                     let ra = run_a[kind]
                     let k = golomb_order(
-                      ra + ((rn >> 1) & (if kind != 0 { -1 } else { 0 })),
+                      ra + ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
                       rn,
                     )
                     let r_esc = escape_limit - exponent - 1
@@ -690,7 +690,7 @@ pub fn Decoder::step(
                       }
                       let mut rneg = run_neg[kind] +
                         (if error < 0 { 1 } else { 0 })
-                      let mut ua = ra + ((mapped + 1 - kind) >> 1)
+                      let mut ua = ra + ((mapped + 1 - kind) >> 1).reinterpret_as_uint()
                       let mut un = rn
                       if un == reset {
                         ua = ua >> 1

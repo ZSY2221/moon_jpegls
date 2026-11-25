@@ -71,7 +71,7 @@ fn BitWriter::symbol(
 fn BitWriter::header(
   self : BitWriter,
   frame : Frame,
-  params : Parameters,
+  preset : Preset?,
 ) -> Unit {
   self.word16(0xFFD8)
   self.word16(0xFFF7)
@@ -83,7 +83,7 @@ fn BitWriter::header(
   self.byte(1)
   self.byte(0x11)
   self.byte(0)
-  if frame.bits > 12 {
+  if preset is Some(params) {
     self.word16(0xFFF8)
     self.word16(13)
     self.byte(1)

@@ -8,11 +8,11 @@ let run_exponents : FixedArray[Int32] = [
 priv struct Scan {
   params : Parameters
   width : Int32
-  ctx_a : FixedArray[Int32]
+  ctx_a : FixedArray[UInt32]
   ctx_b : FixedArray[Int32]
   ctx_c : FixedArray[Int32]
   ctx_n : FixedArray[Int32]
-  run_a : FixedArray[Int32]
+  run_a : FixedArray[UInt32]
   run_n : FixedArray[Int32]
   run_neg : FixedArray[Int32]
   mut previous : FixedArray[Int32]
@@ -29,11 +29,11 @@ fn Scan::new(width : Int32, params : Parameters) -> Scan {
   {
     params,
     width,
-    ctx_a: FixedArray::make(365, a),
+    ctx_a: FixedArray::make(365, a.reinterpret_as_uint()),
     ctx_b: FixedArray::make(365, 0),
     ctx_c: FixedArray::make(365, 0),
     ctx_n: FixedArray::make(365, 1),
-    run_a: FixedArray::make(2, a),
+    run_a: FixedArray::make(2, a.reinterpret_as_uint()),
     run_n: FixedArray::make(2, 1),
     run_neg: FixedArray::make(2, 0),
     previous: FixedArray::make(width, 0),
@@ -226,7 +226,8 @@ fn Parameters::is_valid_error(self : Parameters, error : Int32) -> Bool {
 }
 
 ///|
-fn golomb_order(a : Int32, n : Int32) -> Int32 {
+fn golomb_order(a : UInt32, count : Int32) -> Int32 {
+  let n = count.reinterpret_as_uint()
   if n >= a {
     0
   } else {
@@ -259,7 +260,7 @@ fn Scan::update_regular(
   error : Int32,
 ) -> Unit {
   let p = self.params
-  let mut a = self.ctx_a[index] + abs_i32(error)
+  let mut a = self.ctx_a[index] + abs_i32(error).reinterpret_as_uint()
   let mut b = self.ctx_b[index] + error * p.step
   let mut n = self.ctx_n[index]
   if n == p.reset {
@@ -295,7 +296,7 @@ fn Scan::update_regular(
 ///|
 fn Scan::run_order(self : Scan, kind : Int32) -> Int32 {
   let n = self.run_n[kind]
-  golomb_order(self.run_a[kind] + ((n >> 1) & (if kind != 0 { -1 } else { 0 })), n)
+  golomb_order(self.run_a[kind] + ((n >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(), n)
 }
 
 ///|
@@ -312,7 +313,7 @@ fn Scan::update_run(
 ) -> Unit {
   let p = self.params
   let mut neg = self.run_neg[kind] + (if error < 0 { 1 } else { 0 })
-  let mut a = self.run_a[kind] + ((mapped + 1 - kind) >> 1)
+  let mut a = self.run_a[kind] + ((mapped + 1 - kind) >> 1).reinterpret_as_uint()
   let mut n = self.run_n[kind]
   if n == p.reset {
     a = a >> 1

@@ -60,11 +60,18 @@ function nativeMetrics(stdout) {
   const fields = ['width', 'height', 'bits', 'maxval', 'near', 'rows', 'inputBytes',
     'corePayloadBytes', 'inputPeakBytes', 'firstRowInputConsumed'];
   if (!metrics || !fields.every((key) => Number.isSafeInteger(metrics[key]) && metrics[key] >= 0) ||
-      ![8, 12, 16].includes(metrics.bits) || metrics.width < 1 || metrics.height < 1 ||
-      metrics.rows !== metrics.height || metrics.maxval !== 2 ** metrics.bits - 1 ||
+      metrics.bits < 2 || metrics.bits > 16 || metrics.width < 1 || metrics.height < 1 ||
+      metrics.rows !== metrics.height || metrics.maxval < 1 || metrics.maxval > 2 ** metrics.bits - 1 ||
       metrics.near > Math.min(255, Math.floor(metrics.maxval / 2)) ||
       metrics.firstRowInputConsumed > metrics.inputBytes) {
     throw new Error('Native command returned invalid verification metrics');
+  }
+  const preset = metrics.preset;
+  if (preset && (preset.maxval !== metrics.maxval ||
+      !['t1', 't2', 't3', 'reset'].every((key) => Number.isSafeInteger(preset[key])) ||
+      preset.t1 <= metrics.near || preset.t1 > preset.t2 || preset.t2 > preset.t3 ||
+      preset.t3 > metrics.maxval || preset.reset < 3 || preset.reset > Math.max(255, metrics.maxval))) {
+    throw new Error('Native command returned invalid coding parameters');
   }
   return metrics;
 }
@@ -126,7 +133,7 @@ async function main(args) {
       bytes: metrics?.inputBytes ?? (inputUnchanged && inputAfter.size <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(inputAfter.size) : null),
       sha256: inputUnchanged ? inputDigest : null,
     },
-    frame: metrics,
+    frame: metrics, preset: metrics?.preset,
     stages: { decode: stage },
     timing: { elapsedMs, boundary: 'Native child process launch through exit, including WSL launcher when used; excludes path conversion and hashing' },
     memory: { decode: codecMeasurements(metrics && {

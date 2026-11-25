@@ -27,6 +27,10 @@ CASES = [
     (12, [0, 1, 2047, 2048, 4094, 4095]),
     (16, [0, 1, 32767, 32768, 65534, 65535]),
 ]
+M2_CASES = [
+    (12, [0, 1, 2047, 2048, 4092, 4093]),
+    (16, [0, 1, 32767, 32768, 49999, 50000]),
+]
 CONSUMER = r'''fn main {
   let cases : Array[(Int32, FixedArray[Int32])] = [
     (12, [0, 1, 2047, 2048, 4094, 4095]),
@@ -131,7 +135,7 @@ def loopback_registry(package, requests):
             thread.join()
 
 
-def trials(stdout):
+def trials(stdout, expected=CASES):
     results = {}
     for line in stdout.splitlines():
         kind, _, fields = line.partition(" ")
@@ -143,8 +147,8 @@ def trials(stdout):
             case["samples"].append(values)
         else:
             case.update(values)
-    assert set(results) == {(bits, near) for bits, _ in CASES for near in (0, 255)}
-    for bits, original in CASES:
+    assert set(results) == {(bits, near) for bits, _ in expected for near in (0, 255)}
+    for bits, original in expected:
         for near in (0, 255):
             case = results[bits, near]
             assert case["rows"] == 2
@@ -227,7 +231,8 @@ def verify(args, work, report):
     app.mkdir()
     (app / "moon.mod").write_text('name = "independent/moonjls_probe"\nversion = "0.1.0"\n', encoding="utf-8")
     (app / "moon.pkg").write_text(f'import {{ "{MODULE}/core" @jls }}\npkgtype(kind: "executable")\n', encoding="utf-8")
-    (app / "main.mbt").write_text(CONSUMER, encoding="utf-8")
+    consumer = (ROOT / "tests/conformance/consumer_m2.mbt").read_text(encoding="utf-8") if args.m2 else CONSUMER
+    (app / "main.mbt").write_text(consumer, encoding="utf-8")
     assert all(not (directory / "moon.work").exists() for directory in [app, *app.parents])
     assert not (app / ".mooncakes").exists()
     requests = []
@@ -255,7 +260,7 @@ def verify(args, work, report):
     for backend in ("js", "wasm-gc", "native"):
         result = run(f"consume-{backend}", [moon, "run", "--release", "--frozen", "--target", backend, "."],
                      app, local_env)
-        outcomes[backend] = trials(result.stdout)
+        outcomes[backend] = trials(result.stdout, M2_CASES if args.m2 else CASES)
     assert outcomes["js"] == outcomes["wasm-gc"] == outcomes["native"]
     report["backends"] = outcomes
 
@@ -264,10 +269,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--commit", default=PIN)
     parser.add_argument("--moon", default="moon")
+    parser.add_argument("--m2", action="store_true", help="Exercise non-default MAXVAL and active LSE metadata")
     parser.add_argument("--archive", type=Path, help="Retain the Moon archive at this path")
     parser.add_argument("--output", type=Path, default=Path(__file__).with_name("result.json"))
     args = parser.parse_args()
-    report = {"recordedAtSingapore": datetime.now(timezone(timedelta(hours=8))).isoformat(), "commands": []}
+    if args.m2 and args.commit == PIN:
+        parser.error("--m2 requires an explicit commit implementing the Preset API")
+    report = {"m2": args.m2, "recordedAtSingapore": datetime.now(timezone(timedelta(hours=8))).isoformat(), "commands": []}
     try:
         with TemporaryDirectory(prefix="moonjls-consumer-") as root:
             work = Path(root).resolve()

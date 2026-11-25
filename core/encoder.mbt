@@ -10,23 +10,22 @@ pub struct Encoder {
 }
 
 ///|
-pub fn Encoder::new(frame : Frame, limits : Limits) -> Encoder raise CodecError {
+pub fn Encoder::new(
+  frame : Frame,
+  limits : Limits,
+  preset~ : Preset = Preset::defaults(),
+) -> Encoder raise CodecError {
   validate_limits(limits)
   validate_dimensions(frame.width, frame.height, limits)
-  guard frame.bits >= 2 &&
-    frame.bits <= 16 &&
-    frame.near >= 0 &&
-    frame.near <= 255 else {
-    raise InvalidArgument("sample precision or NEAR")
-  }
-  let maxval = frame.maxval()
-  guard frame.near <= maxval / 2 else {
-    raise InvalidArgument("NEAR exceeds MAXVAL / 2")
-  }
-  validate_profile(frame.bits, maxval)
-  let params = default_parameters(maxval, frame.near)
+  let effective = resolve_preset(frame, preset)
+  let params = Parameters::new(effective, frame.near)
   let bits = BitWriter::new()
-  bits.header(frame, params)
+  let marker = if preset != Preset::defaults() || frame.bits > 12 {
+    Some(effective)
+  } else {
+    None
+  }
+  bits.header(frame, marker)
   {
     frame,
     scan: Scan::new(frame.width, params),
@@ -36,6 +35,11 @@ pub fn Encoder::new(frame : Frame, limits : Limits) -> Encoder raise CodecError 
     run: -1,
     terminal: None,
   }
+}
+
+///|
+pub fn Encoder::preset(self : Encoder) -> Preset {
+  self.scan.params.preset()
 }
 
 ///|
@@ -319,7 +323,7 @@ pub fn Encoder::step(
               let rn = run_n[kind]
               let ra = run_a[kind]
               let k = golomb_order(
-                ra + ((rn >> 1) & (if kind != 0 { -1 } else { 0 })),
+                ra + ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
                 rn,
               )
               let error = p.reduce(sign * (sample - predicted))
@@ -443,7 +447,7 @@ pub fn Encoder::step(
                 }
               }
               let mut neg = run_neg[kind] + (if error < 0 { 1 } else { 0 })
-              let mut ua = ra + ((mapped + 1 - kind) >> 1)
+              let mut ua = ra + ((mapped + 1 - kind) >> 1).reinterpret_as_uint()
               let mut un = rn
               if un == reset {
                 ua = ua >> 1
@@ -528,12 +532,7 @@ pub fn Encoder::step(
             let ca = ctx_a[index]
             let mut cn = ctx_n[index]
             let mut cb = ctx_b[index]
-            let k = if cn >= ca {
-              0
-            } else {
-              let kk = cn.clz() - ca.clz()
-              if (cn << kk) < ca { kk + 1 } else { kk }
-            }
+            let k = golomb_order(ca, cn)
             let quantized = if near == 0 {
               delta
             } else if delta < 0 {
@@ -677,7 +676,7 @@ pub fn Encoder::step(
               }
             }
             let err_abs = if error < 0 { -error } else { error }
-            let mut ua = ca + err_abs
+            let mut ua = ca + err_abs.reinterpret_as_uint()
             cb = cb + error * step
             if cn == reset {
               ua = ua >> 1

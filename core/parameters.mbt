@@ -1,11 +1,27 @@
 ///|
-/// Single-component frame. MAXVAL is `(1 << bits) - 1`.
+/// Single-component frame geometry, coded precision and NEAR. See Preset for the active MAXVAL.
 #derive(Eq, Debug)
 pub(all) struct Frame {
   width : Int32
   height : Int32
   bits : Int32
   near : Int32
+}
+
+///|
+/// Coding parameters for the current scan. Zero fields request the defaults in T.87 Table C.2.
+#derive(Eq, Debug)
+pub(all) struct Preset {
+  maxval : Int32
+  t1 : Int32
+  t2 : Int32
+  t3 : Int32
+  reset : Int32
+}
+
+///|
+pub fn Preset::defaults() -> Preset {
+  { maxval: 0, t1: 0, t2: 0, t3: 0, reset: 0 }
 }
 
 ///|
@@ -61,6 +77,7 @@ pub(all) struct DecodeStep {
 }
 
 ///|
+/// Full-scale default for this precision. Use the active scan Preset for the effective value.
 pub fn Frame::maxval(self : Frame) -> Int32 {
   (1 << self.bits) - 1
 }
@@ -88,16 +105,6 @@ fn validate_dimensions(
     height <= limits.max_height &&
     width <= limits.max_pixels / height else {
     raise ResourceLimit("frame dimensions exceed limits")
-  }
-}
-
-///|
-fn validate_profile(bits : Int32, maxval : Int32) -> Unit raise CodecError {
-  guard bits == 8 || bits == 12 || bits == 16 else {
-    raise UnsupportedFeature("sample precision")
-  }
-  guard maxval == (1 << bits) - 1 else {
-    raise UnsupportedFeature("custom MAXVAL")
   }
 }
 
@@ -162,7 +169,7 @@ fn clamp_default(value : Int32, lower : Int32, upper : Int32) -> Int32 {
 }
 
 ///|
-fn default_parameters(maxval : Int32, near : Int32) -> Parameters {
+fn default_preset(maxval : Int32, near : Int32) -> Preset {
   let (base1, base2, base3) = if maxval >= 128 {
     let factor = (min(maxval, 4095) + 128) / 256
     (
@@ -181,6 +188,51 @@ fn default_parameters(maxval : Int32, near : Int32) -> Parameters {
   let t1 = clamp_default(base1, near + 1, maxval)
   let t2 = clamp_default(base2, t1, maxval)
   let t3 = clamp_default(base3, t2, maxval)
+  { maxval, t1, t2, t3, reset: 64 }
+}
+
+///|
+/// Tests a resolved preset against the default thresholds for its MAXVAL and NEAR.
+pub fn Preset::has_custom_thresholds(self : Preset, near : Int32) -> Bool {
+  self.maxval > 0 && self != default_preset(self.maxval, near)
+}
+
+///|
+fn resolve_preset(frame : Frame, requested : Preset) -> Preset raise CodecError {
+  guard frame.bits >= 2 && frame.bits <= 16 else {
+    raise InvalidArgument("sample precision must be in 2..16")
+  }
+  let full_range = frame.maxval()
+  let maxval = if requested.maxval == 0 { full_range } else { requested.maxval }
+  guard maxval >= 1 && maxval <= full_range else {
+    raise InvalidArgument("MAXVAL is outside the coded precision")
+  }
+  let near = frame.near
+  guard near >= 0 && near <= min(255, maxval / 2) else {
+    raise InvalidArgument("NEAR is outside the range for MAXVAL")
+  }
+  let defaults = default_preset(maxval, near)
+  let t1 = if requested.t1 == 0 { defaults.t1 } else { requested.t1 }
+  let t2 = if requested.t2 == 0 { defaults.t2 } else { requested.t2 }
+  let t3 = if requested.t3 == 0 { defaults.t3 } else { requested.t3 }
+  let reset = if requested.reset == 0 { defaults.reset } else { requested.reset }
+  guard near < t1 && t1 <= t2 && t2 <= t3 && t3 <= maxval else {
+    raise InvalidArgument("LSE thresholds must satisfy NEAR < T1 <= T2 <= T3 <= MAXVAL")
+  }
+  guard reset >= 3 && reset <= max(255, maxval) else {
+    raise InvalidArgument("LSE RESET is outside the legal range")
+  }
+  { maxval, t1, t2, t3, reset }
+}
+
+///|
+fn Parameters::preset(self : Parameters) -> Preset {
+  { maxval: self.maxval, t1: self.t1, t2: self.t2, t3: self.t3, reset: self.reset }
+}
+
+///|
+fn Parameters::new(preset : Preset, near : Int32) -> Parameters {
+  let { maxval, t1, t2, t3, reset } = preset
   let step = 2 * near + 1
   let range = (maxval + 2 * near) / step + 1
   let bpp = max(2, ceil_log2(maxval + 1))
@@ -223,7 +275,7 @@ fn default_parameters(maxval : Int32, near : Int32) -> Parameters {
     t1,
     t2,
     t3,
-    reset: 64,
+    reset,
     q_lut,
   }
 }

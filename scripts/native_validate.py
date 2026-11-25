@@ -105,7 +105,7 @@ def validate(directory, binary, backends):
         if official["expected"] == "valid":
             expected = (directory / f"{official['name']}.raw").read_bytes()
             reconstructed = run(binary, "decode", path, "-", "raw-le", 23).stdout
-            assert_raw(reconstructed, expected, path)
+            assert_raw(raw16(reconstructed, official.get("bits", 12)), expected, path)
             count["nativeCLIOfficialPass"] += 1
         else:
             result = subprocess.run([str(binary), "verify", str(path), "23"], capture_output=True, timeout=30)

@@ -59,7 +59,7 @@ test "high NEAR thresholds fall back and workspace counts the resulting table" {
     (127, 128, 128, 128),
   ]
   for (near, t1, t2, t3) in thresholds {
-    let params = default_parameters(255, near)
+    let params = Parameters::new(default_preset(255, near), near)
     assert_eq((params.t1, params.t2, params.t3), (t1, t2, t3))
     assert_eq(params.q_lut.length(), 2 * t3 + 1)
   }
@@ -70,5 +70,5 @@ test "high NEAR thresholds fall back and workspace counts the resulting table" {
   let decoder = Decoder::new(Limits::default())
   assert_eq(decoder.step(coded, 0, coded.length(), true).status, RowReady)
   assert_eq(decoder.workspace_bytes(), 27243)
-  assert_eq(default_parameters(65535, 244).wrap, 66504)
+  assert_eq(Parameters::new(default_preset(65535, 244), 244).wrap, 66504)
 }

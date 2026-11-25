@@ -1,13 +1,14 @@
 ///|
 let help : String =
-  #|moonjls encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK]
-  #|moonjls encode-pgm NEAR INPUT OUTPUT [CHUNK]
+  #|moonjls encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--maxval N] [preset flags]
+  #|moonjls encode-pgm NEAR INPUT OUTPUT [CHUNK] [preset flags]
   #|moonjls decode INPUT OUTPUT [raw-le|raw-be|pgm] [CHUNK]
   #|moonjls inspect INPUT [CHUNK] [--json]
   #|moonjls verify INPUT [CHUNK] [--json]
   #|
   #|Use - for stdin or stdout. Files are created without overwriting.
-  #|Raw samples use one byte at 8 bits and two bytes at 12/16 bits (default raw-le).
+  #|Raw samples use one byte for P<=8, two bytes for P>8 (default raw-le).
+  #|PGM uses the header MAXVAL. Preset flags: --t1 N --t2 N --t3 N --reset N.
   #|CHUNK sets the byte buffer size (1–1048576, default 65536).
   #|Inspect and verify each read through EOI and reject trailing bytes.
   #|With --json, inspect and verify write successful decoding statistics to stdout.
@@ -46,8 +47,8 @@ async fn with_writer(
 }
 
 ///|
-fn describe(frame : @jls.Frame) -> String {
-  "width=\{frame.width} height=\{frame.height} bits=\{frame.bits} maxval=\{frame.maxval()} near=\{frame.near}"
+fn describe(frame : @jls.Frame, preset : @jls.Preset) -> String {
+  "width=\{frame.width} height=\{frame.height} bits=\{frame.bits} maxval=\{preset.maxval} near=\{frame.near} t1=\{preset.t1} t2=\{preset.t2} t3=\{preset.t3} reset=\{preset.reset}"
 }
 
 ///|
@@ -57,9 +58,10 @@ async fn encode_stream(
   frame : @jls.Frame,
   big : Bool,
   chunk : Int32,
+  preset : @jls.Preset,
 ) -> Unit {
-  let encoder = @jls.Encoder::new(frame, @jls.Limits::default())
-  let storage = if frame.bits == 8 { 1 } else { 2 }
+  let encoder = @jls.Encoder::new(frame, @jls.Limits::default(), preset~)
+  let storage = if frame.bits <= 8 { 1 } else { 2 }
   let samples = FixedArray::make(
     if chunk >= storage {
       chunk / storage
@@ -97,7 +99,7 @@ async fn encode_stream(
     }
   }
   log_line(
-    "encoded \{describe(frame)} input_bytes=\{source.byte_count} output_bytes=\{bytes} core_payload_bytes=\{encoder.workspace_bytes()} input_high_water=\{source.high_water} output_high_water=\{high_water}",
+    "encoded \{describe(frame, encoder.preset())} input_bytes=\{source.byte_count} output_bytes=\{bytes} core_payload_bytes=\{encoder.workspace_bytes()} input_high_water=\{source.high_water} output_high_water=\{high_water}",
   )
 }
 
@@ -107,10 +109,9 @@ async fn buffer_row(
   row : FixedArray[Int32],
   buffer : FixedArray[Byte],
   filled : Int32,
-  frame : @jls.Frame,
+  wide : Bool,
   format : Format,
 ) -> (Int32, Int32, Int32) {
-  let wide = frame.bits > 8
   let big = match format {
     RawLittle => false
     RawBig | Pgm => true
@@ -216,13 +217,16 @@ async fn decode_stream(
         guard decoder.frame() is Some(frame) else {
           raise Input("missing frame")
         }
+        guard decoder.preset() is Some(preset) else {
+          raise Input("missing scan parameters")
+        }
         if rows == 0 {
           first_row_at = consumed
         }
         if sink is Some(sink) {
           if rows == 0 && format is Pgm {
             let header = @utf8.encode(
-              "P5\n\{frame.width} \{frame.height}\n\{frame.maxval()}\n"[:],
+              "P5\n\{frame.width} \{frame.height}\n\{preset.maxval}\n"[:],
             )
             sink.write(header[:])
             bytes += header.length().to_int64()
@@ -232,7 +236,7 @@ async fn decode_stream(
             decoder.row(),
             output,
             out_len,
-            frame,
+            if format is Pgm { preset.maxval > 255 } else { frame.bits > 8 },
             format,
           )
           out_len = next_len
@@ -263,16 +267,18 @@ async fn decode_stream(
     }
   }
   guard decoder.frame() is Some(frame) else { raise Input("missing frame") }
+  guard decoder.preset() is Some(preset) else { raise Input("missing scan parameters") }
   let workspace = decoder.workspace_bytes()
   if json {
     let report = "{\"width\":\{frame.width},\"height\":\{frame.height},\"bits\":\{frame.bits}," +
-      "\"maxval\":\{frame.maxval()},\"near\":\{frame.near},\"rows\":\{rows}," +
+      "\"maxval\":\{preset.maxval},\"near\":\{frame.near},\"rows\":\{rows}," +
+      "\"preset\":{\"maxval\":\{preset.maxval},\"t1\":\{preset.t1},\"t2\":\{preset.t2},\"t3\":\{preset.t3},\"reset\":\{preset.reset}}," +
       "\"inputBytes\":\{consumed},\"corePayloadBytes\":\{workspace}," +
       "\"inputPeakBytes\":\{source.high_water},\"firstRowInputConsumed\":\{first_row_at}}\n"
     @stdio.stdout.text.write(report[:])
   } else {
     log_line(
-      "\{operation} \{describe(frame)} rows=\{rows} input_bytes=\{consumed} output_bytes=\{bytes} first_row_at=\{first_row_at} core_payload_bytes=\{workspace} input_high_water=\{source.high_water} output_high_water=\{high_water}",
+      "\{operation} \{describe(frame, preset)} rows=\{rows} input_bytes=\{consumed} output_bytes=\{bytes} first_row_at=\{first_row_at} core_payload_bytes=\{workspace} input_high_water=\{source.high_water} output_high_water=\{high_water}",
     )
   }
 }
@@ -290,23 +296,59 @@ fn parse_chunk(args : ArrayView[String], index : Int32) -> Int32 raise {
 }
 
 ///|
+fn parse_encode_options(
+  args : ArrayView[String],
+  start : Int32,
+  pgm : Bool,
+) -> (Format, Int32, @jls.Preset) raise {
+  let mut index = start
+  let mut format = RawLittle
+  if !pgm && index < args.length() && !args[index].has_prefix("--") {
+    format = parse_format(args[index])
+    index += 1
+    guard !(format is Pgm) else { raise Usage("use encode-pgm for P5 input") }
+  }
+  let mut chunk = 65536
+  if index < args.length() && !args[index].has_prefix("--") {
+    chunk = parse_chunk(args, index)
+    index += 1
+  }
+  let mut preset = @jls.Preset::defaults()
+  let mut seen = 0
+  while index < args.length() {
+    guard index + 1 < args.length() else { raise Usage("missing preset flag value") }
+    let flag = args[index]
+    let value = @string.parse_int(args[index + 1][:])
+    guard value >= 0 && value <= 65535 else {
+      raise @jls.InvalidArgument("preset flag is outside 0..65535")
+    }
+    let (bit, next) = match flag {
+      "--maxval" if !pgm && value > 0 => (1, { ..preset, maxval: value })
+      "--t1" => (2, { ..preset, t1: value })
+      "--t2" => (4, { ..preset, t2: value })
+      "--t3" => (8, { ..preset, t3: value })
+      "--reset" => (16, { ..preset, reset: value })
+      _ => raise Usage("invalid preset flag or MAXVAL")
+    }
+    guard (seen & bit) == 0 else { raise Usage("duplicate preset flag") }
+    seen = seen | bit
+    preset = next
+    index += 2
+  }
+  (format, chunk, preset)
+}
+
+///|
 async fn dispatch(args : ArrayView[String]) -> Unit {
   match args {
-    ["encode", width, height, bits, near, input, output, ..] if args.length() <=
-      9 => {
+    ["encode", width, height, bits, near, input, output, ..] => {
       let frame : @jls.Frame = {
         width: @string.parse_int(width[:]),
         height: @string.parse_int(height[:]),
         bits: @string.parse_int(bits[:]),
         near: @string.parse_int(near[:]),
       }
-      let format = if args.length() > 7 {
-        parse_format(args[7])
-      } else {
-        RawLittle
-      }
-      guard !(format is Pgm) else { raise Usage("use encode-pgm for P5 input") }
-      let chunk = parse_chunk(args, 8)
+      let (format, chunk, preset) = parse_encode_options(args, 7, false)
       with_reader(input, reader => {
         with_writer(output, writer => {
           encode_stream(
@@ -315,18 +357,20 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             frame,
             format is RawBig,
             chunk,
+            preset,
           )
         })
       })
     }
-    ["encode-pgm", near, input, output, ..] if args.length() <= 5 => {
+    ["encode-pgm", near, input, output, ..] => {
       let near = @string.parse_int(near[:])
-      let chunk = parse_chunk(args, 4)
+      let (_, chunk, preset) = parse_encode_options(args, 4, true)
       with_reader(input, reader => {
         let source = Source::new(reader, chunk)
-        let frame = read_pgm(source, near)
+        let (frame, maxval) = read_pgm(source, near)
+        let preset = if maxval == frame.maxval() { preset } else { { ..preset, maxval, } }
         with_writer(output, writer => {
-          encode_stream(source, writer, frame, true, chunk)
+          encode_stream(source, writer, frame, true, chunk, preset)
         })
       })
     }

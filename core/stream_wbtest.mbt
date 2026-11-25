@@ -190,7 +190,7 @@ test "explicit EOF, truncation, zero output capacity and cancellation are distin
 }
 
 ///|
-test "valid default LSE forms, unsupported custom presets and illegal values" {
+test "default LSE forms and invalid RESET" {
   let frame : Frame = { width: 3, height: 1, bits: 16, near: 3, }
   let coded = encode(frame, [32767, 32768, 65535])
   let (_, expected) = decode(coded)
@@ -204,16 +204,6 @@ test "valid default LSE forms, unsupported custom presets and illegal values" {
     }
   })
   assert_eq(decode(zero).1, expected)
-  let custom = Bytes::makei(coded.length(), i => {
-    if i == 29 {
-      63
-    } else {
-      coded[i]
-    }
-  })
-  assert_true(
-    (Ok(decode(custom)) catch { e => Err(e) }) is Err(UnsupportedFeature(_)),
-  )
   let illegal = Bytes::makei(coded.length(), i => {
     if i == 29 {
       1

@@ -189,8 +189,8 @@ async function invalidTests(core, initial, directory, label, counts) {
   const large = Buffer.from(source);
   large.writeUInt16BE(65535, 7);
   large.writeUInt16BE(65535, 9);
-  const unsupportedPrecision = Buffer.from(source);
-  unsupportedPrecision[6] = 9;
+  const illegalPrecision = Buffer.from(source);
+  illegalPrecision[6] = 17;
   const illegalNear = Buffer.from(source);
   illegalNear[scanStart(source) - 3] = 128;
   const badLength = Buffer.from(source);
@@ -204,10 +204,10 @@ async function invalidTests(core, initial, directory, label, counts) {
     ['missing-eoi', source.subarray(0, source.length - 1), 'Truncated'],
     ['wrong-eoi', badEnd, 'InvalidData'],
     ['unsupported-dnl', zeroHeight, 'UnsupportedFeature'],
-    ['unsupported-precision-nine', unsupportedPrecision, 'UnsupportedFeature'],
+    ['invalid-precision-seventeen', illegalPrecision, 'InvalidData'],
     ['invalid-near-128', illegalNear, 'InvalidData'],
     ['invalid-preset-thresholds', withPreset(source, [255, 8, 3, 21, 64]), 'InvalidData'],
-    ['unsupported-preset-thresholds', withPreset(source, [255, 4, 8, 21, 64]), 'UnsupportedFeature'],
+    ['invalid-preset-reset', withPreset(source, [255, 4, 8, 21, 2]), 'InvalidData'],
     ['dimension-budget', large, 'ResourceLimit'],
     ['metadata-budget', withMarker(source, 0xe1, Buffer.of(1, 2)), 'ResourceLimit', { maxMetadataBytes: 5 }],
     ['tail-by-default', Buffer.concat([source, Buffer.of(1, 2)]), 'TrailingData']
