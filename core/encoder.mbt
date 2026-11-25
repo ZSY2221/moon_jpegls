@@ -1,8 +1,6 @@
 ///|
 priv struct ResolvedScan {
-  component_index : Int32
-  component_id : Int32
-  near : Int32
+  scan_info : ScanInfo
   params : Parameters
   lse_marker : Preset?
 }
@@ -22,10 +20,10 @@ pub struct Encoder {
 }
 
 ///|
-/// Creates a multi-component non-interleaved (ILV=0, Ns=1 per scan) encoder.
-pub fn Encoder::new_multicomponent(
+/// Creates a multi-component encoder supporting ILV=0 and ILV=1 scans.
+pub fn Encoder::new_scans(
   frame_info : FrameInfo,
-  scans : Array[ScanSpec],
+  scans : Array[MultiScanSpec],
   limits : Limits,
 ) -> Encoder raise CodecError {
   validate_limits(limits)
@@ -48,21 +46,43 @@ pub fn Encoder::new_multicomponent(
       }
     }
   }
-  guard scans.length() == count else {
-    raise InvalidArgument("non-interleaved scan count must equal component count")
+  guard scans.length() > 0 else {
+    raise InvalidArgument("at least one scan is required")
   }
   let seen = Array::make(count, false)
+  let mut scanned_count = 0
   let resolved : Array[ResolvedScan] = []
   let mut last_emitted_lse : Preset? = None
   for i in 0..<scans.length() {
     let spec = scans[i]
-    guard frame_info.find_component(spec.component_id) is Some(comp_idx) else {
-      raise InvalidArgument("scan references an undeclared component id")
+    let ns = spec.component_ids.length()
+    guard ns >= 1 && ns <= 4 else {
+      raise InvalidArgument("scan component count must be in 1..4")
     }
-    guard !seen[comp_idx] else {
-      raise InvalidArgument("duplicate scan for component id")
+    guard spec.point_transform == 0 else {
+      raise UnsupportedFeature("point transform is not supported yet")
     }
-    seen[comp_idx] = true
+    guard (ns == 1 && spec.interleave == 0) ||
+      (ns > 1 && spec.interleave == 1) else {
+      if ns > 1 && spec.interleave == 2 {
+        raise UnsupportedFeature("sample-interleaved scan")
+      }
+      raise InvalidArgument("invalid scan interleave mode")
+    }
+    let comp_indices : Array[Int32] = []
+    let comp_ids : Array[Int32] = []
+    for cid in spec.component_ids {
+      guard frame_info.find_component(cid) is Some(comp_idx) else {
+        raise InvalidArgument("scan references an undeclared component id")
+      }
+      guard !seen[comp_idx] else {
+        raise InvalidArgument("duplicate scan for component id")
+      }
+      seen[comp_idx] = true
+      comp_indices.push(comp_idx)
+      comp_ids.push(cid)
+      scanned_count += 1
+    }
     let scan_frame : Frame = {
       width: frame_info.width,
       height: frame_info.height,
@@ -79,13 +99,30 @@ pub fn Encoder::new_multicomponent(
     } else {
       None
     }
-    resolved.push({
-      component_index: comp_idx,
-      component_id: spec.component_id,
+    let scan_info : ScanInfo = {
+      scan_index: i,
+      component_index: comp_indices[0],
+      component_id: comp_ids[0],
+      component_indices: comp_indices,
+      component_ids: comp_ids,
       near: spec.near,
+      interleave: spec.interleave,
+      point_transform: spec.point_transform,
+      preset: effective,
+      header_offset: 0L,
+      entropy_offset: 0L,
+      end_offset: 0L,
+      rows_decoded: 0,
+      completed: false,
+    }
+    resolved.push({
+      scan_info,
       params: Parameters::new(effective, spec.near),
       lse_marker,
     })
+  }
+  guard scanned_count == count else {
+    raise InvalidArgument("scans must cover every declared frame component")
   }
   let cap = if count == 1 { 32 } else { max(32, 16 + 3 * count) }
   let bits = BitWriter::with_capacity(cap)
@@ -96,18 +133,38 @@ pub fn Encoder::new_multicomponent(
       width: frame_info.width,
       height: frame_info.height,
       bits: frame_info.bits,
-      near: first.near,
+      near: first.scan_info.near,
     },
     frame_info,
     scans: resolved,
     scan_index: 0,
-    scan: Scan::new(frame_info.width, first.params),
+    scan: Scan::new_interleaved(frame_info, first.scan_info, first.params),
     bits,
     scan_header: false,
     trailer: false,
     run: -1,
     terminal: None,
   }
+}
+
+///|
+/// Creates a multi-component non-interleaved (ILV=0, Ns=1 per scan) encoder.
+pub fn Encoder::new_multicomponent(
+  frame_info : FrameInfo,
+  scans : Array[ScanSpec],
+  limits : Limits,
+) -> Encoder raise CodecError {
+  let multi : Array[MultiScanSpec] = []
+  for spec in scans {
+    multi.push({
+      component_ids: [spec.component_id],
+      interleave: 0,
+      near: spec.near,
+      point_transform: 0,
+      preset: spec.preset,
+    })
+  }
+  Encoder::new_scans(frame_info, multi, limits)
 }
 
 ///|
@@ -145,17 +202,46 @@ pub fn Encoder::scan_count(self : Encoder) -> Int32 {
 
 ///|
 pub fn Encoder::component_index(self : Encoder) -> Int32 {
-  self.scans[self.scan_index].component_index
+  self.scans[self.scan_index].scan_info.component_index
 }
 
 ///|
 pub fn Encoder::component_id(self : Encoder) -> Int32 {
-  self.scans[self.scan_index].component_id
+  self.scans[self.scan_index].scan_info.component_id
+}
+
+///|
+pub fn Encoder::current_component_index(self : Encoder) -> Int32 {
+  let slot = if self.scan.last_row_idx >= 0 {
+    self.scan.last_row_comp
+  } else {
+    self.scan.active_comp
+  }
+  self.scan.comp_indices[slot]
+}
+
+///|
+pub fn Encoder::current_component_id(self : Encoder) -> Int32 {
+  let slot = if self.scan.last_row_idx >= 0 {
+    self.scan.last_row_comp
+  } else {
+    self.scan.active_comp
+  }
+  self.scan.comp_ids[slot]
+}
+
+///|
+pub fn Encoder::current_row(self : Encoder) -> Int32 {
+  self.scan.last_row_idx
 }
 
 ///|
 pub fn Encoder::row_index(self : Encoder) -> Int32 {
-  self.scan.rows
+  if self.scan.comp_prev.length() == 0 {
+    self.scan.rows
+  } else {
+    self.scan.total_rows
+  }
 }
 
 ///|
@@ -216,7 +302,7 @@ fn Encoder::run_sample(self : Encoder, sample : Int32, a : Int32) -> Unit {
       scan.run_index = min(31, scan.run_index + 1)
       self.run = 0
     }
-    if scan.x == scan.width && self.run != 0 {
+    if scan.x == scan.active_width && self.run != 0 {
       self.bits.bits(1, 1)
     }
   } else {
@@ -256,7 +342,7 @@ fn Encoder::sample(self : Encoder, value : Int32) -> Unit {
     let a = if x == 0 { scan.previous[0] } else { scan.current[x - 1] }
     let b = scan.previous[x]
     let c = if x == 0 { scan.previous_left } else { scan.previous[x - 1] }
-    let d = scan.previous[min(x + 1, scan.width - 1)]
+    let d = scan.previous[min(x + 1, scan.active_width - 1)]
     let id = scan.context_id(a, b, c, d)
     if id == 0 {
       self.run = 0
@@ -302,28 +388,41 @@ pub fn Encoder::step(
         if cur.lse_marker is Some(marker_preset) {
           self.bits.lse1(marker_preset)
         }
-        self.bits.scan_header_for(cur.component_id, cur.near)
+        let si = cur.scan_info
+        self.bits.scan_header(
+          si.component_ids,
+          si.near,
+          si.interleave,
+          si.point_transform,
+        )
         continue
       }
       if self.trailer {
         break Done
       }
-      if self.scan.x == self.frame.width {
-        self.scan.next_row()
+      if self.scan.x == self.scan.active_width {
+        let is_real = self.scan.next_line_or_finish()
         self.run = -1
-        break RowReady
+        if is_real {
+          break RowReady
+        }
+        continue
       }
-      if self.scan.rows == self.frame.height {
+      if self.scan.is_finished(self.frame.height) {
         if self.scan_index + 1 < self.scans.length() {
           self.bits.finish_scan()
           self.scan_index += 1
           let next_cfg = self.scans[self.scan_index]
-          self.scan = Scan::new(self.frame_info.width, next_cfg.params)
+          self.scan = Scan::new_interleaved(
+            self.frame_info,
+            next_cfg.scan_info,
+            next_cfg.params,
+          )
           self.frame = {
             width: self.frame_info.width,
             height: self.frame_info.height,
             bits: self.frame_info.bits,
-            near: next_cfg.near,
+            near: next_cfg.scan_info.near,
           }
           self.run = -1
           self.scan_header = false
@@ -350,7 +449,7 @@ pub fn Encoder::step(
         let p = scan.params
         let prev = scan.previous
         let curr = scan.current
-        let width = scan.width
+        let width = scan.active_width
         let width_m1 = width - 1
         let near = p.near
         let maxval = p.maxval

@@ -98,16 +98,30 @@ pub fn Decoder::current_scan_index(self : Decoder) -> Int32 {
 
 ///|
 pub fn Decoder::current_component_index(self : Decoder) -> Int32 {
-  match self.current_scan() {
-    Some(info) => info.component_index
+  match self.scan {
+    Some(scan) => {
+      let slot = if scan.last_row_idx >= 0 {
+        scan.last_row_comp
+      } else {
+        scan.active_comp
+      }
+      scan.comp_indices[slot]
+    }
     None => -1
   }
 }
 
 ///|
 pub fn Decoder::current_component_id(self : Decoder) -> Int32 {
-  match self.current_scan() {
-    Some(info) => info.component_id
+  match self.scan {
+    Some(scan) => {
+      let slot = if scan.last_row_idx >= 0 {
+        scan.last_row_comp
+      } else {
+        scan.active_comp
+      }
+      scan.comp_ids[slot]
+    }
     None => -1
   }
 }
@@ -115,9 +129,14 @@ pub fn Decoder::current_component_id(self : Decoder) -> Int32 {
 ///|
 pub fn Decoder::current_row(self : Decoder) -> Int32 {
   match self.scan {
-    Some(scan) if scan.rows > 0 => scan.rows - 1
-    _ => -1
+    Some(scan) => scan.last_row_idx
+    None => -1
   }
+}
+
+///|
+pub fn Decoder::current_row_width(self : Decoder) -> Int32 {
+  self.row().length()
 }
 
 ///|
@@ -151,7 +170,12 @@ pub fn Decoder::preset(self : Decoder) -> Preset? {
 /// A read-only borrow by contract. Do not modify it. Copy samples needed beyond `step`.
 pub fn Decoder::row(self : Decoder) -> FixedArray[Int32] {
   match self.scan {
-    Some(scan) if scan.rows > 0 => scan.previous
+    Some(scan) if scan.last_row_idx >= 0 =>
+      if scan.comp_prev.length() == 0 {
+        scan.previous
+      } else {
+        scan.comp_prev[scan.last_row_comp]
+      }
     _ => []
   }
 }
@@ -184,7 +208,7 @@ fn Decoder::start_sample(self : Decoder, scan : Scan) -> Unit {
   let a = if x == 0 { scan.previous[0] } else { scan.current[x - 1] }
   let b = scan.previous[x]
   let c = if x == 0 { scan.previous_left } else { scan.previous[x - 1] }
-  let d = scan.previous[min(x + 1, scan.width - 1)]
+  let d = scan.previous[min(x + 1, scan.active_width - 1)]
   let id = scan.context_id(a, b, c, d)
   if id == 0 {
     self.phase = RunBits
@@ -267,7 +291,7 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
       let a = self.phase_pred
       if self.bits.take(1) == 1 {
         let block = 1 << exponent
-        let count = min(block, scan.width - scan.x)
+        let count = min(block, scan.active_width - scan.x)
         fill_run(scan, a, count)
         if count == block {
           scan.run_index = min(31, scan.run_index + 1)
@@ -288,7 +312,7 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
         self.phase_prefix = value
         return 0
       }
-      if value >= scan.width - scan.x {
+      if value >= scan.active_width - scan.x {
         self.error = Some(InvalidData("run interruption outside row"))
         return -1
       }
@@ -341,7 +365,7 @@ fn Decoder::complete_current_scan(self : Decoder) -> Unit {
 fn Decoder::record_error_location(self : Decoder) -> Unit {
   if self.scan is None {
     let scan_idx = if self.header.bits > 0 {
-      self.header.scanned_count
+      self.header.scan_count
     } else {
       -1
     }
@@ -443,25 +467,31 @@ pub fn Decoder::step(
     }
     while true {
       match (self.frame, self.scan) {
-        (Some(frame), Some(scan)) if scan.rows < frame.height => {
-          if scan.x == scan.width {
-            scan.next_row()
+        (Some(frame), Some(scan)) if !scan.is_finished(frame.height) => {
+          if scan.x == scan.active_width {
+            let is_real = scan.next_line_or_finish()
             if self.current_scan >= 0 && self.current_scan < self.scans.length() {
               let cur = self.scans[self.current_scan]
-              self.scans[self.current_scan] = { ..cur, rows_decoded: scan.rows }
+              self.scans[self.current_scan] = {
+                ..cur,
+                rows_decoded: scan.total_rows,
+              }
             }
-            self.phase = if scan.rows == frame.height {
+            self.phase = if scan.is_finished(frame.height) {
               Padding
             } else {
               Sample
             }
-            break RowReady
+            if is_real {
+              break RowReady
+            }
+            continue
           }
           if self.phase is Sample && consumed < length {
             let p = scan.params
             let prev = scan.previous
             let curr = scan.current
-            let width = scan.width
+            let width = scan.active_width
             let width_m1 = width - 1
             let near = p.near
             let maxval = p.maxval
@@ -969,13 +999,18 @@ pub fn Decoder::step(
         None =>
           if self.header.accept(byte, self.bytes_read)
             is Some((frame, params, scan_info)) {
-            if self.frame_info is None {
-              self.frame_info = Some(self.header.frame_info())
+            let info = match self.frame_info {
+              Some(existing) => existing
+              None => {
+                let created = self.header.frame_info()
+                self.frame_info = Some(created)
+                created
+              }
             }
             self.frame = Some(frame)
             self.scans.push(scan_info)
             self.current_scan = self.scans.length() - 1
-            self.scan = Some(Scan::new(frame.width, params))
+            self.scan = Some(Scan::new_interleaved(info, scan_info, params))
           }
         Some(_) =>
           match self.phase {
@@ -986,10 +1021,14 @@ pub fn Decoder::step(
               } else if end_state < 0 {
                 if self.header.accept(byte, self.bytes_read)
                   is Some((frame, params, scan_info)) {
+                  let info = match self.frame_info {
+                    Some(existing) => existing
+                    None => self.header.frame_info()
+                  }
                   self.frame = Some(frame)
                   self.scans.push(scan_info)
                   self.current_scan = self.scans.length() - 1
-                  self.scan = Some(Scan::new(frame.width, params))
+                  self.scan = Some(Scan::new_interleaved(info, scan_info, params))
                 }
               }
             }

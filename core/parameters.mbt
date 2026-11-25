@@ -37,12 +37,25 @@ pub(all) struct ScanSpec {
 }
 
 ///|
+/// Requested scan encoding parameters for an arbitrary (ILV=0, 1, or 2) scan.
+#derive(Eq, Debug)
+pub(all) struct MultiScanSpec {
+  component_ids : Array[Int32]
+  interleave : Int32
+  near : Int32
+  point_transform : Int32
+  preset : Preset
+}
+
+///|
 /// Decoded or encoded metadata for one JPEG-LS scan segment and its byte boundaries.
 #derive(Eq, Debug)
 pub(all) struct ScanInfo {
   scan_index : Int32
   component_index : Int32
   component_id : Int32
+  component_indices : Array[Int32]
+  component_ids : Array[Int32]
   near : Int32
   interleave : Int32
   point_transform : Int32
@@ -181,6 +194,65 @@ pub fn FrameInfo::find_component(self : FrameInfo, id : Int32) -> Int32? {
     }
   }
   None
+}
+
+///|
+fn ceil_div(num : Int32, den : Int32) -> Int32 {
+  (num + den - 1) / den
+}
+
+///|
+pub fn FrameInfo::max_h_sampling(self : FrameInfo) -> Int32 {
+  let mut best = 1
+  for comp in self.components {
+    if comp.h_sampling > best {
+      best = comp.h_sampling
+    }
+  }
+  best
+}
+
+///|
+pub fn FrameInfo::max_v_sampling(self : FrameInfo) -> Int32 {
+  let mut best = 1
+  for comp in self.components {
+    if comp.v_sampling > best {
+      best = comp.v_sampling
+    }
+  }
+  best
+}
+
+///|
+pub fn FrameInfo::component_width(self : FrameInfo, index : Int32) -> Int32 {
+  let h = self.components[index].h_sampling
+  let max_h = self.max_h_sampling()
+  if h == max_h {
+    self.width
+  } else {
+    ceil_div(self.width * h, max_h)
+  }
+}
+
+///|
+pub fn FrameInfo::component_height(self : FrameInfo, index : Int32) -> Int32 {
+  let v = self.components[index].v_sampling
+  let max_v = self.max_v_sampling()
+  if v == max_v {
+    self.height
+  } else {
+    ceil_div(self.height * v, max_v)
+  }
+}
+
+///|
+pub fn FrameInfo::total_samples(self : FrameInfo) -> Int64 {
+  let mut sum = 0L
+  for i in 0..<self.components.length() {
+    sum += self.component_width(i).to_int64() *
+      self.component_height(i).to_int64()
+  }
+  sum
 }
 
 ///|

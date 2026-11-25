@@ -1,19 +1,25 @@
 ///|
-/// Convenience multi-component encoder. Input samples are planar in scan order
-/// (scan 0 full component plane, followed by scan 1 full component plane, etc.).
-pub fn encode_multicomponent(
+/// Convenience arbitrary-scan encoder. Samples match the scan traversal order:
+/// - ILV=0: full plane for each scan's component;
+/// - ILV=1: MCU-row line-interleaved (H_v=1: row y comp 0, row y comp 1, ...).
+pub fn encode_scans(
   frame : FrameInfo,
-  scans : Array[ScanSpec],
+  scans : Array[MultiScanSpec],
   samples : FixedArray[Int32],
   limits~ : Limits = Limits::default(),
 ) -> Bytes raise CodecError {
-  let encoder = Encoder::new_multicomponent(frame, scans, limits)
-  let total = checked_total_samples(
-    frame.width,
-    frame.height,
-    frame.components.length(),
-  )
-  guard samples.length().to_int64() == total else {
+  let encoder = Encoder::new_scans(frame, scans, limits)
+  let mut expected = 0L
+  for s in scans {
+    for cid in s.component_ids {
+      guard frame.find_component(cid) is Some(ci) else {
+        raise InvalidArgument("scan references undeclared component")
+      }
+      expected += frame.component_width(ci).to_int64() *
+        frame.component_height(ci).to_int64()
+    }
+  }
+  guard samples.length().to_int64() == expected else {
     raise InvalidArgument("incorrect number of samples")
   }
   let block = FixedArray::make(4096, b'\x00')
@@ -42,6 +48,28 @@ pub fn encode_multicomponent(
 }
 
 ///|
+/// Convenience multi-component encoder. Input samples are planar in scan order
+/// (scan 0 full component plane, followed by scan 1 full component plane, etc.).
+pub fn encode_multicomponent(
+  frame : FrameInfo,
+  scans : Array[ScanSpec],
+  samples : FixedArray[Int32],
+  limits~ : Limits = Limits::default(),
+) -> Bytes raise CodecError {
+  let multi : Array[MultiScanSpec] = []
+  for spec in scans {
+    multi.push({
+      component_ids: [spec.component_id],
+      interleave: 0,
+      near: spec.near,
+      point_transform: 0,
+      preset: spec.preset,
+    })
+  }
+  encode_scans(frame, multi, samples, limits~)
+}
+
+///|
 /// Convenience multi-component decoder returning FrameInfo, per-scan info, and planar Int32 samples
 /// ordered by declared component index (comp 0 plane, comp 1 plane, ...).
 pub fn decode_multicomponent(
@@ -51,7 +79,8 @@ pub fn decode_multicomponent(
   let decoder = Decoder::new(limits)
   let mut position = 0
   let mut pixels : FixedArray[Int32] = []
-  let mut plane_size = 0
+  let comp_offsets : Array[Int32] = []
+  let comp_widths : Array[Int32] = []
   while true {
     let report = decoder.step(input, position, input.length() - position, true)
     position += report.consumed
@@ -60,25 +89,27 @@ pub fn decode_multicomponent(
         guard decoder.frame_info() is Some(info) else {
           raise InvalidData("missing frame")
         }
-        guard decoder.current_scan() is Some(scan_info) else {
-          raise InvalidData("missing scan info")
-        }
         if pixels.length() == 0 {
-          plane_size = info.width * info.height
-          let total = checked_total_samples(
-            info.width,
-            info.height,
-            info.components.length(),
-          )
+          let total = info.total_samples()
           guard total <= 2_147_483_647L else {
             raise ResourceLimit("frame buffer exceeds array index limit")
+          }
+          let mut off = 0
+          for ci in 0..<info.components.length() {
+            let cw = info.component_width(ci)
+            let ch = info.component_height(ci)
+            comp_offsets.push(off)
+            comp_widths.push(cw)
+            off += cw * ch
           }
           pixels = FixedArray::make(total.to_int(), 0)
         }
         let row = decoder.row()
+        let comp_idx = decoder.current_component_index()
         let row_idx = decoder.current_row()
-        let base = scan_info.component_index * plane_size + row_idx * info.width
-        for x in 0..<row.length() {
+        let cw = comp_widths[comp_idx]
+        let base = comp_offsets[comp_idx] + row_idx * cw
+        for x in 0..<cw {
           pixels[base + x] = row[x]
         }
       }

@@ -74,10 +74,11 @@ async function run(message) {
   };
   const flushBatch = () => {
     if (!batch || batch.count === 0) return;
-    const { startIndex, count, samples, frame: info, preset, stats, meta } = batch;
+    const { startIndex, count, samples, frame: info, preset, stats, meta, stride } = batch;
     batch = null;
     lastBatchFlush = stats.elapsedMs;
-    const used = count * info.width;
+    const rowWidth = stride ?? info.width;
+    const used = count * rowWidth;
     // Keep a short view for the final/time-limited batch without a second copy.
     const payload = used === samples.length ? samples : samples.subarray(0, used);
     return sendOutput('rows', {
@@ -90,8 +91,11 @@ async function run(message) {
       componentIndex: meta?.componentIndex ?? 0,
       componentId: meta?.componentId ?? 1,
       near: meta?.near ?? info.near,
+      height: meta?.height ?? info.height,
+      interleave: meta?.interleave ?? 0,
+      pointTransform: meta?.pointTransform ?? 0,
       layout: meta?.layout ?? 'planar',
-      stride: meta?.stride ?? info.width,
+      stride: rowWidth,
       sampleBytes: meta?.sampleBytes ?? 2,
       endianness: meta?.endianness ?? 'host-u16',
     }, payload, stats);
@@ -128,6 +132,9 @@ async function run(message) {
         componentIndex: rowMeta?.componentIndex ?? 0,
         componentId: rowMeta?.componentId ?? 1,
         near: rowMeta?.near ?? info.near,
+        height: rowMeta?.height ?? info.height,
+        interleave: rowMeta?.interleave ?? 0,
+        pointTransform: rowMeta?.pointTransform ?? 0,
         layout: rowMeta?.layout ?? 'planar',
         stride: rowMeta?.stride ?? info.width,
         sampleBytes: rowMeta?.sampleBytes ?? 2,
@@ -142,24 +149,33 @@ async function run(message) {
         lastBatchFlush = stats.elapsedMs;
         return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
       }
+      const stride = rowMeta?.stride ?? info.width;
       if (!batch) {
-        const capacityRows = Math.min(maxRows, info.height - index);
+        const compHeight = rowMeta?.height ?? info.height;
+        const maxRowsForStride = Math.max(1, Math.floor(maxBatchBytes / (stride * 2)));
+        if (maxRowsForStride <= 1) {
+          lastBatchFlush = stats.elapsedMs;
+          return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
+        }
+        const capacityRows = Math.min(maxRowsForStride, compHeight - index);
         batch = {
           scanKey,
           meta: metaFields,
+          stride,
+          compHeight,
           startIndex: index,
           count: 0,
-          samples: new Uint16Array(capacityRows * info.width),
+          samples: new Uint16Array(capacityRows * stride),
           frame: info,
           preset,
           stats,
         };
       }
       recordOutput(stats, row.buffer.byteLength);
-      batch.samples.set(row, batch.count * info.width);
+      batch.samples.set(row, batch.count * batch.stride);
       batch.count++;
       batch.stats = stats;
-      if (batch.count * info.width === batch.samples.length || index === info.height - 1 || paused || abort.signal.aborted || stats.elapsedMs - lastBatchFlush >= 16) {
+      if (batch.count * batch.stride === batch.samples.length || index === batch.compHeight - 1 || paused || abort.signal.aborted || stats.elapsedMs - lastBatchFlush >= 16) {
         return flushBatch();
       }
     },

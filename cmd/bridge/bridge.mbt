@@ -155,7 +155,7 @@ pub struct EncodeBuilder {
   output_capacity : Int32
   budget : @jls.Limits
   components : Array[@jls.ComponentSpec]
-  scans : Array[@jls.ScanSpec]
+  scans : Array[@jls.MultiScanSpec]
 }
 
 ///|
@@ -207,10 +207,46 @@ pub fn encoder_builder_scan(
   reset : Int32,
 ) -> Unit {
   builder.scans.push({
-    component_id,
+    component_ids: [component_id],
+    interleave: 0,
     near,
+    point_transform: 0,
     preset: { maxval, t1, t2, t3, reset },
   })
+}
+
+///|
+#export_name("encoder_builder_scan_begin")
+pub fn encoder_builder_scan_begin(
+  builder : EncodeBuilder,
+  interleave : Int32,
+  near : Int32,
+  point_transform : Int32,
+  maxval : Int32,
+  t1 : Int32,
+  t2 : Int32,
+  t3 : Int32,
+  reset : Int32,
+) -> Unit {
+  builder.scans.push({
+    component_ids: [],
+    interleave,
+    near,
+    point_transform,
+    preset: { maxval, t1, t2, t3, reset },
+  })
+}
+
+///|
+#export_name("encoder_builder_scan_component")
+pub fn encoder_builder_scan_component(
+  builder : EncodeBuilder,
+  component_id : Int32,
+) -> Unit {
+  let len = builder.scans.length()
+  if len > 0 {
+    builder.scans[len - 1].component_ids.push(component_id)
+  }
 }
 
 ///|
@@ -223,7 +259,7 @@ pub fn encoder_builder_build(builder : EncodeBuilder) -> EncodePort {
     components: builder.components,
   }
   try {
-    let codec = @jls.Encoder::new_multicomponent(
+    let codec = @jls.Encoder::new_scans(
       frame,
       builder.scans,
       builder.budget,
@@ -280,7 +316,7 @@ pub fn encoder_scan_count(port : EncodePort) -> Int32 {
 #export_name("encoder_component_index")
 pub fn encoder_component_index(port : EncodePort) -> Int32 {
   match port.codec {
-    Some(codec) => codec.component_index()
+    Some(codec) => codec.current_component_index()
     None => -1
   }
 }
@@ -289,7 +325,7 @@ pub fn encoder_component_index(port : EncodePort) -> Int32 {
 #export_name("encoder_component_id")
 pub fn encoder_component_id(port : EncodePort) -> Int32 {
   match port.codec {
-    Some(codec) => codec.component_id()
+    Some(codec) => codec.current_component_id()
     None => -1
   }
 }
@@ -646,7 +682,9 @@ pub fn decoder_component_field(
       match field {
         0 => comp.id
         1 => comp.h_sampling
-        _ => comp.v_sampling
+        2 => comp.v_sampling
+        3 => info.component_width(index)
+        _ => info.component_height(index)
       }
     }
     _ => -1
@@ -660,20 +698,51 @@ pub fn decoder_scan_count(port : DecodePort) -> Int32 {
 }
 
 ///|
+#export_name("decoder_current_row_width")
+pub fn decoder_current_row_width(port : DecodePort) -> Int32 {
+  port.row.length()
+}
+
+///|
 #export_name("decoder_current_scan")
 pub fn decoder_current_scan(port : DecodePort, field : Int32) -> Int32 {
   match port.codec.current_scan() {
     Some(scan) =>
       match field {
         0 => scan.scan_index
-        1 => scan.component_index
-        2 => scan.component_id
+        1 => port.codec.current_component_index()
+        2 => port.codec.current_component_id()
         3 => scan.near
         4 => port.codec.current_row()
-        _ => if scan.completed { 1 } else { 0 }
+        5 => if scan.completed { 1 } else { 0 }
+        6 => scan.interleave
+        _ => scan.point_transform
       }
     None => -1
   }
+}
+
+///|
+#export_name("decoder_scan_comp_count")
+pub fn decoder_scan_comp_count(port : DecodePort, scan_index : Int32) -> Int32 {
+  let scans = port.codec.scans()
+  guard scan_index >= 0 && scan_index < scans.length() else { return 0 }
+  scans[scan_index].component_ids.length()
+}
+
+///|
+#export_name("decoder_scan_comp_field")
+pub fn decoder_scan_comp_field(
+  port : DecodePort,
+  scan_index : Int32,
+  slot : Int32,
+  which : Int32,
+) -> Int32 {
+  let scans = port.codec.scans()
+  guard scan_index >= 0 && scan_index < scans.length() else { return -1 }
+  let scan = scans[scan_index]
+  guard slot >= 0 && slot < scan.component_ids.length() else { return -1 }
+  if which == 0 { scan.component_indices[slot] } else { scan.component_ids[slot] }
 }
 
 ///|

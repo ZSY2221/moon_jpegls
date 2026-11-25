@@ -16,6 +16,9 @@ export interface WorkerRowMeta {
   componentIndex?: number;
   componentId?: number;
   near?: number;
+  height?: number;
+  interleave?: number;
+  pointTransform?: number;
   layout?: 'planar';
   stride?: number;
   sampleBytes?: 2;
