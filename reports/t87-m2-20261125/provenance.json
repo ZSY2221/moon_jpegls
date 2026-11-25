@@ -24,5 +24,33 @@
   "publishedLfJsonSha256": {
     "synthetic-matrix-manifest.json": "59a72e2d5b26bcc3e2e95797261f891278921f9bf9f044eb3e170292be81eb7d",
     "synthetic-matrix-results.json": "55a7391fd60a07fbc61e9495be270b78ef5fda1dbb4f86a64afb7abd584778ea"
-  }
+  },
+  "fixedBrowserAndLunarRevision": "75521cf57cd4f5bfaff289001cc199ef0f977f38",
+  "regressionExitCodes": {
+    "historic640": 0,
+    "nativeCore": 0,
+    "nativeDeliveryAndTail": 0,
+    "jsCore": 0,
+    "wasmGcCore": 0,
+    "nodeWorkerReportAndWeb": 0,
+    "typescriptStrict": 0,
+    "chromeSmoke": 0,
+    "chromePreview": 0,
+    "chromeReport": 0,
+    "chromeWorkerProbe": 0,
+    "lunarSdk": 0,
+    "isolatedPackage": 0
+  },
+  "historicalMatrixInvocation": [
+    "<reference-venv>/python.exe",
+    "scripts/validate.py",
+    "--near-matrix",
+    "--conformance",
+    "--directory",
+    ".evidence/m2-p1-640-frozen",
+    "--native-wsl",
+    "Ubuntu-22.04",
+    "--native-exe",
+    ".tools/m2-frozen/moonjls.exe"
+  ]
 }
