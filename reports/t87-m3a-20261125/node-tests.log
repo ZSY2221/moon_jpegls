@@ -1,0 +1,31 @@
+✔ strict decode distinguishes absent comparison from measured zero (7.1514ms)
+✔ a passing comparison requires measured errors within NEAR on every sample (0.9025ms)
+REAL_WORKER_CODEC_TRACE {"backend":"js","root":"D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\","trace":[{"type":"row","count":1,"viewBytes":16,"backingBytes":16,"queue":16,"peak":16},{"type":"rows","count":6,"viewBytes":96,"backingBytes":96,"queue":96,"peak":112},{"type":"rows","count":5,"viewBytes":80,"backingBytes":80,"queue":80,"peak":112},{"type":"scanComplete","queue":0,"peak":112},{"type":"done","queue":0,"peak":112}]}
+✔ real js codec + real Worker/client: pixels, buffer high water, terminal queue (117.7328ms)
+✔ real js encoder Worker keeps byte ACKs and terminal peak (62.0812ms)
+✔ real js multicomponent Worker delivers scan 0 rows before scan 1 arrives & supports pause/cancel (187.0419ms)
+REAL_WORKER_CODEC_TRACE {"backend":"wasm-gc","root":"D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\","trace":[{"type":"row","count":1,"viewBytes":16,"backingBytes":16,"queue":16,"peak":16},{"type":"rows","count":6,"viewBytes":96,"backingBytes":96,"queue":96,"peak":112},{"type":"rows","count":5,"viewBytes":80,"backingBytes":80,"queue":80,"peak":112},{"type":"scanComplete","queue":0,"peak":112},{"type":"done","queue":0,"peak":112}]}
+✔ real wasm-gc codec + real Worker/client: pixels, buffer high water, terminal queue (75.2367ms)
+✔ real wasm-gc encoder Worker keeps byte ACKs and terminal peak (75.4795ms)
+✔ real wasm-gc multicomponent Worker delivers scan 0 rows before scan 1 arrives & supports pause/cancel (156.8851ms)
+✔ PGM P5 retains 8-, 12- and 16-bit samples including CRLF and big-endian boundaries (9.6268ms)
+✔ PGM preserves custom MAXVAL and chooses storage width independently (3.3095ms)
+✔ Reference windows hit, replace and clip by whole row without moving the encoding cursor (12.1356ms)
+✔ A row wider than 64 KiB uses the existing uncached read (6.2633ms)
+✔ Concurrent reference requests share at most one physical window load (2.8321ms)
+✔ A released old window cannot trigger another read after cancellation and restart (3.6212ms)
+✔ wide preview ignores letterbox and preserves equal grayscale mapping and full integers (8.1045ms)
+✔ tall sampled preview maps across desktop and narrow content boxes without borrowing input rows (1.2717ms)
+✔ standalone decode exposes the reconstructed integers with no original or error (0.4595ms)
+✔ errorPalette and errorColor provide calibrated monotonic discrete stops and mark overflow beyond NEAR (0.3621ms)
+✔ high NEAR uses the same calibrated colors in the legend and canvas (5.9722ms)
+✔ synchronized reticle overlays stay inside content area across resize and clear (1.5644ms)
+✔ multicomponent preview preserves >255 raw integers, switches composite/channels and reports bufferBytes (1.0615ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 800.9425

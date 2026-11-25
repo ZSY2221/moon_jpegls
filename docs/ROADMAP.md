@@ -10,7 +10,7 @@
 
 ---
 
-## 2. 已完成里程碑（M0 / M1 / M2）
+## 2. 已完成里程碑（M0 / M1 / M2 / M3-A）
 
 ### M0：初始工程与正确性基线 — **已完成**
 
@@ -21,19 +21,21 @@
 
 - **交付物**：在满量程 8/12/16 位、单分量单扫描灰度 profile 下，将合法 `NEAR` 扩展至 8 位 `0–127`、12/16 位 `0–255`。
 - **验证证据**：原有满量程 8/12/16 位全部 **640 个 NEAR 组合** 在 Native、JS、Wasm GC 三后端完成固定版本 CharLS（2.4.5 / Wasm 0.10.0）双向互操作与逐样本比对（**640/640**）；浏览器工作台验证高 NEAR 样本读数、误差热图、下载与取消重启。详见 [review-near-20261125](../reports/review-near-20261125/README.md)。
-- **范围注记**：该 640 组属于满量程 8/12/16 位 NEAR 回归，不等同于 M2 全部参数空间的完整笛卡尔积。
+- **范围注记**：该 640 组属于满量程 8/12/16 位 NEAR 回归，不等同于 M2/M3-A 全部参数空间的完整笛卡尔积。
 
 ### M2：完整数值域与预置参数 — **已完成（2026-11-25）**
 
-- **交付物**：在单帧、单分量、单扫描、`ILV=0`、`Pt=0` 下支持 **`P=2–16` 编码精度、独立 `MAXVAL`（`1..2^P−1`）、基于有效 `MAXVAL` 约束的合法 `NEAR`（`0..min(255, floor(MAXVAL/2))`）、以及真正参与编解码的 `LSE ID=1` 自定义 `T1/T2/T3/RESET`**；Native/SDK/Worker/工作台（Precision Lab、Streaming Lab、Compatibility Lab）与验证工具链全链路透传解析后的实际参数。受测产品核心锚定提交 [`fc43bc2`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44)，M2 冻结证据提交 [`a7d8c39`](https://github.com/ZSY2221/moon_jpegls/commit/a7d8c391b7af0d88bc5c912ed62c78eaf4c79565)。
+- **交付物**：在单帧、单分量、单扫描、`ILV=0`、`Pt=0` 下支持 **`P=2–16` 编码精度、独立 `MAXVAL`（`1..2^P−1`）、基于有效 `MAXVAL` 约束的合法 `NEAR`（`0..min(255, floor(MAXVAL/2))`）、以及真正参与编解码的 `LSE ID=1` 自定义 `T1/T2/T3/RESET`**；Native/SDK/Worker/工作台（Precision Lab、Streaming Lab、Compatibility Lab）与验证工具链全链路透传解析后的实际参数。详见 [M2 验收总结](../reports/t87-m2-20261125/README.md) · [合成矩阵说明](../reports/t87-m2-20261125/synthetic-matrix.md)。
+
+### M3-A：多分量与非交错多扫描 — **已完成（2026-11-25，受测源码 `36bb9e6`）**
+
+- **交付物**：在单帧、`H=V=1`、`ILV=0`（每扫描 `Ns=1`）、`Pt=0` 下完整实现纯 MoonBit **多分量（1–255）非交错多扫描 JPEG-LS**：帧级 `FrameInfo` 与扫描级 `ScanSpec`/`ScanInfo`/上下文及位流状态完全隔离；按 ID 分量表与合法重排扫描次序支持（拒绝重复、遗漏、未知分量、提前 `EOI` 及终扫描后无后续 `SOS` 的 `lse-after-scan` 归类为 `InvalidData`）；跨扫描保留原始 `LSE1` 与零默认字段语义并按每扫描 `NEAR`/`MAXVAL` 重算默认阈值；打通 Native 零宿主缓冲 planar 流式入口（`encode-planar`/`encode-pgms`/`decode-pgms`）与显式计费 P6 PPM 转换、SDK `encodePlanarImage`/`decodePlanarImage`/`inspectStream`、Worker `scanComplete`/`structure`/`rowMeta` 及科学工作台多通道视图与 Scan Structure Inspector。
 - **验证证据**：
-  1. 三后端核心 MoonBit 测试各 **15/15** 通过；
-  2. M2 本机独立合成矩阵 **388 组正例** + **18 个 LSE 变体** + **7 个非法编码用例** + **6 项 Native PGM 检查**全过（HP V.1.00 + `MAXVAL=1,2` 独立 Annex A 向量）；
-  3. 历史 **640/640** 满量程 NEAR 在 M2 冻结二进制上复跑通过；
-  4. 官方 Annex E `E.2-9` 至 `E.2-12` 在三后端完成编码与解码验收，12 次候选编码与官方流逐字节一致；`E.2-1` 至 `E.2-8` 按范围返回 `UnsupportedFeature`；
-  5. NASA LOLA **1,036,800** 样本实测及 Chrome 工作台 M2 验证通过；
-  6. GitHub Actions CI 已新增 [`scripts/verify_m2_golden.mjs`](../scripts/verify_m2_golden.mjs) 固定运行 12 组独立合成 M2 黄金正例、18 个 LSE 变体、7 个非法编码及 4 项 Native PGM 检查（注：该 12 组合成黄金用例不等同于官方 Annex E 全部 12 项通过；第 2、4、5 项重型测试沿用受测源码 `fc43bc2` 归档证据）。
-  详见 [M2 验收总结](../reports/t87-m2-20261125/README.md) · [Annex E 逐项结果](CONFORMANCE_RESULTS.md) · [合成矩阵说明](../reports/t87-m2-20261125/synthetic-matrix.md)。
+  1. 三后端核心 MoonBit 测试各 **18/18** 通过（`--deny-warn`）；
+  2. 官方 Annex E **`E.2-1`**（`T8C0E0.JLS`）、**`E.2-4`**（`T8C0E3.JLS`）及 **`E.2-9`–`E.2-12`**（共 **6/12** 适用官方流）在 Native、JS、Wasm GC 三后端通过 HP JPEG-LS 1.00 与 CharLS Wasm 0.10.0 双独立参考双向验收，全部 18 次候选编码与官方 `.JLS` 逐字节一致（`E.2-2, 3, 5, 6, 7, 8` 交错/子采样流按范围返回 `UnsupportedFeature`）；
+  3. M3-A 独立合成多扫描黄金矩阵（[`scripts/verify_m3a_golden.mjs`](../scripts/verify_m3a_golden.mjs)：7 正例 + 7 负例 + CharLS Wasm 交叉核对）、M2 黄金回归（[`scripts/verify_m2_golden.mjs`](../scripts/verify_m2_golden.mjs)：12 正例 + 18 变体 + 7 非法编码 + 4 PGM）、388 组 M2 全量矩阵及 Native 跨扫描首分量实时行交付回归（[`native_multiscan_delivery_regression.py`](../REVIEW_EVIDENCE/native_multiscan_delivery_regression.py)）全部通过；
+  4. Chrome 158 科学工作台多通道/Scan Inspector 验证与 Worker/TS 检查通过。
+  详见 [M3-A 验收汇总](../reports/t87-m3a-20261125/README.md) · [Annex E 逐项结果](CONFORMANCE_RESULTS.md)。
 
 ---
 
@@ -41,7 +43,6 @@
 
 | 阶段 | 状态 / 内部目标日期 | 核心交付范围 | 首要验收与退出条件 | 风险与替代方案 |
 | --- | --- | --- | --- | --- |
-| **M3-A：多分量与非交错多扫描** | 规划中<br>目标：**2026-12-10** | 多分量 `SOF55` 帧组织；多 `SOS` 连续扫描；分量 ID 映射；`ILV=0` 多扫描编解码与状态隔离；跨扫描 `LSE1` 参数继承与重定义；重复/遗漏/错序分量及扫描错误检查 | 首要通过官方 Annex E **`E.2-1`**（`T8C0E0.JLS`）、**`E.2-4`**（`T8C0E3.JLS`）在 JS/Wasm GC/Native 三后端的双向编解码与逐样本比对，以及多扫描 LSE 继承/非法扫描拓扑回归测试 | 若跨扫描宿主合成行内存边界或参考工具差异导致验证耗时超预期，优先确保核心流式按分量扫描独立交付并通过 CLI/SDK 验收，工作台全彩合帧后置 |
 | **M3-B：交错、采样与点变换** | 规划中<br>目标：**2026-12-25** | 行交错 `ILV=1`、样本交错 `ILV=2`；合法 `H/V` 采样因子（`1..4`）及边缘 MCU 补齐/裁剪；点变换 `Pt` 正逆变换；变换域 `NEAR` 与原始样本尺度误差分离报告（`s·NEAR+s−1`） | 首要通过官方 Annex E **`E.2-2`**、**`E.2-3`**、**`E.2-5`**、**`E.2-6`**、**`E.2-7`**、**`E.2-8`** 在三后端的双向编解码；完成独立 `Pt>0` 向量对照并在报告中分离编码域与原始域误差 | `ILV=1/2` 与子采样边缘 MCU 在不同参考实现间行为需提前排查；如 `Pt` 外部参考缺失，先建立 Annex A/T.81 独立计算向量并在清单中标明参考能力范围 |
 | **M4：完整码流格式和状态扩展** | 规划中<br>目标：**2027-01-10** | `LSE ID=2` 映射表与 `LSE ID=3` 续表；表规范数据流（`§7(b)`、`C.3`）；简略图像格式（`§7(c)`、`C.4`）与解码器外部表生命周期；`DRI` 与 `RST0–RST7` 重启状态复位；`DNL` 延后高度；`LSE ID=4` 扩展尺寸与溢出/配额分离；剩余位置标准标记语法 | 编码状态、解码状态、数据格式状态均具备可复跑测试：包括正常与缺失/错配 `TID/Wt` 续表、重定义表、跨重启区间分块断点、延后 `DNL` 与扩展尺寸合法/超限区分 | 表规范/简略流与 `LSE4` 可能缺乏现成 Wasm 裁判，需以官方 HP 工具适用子集 + 独立构造 Annex C 向量验证，并在必要时将 `DRI/DNL` 与 `LSE2/3` 拆批冻结 |
 | **M5：完整 Part 1 符合性验收** | 规划中<br>目标：**2027-01-20** | 官方 Annex E `E.2-1` 至 `E.2-12` 全部双向通过；T.87 `§8.2` 编码与 `§8.3` 解码全覆盖；适用独立参考实现与跨后端一致；全量能力矩阵无未完成项；独立干净环境全流程复现；发布候选与文档定稿 | [T.87 能力矩阵](T87_CONFORMANCE_PLAN.md) 中所有 Part 1 必选条目的编码、解码、格式状态均达到 `passed`，CI 与独立环境零人工修补可复现；如届时仍有单项缺口，严格保留阶段标签而不提前宣称完整 Part 1 达成 | 若组委会正式验收节点早于或晚于 2027-01-20，将在收到官方确认后第一时间按剩余矩阵工作量同步重排并在仓库公开标注 |

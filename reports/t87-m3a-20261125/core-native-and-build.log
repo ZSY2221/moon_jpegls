@@ -1,0 +1,9 @@
+WSL clang:
+Ubuntu clang version 14.0.0-1ubuntu1.1
+WSL MoonBit:
+moon 0.1.20261119 (738607b 2026-11-19) ~/.moon/bin/moon
+moonc v0.10.22+124d61d05 (2026-11-19) ~/.moon/bin/moonc
+moonrun 0.1.20261119 (738607b 2026-11-19) ~/.moon/bin/moonrun
+Total tests: 18, passed: 18, failed: 0.
+Artifacts:
+  ZSY2221/moon_jpegls/cmd/moonjls  native  /mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/_build/native/release/build/cmd/moonjls/moonjls.exe

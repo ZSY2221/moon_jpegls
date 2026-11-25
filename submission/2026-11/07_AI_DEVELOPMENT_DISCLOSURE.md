@@ -4,24 +4,23 @@
 
 ## 1. AI 编程助手的实际编写与参与范围
 
-- **早期阶段（至 M2 基线 `a7d8c39`，含 Codex 与早期 Antigravity）**：AI 助手直接参与编写了本项目绝大多数技术与工程代码，包括：
-  - 纯 MoonBit JPEG-LS 编解码核心与流式状态机（`core/*.mbt`）；
-  - Native 流式命令行工具与文件/PGM IO（`cmd/moonjls/*.mbt`）及 JS/Wasm GC FFI 桥接端口（`cmd/bridge/bridge.mbt`）；
-  - JS/TS SDK 宿主包装、Web Worker 背压协议与验证报告契约（`sdk/*.mjs`、`sdk/*.d.mts`）；
-  - 浏览器科学工作台界面、预览与传输控制（`web/*.mjs`、`web/index.html`、`web/style.css`）；
-  - 独立参考驱动、互操作测试脚本、自动化验证流水线（`scripts/*.py`、`scripts/*.mjs`）与技术文档。
-- **本轮接管收尾阶段（Antigravity，2026-11-25）**：在保持固定产品源码 `fc43bc2` 不变的前提下，完成工作区与仓库审计、提取 12 组独立合成 HP/Annex A 黄金夹具并编写 CI 三后端回归脚本 `scripts/verify_m2_golden.mjs`、统一全仓文档口径并撰写复审参考材料、以及在确认 CI 通过后合入 `main`。
+- **早期阶段（至 M2 基线 `a7d8c39`，含 Codex 与早期 Antigravity）**：AI 助手直接参与编写了本项目M0–M2 阶段核心、CLI/桥接、SDK/Worker、工作台与验证脚本。
+- **M3-A 升级与复审交付阶段（Antigravity，2026-11-25）**：由 **Antigravity** 独立承接并完成：
+  - 纯 MoonBit M3-A 多分量非交错多扫描编解码器、跨扫描 `LSE1` 语义与结构检查（`core/*.mbt`、`core/multiscan_wbtest.mbt`）；
+  - Native planar/PGM/PPM 流式命令与 JSON 遥测、JS/Wasm GC FFI 桥接端口（`cmd/`）、SDK/Worker 多扫描协议及类型定义（`sdk/`）；
+  - 科学工作台多通道视图、P6 PPM 宿主转换与 Scan Structure Inspector（`web/`）；
+  - M3-A 独立黄金向量、Native 跨扫描行交付回归、`scripts/interop.mjs` 兼容修复、HP 1.00 / CharLS Wasm 双参考 12 项 Annex E 实跑与全仓文档同步。
 
 ## 2. 参赛者（`ZSY2221`）权责与「承担责任」vs.「已逐项审查」的严格区分
 
 - **参赛者主导与承担最终责任的事项**：
   - 确定项目选题、实际应用场景、以完整 **ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1** 为最终标准目标及 M0–M5 分阶段路线；
-  - 决定仓库治理、PR #1 合入 `main`、是否进行包发布，以及对提交赛事的全部代码、文档与对外测试声明承担最终责任；
-  - **独立撰写报名表字段 11《项目申报书》**：飞书表单明确要求「请使用 markdown 格式，长度控制在一页以内，不要使用 AI 编写」。本目录下的 [`03_ONE_PAGE_PROPOSAL.md`](03_ONE_PAGE_PROPOSAL.md) 与历史 [`04_ONE_PAGE_PROPOSAL.pdf`](04_ONE_PAGE_PROPOSAL.pdf) **仅作为内部事实与版式参考归档**，不属于可直接上传的正式成稿；参赛者本人需据此独立完成 1 页 Markdown 申报书并自行修改提交原报名表。
+  - 决定仓库治理、合入 `main`、是否执行包发布，以及对提交赛事的全部代码、文档与对外测试声明承担最终责任；
+  - **独立撰写报名表字段 11《项目申报书》**：飞书表单明确要求「请使用 markdown 格式，长度控制在一页以内，不要使用 AI 编写」。本目录下的 [`03_ONE_PAGE_PROPOSAL.md`](03_ONE_PAGE_PROPOSAL.md) 与历史 [`04_ONE_PAGE_PROPOSAL.pdf`](04_ONE_PAGE_PROPOSAL.pdf) **仅作为 M2 阶段内部参考归档**，不属于可直接上传的正式成稿；参赛者本人需依据真实核对清单独立撰写 1 页 Markdown 申报书并自行修改提交原报名表。
 - **尚未由参赛者声明已逐项完成的人工审查边界**：
   - 「参赛者对项目最终质量与申报结果负责」**不等于**「参赛者已经对全仓每一行核心算法代码、每一份脚本与全部历史测试日志完成逐行独立人工复核」；
-  - 对参赛者尚未明确完成逐项理解、审阅与本地复跑核验的核心实现细节及历史重型测试（如 388 组合成矩阵、Annex E HP 实跑、Chrome 与 NASA LOLA 实测），本文档如实标为**待参赛者按仓库事实清单与复现指南自行核验确认**，绝不代为宣称已经人工逐项审毕。
+  - 对参赛者尚未明确完成逐项理解、审阅与本地复跑核验的核心实现细节及独立测试收据，本文档如实标为**待参赛者按仓库事实清单与复现指南自行核验确认**，绝不代为宣称已经人工逐项审毕。
 
 ## 3. 可审查性说明
 
-- 所有测试数据均区分 CI 自动运行项与固定受测源码 `fc43bc2` 归档证据，保留初次 HP 1.00 哨兵 `0` 字段拒收 `LSE1` 的失败记录，未伪造或掩盖未实现能力。
+- 所有测试数据均严格区分 CI 自动运行项、M3-A (`36bb9e6`) 实测收据与历史 M2 (`fc43bc2`) 归档证据，真实记录 `lse-after-scan` 因多扫描语义从 `UnsupportedFeature` 到 `InvalidData` 的归类变更及历史 HP 哨兵 `0` 修复记录，绝不掩盖未完成的 M3-B–M5 项目。

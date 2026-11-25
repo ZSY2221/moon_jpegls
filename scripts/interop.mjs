@@ -64,9 +64,9 @@ async function decode(core, stream, options = {}) {
     trailing: options.trailing ?? 'reject',
     onRow: async (row, i, metadata) => {
       assert.ok(row instanceof Uint16Array, 'original integer samples must remain uint16');
-      assert.equal(i, rows.length % frame.height, 'row numbering');
-      if (frame) assert.equal(row.length, frame.width, 'row width');
       frame = metadata;
+      assert.equal(i, rows.length % frame.height, 'row numbering');
+      assert.equal(row.length, frame.width, 'row width');
       rows.push(row.slice());
     }
   });

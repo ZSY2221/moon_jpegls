@@ -1,0 +1,1 @@
+{"status":"passed","verifiedFixtureFiles":54,"cases":12,"variants":18,"invalidEncodes":7,"pgmChecks":4,"backends":["js","wasm-gc","native"]}

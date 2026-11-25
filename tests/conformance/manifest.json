@@ -70,7 +70,7 @@
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
       "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
-      "evidence_ref": "antigravity/t87-m2-20261125"
+      "evidence_ref": "main"
     },
     {
       "feature_id": "maxval",
@@ -87,7 +87,7 @@
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
       "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
-      "evidence_ref": "antigravity/t87-m2-20261125"
+      "evidence_ref": "main"
     },
     {
       "feature_id": "near_full_range",
@@ -119,7 +119,7 @@
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
       "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
-      "evidence_ref": "antigravity/t87-m2-20261125"
+      "evidence_ref": "main"
     },
     {
       "feature_id": "lse1_default",
@@ -155,24 +155,25 @@
       "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
       "target_milestone": "M2",
       "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
-      "evidence_ref": "antigravity/t87-m2-20261125"
+      "evidence_ref": "main"
     },
     {
       "feature_id": "component_scans",
-      "display_name": "Multiple components and scans",
+      "display_name": "Multiple components and non-interleaved multi-scan (ILV=0, Ns=1, H=V=1, Pt=0)",
       "standard_clause": "Annexes B, C, D",
-      "encode_status": "unsupported",
-      "decode_status": "unsupported",
-      "format_status": "recognized_only",
-      "reference_support": "Reference capability must be qualified per mode",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "HP JPEG-LS 1.00 and CharLS Wasm 0.10.0 on E.2-1 and E.2-4; scripts/verify_m3a_golden.mjs covers 2/3/4 components, non-contiguous IDs, reordered scans, LSE1 inheritance, and negative cases.",
       "test_ids": [
         "E.2-1",
-        "E.2-4"
+        "E.2-4",
+        "scripts/verify_m3a_golden.mjs"
       ],
-      "evidence_path": "docs/CONFORMANCE_RESULTS.md",
+      "evidence_path": "reports/t87-m3a-20261125/README.md",
       "target_milestone": "M3-A",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
-      "evidence_ref": "antigravity/t87-m2-20261125"
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5",
+      "evidence_ref": "main"
     },
     {
       "feature_id": "interleave",
@@ -190,8 +191,8 @@
       ],
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
       "target_milestone": "M3-B",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
-      "evidence_ref": "antigravity/t87-m2-20261125"
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5",
+      "evidence_ref": "main"
     },
     {
       "feature_id": "sampling",
@@ -207,8 +208,8 @@
       ],
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
       "target_milestone": "M3-B",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
-      "evidence_ref": "antigravity/t87-m2-20261125"
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5",
+      "evidence_ref": "main"
     },
     {
       "feature_id": "point_transform",
@@ -326,7 +327,7 @@
       "evidence_path": "docs/CONFORMANCE_RESULTS.md",
       "target_milestone": "M5",
       "source_revision": null,
-      "evidence_ref": "antigravity/t87-m2-20261125"
+      "evidence_ref": "main"
     }
   ],
   "cases": [
@@ -355,31 +356,31 @@
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed"
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed"
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed"
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed"
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed"
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed"
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 2,
@@ -429,8 +430,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 3,
@@ -477,8 +478,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 4,
@@ -505,31 +506,31 @@
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed"
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed"
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed"
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed"
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed"
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed"
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 5,
@@ -579,8 +580,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 6,
@@ -627,8 +628,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 7,
@@ -677,8 +678,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 8,
@@ -727,8 +728,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 9,
@@ -780,8 +781,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 10,
@@ -833,8 +834,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 11,
@@ -881,8 +882,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     },
     {
       "id": 12,
@@ -929,8 +930,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
-      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
+      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
     }
   ],
   "officialReference": {

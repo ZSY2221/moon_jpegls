@@ -1,0 +1,92 @@
+{
+  "binary": "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/_build/native/release/build/cmd/moonjls/moonjls.exe",
+  "binarySha256": "6d39a0fcf824f535064994fbc88aa44ed44c2575e39741bd13a5e225d30c9cd2",
+  "trials": [
+    {
+      "case": "multiscan-delivery-16b-3ch",
+      "width": 96,
+      "height": 48,
+      "bits": 16,
+      "components": 3,
+      "streamBytes": 27066,
+      "streamSha256": "e9c14bfc4be07da1966e2402eefa42017ac7b5760c04f478b6d473140777f2e1",
+      "scan0EndOffset": 9041,
+      "scan1EndOffset": 18048,
+      "eoiOffset": 27064,
+      "chunkWrites": {
+        "scan1": [
+          4096,
+          4096,
+          849
+        ],
+        "scan2": [
+          4096,
+          4096,
+          815
+        ],
+        "scan3PlusEoi": [
+          4096,
+          4096,
+          826
+        ]
+      },
+      "planeBytes": 9216,
+      "deliveredBeforeScan2Bytes": 9216,
+      "deliveredAfterScan2BeforeScan3Bytes": 9216,
+      "deliveredAtEoiBeforeEofBytes": 9216,
+      "deliveredAfterEofBytes": 0,
+      "aliveAfterScan1": true,
+      "aliveAfterScan2": true,
+      "waitedForStdinEof": true,
+      "outputExact": true,
+      "exitCode": 0,
+      "stderr": "decoded width=96 height=48 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=3 scans=3 rows=144 input_bytes=27066 output_bytes=27648 first_row_at=232 core_payload_bytes=9635 host_conversion_buffer_bytes=0 input_high_water=4096 output_high_water=192\n",
+      "passed": true
+    },
+    {
+      "case": "multiscan-delivery-8b-4ch",
+      "width": 64,
+      "height": 16,
+      "bits": 8,
+      "components": 4,
+      "streamBytes": 4747,
+      "streamSha256": "8872940ac99b63eeede78e8ac02b8806bfac33df1717b34c0fc6fa5a5b046eef",
+      "scan0EndOffset": 1219,
+      "scan1EndOffset": 2398,
+      "eoiOffset": 4745,
+      "chunkWrites": {
+        "scan1": [
+          1219
+        ],
+        "scan2": [
+          1179
+        ],
+        "scan3PlusEoi": [
+          2349
+        ]
+      },
+      "planeBytes": 1024,
+      "deliveredBeforeScan2Bytes": 1024,
+      "deliveredAfterScan2BeforeScan3Bytes": 1024,
+      "deliveredAtEoiBeforeEofBytes": 2048,
+      "deliveredAfterEofBytes": 0,
+      "aliveAfterScan1": true,
+      "aliveAfterScan2": true,
+      "waitedForStdinEof": true,
+      "outputExact": true,
+      "exitCode": 0,
+      "stderr": "decoded width=64 height=16 bits=8 maxval=255 near=0 t1=3 t2=7 t3=21 reset=64 components=4 scans=4 rows=64 input_bytes=4747 output_bytes=4096 first_row_at=97 core_payload_bytes=7339 host_conversion_buffer_bytes=0 input_high_water=2349 output_high_water=64\n",
+      "passed": true
+    },
+    {
+      "case": "multiscan-late-tail-rejected",
+      "deliveredBeforeTailBytes": 27648,
+      "deliveredAfterTailBytes": 0,
+      "waitedForStdinEof": true,
+      "exitCode": 1,
+      "stderr": "ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input\n",
+      "passed": true
+    }
+  ],
+  "passed": true
+}
