@@ -1,0 +1,686 @@
+{
+  "status": "passed",
+  "browser": "158.0.8127.37",
+  "node": "v24.20.0",
+  "integerPixel": "(0, 0) · original 20000 · reconstructed 19999 · error 1",
+  "physicalPixel": "Elevation 0 → -0.5 m · difference 0.5 m",
+  "reports": {
+    "nasaRoundTrip": {
+      "schemaVersion": "moonjls.verification/1",
+      "runId": "8729dc6f-7b39-4a64-b129-5dd02c412f4f",
+      "host": "workbench",
+      "backend": "wasm-gc",
+      "status": "passed",
+      "error": null,
+      "source": {
+        "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+        "dirty": false
+      },
+      "artifact": {
+        "name": "core.wasm",
+        "sha256": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c"
+      },
+      "input": {
+        "name": "renamed-nasa.pgm",
+        "format": "pgm",
+        "bytes": 2073618,
+        "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+        "provenance": {
+          "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+          "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+          "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+          "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+          "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+          "tiffBytes": 2076866,
+          "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+          "pgmBytes": 2073618,
+          "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "sampleOffset": 20000,
+          "metersPerSample": 0.5,
+          "referenceRadiusMeters": 1737400,
+          "elevationUnit": "m"
+        }
+      },
+      "output": {
+        "name": "renamed-nasa.jls",
+        "format": "jls",
+        "bytes": 999459,
+        "sha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+        "retained": true,
+        "complete": true
+      },
+      "frame": {
+        "width": 1440,
+        "height": 720,
+        "bits": 16,
+        "near": 3,
+        "maxval": 65535,
+        "components": 1,
+        "scans": 1,
+        "interleave": 0,
+        "pointTransform": 0,
+        "mapping": false
+      },
+      "stages": {
+        "encode": "passed",
+        "decode": "passed",
+        "compare": "passed"
+      },
+      "samples": {
+        "total": 1036800,
+        "verified": 1036800,
+        "maxError": 3,
+        "errorBound": 3,
+        "unit": "sample"
+      },
+      "reference": {
+        "status": "not_run",
+        "name": null,
+        "version": null
+      },
+      "timing": {
+        "elapsedMs": 412.8000000715256,
+        "encodeMs": null,
+        "decodeMs": null,
+        "compareMs": null,
+        "boundary": "From sink open to successful close or failure/cancellation. Includes Worker load and host callbacks. Excludes PGM preflight and report hashing."
+      },
+      "memory": {
+        "encode": {
+          "scope": "worker",
+          "corePayloadBytes": 19796,
+          "bridgeBufferPeakBytes": 163840,
+          "inputPayloadPeakBytes": 65536,
+          "outputPayloadPeakBytes": 1560,
+          "lastOutputQueueBytes": 0
+        },
+        "decode": {
+          "scope": "worker",
+          "corePayloadBytes": 20555,
+          "bridgeBufferPeakBytes": 34328,
+          "inputPayloadPeakBytes": 1560,
+          "outputPayloadPeakBytes": 17280,
+          "lastOutputQueueBytes": 0
+        },
+        "host": {
+          "sink": "buffered",
+          "retainedOutputBytes": 999459
+        }
+      },
+      "stream": {
+        "rowsDecoded": 720,
+        "rowsDelivered": 720,
+        "provisionalRows": 0,
+        "firstRowMs": 5.600000023841858,
+        "firstRowInputConsumed": 287,
+        "trailingPolicy": "reject",
+        "strictEoi": true
+      },
+      "limits": {
+        "maxWidth": 65535,
+        "maxHeight": 65535,
+        "maxPixels": 100000000,
+        "maxMetadataBytes": 1048576,
+        "inputChunkSize": 32768,
+        "outputChunkSize": 32768
+      },
+      "physical": {
+        "unit": "m",
+        "quantity": "codec_added_elevation_error",
+        "errorBound": 1.5,
+        "maxError": 1.5
+      },
+      "unexecuted": [
+        "independent_reference"
+      ]
+    },
+    "nasaDecodeOnly": {
+      "schemaVersion": "moonjls.verification/1",
+      "runId": "728ebb34-9146-4de0-95ee-f93283d94239",
+      "host": "workbench",
+      "backend": "wasm-gc",
+      "status": "passed",
+      "error": null,
+      "source": {
+        "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+        "dirty": false
+      },
+      "artifact": {
+        "name": "core.wasm",
+        "sha256": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c"
+      },
+      "input": {
+        "name": "renamed-nasa.jls",
+        "format": "jls",
+        "bytes": 999459,
+        "sha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+        "provenance": null
+      },
+      "output": {
+        "name": "renamed-nasa.pgm",
+        "format": "pgm",
+        "bytes": 2073618,
+        "sha256": "0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002",
+        "retained": true,
+        "complete": true
+      },
+      "frame": {
+        "width": 1440,
+        "height": 720,
+        "bits": 16,
+        "near": 3,
+        "maxval": 65535,
+        "components": 1,
+        "scans": 1,
+        "interleave": 0,
+        "pointTransform": 0,
+        "mapping": false
+      },
+      "stages": {
+        "encode": "not_run",
+        "decode": "passed",
+        "compare": "not_run"
+      },
+      "samples": {
+        "total": 1036800,
+        "verified": null,
+        "maxError": null,
+        "errorBound": 3,
+        "unit": "sample"
+      },
+      "reference": {
+        "status": "not_run",
+        "name": null,
+        "version": null
+      },
+      "timing": {
+        "elapsedMs": 136.80000007152557,
+        "encodeMs": null,
+        "decodeMs": null,
+        "compareMs": null,
+        "boundary": "From sink open to successful close or failure/cancellation. Includes Worker load and host callbacks. Excludes PGM preflight and report hashing."
+      },
+      "memory": {
+        "encode": null,
+        "decode": {
+          "scope": "worker",
+          "corePayloadBytes": 20555,
+          "bridgeBufferPeakBytes": 65536,
+          "inputPayloadPeakBytes": 32768,
+          "outputPayloadPeakBytes": 17280,
+          "lastOutputQueueBytes": 0
+        },
+        "host": {
+          "sink": "buffered",
+          "retainedOutputBytes": 2073618
+        }
+      },
+      "stream": {
+        "rowsDecoded": 720,
+        "rowsDelivered": 720,
+        "provisionalRows": 0,
+        "firstRowMs": 2,
+        "firstRowInputConsumed": 287,
+        "trailingPolicy": "reject",
+        "strictEoi": true
+      },
+      "limits": {
+        "maxWidth": 65535,
+        "maxHeight": 65535,
+        "maxPixels": 100000000,
+        "maxMetadataBytes": 1048576,
+        "inputChunkSize": 32768,
+        "outputChunkSize": 32768
+      },
+      "physical": null,
+      "unexecuted": [
+        "encode",
+        "compare",
+        "independent_reference"
+      ]
+    },
+    "sameSizeDifferentHash": {
+      "schemaVersion": "moonjls.verification/1",
+      "runId": "7c8ed899-bbfb-4739-8ea5-784b89e762bb",
+      "host": "workbench",
+      "backend": "wasm-gc",
+      "status": "passed",
+      "error": null,
+      "source": {
+        "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+        "dirty": false
+      },
+      "artifact": {
+        "name": "core.wasm",
+        "sha256": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c"
+      },
+      "input": {
+        "name": "lola.pgm",
+        "format": "pgm",
+        "bytes": 2073618,
+        "sha256": "4993161323035894310ec63f7c7cb3873b37041b71d4baf11065a610646d9ebd",
+        "provenance": null
+      },
+      "output": {
+        "name": "lola.jls",
+        "format": "jls",
+        "bytes": 999459,
+        "sha256": null,
+        "retained": false,
+        "complete": false
+      },
+      "frame": {
+        "width": 1440,
+        "height": 720,
+        "bits": 16,
+        "near": 3,
+        "maxval": 65535,
+        "components": 1,
+        "scans": 1,
+        "interleave": 0,
+        "pointTransform": 0,
+        "mapping": false
+      },
+      "stages": {
+        "encode": "passed",
+        "decode": "passed",
+        "compare": "passed"
+      },
+      "samples": {
+        "total": 1036800,
+        "verified": 1036800,
+        "maxError": 3,
+        "errorBound": 3,
+        "unit": "sample"
+      },
+      "reference": {
+        "status": "not_run",
+        "name": null,
+        "version": null
+      },
+      "timing": {
+        "elapsedMs": 213,
+        "encodeMs": null,
+        "decodeMs": null,
+        "compareMs": null,
+        "boundary": "From sink open to successful close or failure/cancellation. Includes Worker load and host callbacks. Excludes PGM preflight and report hashing."
+      },
+      "memory": {
+        "encode": {
+          "scope": "worker",
+          "corePayloadBytes": 19796,
+          "bridgeBufferPeakBytes": 163840,
+          "inputPayloadPeakBytes": 65536,
+          "outputPayloadPeakBytes": 1560,
+          "lastOutputQueueBytes": 0
+        },
+        "decode": {
+          "scope": "worker",
+          "corePayloadBytes": 20555,
+          "bridgeBufferPeakBytes": 34328,
+          "inputPayloadPeakBytes": 1560,
+          "outputPayloadPeakBytes": 17280,
+          "lastOutputQueueBytes": 0
+        },
+        "host": {
+          "sink": "bounded",
+          "retainedOutputBytes": 0
+        }
+      },
+      "stream": {
+        "rowsDecoded": 720,
+        "rowsDelivered": 720,
+        "provisionalRows": 0,
+        "firstRowMs": 5.600000023841858,
+        "firstRowInputConsumed": 287,
+        "trailingPolicy": "reject",
+        "strictEoi": true
+      },
+      "limits": {
+        "maxWidth": 65535,
+        "maxHeight": 65535,
+        "maxPixels": 100000000,
+        "maxMetadataBytes": 1048576,
+        "inputChunkSize": 32768,
+        "outputChunkSize": 32768
+      },
+      "physical": null,
+      "unexecuted": [
+        "independent_reference",
+        "output_sha256"
+      ]
+    },
+    "ordinaryRoundTrip": {
+      "schemaVersion": "moonjls.verification/1",
+      "runId": "bbb14b31-806d-495a-919c-d0e337398e24",
+      "host": "workbench",
+      "backend": "js",
+      "status": "passed",
+      "error": null,
+      "source": {
+        "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+        "dirty": false
+      },
+      "artifact": {
+        "name": "core.mjs",
+        "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+      },
+      "input": {
+        "name": "ordinary.pgm",
+        "format": "pgm",
+        "bytes": 15,
+        "sha256": "a19861ce0d424ee258925e4f647ef650270abe089de3462c6a4f3944fc0432c3",
+        "provenance": null
+      },
+      "output": {
+        "name": "ordinary.jls",
+        "format": "jls",
+        "bytes": 32,
+        "sha256": null,
+        "retained": false,
+        "complete": false
+      },
+      "frame": {
+        "width": 2,
+        "height": 2,
+        "bits": 8,
+        "near": 0,
+        "maxval": 255,
+        "components": 1,
+        "scans": 1,
+        "interleave": 0,
+        "pointTransform": 0,
+        "mapping": false
+      },
+      "stages": {
+        "encode": "passed",
+        "decode": "passed",
+        "compare": "passed"
+      },
+      "samples": {
+        "total": 4,
+        "verified": 4,
+        "maxError": 0,
+        "errorBound": 0,
+        "unit": "sample"
+      },
+      "reference": {
+        "status": "not_run",
+        "name": null,
+        "version": null
+      },
+      "timing": {
+        "elapsedMs": 97.5,
+        "encodeMs": null,
+        "decodeMs": null,
+        "compareMs": null,
+        "boundary": "From sink open to successful close or failure/cancellation. Includes Worker load and host callbacks. Excludes PGM preflight and report hashing."
+      },
+      "memory": {
+        "encode": {
+          "scope": "worker",
+          "corePayloadBytes": 6084,
+          "bridgeBufferPeakBytes": 163840,
+          "inputPayloadPeakBytes": 8,
+          "outputPayloadPeakBytes": 25,
+          "lastOutputQueueBytes": 0
+        },
+        "decode": {
+          "scope": "worker",
+          "corePayloadBytes": 6843,
+          "bridgeBufferPeakBytes": 32793,
+          "inputPayloadPeakBytes": 25,
+          "outputPayloadPeakBytes": 8,
+          "lastOutputQueueBytes": 0
+        },
+        "host": {
+          "sink": "bounded",
+          "retainedOutputBytes": 0
+        }
+      },
+      "stream": {
+        "rowsDecoded": 2,
+        "rowsDelivered": 2,
+        "provisionalRows": 0,
+        "firstRowMs": 4.100000023841858,
+        "firstRowInputConsumed": 30,
+        "trailingPolicy": "reject",
+        "strictEoi": true
+      },
+      "limits": {
+        "maxWidth": 65535,
+        "maxHeight": 65535,
+        "maxPixels": 100000000,
+        "maxMetadataBytes": 1048576,
+        "inputChunkSize": 32768,
+        "outputChunkSize": 32768
+      },
+      "physical": null,
+      "unexecuted": [
+        "independent_reference",
+        "output_sha256"
+      ]
+    },
+    "cancelledBeforeEoi": {
+      "schemaVersion": "moonjls.verification/1",
+      "runId": "a2227150-9927-4e54-adbc-418434ba90c1",
+      "host": "workbench",
+      "backend": "js",
+      "status": "cancelled",
+      "error": {
+        "code": "Cancelled",
+        "message": "Operation cancelled"
+      },
+      "source": {
+        "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+        "dirty": false
+      },
+      "artifact": {
+        "name": "core.mjs",
+        "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+      },
+      "input": {
+        "name": "held.jls",
+        "format": "jls",
+        "bytes": 43,
+        "sha256": "148c531ca123647239f3e693bf95154ff48acc911afa3c0e371969707fec4e4a",
+        "provenance": null
+      },
+      "output": {
+        "name": "held.pgm",
+        "format": "pgm",
+        "bytes": 21,
+        "sha256": null,
+        "retained": false,
+        "complete": false
+      },
+      "frame": {
+        "width": 1,
+        "height": 4,
+        "bits": 16,
+        "near": 0,
+        "maxval": 65535,
+        "components": 1,
+        "scans": 1,
+        "interleave": 0,
+        "pointTransform": 0,
+        "mapping": false
+      },
+      "stages": {
+        "encode": "not_run",
+        "decode": "cancelled",
+        "compare": "not_run"
+      },
+      "samples": {
+        "total": 4,
+        "verified": null,
+        "maxError": null,
+        "errorBound": 0,
+        "unit": "sample"
+      },
+      "reference": {
+        "status": "not_run",
+        "name": null,
+        "version": null
+      },
+      "timing": {
+        "elapsedMs": 66.60000002384186,
+        "encodeMs": null,
+        "decodeMs": null,
+        "compareMs": null,
+        "boundary": "From sink open to successful close or failure/cancellation. Includes Worker load and host callbacks. Excludes PGM preflight and report hashing."
+      },
+      "memory": {
+        "encode": null,
+        "decode": {
+          "scope": "worker",
+          "corePayloadBytes": 8875,
+          "bridgeBufferPeakBytes": 2,
+          "inputPayloadPeakBytes": 1,
+          "outputPayloadPeakBytes": 2,
+          "lastOutputQueueBytes": 2
+        },
+        "host": {
+          "sink": "bounded",
+          "retainedOutputBytes": 0
+        }
+      },
+      "stream": {
+        "rowsDecoded": 4,
+        "rowsDelivered": 4,
+        "provisionalRows": 4,
+        "firstRowMs": 17.800000071525574,
+        "firstRowInputConsumed": 41,
+        "trailingPolicy": "reject",
+        "strictEoi": false
+      },
+      "limits": {
+        "maxWidth": 65535,
+        "maxHeight": 65535,
+        "maxPixels": 100000000,
+        "maxMetadataBytes": 1048576,
+        "inputChunkSize": 1,
+        "outputChunkSize": 1
+      },
+      "physical": null,
+      "unexecuted": [
+        "encode",
+        "compare",
+        "independent_reference",
+        "output_sha256"
+      ]
+    },
+    "failedWithTrailingByte": {
+      "schemaVersion": "moonjls.verification/1",
+      "runId": "c10a7739-ec5e-4f6d-bac6-490276ffd971",
+      "host": "workbench",
+      "backend": "js",
+      "status": "failed",
+      "error": {
+        "code": "TrailingData",
+        "message": "Unexpected data after EOI"
+      },
+      "source": {
+        "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+        "dirty": false
+      },
+      "artifact": {
+        "name": "core.mjs",
+        "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+      },
+      "input": {
+        "name": "trailing.jls",
+        "format": "jls",
+        "bytes": 44,
+        "sha256": "22cadcb341365cbe3b452363ad056f6db7295825812b301f5700302109544898",
+        "provenance": null
+      },
+      "output": {
+        "name": "trailing.pgm",
+        "format": "pgm",
+        "bytes": 21,
+        "sha256": null,
+        "retained": false,
+        "complete": false
+      },
+      "frame": {
+        "width": 1,
+        "height": 4,
+        "bits": 16,
+        "near": 0,
+        "maxval": 65535,
+        "components": 1,
+        "scans": 1,
+        "interleave": 0,
+        "pointTransform": 0,
+        "mapping": false
+      },
+      "stages": {
+        "encode": "not_run",
+        "decode": "failed",
+        "compare": "not_run"
+      },
+      "samples": {
+        "total": 4,
+        "verified": null,
+        "maxError": null,
+        "errorBound": 0,
+        "unit": "sample"
+      },
+      "reference": {
+        "status": "not_run",
+        "name": null,
+        "version": null
+      },
+      "timing": {
+        "elapsedMs": 26.899999976158142,
+        "encodeMs": null,
+        "decodeMs": null,
+        "compareMs": null,
+        "boundary": "From sink open to successful close or failure/cancellation. Includes Worker load and host callbacks. Excludes PGM preflight and report hashing."
+      },
+      "memory": {
+        "encode": null,
+        "decode": {
+          "scope": "worker",
+          "corePayloadBytes": 8875,
+          "bridgeBufferPeakBytes": 2,
+          "inputPayloadPeakBytes": 1,
+          "outputPayloadPeakBytes": 2,
+          "lastOutputQueueBytes": 2
+        },
+        "host": {
+          "sink": "bounded",
+          "retainedOutputBytes": 0
+        }
+      },
+      "stream": {
+        "rowsDecoded": 4,
+        "rowsDelivered": 4,
+        "provisionalRows": 4,
+        "firstRowMs": 15.300000071525574,
+        "firstRowInputConsumed": 41,
+        "trailingPolicy": "reject",
+        "strictEoi": false
+      },
+      "limits": {
+        "maxWidth": 65535,
+        "maxHeight": 65535,
+        "maxPixels": 100000000,
+        "maxMetadataBytes": 1048576,
+        "inputChunkSize": 1,
+        "outputChunkSize": 1
+      },
+      "physical": null,
+      "unexecuted": [
+        "encode",
+        "compare",
+        "independent_reference",
+        "output_sha256"
+      ]
+    }
+  }
+}

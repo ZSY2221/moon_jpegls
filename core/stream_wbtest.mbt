@@ -190,7 +190,7 @@ test "explicit EOF, truncation, zero output capacity and cancellation are distin
 }
 
 ///|
-test "valid default LSE forms, unsupported custom presets and illegal values" {
+test "default LSE forms and invalid RESET" {
   let frame : Frame = { width: 3, height: 1, bits: 16, near: 3, }
   let coded = encode(frame, [32767, 32768, 65535])
   let (_, expected) = decode(coded)
@@ -204,16 +204,6 @@ test "valid default LSE forms, unsupported custom presets and illegal values" {
     }
   })
   assert_eq(decode(zero).1, expected)
-  let custom = Bytes::makei(coded.length(), i => {
-    if i == 29 {
-      63
-    } else {
-      coded[i]
-    }
-  })
-  assert_true(
-    (Ok(decode(custom)) catch { e => Err(e) }) is Err(UnsupportedFeature(_)),
-  )
   let illegal = Bytes::makei(coded.length(), i => {
     if i == 29 {
       1
@@ -296,4 +286,28 @@ test "legal fill and unsupported features remain distinct from malformed markers
   assert_true(
     (Ok(decode(sof57)) catch { e => Err(e) }) is Err(UnsupportedFeature(_)),
   )
+}
+
+///|
+test "high NEAR streams and out-of-range arguments preserve error categories" {
+  for (bits, upper) in [(8, 127), (12, 255), (16, 255)] {
+    let frame : Frame = { width: 19, height: 3, bits, near: upper, }
+    let original = pattern(frame)
+    let coded = encode_chunks(frame, original, 1, 1)
+    assert_eq(coded, encode(frame, original))
+    let (info, reconstructed) = decode(coded)
+    assert_eq(info, frame)
+    for i in 0..<original.length() {
+      assert_true((original[i] - reconstructed[i]).abs() <= upper)
+    }
+    let single_bytes = Array::makei(coded.length(), i => i + 1)
+    decode_chunks(coded, single_bytes, frame, reconstructed)
+    for near in [-1, upper + 1] {
+      let invalid : Frame = { ..frame, near, }
+      assert_true(
+        (Ok(Encoder::new(invalid, Limits::default())) catch { e => Err(e) })
+        is Err(InvalidArgument(_)),
+      )
+    }
+  }
 }

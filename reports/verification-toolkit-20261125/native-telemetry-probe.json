@@ -1,0 +1,256 @@
+{
+  "checks": [
+    {
+      "operation": "inspect",
+      "chunk": null,
+      "source": "stdin",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 28,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "inspect",
+      "chunk": null,
+      "source": "file",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 28,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "inspect",
+      "chunk": 1,
+      "source": "stdin",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 1,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "inspect",
+      "chunk": 1,
+      "source": "file",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 1,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "inspect",
+      "chunk": 4096,
+      "source": "stdin",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 28,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "inspect",
+      "chunk": 4096,
+      "source": "file",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 28,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "inspect",
+      "humanStderr": "inspect width=1 height=4 bits=8 maxval=255 near=0 rows=4 input_bytes=28 output_bytes=0 first_row_at=26 core_payload_bytes=6835 input_high_water=28 output_high_water=0"
+    },
+    {
+      "operation": "inspect",
+      "badSource": "truncated",
+      "stderr": "ZSY2221/moon_jpegls/core.CodecError.Truncated"
+    },
+    {
+      "operation": "inspect",
+      "badSource": "trailing",
+      "stderr": "ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input"
+    },
+    {
+      "operation": "inspect",
+      "badSource": "malformed",
+      "stderr": "ZSY2221/moon_jpegls/core.CodecError.InvalidData"
+    },
+    {
+      "operation": "verify",
+      "chunk": null,
+      "source": "stdin",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 28,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "verify",
+      "chunk": null,
+      "source": "file",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 28,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "verify",
+      "chunk": 1,
+      "source": "stdin",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 1,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "verify",
+      "chunk": 1,
+      "source": "file",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 1,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "verify",
+      "chunk": 4096,
+      "source": "stdin",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 28,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "verify",
+      "chunk": 4096,
+      "source": "file",
+      "result": {
+        "width": 1,
+        "height": 4,
+        "bits": 8,
+        "maxval": 255,
+        "near": 0,
+        "rows": 4,
+        "inputBytes": 28,
+        "corePayloadBytes": 6835,
+        "inputPeakBytes": 28,
+        "firstRowInputConsumed": 26
+      }
+    },
+    {
+      "operation": "verify",
+      "humanStderr": "verify width=1 height=4 bits=8 maxval=255 near=0 rows=4 input_bytes=28 output_bytes=0 first_row_at=26 core_payload_bytes=6835 input_high_water=28 output_high_water=0"
+    },
+    {
+      "operation": "verify",
+      "badSource": "truncated",
+      "stderr": "ZSY2221/moon_jpegls/core.CodecError.Truncated"
+    },
+    {
+      "operation": "verify",
+      "badSource": "trailing",
+      "stderr": "ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input"
+    },
+    {
+      "operation": "verify",
+      "badSource": "malformed",
+      "stderr": "ZSY2221/moon_jpegls/core.CodecError.InvalidData"
+    },
+    {
+      "operation": "verify",
+      "stdoutWaitedForStrictEof": true,
+      "lateTail": false
+    },
+    {
+      "operation": "verify",
+      "stdoutWaitedForStrictEof": true,
+      "lateTail": true
+    }
+  ]
+}

@@ -1,0 +1,650 @@
+{
+  "native-inspect-tiny": {
+    "schemaVersion": "moonjls.verification/1",
+    "runId": "13f7c6dd-ce34-4d4d-a74d-5e4b2507375e",
+    "host": "native-cli",
+    "backend": "native",
+    "status": "passed",
+    "error": null,
+    "source": {
+      "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+      "dirty": false
+    },
+    "artifact": {
+      "name": "moonjls.exe",
+      "sha256": "e359c6eb2e968a0d410af37df2dae419b530722319ef656b6f6fb42227da2f8e"
+    },
+    "input": {
+      "name": "tiny.jls",
+      "format": "jls",
+      "bytes": 28,
+      "sha256": "e8075cfec5a473820b587a8fe64ab31a040c2cb495aa1c4e692496a5d7b19648"
+    },
+    "output": null,
+    "frame": {
+      "width": 1,
+      "height": 4,
+      "bits": 8,
+      "near": 0,
+      "maxval": 255,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "pointTransform": 0,
+      "mapping": false
+    },
+    "stages": {
+      "encode": "not_run",
+      "decode": "passed",
+      "compare": "not_run"
+    },
+    "samples": {
+      "total": 4,
+      "verified": null,
+      "maxError": null,
+      "errorBound": 0,
+      "unit": "sample"
+    },
+    "reference": {
+      "status": "not_run",
+      "name": null,
+      "version": null
+    },
+    "timing": {
+      "elapsedMs": 138.84939999999915,
+      "encodeMs": null,
+      "decodeMs": null,
+      "compareMs": null,
+      "boundary": "Native child process launch through exit, including WSL launcher when used; excludes path conversion and hashing"
+    },
+    "memory": {
+      "encode": null,
+      "decode": {
+        "scope": "native-cli",
+        "corePayloadBytes": 6835,
+        "bridgeBufferPeakBytes": null,
+        "inputPayloadPeakBytes": 28,
+        "outputPayloadPeakBytes": null,
+        "lastOutputQueueBytes": null
+      },
+      "host": null
+    },
+    "stream": {
+      "rowsDecoded": 4,
+      "rowsDelivered": 0,
+      "provisionalRows": 0,
+      "firstRowMs": null,
+      "firstRowInputConsumed": 26,
+      "trailingPolicy": "reject",
+      "strictEoi": true
+    },
+    "limits": {
+      "maxWidth": 65535,
+      "maxHeight": 65535,
+      "maxPixels": 100000000,
+      "maxMetadataBytes": 1048576,
+      "inputChunkSize": 65536
+    },
+    "physical": null,
+    "unexecuted": [
+      "encode",
+      "compare",
+      "independent_reference"
+    ]
+  },
+  "native-verify-tiny": {
+    "schemaVersion": "moonjls.verification/1",
+    "runId": "7255de4b-2254-43b0-b591-6edcb0f7412d",
+    "host": "native-cli",
+    "backend": "native",
+    "status": "passed",
+    "error": null,
+    "source": {
+      "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+      "dirty": false
+    },
+    "artifact": {
+      "name": "moonjls.exe",
+      "sha256": "e359c6eb2e968a0d410af37df2dae419b530722319ef656b6f6fb42227da2f8e"
+    },
+    "input": {
+      "name": "tiny.jls",
+      "format": "jls",
+      "bytes": 28,
+      "sha256": "e8075cfec5a473820b587a8fe64ab31a040c2cb495aa1c4e692496a5d7b19648"
+    },
+    "output": null,
+    "frame": {
+      "width": 1,
+      "height": 4,
+      "bits": 8,
+      "near": 0,
+      "maxval": 255,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "pointTransform": 0,
+      "mapping": false
+    },
+    "stages": {
+      "encode": "not_run",
+      "decode": "passed",
+      "compare": "not_run"
+    },
+    "samples": {
+      "total": 4,
+      "verified": null,
+      "maxError": null,
+      "errorBound": 0,
+      "unit": "sample"
+    },
+    "reference": {
+      "status": "not_run",
+      "name": null,
+      "version": null
+    },
+    "timing": {
+      "elapsedMs": 158.64980000000105,
+      "encodeMs": null,
+      "decodeMs": null,
+      "compareMs": null,
+      "boundary": "Native child process launch through exit, including WSL launcher when used; excludes path conversion and hashing"
+    },
+    "memory": {
+      "encode": null,
+      "decode": {
+        "scope": "native-cli",
+        "corePayloadBytes": 6835,
+        "bridgeBufferPeakBytes": null,
+        "inputPayloadPeakBytes": 28,
+        "outputPayloadPeakBytes": null,
+        "lastOutputQueueBytes": null
+      },
+      "host": null
+    },
+    "stream": {
+      "rowsDecoded": 4,
+      "rowsDelivered": 0,
+      "provisionalRows": 0,
+      "firstRowMs": null,
+      "firstRowInputConsumed": 26,
+      "trailingPolicy": "reject",
+      "strictEoi": true
+    },
+    "limits": {
+      "maxWidth": 65535,
+      "maxHeight": 65535,
+      "maxPixels": 100000000,
+      "maxMetadataBytes": 1048576,
+      "inputChunkSize": 4096
+    },
+    "physical": null,
+    "unexecuted": [
+      "encode",
+      "compare",
+      "independent_reference"
+    ]
+  },
+  "native-verify-trailing": {
+    "schemaVersion": "moonjls.verification/1",
+    "runId": "e29969f1-7a8e-4fad-acd9-3262de043861",
+    "host": "native-cli",
+    "backend": "native",
+    "status": "failed",
+    "error": {
+      "code": "Input",
+      "message": "wsl: \u68c0\u6d4b\u5230 localhost \u4ee3\u7406\u914d\u7f6e\uff0c\u4f46\u672a\u955c\u50cf\u5230 WSL\u3002NAT \u6a21\u5f0f\u4e0b\u7684 WSL \u4e0d\u652f\u6301 localhost \u4ee3\u7406\u3002\r\nZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input"
+    },
+    "source": {
+      "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+      "dirty": false
+    },
+    "artifact": {
+      "name": "moonjls.exe",
+      "sha256": "e359c6eb2e968a0d410af37df2dae419b530722319ef656b6f6fb42227da2f8e"
+    },
+    "input": {
+      "name": "trailing.jls",
+      "format": "jls",
+      "bytes": 29,
+      "sha256": "d947493f243e2339e56280af95da356656b2412887b36dc6cf1ba53506575fdd"
+    },
+    "output": null,
+    "frame": null,
+    "stages": {
+      "encode": "not_run",
+      "decode": "failed",
+      "compare": "not_run"
+    },
+    "samples": {
+      "total": null,
+      "verified": null,
+      "maxError": null,
+      "errorBound": null,
+      "unit": "sample"
+    },
+    "reference": {
+      "status": "not_run",
+      "name": null,
+      "version": null
+    },
+    "timing": {
+      "elapsedMs": 136.41450000000077,
+      "encodeMs": null,
+      "decodeMs": null,
+      "compareMs": null,
+      "boundary": "Native child process launch through exit, including WSL launcher when used; excludes path conversion and hashing"
+    },
+    "memory": {
+      "encode": null,
+      "decode": null,
+      "host": null
+    },
+    "stream": {
+      "rowsDecoded": null,
+      "rowsDelivered": 0,
+      "provisionalRows": 0,
+      "firstRowMs": null,
+      "firstRowInputConsumed": null,
+      "trailingPolicy": "reject",
+      "strictEoi": false
+    },
+    "limits": {
+      "maxWidth": 65535,
+      "maxHeight": 65535,
+      "maxPixels": 100000000,
+      "maxMetadataBytes": 1048576,
+      "inputChunkSize": 1
+    },
+    "physical": null,
+    "unexecuted": [
+      "encode",
+      "compare",
+      "independent_reference"
+    ]
+  },
+  "native-verify-truncated": {
+    "schemaVersion": "moonjls.verification/1",
+    "runId": "08771121-178a-4b72-8aaa-299fad918903",
+    "host": "native-cli",
+    "backend": "native",
+    "status": "failed",
+    "error": {
+      "code": "Truncated",
+      "message": "wsl: \u68c0\u6d4b\u5230 localhost \u4ee3\u7406\u914d\u7f6e\uff0c\u4f46\u672a\u955c\u50cf\u5230 WSL\u3002NAT \u6a21\u5f0f\u4e0b\u7684 WSL \u4e0d\u652f\u6301 localhost \u4ee3\u7406\u3002\r\nZSY2221/moon_jpegls/core.CodecError.Truncated"
+    },
+    "source": {
+      "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+      "dirty": false
+    },
+    "artifact": {
+      "name": "moonjls.exe",
+      "sha256": "e359c6eb2e968a0d410af37df2dae419b530722319ef656b6f6fb42227da2f8e"
+    },
+    "input": {
+      "name": "truncated.jls",
+      "format": "jls",
+      "bytes": 27,
+      "sha256": "f47bf1ff717ec206b9f2c96b3450df8a9a58ca6e4e6e38457f29b32c881133c4"
+    },
+    "output": null,
+    "frame": null,
+    "stages": {
+      "encode": "not_run",
+      "decode": "failed",
+      "compare": "not_run"
+    },
+    "samples": {
+      "total": null,
+      "verified": null,
+      "maxError": null,
+      "errorBound": null,
+      "unit": "sample"
+    },
+    "reference": {
+      "status": "not_run",
+      "name": null,
+      "version": null
+    },
+    "timing": {
+      "elapsedMs": 160.7541000000001,
+      "encodeMs": null,
+      "decodeMs": null,
+      "compareMs": null,
+      "boundary": "Native child process launch through exit, including WSL launcher when used; excludes path conversion and hashing"
+    },
+    "memory": {
+      "encode": null,
+      "decode": null,
+      "host": null
+    },
+    "stream": {
+      "rowsDecoded": null,
+      "rowsDelivered": 0,
+      "provisionalRows": 0,
+      "firstRowMs": null,
+      "firstRowInputConsumed": null,
+      "trailingPolicy": "reject",
+      "strictEoi": false
+    },
+    "limits": {
+      "maxWidth": 65535,
+      "maxHeight": 65535,
+      "maxPixels": 100000000,
+      "maxMetadataBytes": 1048576,
+      "inputChunkSize": 1
+    },
+    "physical": null,
+    "unexecuted": [
+      "encode",
+      "compare",
+      "independent_reference"
+    ]
+  },
+  "sdk-decode": {
+    "schemaVersion": "moonjls.verification/1",
+    "runId": "dfe4b70b-f1f6-44c6-9933-964b6b5a7333",
+    "host": "sdk-cli",
+    "backend": "wasm-gc",
+    "status": "passed",
+    "error": null,
+    "source": {
+      "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+      "dirty": false
+    },
+    "artifact": {
+      "name": "core.wasm",
+      "sha256": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c"
+    },
+    "input": {
+      "name": "sdk.jls",
+      "format": "jls",
+      "bytes": 87,
+      "sha256": "304e6f119bd7ee6e72b565e648942d7cd00d4474a0771f6d41c210c1314da537"
+    },
+    "output": {
+      "name": "sdk.raw",
+      "format": "raw-u16le",
+      "bytes": 16,
+      "sha256": "4faf53bc7d4b7ebd3ffecf02098df4b21c985380a4b4e79b4bcbe21f32868290",
+      "retained": true,
+      "complete": true
+    },
+    "frame": {
+      "width": 2,
+      "height": 4,
+      "bits": 16,
+      "near": 0,
+      "maxval": 65535,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "pointTransform": 0,
+      "mapping": false
+    },
+    "stages": {
+      "encode": "not_run",
+      "decode": "passed",
+      "compare": "not_run"
+    },
+    "samples": {
+      "total": 8,
+      "verified": null,
+      "maxError": null,
+      "errorBound": 0,
+      "unit": "sample"
+    },
+    "reference": {
+      "status": "not_run",
+      "name": null,
+      "version": null
+    },
+    "timing": {
+      "elapsedMs": 6.051900000000003,
+      "encodeMs": null,
+      "decodeMs": null,
+      "compareMs": null,
+      "boundary": "SDK stream start through output close, including incremental hashing; excludes backend load, file open, and any post-failure input fingerprinting"
+    },
+    "memory": {
+      "encode": null,
+      "decode": {
+        "scope": "sdk",
+        "corePayloadBytes": 8883,
+        "bridgeBufferPeakBytes": 2,
+        "inputPayloadPeakBytes": 1,
+        "outputPayloadPeakBytes": 4,
+        "lastOutputQueueBytes": 0
+      },
+      "host": null
+    },
+    "stream": {
+      "rowsDecoded": 4,
+      "rowsDelivered": 4,
+      "provisionalRows": 0,
+      "firstRowMs": 4.445599999999999,
+      "firstRowInputConsumed": 49,
+      "trailingPolicy": "reject",
+      "strictEoi": true
+    },
+    "limits": {
+      "maxWidth": 65535,
+      "maxHeight": 65535,
+      "maxPixels": 100000000,
+      "maxMetadataBytes": 1048576,
+      "inputChunkSize": 1,
+      "outputChunkSize": 32768
+    },
+    "physical": null,
+    "unexecuted": [
+      "encode",
+      "compare",
+      "independent_reference"
+    ]
+  },
+  "sdk-encode": {
+    "schemaVersion": "moonjls.verification/1",
+    "runId": "6ede56c1-5844-4bd1-b2ae-0174ee8e6f95",
+    "host": "sdk-cli",
+    "backend": "js",
+    "status": "passed",
+    "error": null,
+    "source": {
+      "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+      "dirty": false
+    },
+    "artifact": {
+      "name": "core.mjs",
+      "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+    },
+    "input": {
+      "name": "input.raw",
+      "format": "raw-u16le",
+      "bytes": 16,
+      "sha256": "4faf53bc7d4b7ebd3ffecf02098df4b21c985380a4b4e79b4bcbe21f32868290"
+    },
+    "output": {
+      "name": "sdk.jls",
+      "format": "jls",
+      "bytes": 87,
+      "sha256": "304e6f119bd7ee6e72b565e648942d7cd00d4474a0771f6d41c210c1314da537",
+      "retained": true,
+      "complete": true
+    },
+    "frame": {
+      "width": 2,
+      "height": 4,
+      "bits": 16,
+      "near": 0,
+      "maxval": 65535,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "pointTransform": 0,
+      "mapping": false
+    },
+    "stages": {
+      "encode": "passed",
+      "decode": "not_run",
+      "compare": "not_run"
+    },
+    "samples": {
+      "total": 8,
+      "verified": null,
+      "maxError": null,
+      "errorBound": 0,
+      "unit": "sample"
+    },
+    "reference": {
+      "status": "not_run",
+      "name": null,
+      "version": null
+    },
+    "timing": {
+      "elapsedMs": 3.832899999999995,
+      "encodeMs": null,
+      "decodeMs": null,
+      "compareMs": null,
+      "boundary": "SDK stream start through output close, including incremental hashing; excludes backend load, file open, and any post-failure input fingerprinting"
+    },
+    "memory": {
+      "encode": {
+        "scope": "sdk",
+        "corePayloadBytes": 8124,
+        "bridgeBufferPeakBytes": 32772,
+        "inputPayloadPeakBytes": 2,
+        "outputPayloadPeakBytes": 40,
+        "lastOutputQueueBytes": 0
+      },
+      "decode": null,
+      "host": null
+    },
+    "stream": {
+      "rowsDecoded": null,
+      "rowsDelivered": null,
+      "provisionalRows": null,
+      "firstRowMs": 2.5429999999999993,
+      "firstRowInputConsumed": 2,
+      "trailingPolicy": null,
+      "strictEoi": null
+    },
+    "limits": {
+      "maxWidth": 65535,
+      "maxHeight": 65535,
+      "maxPixels": 100000000,
+      "maxMetadataBytes": 1048576,
+      "inputChunkSize": 1,
+      "outputChunkSize": 32768
+    },
+    "physical": null,
+    "unexecuted": [
+      "decode",
+      "compare",
+      "independent_reference"
+    ]
+  },
+  "sdk-trailing": {
+    "schemaVersion": "moonjls.verification/1",
+    "runId": "35a0baa0-ce47-47ed-afc6-1f67f73a9312",
+    "host": "sdk-cli",
+    "backend": "js",
+    "status": "failed",
+    "error": {
+      "code": "TrailingData",
+      "message": "Unexpected data after EOI"
+    },
+    "source": {
+      "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+      "dirty": false
+    },
+    "artifact": {
+      "name": "core.mjs",
+      "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+    },
+    "input": {
+      "name": "trailing.jls",
+      "format": "jls",
+      "bytes": 29,
+      "sha256": "d947493f243e2339e56280af95da356656b2412887b36dc6cf1ba53506575fdd"
+    },
+    "output": {
+      "name": "trailing.raw",
+      "format": "raw-u16le",
+      "bytes": 8,
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "retained": true,
+      "complete": false
+    },
+    "frame": {
+      "width": 1,
+      "height": 4,
+      "bits": 8,
+      "near": 0,
+      "maxval": 255,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "pointTransform": 0,
+      "mapping": false
+    },
+    "stages": {
+      "encode": "not_run",
+      "decode": "failed",
+      "compare": "not_run"
+    },
+    "samples": {
+      "total": 4,
+      "verified": null,
+      "maxError": null,
+      "errorBound": 0,
+      "unit": "sample"
+    },
+    "reference": {
+      "status": "not_run",
+      "name": null,
+      "version": null
+    },
+    "timing": {
+      "elapsedMs": 7.255000000000003,
+      "encodeMs": null,
+      "decodeMs": null,
+      "compareMs": null,
+      "boundary": "SDK stream start through output close, including incremental hashing; excludes backend load, file open, and any post-failure input fingerprinting"
+    },
+    "memory": {
+      "encode": null,
+      "decode": {
+        "scope": "sdk",
+        "corePayloadBytes": 6835,
+        "bridgeBufferPeakBytes": 2,
+        "inputPayloadPeakBytes": 1,
+        "outputPayloadPeakBytes": 2,
+        "lastOutputQueueBytes": 0
+      },
+      "host": null
+    },
+    "stream": {
+      "rowsDecoded": 4,
+      "rowsDelivered": 4,
+      "provisionalRows": 4,
+      "firstRowMs": 5.747900000000001,
+      "firstRowInputConsumed": 26,
+      "trailingPolicy": "reject",
+      "strictEoi": false
+    },
+    "limits": {
+      "maxWidth": 65535,
+      "maxHeight": 65535,
+      "maxPixels": 100000000,
+      "maxMetadataBytes": 1048576,
+      "inputChunkSize": 1,
+      "outputChunkSize": 32768
+    },
+    "physical": null,
+    "unexecuted": [
+      "encode",
+      "compare",
+      "independent_reference"
+    ]
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "trials": [
+    {
+      "case": "complete",
+      "chunk": 1,
+      "exitCode": 0
+    },
+    {
+      "case": "missing-eoi",
+      "chunk": 1,
+      "exitCode": 1
+    },
+    {
+      "case": "short-eoi",
+      "chunk": 1,
+      "exitCode": 1
+    },
+    {
+      "case": "nonzero-padding",
+      "chunk": 1,
+      "exitCode": 1
+    },
+    {
+      "case": "trailing-data",
+      "chunk": 1,
+      "exitCode": 1
+    },
+    {
+      "case": "complete",
+      "chunk": 2,
+      "exitCode": 0
+    },
+    {
+      "case": "missing-eoi",
+      "chunk": 2,
+      "exitCode": 1
+    },
+    {
+      "case": "short-eoi",
+      "chunk": 2,
+      "exitCode": 1
+    },
+    {
+      "case": "nonzero-padding",
+      "chunk": 2,
+      "exitCode": 1
+    },
+    {
+      "case": "trailing-data",
+      "chunk": 2,
+      "exitCode": 1
+    },
+    {
+      "case": "complete",
+      "chunk": 7,
+      "exitCode": 0
+    },
+    {
+      "case": "missing-eoi",
+      "chunk": 7,
+      "exitCode": 1
+    },
+    {
+      "case": "short-eoi",
+      "chunk": 7,
+      "exitCode": 1
+    },
+    {
+      "case": "nonzero-padding",
+      "chunk": 7,
+      "exitCode": 1
+    },
+    {
+      "case": "trailing-data",
+      "chunk": 7,
+      "exitCode": 1
+    },
+    {
+      "case": "complete",
+      "chunk": 4096,
+      "exitCode": 0
+    },
+    {
+      "case": "missing-eoi",
+      "chunk": 4096,
+      "exitCode": 1
+    },
+    {
+      "case": "short-eoi",
+      "chunk": 4096,
+      "exitCode": 1
+    },
+    {
+      "case": "nonzero-padding",
+      "chunk": 4096,
+      "exitCode": 1
+    },
+    {
+      "case": "trailing-data",
+      "chunk": 4096,
+      "exitCode": 1
+    }
+  ],
+  "lateTrailingDataWhileInputOpen": "rejected"
+}

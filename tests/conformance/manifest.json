@@ -1,0 +1,959 @@
+{
+  "schemaVersion": 1,
+  "standard": "ITU-T T.87 (06/1998), Annex E Table E.2",
+  "baseline_revision": "27f045d853d6b6a1b1317a55f199d077705ba326",
+  "fixtureArchive": {
+    "name": "jlsimgV100.zip",
+    "sha256": "b2c250453f631248bc3744bc50c935adcc94f55784f19b2fa1fa28ee8b803b70",
+    "url": "https://www.itu.int/rec/T-REC-T.87-199806-I/en"
+  },
+  "sourceFiles": {
+    "TEST16.PGM": {
+      "bytes": 131088,
+      "sha256": "1eb2001a0fe66c9d44776b40a35aaa3b68a4fe74cb749e6271d96523378149d2"
+    },
+    "TEST8.PPM": {
+      "bytes": 196623,
+      "sha256": "a7ecaa841b8a7dc131a73007f0d6c07732e901029810e45ca3cc788fdf9e9593"
+    },
+    "TEST8B.PGM": {
+      "bytes": 65551,
+      "sha256": "3c4a4d24d57d26afc86ab6bc4486dc813e83a8f595b0c0ece737a1ad7402a060"
+    },
+    "TEST8BS2.PGM": {
+      "bytes": 16399,
+      "sha256": "6cf4289f0afd89d0622ff0bfc04a830770b104b969ba69e8e952b1834faf69a4"
+    },
+    "TEST8G.PGM": {
+      "bytes": 65551,
+      "sha256": "ae607ad1b61efa340831a9b0f0c228f752908ec59b20deaa54b4c0419d0e00fd"
+    },
+    "TEST8GR4.PGM": {
+      "bytes": 16398,
+      "sha256": "9cb5b43912836fce8b1f40eb2ad67fed9d1c303421641e67d6759909d10e37d3"
+    },
+    "TEST8R.PGM": {
+      "bytes": 65551,
+      "sha256": "9474fbec2fe54221b0943f4f43014f70469a2478654d1f4ac1de05bed3ceb182"
+    }
+  },
+  "features": [
+    {
+      "feature_id": "gray_baseline",
+      "display_name": "Single-component interchange stream",
+      "standard_clause": "Annex A; C.2",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "Pinned CharLS 2.4.5 and CharLS Wasm 0.10.0 where supported",
+      "test_ids": [
+        "P1-640",
+        "E.2-11",
+        "E.2-12"
+      ],
+      "evidence_path": "reports/review-near-20261125/README.md",
+      "target_milestone": "M1",
+      "source_revision": "27f045d853d6b6a1b1317a55f199d077705ba326"
+    },
+    {
+      "feature_id": "precision_2_16",
+      "display_name": "Coded precision P=2–16",
+      "standard_clause": "§4.3.2; C.2.2",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "HP JPEG-LS 1.00 for applicable configurations and independent Annex A vectors at MAXVAL 1 and 2",
+      "test_ids": [
+        "scripts/test_m2.py",
+        "scripts/verify_m2_golden.mjs"
+      ],
+      "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
+      "target_milestone": "M2",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
+      "evidence_ref": "antigravity/t87-m2-20261125"
+    },
+    {
+      "feature_id": "maxval",
+      "display_name": "Explicit legal MAXVAL",
+      "standard_clause": "C.2.3; C.2.4.1.1, Table C.1",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "HP JPEG-LS 1.00 for applicable configurations and independent Annex A vectors at MAXVAL 1 and 2",
+      "test_ids": [
+        "scripts/test_m2.py",
+        "scripts/verify_m2_golden.mjs"
+      ],
+      "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
+      "target_milestone": "M2",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
+      "evidence_ref": "antigravity/t87-m2-20261125"
+    },
+    {
+      "feature_id": "near_full_range",
+      "display_name": "Legal NEAR at 8/12/16 bits and full-range MAXVAL",
+      "standard_clause": "Annex A; C.2.3",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "Pinned CharLS 2.4.5 and CharLS Wasm 0.10.0 where supported",
+      "test_ids": [
+        "P1-640"
+      ],
+      "evidence_path": "reports/review-near-20261125/README.md",
+      "target_milestone": "M1",
+      "source_revision": "27f045d853d6b6a1b1317a55f199d077705ba326"
+    },
+    {
+      "feature_id": "near_by_maxval",
+      "display_name": "NEAR derived from explicit MAXVAL",
+      "standard_clause": "Annex A; C.2.3",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "HP JPEG-LS 1.00 for applicable configurations and independent Annex A vectors at MAXVAL 1 and 2",
+      "test_ids": [
+        "scripts/test_m2.py",
+        "scripts/verify_m2_golden.mjs"
+      ],
+      "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
+      "target_milestone": "M2",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
+      "evidence_ref": "antigravity/t87-m2-20261125"
+    },
+    {
+      "feature_id": "lse1_default",
+      "display_name": "Default and default-equivalent LSE1",
+      "standard_clause": "C.2.4.1.1, Tables C.1–C.2",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "Pinned CharLS 2.4.5 and CharLS Wasm 0.10.0 where supported",
+      "test_ids": [
+        "P1-640",
+        "E.2-11",
+        "E.2-12"
+      ],
+      "evidence_path": "reports/review-near-20261125/README.md",
+      "target_milestone": "M1",
+      "source_revision": "27f045d853d6b6a1b1317a55f199d077705ba326"
+    },
+    {
+      "feature_id": "lse1_custom",
+      "display_name": "Non-default T1/T2/T3 and RESET",
+      "standard_clause": "C.2.4.1.1, Table C.1",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "Official HP 1.00 and CharLS Wasm 0.10.0 on E.2-9/10. Synthetic cases use capability-qualified HP and Annex A vectors.",
+      "test_ids": [
+        "E.2-9",
+        "E.2-10",
+        "scripts/test_m2.py",
+        "scripts/verify_m2_golden.mjs"
+      ],
+      "evidence_path": "reports/t87-m2-20261125/synthetic-matrix.md",
+      "target_milestone": "M2",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
+      "evidence_ref": "antigravity/t87-m2-20261125"
+    },
+    {
+      "feature_id": "component_scans",
+      "display_name": "Multiple components and scans",
+      "standard_clause": "Annexes B, C, D",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "recognized_only",
+      "reference_support": "Reference capability must be qualified per mode",
+      "test_ids": [
+        "E.2-1",
+        "E.2-4"
+      ],
+      "evidence_path": "docs/CONFORMANCE_RESULTS.md",
+      "target_milestone": "M3-A",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
+      "evidence_ref": "antigravity/t87-m2-20261125"
+    },
+    {
+      "feature_id": "interleave",
+      "display_name": "Line and sample interleave",
+      "standard_clause": "Annex B; C.2.3",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "recognized_only",
+      "reference_support": "Reference capability must be qualified per mode",
+      "test_ids": [
+        "E.2-2",
+        "E.2-3",
+        "E.2-5",
+        "E.2-6"
+      ],
+      "evidence_path": "docs/CONFORMANCE_RESULTS.md",
+      "target_milestone": "M3-B",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
+      "evidence_ref": "antigravity/t87-m2-20261125"
+    },
+    {
+      "feature_id": "sampling",
+      "display_name": "Component subsampling and MCU boundaries",
+      "standard_clause": "§4.3.1; Annex B; Annex D",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "recognized_only",
+      "reference_support": "Official subsampled streams available. Check each intended reference separately.",
+      "test_ids": [
+        "E.2-7",
+        "E.2-8"
+      ],
+      "evidence_path": "docs/CONFORMANCE_RESULTS.md",
+      "target_milestone": "M3-B",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
+      "evidence_ref": "antigravity/t87-m2-20261125"
+    },
+    {
+      "feature_id": "point_transform",
+      "display_name": "Point transform Pt",
+      "standard_clause": "§4.3.2; C.2.3",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "recognized_only",
+      "reference_support": "Reference not selected",
+      "test_ids": [],
+      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "target_milestone": "M3-B",
+      "source_revision": null
+    },
+    {
+      "feature_id": "mapping",
+      "display_name": "LSE mapping tables and continuations",
+      "standard_clause": "C.2.4.1.2–3",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "recognized_only",
+      "reference_support": "Reference not selected",
+      "test_ids": [],
+      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "target_milestone": "M4",
+      "source_revision": null
+    },
+    {
+      "feature_id": "abbreviated",
+      "display_name": "Abbreviated image and table-specification formats",
+      "standard_clause": "§7(b)(c); C.3; C.4",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "planned",
+      "reference_support": "Reference not selected",
+      "test_ids": [],
+      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "target_milestone": "M4",
+      "source_revision": null
+    },
+    {
+      "feature_id": "restart",
+      "display_name": "DRI and RST coding state",
+      "standard_clause": "C.2.5; Annex D",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "recognized_only",
+      "reference_support": "Reference must be qualified per interval and mode",
+      "test_ids": [],
+      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "target_milestone": "M4",
+      "source_revision": null
+    },
+    {
+      "feature_id": "dnl",
+      "display_name": "Deferred height with DNL",
+      "standard_clause": "C.2.2; C.2.6",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "recognized_only",
+      "reference_support": "Reference not selected",
+      "test_ids": [],
+      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "target_milestone": "M4",
+      "source_revision": null
+    },
+    {
+      "feature_id": "oversize",
+      "display_name": "Extended dimensions with LSE4",
+      "standard_clause": "C.2.2; C.2.4.1.4",
+      "encode_status": "unsupported",
+      "decode_status": "unsupported",
+      "format_status": "recognized_only",
+      "reference_support": "Reference not selected",
+      "test_ids": [],
+      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "target_milestone": "M4",
+      "source_revision": null
+    },
+    {
+      "feature_id": "marker_positions",
+      "display_name": "Remaining legal marker positions and state",
+      "standard_clause": "Annex C and referenced T.81 syntax",
+      "encode_status": "planned",
+      "decode_status": "planned",
+      "format_status": "planned",
+      "reference_support": "Directed marker fixtures planned",
+      "test_ids": [],
+      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "target_milestone": "M4",
+      "source_revision": null
+    },
+    {
+      "feature_id": "part1_acceptance",
+      "display_name": "Complete Part 1 acceptance",
+      "standard_clause": "§§6–8; Annex E",
+      "encode_status": "planned",
+      "decode_status": "planned",
+      "format_status": "planned",
+      "reference_support": "Official data and capability-qualified independent oracles",
+      "test_ids": [
+        "E.2-1",
+        "E.2-2",
+        "E.2-3",
+        "E.2-4",
+        "E.2-5",
+        "E.2-6",
+        "E.2-7",
+        "E.2-8",
+        "E.2-9",
+        "E.2-10",
+        "E.2-11",
+        "E.2-12"
+      ],
+      "evidence_path": "docs/CONFORMANCE_RESULTS.md",
+      "target_milestone": "M5",
+      "source_revision": null,
+      "evidence_ref": "antigravity/t87-m2-20261125"
+    }
+  ],
+  "cases": [
+    {
+      "id": 1,
+      "test_id": "E.2-1",
+      "file": "T8C0E0.JLS",
+      "bytes": 102248,
+      "sha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+      "sourceFiles": [
+        "TEST8.PPM",
+        "TEST8R.PGM",
+        "TEST8G.PGM",
+        "TEST8B.PGM"
+      ],
+      "bits": 8,
+      "width": 256,
+      "height": 256,
+      "near": 0,
+      "components": 3,
+      "scans": 3,
+      "interleave": 0,
+      "feature": "Three components in separate scans",
+      "expected": "unsupported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 2,
+      "test_id": "E.2-2",
+      "file": "T8C1E0.JLS",
+      "bytes": 100615,
+      "sha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+      "sourceFiles": [
+        "TEST8.PPM",
+        "TEST8R.PGM",
+        "TEST8G.PGM",
+        "TEST8B.PGM"
+      ],
+      "bits": 8,
+      "width": 256,
+      "height": 256,
+      "near": 0,
+      "components": 3,
+      "scans": 1,
+      "interleave": 1,
+      "feature": "Three components, line interleave",
+      "expected": "unsupported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 3,
+      "test_id": "E.2-3",
+      "file": "T8C2E0.JLS",
+      "bytes": 99734,
+      "sha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+      "sourceFiles": [
+        "TEST8.PPM"
+      ],
+      "bits": 8,
+      "width": 256,
+      "height": 256,
+      "near": 0,
+      "components": 3,
+      "scans": 1,
+      "interleave": 2,
+      "feature": "Three components, sample interleave",
+      "expected": "unsupported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 4,
+      "test_id": "E.2-4",
+      "file": "T8C0E3.JLS",
+      "bytes": 63645,
+      "sha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+      "sourceFiles": [
+        "TEST8.PPM",
+        "TEST8R.PGM",
+        "TEST8G.PGM",
+        "TEST8B.PGM"
+      ],
+      "bits": 8,
+      "width": 256,
+      "height": 256,
+      "near": 3,
+      "components": 3,
+      "scans": 3,
+      "interleave": 0,
+      "feature": "Three components in separate scans",
+      "expected": "unsupported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 5,
+      "test_id": "E.2-5",
+      "file": "T8C1E3.JLS",
+      "bytes": 63005,
+      "sha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+      "sourceFiles": [
+        "TEST8.PPM",
+        "TEST8R.PGM",
+        "TEST8G.PGM",
+        "TEST8B.PGM"
+      ],
+      "bits": 8,
+      "width": 256,
+      "height": 256,
+      "near": 3,
+      "components": 3,
+      "scans": 1,
+      "interleave": 1,
+      "feature": "Three components, line interleave",
+      "expected": "unsupported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 6,
+      "test_id": "E.2-6",
+      "file": "T8C2E3.JLS",
+      "bytes": 62300,
+      "sha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+      "sourceFiles": [
+        "TEST8.PPM"
+      ],
+      "bits": 8,
+      "width": 256,
+      "height": 256,
+      "near": 3,
+      "components": 3,
+      "scans": 1,
+      "interleave": 2,
+      "feature": "Three components, sample interleave",
+      "expected": "unsupported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 7,
+      "test_id": "E.2-7",
+      "file": "T8SSE0.JLS",
+      "bytes": 51781,
+      "sha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+      "sourceFiles": [
+        "TEST8R.PGM",
+        "TEST8GR4.PGM",
+        "TEST8BS2.PGM"
+      ],
+      "bits": 8,
+      "width": 256,
+      "height": 256,
+      "near": 0,
+      "components": 3,
+      "scans": 1,
+      "interleave": 1,
+      "feature": "Three components with subsampling",
+      "expected": "unsupported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 8,
+      "test_id": "E.2-8",
+      "file": "T8SSE3.JLS",
+      "bytes": 32231,
+      "sha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+      "sourceFiles": [
+        "TEST8R.PGM",
+        "TEST8GR4.PGM",
+        "TEST8BS2.PGM"
+      ],
+      "bits": 8,
+      "width": 256,
+      "height": 256,
+      "near": 3,
+      "components": 3,
+      "scans": 1,
+      "interleave": 1,
+      "feature": "Three components with subsampling",
+      "expected": "unsupported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run"
+          },
+          "decode": {
+            "status": "expected_unsupported"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 9,
+      "test_id": "E.2-9",
+      "file": "T8NDE0.JLS",
+      "bytes": 9421,
+      "sha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+      "sourceFiles": [
+        "TEST8BS2.PGM"
+      ],
+      "bits": 8,
+      "width": 128,
+      "height": 128,
+      "near": 0,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "feature": "Custom LSE1 thresholds and RESET",
+      "expected": "supported",
+      "preset": {
+        "t1": 9,
+        "t2": 9,
+        "t3": 9,
+        "reset": 31
+      },
+      "results": {
+        "js": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 10,
+      "test_id": "E.2-10",
+      "file": "T8NDE3.JLS",
+      "bytes": 6111,
+      "sha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+      "sourceFiles": [
+        "TEST8BS2.PGM"
+      ],
+      "bits": 8,
+      "width": 128,
+      "height": 128,
+      "near": 3,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "feature": "Custom LSE1 thresholds and RESET",
+      "expected": "supported",
+      "preset": {
+        "t1": 9,
+        "t2": 9,
+        "t3": 9,
+        "reset": 31
+      },
+      "results": {
+        "js": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 11,
+      "test_id": "E.2-11",
+      "file": "T16E0.JLS",
+      "bytes": 60077,
+      "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+      "sourceFiles": [
+        "TEST16.PGM"
+      ],
+      "bits": 12,
+      "width": 256,
+      "height": 256,
+      "near": 0,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "feature": "Twelve effective bits, default parameters",
+      "expected": "supported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    },
+    {
+      "id": 12,
+      "test_id": "E.2-12",
+      "file": "T16E3.JLS",
+      "bytes": 42189,
+      "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+      "sourceFiles": [
+        "TEST16.PGM"
+      ],
+      "bits": 12,
+      "width": 256,
+      "height": 256,
+      "near": 3,
+      "components": 1,
+      "scans": 1,
+      "interleave": 0,
+      "feature": "Twelve effective bits, default parameters",
+      "expected": "supported",
+      "preset": null,
+      "results": {
+        "js": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "passed"
+          },
+          "decode": {
+            "status": "passed"
+          }
+        }
+      },
+      "evidence_path": "reports/t87-m2-20261125/annex-e-hp.json",
+      "source_revision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44"
+    }
+  ],
+  "officialReference": {
+    "name": "jlsrefV100.zip",
+    "version": "1.00",
+    "sha256": "085285f0552ef0b6ebcf29bc5a6d3bc0d6bda0408e9f2f1c138be2e55200814f",
+    "files": {
+      "locod.exe": {
+        "bytes": 82944,
+        "sha256": "36516cba57c7706a76d9ae3f21c4e35f2b3bd1a7a0ef7ca0f0124f18b78015c0"
+      },
+      "nlocod.exe": {
+        "bytes": 83968,
+        "sha256": "7cbc4c9506c9031a53b863793ad27c6bcb90f83c7fa257c53a90e83c5a6d5e86"
+      },
+      "loco16d.exe": {
+        "bytes": 83456,
+        "sha256": "f080d7cd7722ffbbd4e8887a229cb023e2c7ca471a69f6730d2ac41a09a6e7f5"
+      },
+      "nloco16d.exe": {
+        "bytes": 83968,
+        "sha256": "84682e13e6a12cd60e758cfd8d4c1c4c82d49bd415b76ae0c58a745bc71e4b00"
+      }
+    }
+  }
+}

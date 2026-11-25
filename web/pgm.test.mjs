@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { openPgm } from './pgm.mjs';
+import { openPgm, pgmHeader, pgmRow } from './pgm.mjs';
 
 function fixture(width, height, bits, { crlf = false, maxval = (1 << bits) - 1, offset = 0 } = {}) {
   const eol = crlf ? '\r\n' : '\n';
   const header = Buffer.from(['P5', '# keep the raster offset correct', `${width} ${height}`, maxval].join(eol) + eol);
-  const sampleBytes = bits === 8 ? 1 : 2;
+  const sampleBytes = maxval < 256 ? 1 : 2;
   const raster = Buffer.alloc(width * height * sampleBytes);
   const edges = [0, 255, 256, 4095, 65535].filter((sample) => sample <= maxval);
   const sampleAt = (index) => index < edges.length ? edges[index] : (index * 139 + offset) & maxval;
@@ -64,8 +64,23 @@ test('PGM P5 retains 8-, 12- and 16-bit samples including CRLF and big-endian bo
   const image = fixture(9, 5, 16, { crlf: true });
   // Minus one could be a CR separator followed by an initial LF raster byte.
   await assert.rejects(openPgm({ ...image.file, size: image.file.size - 2 }, 0), { code: 'InvalidData' });
-  const unsupported = fixture(9, 5, 12, { maxval: 4094 });
-  await assert.rejects(openPgm(unsupported.file, 0), { code: 'UnsupportedFeature' });
+});
+
+test('PGM preserves custom MAXVAL and chooses storage width independently', async () => {
+  for (const [bits, maxval] of [[2, 1], [6, 57], [9, 256], [12, 4094]]) {
+    const image = fixture(9, 5, bits, { maxval });
+    const reader = await openPgm(image.file, 0);
+    assert.deepEqual(reader.frame, { width: 9, height: 5, bits, near: 0, maxval });
+    assert.deepEqual(await reader.row(1), image.expected(9, 9));
+    assert.equal(pgmRow(Uint16Array.of(maxval), reader.frame).length, maxval < 256 ? 1 : 2);
+    assert.equal(Buffer.from(pgmHeader(reader.frame)).toString(), `P5\n9 5\n${maxval}\n`);
+    reader.closeReference();
+  }
+  const invalidMaxval = new Blob([Buffer.from('P5\n1 1\n65536\n'), Buffer.from([0])]);
+  await assert.rejects(openPgm(invalidMaxval, 0), { code: 'InvalidData' });
+  const invalidSample = new Blob([Buffer.from('P5\n1 1\n63\n'), Buffer.from([64])]);
+  const reader = await openPgm(invalidSample, 0);
+  await assert.rejects(reader.read(1), { code: 'InvalidData' });
 });
 
 test('Reference windows hit, replace and clip by whole row without moving the encoding cursor', async () => {

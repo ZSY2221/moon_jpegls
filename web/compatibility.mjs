@@ -1,0 +1,65 @@
+const sourceRepository = 'https://github.com/ZSY2221/moon_jpegls';
+
+function element(tag, text) {
+  const node = document.createElement(tag);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+function showFeatures(features, destination) {
+  const rows = features.map((feature) => {
+    const row = element('tr');
+    row.dataset.feature = feature.feature_id;
+    const name = element('th', feature.display_name);
+    name.scope = 'row';
+    name.append(element('small', feature.target_milestone));
+    const states = ['encode_status', 'decode_status', 'format_status'].map((field) => feature[field]);
+    const status = element('td', states.join(' / '));
+    status.dataset.encode = states[0];
+    status.dataset.decode = states[1];
+    status.dataset.format = states[2];
+    const evidence = element('td');
+    if (feature.test_ids.length) evidence.append(element('strong', feature.test_ids.join(', ')));
+    if (feature.reference_support) evidence.append(element('small', feature.reference_support));
+    if (feature.evidence_path) {
+      const evidenceRef = feature.evidence_ref ?? feature.source_revision;
+      if (evidenceRef) {
+        const link = element('a', feature.evidence_path);
+        link.href = `${sourceRepository}/blob/${encodeURIComponent(evidenceRef)}/${encodeURI(feature.evidence_path)}`;
+        if (feature.source_revision) link.title = feature.source_revision;
+        evidence.append(link);
+      } else {
+        evidence.append(element('small', feature.evidence_path));
+      }
+    }
+    row.append(name, element('td', feature.standard_clause), status, evidence);
+    return row;
+  });
+  destination.replaceChildren(...rows);
+}
+
+export async function mountCompatibility(unavailable) {
+  const destination = document.getElementById('compatibility-features');
+  if (!destination || typeof document.createElement !== 'function') return;
+  const standard = document.getElementById('compatibility-standard');
+  try {
+    const response = await fetch(new URL('./conformance-manifest.json', import.meta.url));
+    if (!response.ok) throw new Error('Could not load the conformance manifest');
+    const manifest = await response.json();
+    showFeatures(manifest.features, destination);
+    standard.textContent = manifest.standard;
+    const cases = manifest.cases.map((fixture) => {
+      const item = element('li', `${fixture.test_id} ${fixture.file} (${fixture.expected})`);
+      item.title = fixture.sha256;
+      if (fixture.results) {
+        const observed = Object.entries(fixture.results).map(([backend, result]) =>
+          `${backend}: ${result.encode?.status ?? 'not_run'} / ${result.decode?.status ?? 'not_run'}`).join('; ');
+        if (observed) item.append(element('small', ` ${observed}`));
+      }
+      return item;
+    });
+    document.getElementById('compatibility-cases').replaceChildren(...cases);
+  } catch {
+    standard.textContent = unavailable();
+  }
+}

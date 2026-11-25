@@ -1,8 +1,37 @@
 import { CodecError } from './index.mjs';
 
+const wasmCache = new Map();
+let canCloneWasmModule = true;
+
+async function getWasmAsset() {
+  const url = new URL('./generated/core.wasm', import.meta.url);
+  if (url.protocol === 'file:' || typeof globalThis.fetch !== 'function' || typeof WebAssembly?.compile !== 'function') {
+    return null;
+  }
+  const key = url.href;
+  if (!wasmCache.has(key)) {
+    const promise = (async () => {
+      const response = await fetch(url);
+      if (!response.ok) return null;
+      const buffer = await response.arrayBuffer();
+      try {
+        const module = await WebAssembly.compile(buffer, { builtins: ['js-string'], importedStringConstants: '_' });
+        return { module, buffer };
+      } catch {
+        return { module: null, buffer };
+      }
+    })().catch(() => {
+      wasmCache.delete(key);
+      return null;
+    });
+    wasmCache.set(key, promise);
+  }
+  return wasmCache.get(key);
+}
+
 export function startWorker(options) {
   const worker = new Worker(new URL('./worker.mjs', import.meta.url), { type: 'module' });
-  const { read, onEvent, signal, ...settings } = options;
+  const { read, onEvent, onAck, signal, ...settings } = options;
   const Input = settings.mode === 'encode' ? Uint16Array : Uint8Array;
   let paused = false;
   let stopped = false;
@@ -52,9 +81,15 @@ export function startWorker(options) {
         case 'progress':
         case 'bytes':
         case 'row':
+        case 'rows': {
+          const receivedAt = onAck ? performance.now() : 0;
           if (onEvent) await onEvent(data);
-          if (!stopped) worker.postMessage({ type: 'ack', seq: data.seq });
+          if (!stopped) {
+            worker.postMessage({ type: 'ack', seq: data.seq });
+            onAck?.(data, performance.now() - receivedAt);
+          }
           break;
+        }
         case 'done':
           stop();
           complete(data);
@@ -71,7 +106,34 @@ export function startWorker(options) {
   };
   worker.onerror = (event) => reject(new Error(event.message || 'MoonJLS Worker failed to load'));
   worker.onmessageerror = () => reject(new Error('Could not read MoonJLS Worker message'));
-  worker.postMessage({ ...settings, type: 'start' });
+  const startPayload = { ...settings, type: 'start' };
+  const canPreload = settings.backend !== 'js'
+    && typeof globalThis.fetch === 'function'
+    && typeof WebAssembly?.compile === 'function'
+    && new URL('./generated/core.wasm', import.meta.url).protocol !== 'file:';
+  if (canPreload) {
+    getWasmAsset().then((asset) => {
+      if (stopped) return;
+      if (asset?.module && canCloneWasmModule) {
+        try {
+          worker.postMessage({ ...startPayload, wasmModule: asset.module });
+          if (signal?.aborted) cancel();
+          return;
+        } catch {
+          canCloneWasmModule = false;
+        }
+      }
+      if (asset?.buffer) {
+        const copy = asset.buffer.slice(0);
+        worker.postMessage({ ...startPayload, wasmBytes: copy }, [copy]);
+      } else {
+        worker.postMessage(startPayload);
+      }
+      if (signal?.aborted) cancel();
+    });
+  } else {
+    worker.postMessage(startPayload);
+  }
   if (signal?.aborted) cancel();
 
   return {

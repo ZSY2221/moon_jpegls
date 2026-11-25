@@ -4,9 +4,10 @@ const maxHeader = 64 * 1024;
 const maxReferenceBytes = 64 * 1024;
 const whitespace = (byte) => byte === 32 || (byte >= 9 && byte <= 13);
 const invalid = (message) => new CodecError('InvalidData', message);
-const maxvals = new Map([[255, 8], [4095, 12], [65535, 16]]);
+export const sampleMaximum = (frame) => frame.maxval ?? (2 ** frame.bits - 1);
+export const sampleByteWidth = (maxval) => maxval < 256 ? 1 : 2;
 
-export async function openPgm(file, near, signal) {
+export async function readPgmHeader(file) {
   const prefix = new Uint8Array(await file.slice(0, maxHeader + 1).arrayBuffer());
   let position = 0;
   const token = () => {
@@ -30,28 +31,41 @@ export async function openPgm(file, near, signal) {
   const width = number();
   const height = number();
   const maxval = number();
-  if (!maxvals.has(maxval)) throw new CodecError('UnsupportedFeature', 'PGM MAXVAL must be 255, 4095, or 65535');
+  if (maxval < 1 || maxval > 65535) throw invalid('PGM MAXVAL must be in 1..65535');
   if (!whitespace(prefix[position])) throw invalid('PGM raster must follow a header separator');
   if (width < 1 || height < 1) throw invalid('PGM dimensions must be positive');
   if (width > 65535 || height > 65535) throw new CodecError('UnsupportedFeature', 'PGM dimensions exceed the JPEG-LS frame format');
-  const bits = maxvals.get(maxval);
-  const sampleBytes = bits === 8 ? 1 : 2;
+  const bits = Math.max(2, 32 - Math.clz32(maxval));
+  const sampleBytes = sampleByteWidth(maxval);
   const count = width * height;
   if (prefix[position] === 13 && prefix[position + 1] === 10 && file.size === position + 2 + count * sampleBytes) position++;
   position++;
   if (position > maxHeader) throw new CodecError('ResourceLimit', 'PGM header exceeds 64 KiB');
   if (file.size !== position + count * sampleBytes) throw invalid('PGM raster byte length differs from the frame size');
+  return { width, height, bits, maxval, sampleBytes, count, position };
+}
 
-  const readRange = async (start, size) => {
-    const offset = position + start * sampleBytes;
-    const bytes = new Uint8Array(await file.slice(offset, offset + size * sampleBytes).arrayBuffer());
+export async function openPgm(file, near, signal, header) {
+  const { width, height, bits, maxval, sampleBytes, count, position } = header ?? await readPgmHeader(file);
+  const frame = { width, height, bits, near };
+  if (maxval !== 2 ** bits - 1) frame.maxval = maxval;
+
+  const materialize = (bytes, size) => {
     const output = new Uint16Array(size);
     if (sampleBytes === 1) output.set(bytes);
     else {
-      const view = new DataView(bytes.buffer);
-      for (let i = 0; i < size; i++) output[i] = view.getUint16(i * 2, false);
+      for (let i = 0, p = 0; i < size; i++, p += 2) {
+        output[i] = (bytes[p] << 8) | bytes[p + 1];
+      }
+    }
+    if (maxval < 2 ** (sampleBytes * 8) - 1 && output.some((sample) => sample > maxval)) {
+      throw invalid('PGM sample exceeds MAXVAL');
     }
     return output;
+  };
+  const readRange = async (start, size) => {
+    const offset = position + start * sampleBytes;
+    return materialize(new Uint8Array(await file.slice(offset, offset + size * sampleBytes).arrayBuffer()), size);
   };
   let cursor = 0;
   const rowBytes = width * sampleBytes;
@@ -70,7 +84,7 @@ export async function openPgm(file, near, signal) {
   signal?.addEventListener('abort', releaseReference, { once: true });
 
   return {
-    frame: { width, height, bits, near },
+    frame,
     async read(capacity) {
       if (cursor === count) return null;
       const size = Math.min(capacity, count - cursor);
@@ -104,13 +118,7 @@ export async function openPgm(file, near, signal) {
       }
       const offset = (index - referenceWindow.firstRow) * rowBytes;
       const bytes = referenceWindow.bytes;
-      const pixels = new Uint16Array(width);
-      if (sampleBytes === 1) pixels.set(bytes.subarray(offset, offset + rowBytes));
-      else {
-        const view = new DataView(bytes.buffer, offset, rowBytes);
-        for (let i = 0; i < width; i++) pixels[i] = view.getUint16(i * 2, false);
-      }
-      return pixels;
+      return materialize(bytes.subarray(offset, offset + rowBytes), width);
     },
     closeReference() {
       releaseReference();
@@ -119,15 +127,18 @@ export async function openPgm(file, near, signal) {
   };
 }
 
-export function pgmHeader({ width, height, bits }) {
-  return new TextEncoder().encode(`P5\n${width} ${height}\n${2 ** bits - 1}\n`);
+export function pgmHeader(frame) {
+  return new TextEncoder().encode(`P5\n${frame.width} ${frame.height}\n${sampleMaximum(frame)}\n`);
 }
 
-export function pgmRow(samples, { bits }) {
-  if (bits === 8) return Uint8Array.from(samples);
+export function pgmRow(samples, frame) {
+  if (sampleByteWidth(sampleMaximum(frame)) === 1) return Uint8Array.from(samples);
   const row = new Uint8Array(samples.length * 2);
-  const view = new DataView(row.buffer);
-  for (let i = 0; i < samples.length; i++) view.setUint16(i * 2, samples[i], false);
+  for (let i = 0, p = 0; i < samples.length; i++, p += 2) {
+    const s = samples[i];
+    row[p] = s >> 8;
+    row[p + 1] = s & 255;
+  }
   return row;
 }
 

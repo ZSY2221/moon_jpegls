@@ -1,0 +1,56 @@
+{
+  "testedProductRevision": "fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44",
+  "coreCommit": "65f91cd8895ddf2adade6f003444c1f599234dae",
+  "node": "24.20.0",
+  "moon": "0.1.20261119 (738607b)",
+  "moonc": "v0.10.22+124d61d05",
+  "native": "Ubuntu 22.04 WSL2 / clang 14",
+  "browser": "Chrome 158.0.8127.37, headless",
+  "artifactSha256": {
+    "sdk/generated/core.mjs": "62435532b700c008c3fe80e3ed994bdc4aaf6f5b65064554e524f054b31d2f68",
+    "sdk/generated/core.wasm": "4a05e6042816d1759146cc8e0e4978880ab9d77693e66abc8d209579d83717e6",
+    ".tools/m2-frozen/moonjls.exe": "f8574aec2cc784481d35445215dd63312559d0dd1285c81adf73f37ac72202cc"
+  },
+  "baselineNotes": [
+    "The first historical 640 run exited during Native verification with EBUSY/ETXTBSY because Native was being rebuilt. Its failure file is retained locally.",
+    "The independent package runner first exited because Linux Git could not resolve a Windows-linked worktree .git path. The retry read the same shared Git object store via the original .git and passed.",
+    "The initial HP Annex E encode oracle rejected the sentinel form of LSE MAXVAL. The initial receipt is retained. Canonical writing of resolved parameters restored interoperability.",
+    "The first focused Chrome report upload met a 30-second Playwright timeout. A fresh run passed all report cases."
+  ],
+  "originalRunnerJsonSha256": {
+    "synthetic-matrix-manifest.json": "dda331ef8c4daf3a871cc84208ca1be8ad9d883ba81d019d2b6a8d7906c6ead7",
+    "synthetic-matrix-results.json": "2c7f15a3bd75753e6d8e929e19a9a67ef35a24733087f9240eb1cb56f1e672fd"
+  },
+  "publishedLfJsonSha256": {
+    "synthetic-matrix-manifest.json": "59a72e2d5b26bcc3e2e95797261f891278921f9bf9f044eb3e170292be81eb7d",
+    "synthetic-matrix-results.json": "55a7391fd60a07fbc61e9495be270b78ef5fda1dbb4f86a64afb7abd584778ea"
+  },
+  "fixedBrowserAndLunarRevision": "75521cf57cd4f5bfaff289001cc199ef0f977f38",
+  "regressionExitCodes": {
+    "historic640": 0,
+    "nativeCore": 0,
+    "nativeDeliveryAndTail": 0,
+    "jsCore": 0,
+    "wasmGcCore": 0,
+    "nodeWorkerReportAndWeb": 0,
+    "typescriptStrict": 0,
+    "chromeSmoke": 0,
+    "chromePreview": 0,
+    "chromeReport": 0,
+    "chromeWorkerProbe": 0,
+    "lunarSdk": 0,
+    "isolatedPackage": 0
+  },
+  "historicalMatrixInvocation": [
+    "<reference-venv>/python.exe",
+    "scripts/validate.py",
+    "--near-matrix",
+    "--conformance",
+    "--directory",
+    ".evidence/m2-p1-640-frozen",
+    "--native-wsl",
+    "Ubuntu-22.04",
+    "--native-exe",
+    ".tools/m2-frozen/moonjls.exe"
+  ]
+}

@@ -1,6 +1,16 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { createPreview } from './preview.mjs';
+import { createPreview, errorColor, errorLegendStops, errorPalette, ERROR_OVERFLOW_RGB } from './preview.mjs';
+
+function makeLayer() {
+  const mkNode = () => ({ style: {} });
+  const nodes = { '.reticle-h': mkNode(), '.reticle-v': mkNode(), '.reticle-box': mkNode() };
+  return {
+    hidden: true,
+    querySelector: (selector) => nodes[selector],
+    nodes,
+  };
+}
 
 class Canvas {
   clientLeft = 0;
@@ -8,9 +18,14 @@ class Canvas {
   listeners = new Map();
   draws = [];
 
-  constructor(clientWidth, clientHeight) {
+  constructor(clientWidth, clientHeight, withOverlay = false) {
     this.clientWidth = clientWidth;
     this.clientHeight = clientHeight;
+    if (withOverlay) {
+      const layer = makeLayer();
+      this.overlay = layer;
+      this.parentElement = { querySelector: (sel) => (sel === '.reticle-layer' ? layer : null) };
+    }
   }
 
   addEventListener(type, handler) {
@@ -39,8 +54,12 @@ class Canvas {
   }
 }
 
-function surfaces(width, height) {
-  const canvases = [new Canvas(width, height), new Canvas(width, height), new Canvas(width, height)];
+function surfaces(width, height, withOverlay = false) {
+  const canvases = [
+    new Canvas(width, height, withOverlay),
+    new Canvas(width, height, withOverlay),
+    new Canvas(width, height, withOverlay),
+  ];
   const [original, reconstructed, difference] = canvases;
   const pixels = [];
   const preview = createPreview(canvases, (value) => pixels.push(value));
@@ -108,4 +127,67 @@ test('standalone decode exposes the reconstructed integers with no original or e
   preview.clear();
   assert.equal(reconstructed.tabIndex, -1);
   assert.equal(reconstructed.key('Enter'), false);
+});
+
+test('errorPalette and errorColor provide calibrated monotonic discrete stops and mark overflow beyond NEAR', () => {
+  const p0 = errorPalette(0);
+  assert.equal(p0.length, 1);
+  assert.deepEqual(p0[0].rgb, [12, 19, 28]);
+
+  const p3 = errorPalette(3);
+  assert.equal(p3.length, 4);
+  const luminance = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  for (let i = 1; i < p3.length; i++) {
+    assert.ok(luminance(p3[i].rgb) > luminance(p3[i - 1].rgb), `Stop ${i} should be brighter than stop ${i - 1}`);
+  }
+  assert.deepEqual(errorColor(0, 3), p3[0].rgb);
+  assert.deepEqual(errorColor(3, 3), p3[3].rgb);
+  assert.deepEqual(errorColor(4, 3), ERROR_OVERFLOW_RGB);
+  assert.deepEqual(errorColor(1, 0), ERROR_OVERFLOW_RGB);
+});
+
+test('high NEAR uses the same calibrated colors in the legend and canvas', () => {
+  const luminance = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  for (const near of [4, 127, 255]) {
+    const palette = errorPalette(near);
+    const legend = errorLegendStops(near);
+    assert.equal(palette.length, near + 1);
+    assert.deepEqual(palette[0].rgb, errorColor(0, 3));
+    assert.deepEqual(palette[near].rgb, errorColor(3, 3));
+    assert.ok(palette.every((stop, index) => index === 0 || luminance(stop.rgb) >= luminance(palette[index - 1].rgb)));
+    assert.deepEqual(legend.map(({ value }) => value), [0, Math.round(near / 4), Math.round(near / 2), Math.round(near * 3 / 4), near]);
+    assert.deepEqual(legend, legend.map(({ value }) => palette[value]));
+
+    const { preview, difference } = surfaces(100, 100);
+    const diffs = [0, Math.round(near / 2), near, near + 1];
+    preview.configure({ width: diffs.length, height: 1, bits: 16, near }, true);
+    preview.drawRow(0, new Uint16Array(diffs.length), Uint16Array.from(diffs));
+    assert.deepEqual([...difference.draws[0].data], diffs.flatMap(value => [...errorColor(value, near), 255]));
+    assert.deepEqual(errorColor(near + 1, near), ERROR_OVERFLOW_RGB);
+  }
+});
+
+test('synchronized reticle overlays stay inside content area across resize and clear', () => {
+  const { original, reconstructed, difference, preview } = surfaces(240, 160, true);
+  preview.configure({ width: 4, height: 2, bits: 16, near: 3 }, true);
+  preview.drawRow(0, Uint16Array.of(0, 100, 200, 300), Uint16Array.of(0, 100, 200, 303));
+  reconstructed.click(150, 50); // sampled x=2, y=0 -> box scale 60, content top=20, left=0
+  assert.equal(original.overlay.hidden, false);
+  assert.equal(reconstructed.overlay.hidden, false);
+  assert.equal(difference.overlay.hidden, false);
+  assert.equal(original.overlay.nodes['.reticle-box'].style.left, '150px');
+  assert.equal(original.overlay.nodes['.reticle-box'].style.top, '50px');
+  assert.equal(original.overlay.nodes['.reticle-h'].style.left, '0px');
+  assert.equal(original.overlay.nodes['.reticle-h'].style.width, '240px');
+
+  reconstructed.clientWidth = 120;
+  reconstructed.clientHeight = 120;
+  preview.syncOverlays();
+  assert.equal(reconstructed.overlay.nodes['.reticle-h'].style.width, '120px');
+  assert.equal(reconstructed.overlay.nodes['.reticle-box'].style.left, '75px');
+
+  preview.clear();
+  assert.equal(original.overlay.hidden, true);
+  assert.equal(reconstructed.overlay.hidden, true);
+  assert.equal(difference.overlay.hidden, true);
 });

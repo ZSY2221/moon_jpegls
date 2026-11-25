@@ -7,7 +7,7 @@ import { chromium } from 'playwright-core';
 const origin = process.env.MOONJLS_WEB_URL ?? 'http://127.0.0.1:8000';
 const executablePath = process.env.MOONJLS_CHROME;
 const browser = await chromium.launch(executablePath ? { executablePath } : { channel: 'chrome' });
-const page = await browser.newPage({ viewport: { width: 1440, height: 1080 }, acceptDownloads: true });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
 const pageErrors = [];
 page.on('pageerror', (error) => pageErrors.push(error));
 const consoleErrors = [];
@@ -18,7 +18,7 @@ const expectReferenceWindow = process.env.MOONJLS_EXPECT_REFERENCE_WINDOW === '1
 if (receiptPath) {
   page.context().on('response', (response) => {
     const url = new URL(response.url());
-    if (url.origin !== origin || !/\.(mjs|wasm)$/.test(url.pathname) || !response.ok() || loaded.has(url.pathname)) return;
+    if (url.origin !== origin || !/\.(mjs|wasm|css)$/.test(url.pathname) || !response.ok() || loaded.has(url.pathname)) return;
     loaded.set(url.pathname, response.body().then(
       (body) => ({ sha256: createHash('sha256').update(body).digest('hex'), bytes: body.byteLength }),
       (error) => ({ error: error.message }),
@@ -52,7 +52,7 @@ function smallPgm(samples) {
   return { bytes, headerLength: header.length };
 }
 
-async function cancelRestart(kind, oldStream) {
+async function cancelRestart(kind, oldStream, oldNear = 0) {
   const oldPgm = smallPgm([1000, 1000, 2000, 2000, 5000, 5000]);
   const expected = [3000, 3000, 4000, 4000];
   const nextPgm = smallPgm(expected);
@@ -130,10 +130,11 @@ async function cancelRestart(kind, oldStream) {
 
   await upload(oldName, kind === 'read' ? oldPgm.bytes : oldStream);
   await chunkSize('4096');
-  if (kind === 'read') await select('near', '0');
+  if (kind === 'read') await select('near', String(oldNear));
   await select('sink', kind === 'read' ? 'bounded' : 'file');
   await click('run');
   await waitForBarrier('old');
+  if (kind === 'read') assert.equal(await text('frame'), `2 × 3 · 16-bit · NEAR ${oldNear}`);
   await click('cancel');
   await phase('cancelled');
   assert.equal(await text('preview-state'), 'Incomplete');
@@ -175,6 +176,9 @@ async function cancelRestart(kind, oldStream) {
   });
   await canvas.click({ position: point });
   assert.match(await page.locator('#pixel').textContent(), /original 4000 · reconstructed 4000 · error 0/);
+  assert.equal(await text('inspect-original'), '4,000');
+  assert.equal(await text('inspect-reconstructed'), '4,000');
+  assert.equal(await text('inspect-error'), '0');
 
   const pendingDownload = page.waitForEvent('download');
   await click('download');
@@ -187,7 +191,8 @@ async function cancelRestart(kind, oldStream) {
     return [...(await decodeImage(core, Uint8Array.from(bytes))).samples];
   }, [...downloaded]);
   assert.deepEqual(reconstructed, expected);
-  console.log(JSON.stringify({ test: 'browser cancel/restart with pending host operation', blocked: kind, reads, newPixel: 4000, reconstructed, download: download.suggestedFilename() }));
+  console.log(JSON.stringify({ test: 'browser cancel/restart with pending host operation', blocked: kind,
+    oldNear: kind === 'read' ? oldNear : undefined, reads, newPixel: 4000, reconstructed, download: download.suggestedFilename() }));
 }
 
 async function gatedEnding() {
@@ -278,6 +283,232 @@ async function gatedClose(fail) {
     bytesWritten: await page.evaluate(() => outputGate.bytes) }));
 }
 
+async function narrowSettingsSummary(jlsStream) {
+  await page.setViewportSize({ width: 390, height: 844 });
+  try {
+    await page.goto(`${origin}/web/`);
+    await click('example');
+    await select('near', '0');
+    await select('backend', 'wasm-gc');
+    await select('sink', 'buffered');
+    await click('run');
+    await phase('complete');
+
+    assert.equal(await page.locator('#settings-drawer').evaluate((el) => el.open), false);
+    assert.equal(await text('settings-summary-meta'), 'NEAR 0 · Wasm GC · Buffered download');
+    assert.equal(await text('task-meta'), 'Wasm GC · 16-bit · NEAR 0');
+    assert.equal(await text('frame'), '400 × 260 · 16-bit · NEAR 0');
+    assert.equal(await text('result-backend'), 'Wasm GC');
+    assert.equal(await text('error'), '0');
+    assert.equal(await text('inspect-near'), '0');
+
+    await page.locator('#settings-drawer > summary').click();
+    assert.equal(await page.locator('#settings-drawer').evaluate((el) => el.open), true);
+    await select('near', '3');
+    await select('backend', 'js');
+    await select('sink', 'bounded');
+    await page.locator('#settings-drawer > summary').click();
+    assert.equal(await page.locator('#settings-drawer').evaluate((el) => el.open), false);
+
+    // Summary reflects the upcoming run immediately while completed results stay bound to job #1.
+    assert.equal(await text('settings-summary-meta'), 'NEAR 3 · JavaScript · Bounded verification');
+    assert.equal(await text('task-meta'), 'Wasm GC · 16-bit · NEAR 0');
+    assert.equal(await text('frame'), '400 × 260 · 16-bit · NEAR 0');
+    assert.equal(await text('result-backend'), 'Wasm GC');
+    assert.equal(await text('error'), '0');
+    assert.equal(await text('inspect-near'), '0');
+
+    await click('run');
+    await phase('complete');
+    assert.equal(await text('task-meta'), 'JavaScript · 16-bit · NEAR 3');
+    assert.equal(await text('frame'), '400 × 260 · 16-bit · NEAR 3');
+    assert.equal(await text('result-backend'), 'JavaScript');
+    assert.equal(await text('error'), '3');
+    assert.equal(await text('inspect-near'), '3');
+    assert.equal(await page.locator('#download').isVisible(), false);
+
+    // Standalone JLS decode: summary shows JLS + current form settings, while parsed header NEAR stays in task info.
+    await upload('narrow-summary.jls', jlsStream);
+    if (!(await page.locator('#settings-drawer').evaluate((el) => el.open))) {
+      await page.locator('#settings-drawer > summary').click();
+    }
+    await select('backend', 'wasm-gc');
+    await select('sink', 'buffered');
+    await click('run');
+    await phase('complete');
+    assert.equal(await text('settings-summary-meta'), 'JLS · Wasm GC · Buffered download');
+    assert.equal(await text('task-meta'), 'Wasm GC · 16-bit · NEAR 3');
+    assert.equal(await text('inspect-near'), '3');
+
+    await page.locator('#settings-drawer > summary').click();
+    await select('backend', 'js');
+    await select('sink', 'bounded');
+    await page.locator('#settings-drawer > summary').click();
+    assert.equal(await text('settings-summary-meta'), 'JLS · JavaScript · Bounded verification');
+    assert.equal(await text('task-meta'), 'Wasm GC · 16-bit · NEAR 3');
+    assert.equal(await text('inspect-near'), '3');
+
+    console.log(JSON.stringify({
+      test: 'narrow settings summary tracks form changes without altering completed results',
+      viewport: [390, 844],
+      pgmUpdatedSummary: 'NEAR 3 · JavaScript · Bounded verification',
+      jlsUpdatedSummary: 'JLS · JavaScript · Bounded verification',
+    }));
+  } finally {
+    await page.setViewportSize({ width: 1440, height: 900 });
+  }
+}
+
+async function expandedNear() {
+  await page.goto(`${origin}/web/`);
+  const rejected = await page.evaluate(async () => {
+    const { loadCore } = await import('/sdk/index.mjs');
+    const invalid = [[8, 128], [12, 256], [16, 256], [16, -1], [16, 1.5], [16, '4']];
+    return Promise.all(['js', 'wasm-gc'].map(async (backend) => {
+      const core = await loadCore({ backend });
+      return { backend, cases: invalid.map(([bits, near]) => {
+        try {
+          core.createEncoder({ width: 1, height: 1, bits, near });
+          return null;
+        } catch (error) {
+          return error.code;
+        }
+      }) };
+    }));
+  });
+  for (const { cases } of rejected) assert.deepEqual(cases, Array(6).fill('InvalidArgument'));
+  console.log(JSON.stringify({ test: 'browser SDK rejects invalid NEAR arguments', rejected }));
+
+  const results = [];
+  let encoded;
+  for (const [bits, near, backend] of [[16, 4, 'wasm-gc'], [16, 255, 'wasm-gc'], [8, 127, 'js'], [12, 255, 'wasm-gc']]) {
+    const maxval = 2 ** bits - 1;
+    const limit = bits === 8 ? 127 : 255;
+    const samples = [0, maxval, 12, 60, maxval - 1, 128, 75, maxval];
+    const raster = Buffer.alloc(samples.length * (bits === 8 ? 1 : 2));
+    samples.forEach((sample, index) => {
+      if (bits === 8) raster[index] = sample;
+      else raster.writeUInt16BE(sample, index * 2);
+    });
+    await upload(`expanded-${bits}.pgm`, Buffer.concat([Buffer.from(`P5\n4 2\n${maxval}\n`), raster]));
+    await page.waitForFunction((limit) => {
+      const input = document.getElementById('near');
+      return !input.disabled && input.options.length === limit + 1;
+    }, limit);
+    assert.equal(await text('near-note'), `NEAR 0–${limit}`);
+    if (bits === 8) assert.equal(await page.locator('#near').inputValue(), '127');
+    await select('near', String(near));
+    await select('backend', backend);
+    await click('run');
+    await phase('complete');
+    assert.equal(await text('frame'), `4 × 2 · ${bits}-bit · NEAR ${near}`);
+    const maxError = Number(await text('error'));
+    assert.ok(maxError > 0 && maxError <= near);
+    const legend = await page.locator('#error-legend-swatches .legend-chip-label').allTextContents();
+    assert.deepEqual(legend, ['0 · exact', ...[1, 2, 3].map(index => `${Math.round(near * index / 4)} · in bound`), `${near} · NEAR limit`]);
+    const pending = page.waitForEvent('download');
+    await click('download');
+    encoded = await readFile(await (await pending).path());
+    const reconstructed = await page.evaluate(async (bytes) => {
+      const { loadCore, decodeImage } = await import('/sdk/index.mjs');
+      const core = await loadCore({ backend: 'js' });
+      return [...(await decodeImage(core, Uint8Array.from(bytes))).samples];
+    }, [...encoded]);
+    const differences = samples.map((value, index) => Math.abs(value - reconstructed[index]));
+    assert.equal(Math.max(...differences), maxError);
+    const index = differences.indexOf(maxError);
+    const x = index % 4;
+    const y = Math.floor(index / 4);
+    const canvas = page.locator('#reconstruction');
+    await canvas.press('Enter');
+    for (let step = 0; step < x; step++) await canvas.press('ArrowRight');
+    if (y) await canvas.press('ArrowDown');
+    assert.equal(await text('pixel'), `(${x}, ${y}) · original ${samples[index]} · reconstructed ${reconstructed[index]} · error ${maxError}`);
+    assert.equal(await text('inspect-original'), samples[index].toLocaleString('en'));
+    assert.equal(await text('inspect-reconstructed'), reconstructed[index].toLocaleString('en'));
+    assert.equal(await text('inspect-error'), String(maxError));
+    const heatmap = await page.evaluate(async ({ x, y, error, near }) => {
+      const { errorColor } = await import('/web/preview.mjs');
+      const { data } = document.getElementById('difference').getContext('2d').getImageData(x, y, 1, 1);
+      return { rendered: [...data], expected: [...errorColor(error, near), 255] };
+    }, { x, y, error: maxError, near });
+    assert.deepEqual(heatmap.rendered, heatmap.expected);
+    results.push({ bits, backend, near, maxError,
+      pixel: { x, y, original: samples[index], reconstructed: reconstructed[index], rgba: heatmap.rendered } });
+  }
+  await upload('expanded-12.jls', encoded);
+  assert.equal(await page.locator('#near').isDisabled(), true);
+  assert.equal(await text('near-note'), 'NEAR from JLS header');
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('frame'), '4 × 2 · 12-bit · NEAR 255');
+  assert.equal(await text('error'), 'Not compared');
+  assert.equal(await page.locator('#error-legend-swatches .legend-chip').count(), 0);
+  console.log(JSON.stringify({ test: 'browser precision-specific NEAR limits and calibrated legend', results }));
+}
+
+async function verifyM2Workbench() {
+  await page.goto(`${origin}/web/`);
+  const frame = { width: 2, height: 2, bits: 9, near: 0, maxval: 300 };
+  const preset = { maxval: 300, t1: 5, t2: 9, t3: 23, reset: 42 };
+  const raster = Buffer.alloc(8);
+  [0, 300, 128, 255].forEach((sample, i) => raster.writeUInt16BE(sample, i * 2));
+  const original = Buffer.concat([Buffer.from('P5\n2 2\n300\n'), raster]);
+  await upload('custom.pgm', original);
+  await select('near', '0');
+  await page.locator('#advanced').evaluate((details) => { details.open = true; });
+  for (const key of ['t1', 't2', 't3', 'reset']) await page.locator(`#preset-${key}`).fill(String(preset[key]));
+  await click('run');
+  await phase('complete');
+  for (const [field, expected] of Object.entries({ ...preset, bits: frame.bits, near: frame.near })) {
+    assert.equal(await text(`precision-${field}`), String(expected));
+  }
+  await page.locator('#reconstruction').press('Enter');
+  await page.locator('#reconstruction').press('ArrowRight');
+  assert.equal(await text('inspect-reconstructed'), '300');
+  assert.equal(await page.locator('#magnifier').isVisible(), true);
+  const zoom = await page.locator('#zoom-reconstruction').evaluate((canvas) =>
+    [...canvas.getContext('2d').getImageData(3, 3, 1, 1).data]);
+  assert.deepEqual(zoom, [255, 255, 255, 255]);
+  await page.locator('.scientific-nav a[href="#resource-details"]').click();
+  assert.equal(await page.locator('#resource-details').evaluate((details) => details.open), true);
+  assert.equal(await text('stream-rows'), '2 / 0');
+  assert.ok(Number(await text('stream-acks')) >= 2);
+  assert.match(await text('stream-peak-ack'), /ms/);
+  const getDownload = async (id) => {
+    const pending = page.waitForEvent('download');
+    await click(id);
+    return readFile(await (await pending).path());
+  };
+  const report = JSON.parse(await getDownload('export-report'));
+  assert.deepEqual(report.frame.preset, preset);
+  assert.equal(report.frame.maxval, 300);
+  assert.equal(report.samples.maxError, 0);
+  assert.ok(report.stream.acknowledgedEvents >= 2);
+  assert.equal(report.stream.provisionalRows, 0);
+  const jls = await getDownload('download');
+  await upload('custom.jls', jls);
+  await select('backend', 'js');
+  await click('run');
+  await phase('complete');
+  assert.equal(await page.locator('#preset-t1').isDisabled(), true);
+  assert.deepEqual(await getDownload('download'), original);
+  const decode = JSON.parse(await getDownload('export-report'));
+  assert.deepEqual(decode.frame.preset, preset);
+  assert.equal(decode.stages.compare, 'not_run');
+  const manifest = await (await page.request.get(`${origin}/web/conformance-manifest.json`)).json();
+  await page.locator('.scientific-nav a[href="#compatibility-view"]').click();
+  assert.equal(await page.locator('#compatibility-view').evaluate((details) => details.open), true);
+  await page.waitForFunction((count) => document.querySelector('#compatibility-features').rows.length === count, manifest.features.length);
+  for (const feature of manifest.features) {
+    const row = page.locator(`#compatibility-features tr[data-feature="${feature.feature_id}"]`);
+    assert.equal(await row.locator('td').nth(1).getAttribute('data-decode'), feature.decode_status);
+  }
+  assert.equal(await page.locator('#compatibility-cases li').count(), manifest.cases.length);
+  console.log(JSON.stringify({ test: 'M2 preset, MAXVAL, magnifier, stream accounting and compatibility views', frame, preset,
+    features: manifest.features.length, annexCases: manifest.cases.length, acknowledgedEvents: report.stream.acknowledgedEvents }));
+}
+
 async function verifyLunarDownload(sourcePath) {
   const source = await readFile(sourcePath);
   const fingerprint = (value) => createHash('sha256').update(value).digest('hex');
@@ -340,6 +571,11 @@ try {
   const pixel = /original (\d+) · reconstructed (\d+) · error (\d+)/.exec(await page.locator('#pixel').textContent());
   assert.ok(pixel && Number(pixel[1]) > 255);
   assert.equal(Math.abs(Number(pixel[1]) - Number(pixel[2])), Number(pixel[3]));
+  assert.equal(await text('inspect-original'), Number(pixel[1]).toLocaleString('en'));
+  assert.equal(await text('inspect-reconstructed'), Number(pixel[2]).toLocaleString('en'));
+  assert.equal(await text('inspect-error'), Number(pixel[3]).toLocaleString('en'));
+  assert.equal(await page.locator('[data-pane="original"] .reticle-layer').evaluate((el) => el.hidden), false);
+  assert.equal(await page.locator('[data-pane="reconstruction"] .reticle-layer').evaluate((el) => el.hidden), false);
   if (process.env.MOONJLS_SCREENSHOT) {
     await mkdir(dirname(process.env.MOONJLS_SCREENSHOT), { recursive: true });
     await page.screenshot({ path: process.env.MOONJLS_SCREENSHOT, fullPage: true });
@@ -358,6 +594,13 @@ try {
   await phase('complete');
   assert.match(await text('status'), /stream termination verified\. No original comparison/);
   assert.equal(await text('error'), 'Not compared');
+  await page.locator('#reconstruction').click();
+  assert.equal(await text('inspect-original'), 'Not compared');
+  assert.equal(await text('inspect-error'), 'Not compared');
+  await page.locator('.view-tab[data-view="difference"]').click();
+  assert.equal(await page.locator('#difference').isVisible(), false);
+  assert.equal(await page.locator('[data-pane="difference"] .reference-placeholder').isVisible(), true);
+  await page.locator('.view-tab[data-view="reconstruction"]').click();
   const pgmDownload = page.waitForEvent('download');
   await click('download');
   const pgm = await readFile(await (await pgmDownload).path());
@@ -372,10 +615,10 @@ try {
   await select('sink', 'bounded');
   await click('run');
   await status('Truncated');
-  await upload('unsupported.pgm', Buffer.from('P5\n1 1\n63\n\0'));
+  await upload('invalid-maxval.pgm', Buffer.from('P5\n1 1\n65536\n\0'));
   await click('run');
-  await status('UnsupportedFeature');
-  console.log(JSON.stringify({ test: 'browser malformed/unsupported status', cases: 2 }));
+  await status('InvalidData');
+  console.log(JSON.stringify({ test: 'browser truncated stream and invalid PGM MAXVAL', cases: 2 }));
 
   await click('example');
   await chunkSize('1024');
@@ -385,8 +628,33 @@ try {
   assert.equal(await page.locator('#error').textContent(), '3');
   await select('language', 'zh');
   await status('已完成');
+  assert.equal(await page.title(), 'MoonJLS · JPEG-LS 工作台');
+  assert.equal(await page.locator('.view-tabs').getAttribute('aria-label'), '图像显示模式');
   await select('language', 'en');
-  console.log(JSON.stringify({ test: 'browser bounded verification and locale switch', inputChunkSize: 1024 }));
+  assert.equal(await page.title(), 'MoonJLS · JPEG-LS Workbench');
+  assert.equal(await page.locator('.view-tabs').getAttribute('aria-label'), 'Image view mode');
+
+  // Empty file-picker cancel should keep loaded source and completed results intact.
+  await page.locator('#file').setInputFiles([]);
+  assert.equal(await text('phase'), 'Complete');
+  assert.equal(await text('error'), '3');
+
+  // Drag-and-drop PGM file load resets drop ring and sets source cleanly.
+  const dropBytes = smallPgm([100, 200, 300, 400]).bytes;
+  await page.evaluate((raw) => {
+    const dt = new DataTransfer();
+    dt.items.add(new File([Uint8Array.from(raw)], 'dropped.pgm', { type: 'image/x-portable-graymap' }));
+    document.body.dispatchEvent(new DragEvent('dragenter', { bubbles: true, cancelable: true, dataTransfer: dt }));
+    document.body.dispatchEvent(new DragEvent('dragover', { bubbles: true, cancelable: true, dataTransfer: dt }));
+    document.body.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: dt }));
+  }, [...dropBytes]);
+  assert.equal(await text('source-name'), 'dropped.pgm');
+  assert.equal(await page.locator('#workspace-view').getAttribute('data-drop-active'), 'false');
+  await select('near', '0');
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('error'), '0');
+  console.log(JSON.stringify({ test: 'browser bounded verification, locale ARIA/title, cancel-picker guard & drag-drop', inputChunkSize: 1024 }));
 
   await click('example');
   await select('near', '0');
@@ -408,11 +676,13 @@ try {
   console.log(JSON.stringify({ test: 'browser UI pause, resume and cancel', inputChunkSize: 1 }));
 
   await cancelRestart('read', byteStream);
+  await cancelRestart('read', byteStream, 255);
   await cancelRestart('write', byteStream);
   await cancelRestart('close', byteStream);
   await gatedEnding();
   await gatedClose(false);
   await gatedClose(true);
+  await narrowSettingsSummary(byteStream);
 
   const flow = await page.evaluate(async () => {
     const { loadCore, encodeImage } = await import('/sdk/index.mjs');
@@ -461,14 +731,16 @@ try {
   assert.equal(flow.stats.outputPeakBytes, 8);
   console.log(JSON.stringify({ test: 'worker ACK, manual resume and one-byte reads', ...flow }));
 
+  await expandedNear();
+  await verifyM2Workbench();
   if (process.env.MOONJLS_LOLA) await verifyLunarDownload(process.env.MOONJLS_LOLA);
 
   assert.deepEqual(pageErrors, []);
   assert.deepEqual(consoleErrors, []);
   if (receiptPath) {
     const responses = Object.fromEntries(await Promise.all([...loaded].map(async ([path, receipt]) => [path, await receipt])));
-    for (const path of ['/web/app.mjs', '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs',
-      '/sdk/generated/core.mjs', '/sdk/generated/core.wasm']) {
+    for (const path of ['/web/app.mjs', '/web/style.css', '/web/preview.mjs', '/web/labels.mjs',
+      '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs', '/sdk/generated/core.mjs', '/sdk/generated/core.wasm']) {
       assert.ok(responses[path]?.sha256, `No browser body hash for ${path}`);
     }
     await mkdir(dirname(receiptPath), { recursive: true });

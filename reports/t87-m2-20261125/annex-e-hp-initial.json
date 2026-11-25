@@ -1,0 +1,552 @@
+{
+  "standard": "ITU-T T.87 (06/1998), Annex E Table E.2",
+  "sourceRevision": "27f045d853d6b6a1b1317a55f199d077705ba326",
+  "node": "v24.20.0",
+  "fixtureArchive": {
+    "name": "jlsimgV100.zip",
+    "sha256": "b2c250453f631248bc3744bc50c935adcc94f55784f19b2fa1fa28ee8b803b70",
+    "url": "https://www.itu.int/rec/T-REC-T.87-199806-I/en"
+  },
+  "reference": {
+    "name": "HP JPEG-LS reference software",
+    "version": "1.00",
+    "officialSoftware": true,
+    "executableSha256": {
+      "locod.exe": "36516cba57c7706a76d9ae3f21c4e35f2b3bd1a7a0ef7ca0f0124f18b78015c0",
+      "nlocod.exe": "7cbc4c9506c9031a53b863793ad27c6bcb90f83c7fa257c53a90e83c5a6d5e86",
+      "loco16d.exe": "f080d7cd7722ffbbd4e8887a229cb023e2c7ca471a69f6730d2ac41a09a6e7f5",
+      "nloco16d.exe": "84682e13e6a12cd60e758cfd8d4c1c4c82d49bd415b76ae0c58a745bc71e4b00"
+    }
+  },
+  "artifactSha256": {
+    "js": "337972a930536b4159b37ab4fbdb3d985bacecabf2c7e0bc298c6e7ed224f8a6",
+    "wasm-gc": "f00b4ae226b622b097f0612f4febb7b41e30b65aaf3e30517ede67236f107d3d",
+    "native": "17be3e817d0f9b2b717b3f8281803c4fec8c91eaf0fb6cf5ab410ad7e215e693"
+  },
+  "cases": [
+    {
+      "id": 1,
+      "test_id": "E.2-1",
+      "file": "T8C0E0.JLS",
+      "sha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "test_id": "E.2-2",
+      "file": "T8C1E0.JLS",
+      "sha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "test_id": "E.2-3",
+      "file": "T8C2E0.JLS",
+      "sha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "test_id": "E.2-4",
+      "file": "T8C0E3.JLS",
+      "sha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "test_id": "E.2-5",
+      "file": "T8C1E3.JLS",
+      "sha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "test_id": "E.2-6",
+      "file": "T8C2E3.JLS",
+      "sha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "test_id": "E.2-7",
+      "file": "T8SSE0.JLS",
+      "sha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 8,
+      "test_id": "E.2-8",
+      "file": "T8SSE3.JLS",
+      "sha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current multicomponent scope"
+          },
+          "decode": {
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "test_id": "E.2-9",
+      "file": "T8NDE0.JLS",
+      "sha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "failed",
+            "message": "locod.exe: Alphabet size must be >= 4, got 1\n\n\n10 !== 0\n",
+            "code": "ERR_ASSERTION"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 0
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "failed",
+            "message": "locod.exe: Alphabet size must be >= 4, got 1\n\n\n10 !== 0\n",
+            "code": "ERR_ASSERTION"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 0
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "failed",
+            "message": "locod.exe: Alphabet size must be >= 4, got 1\n\n\n10 !== 0\n",
+            "code": "ERR_ASSERTION"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 0
+          }
+        }
+      },
+      "reference": {
+        "status": "passed",
+        "samples": 16384,
+        "maxAbsoluteError": 0
+      }
+    },
+    {
+      "id": 10,
+      "test_id": "E.2-10",
+      "file": "T8NDE3.JLS",
+      "sha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "failed",
+            "message": "nlocod.exe: Alphabet size must be >= 4, got 1\n\n\n10 !== 0\n",
+            "code": "ERR_ASSERTION"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 3
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "failed",
+            "message": "nlocod.exe: Alphabet size must be >= 4, got 1\n\n\n10 !== 0\n",
+            "code": "ERR_ASSERTION"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 3
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "failed",
+            "message": "nlocod.exe: Alphabet size must be >= 4, got 1\n\n\n10 !== 0\n",
+            "code": "ERR_ASSERTION"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 3
+          }
+        }
+      },
+      "reference": {
+        "status": "passed",
+        "samples": 16384,
+        "maxAbsoluteError": 3
+      }
+    },
+    {
+      "id": 11,
+      "test_id": "E.2-11",
+      "file": "T16E0.JLS",
+      "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "bytes": 60077,
+            "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "bytes": 60077,
+            "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "bytes": 60077,
+            "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0
+          }
+        }
+      },
+      "reference": {
+        "status": "passed",
+        "samples": 65536,
+        "maxAbsoluteError": 0
+      }
+    },
+    {
+      "id": 12,
+      "test_id": "E.2-12",
+      "file": "T16E3.JLS",
+      "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "bytes": 42189,
+            "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "bytes": 42189,
+            "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "bytes": 42189,
+            "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813"
+          },
+          "decode": {
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3
+          }
+        }
+      },
+      "reference": {
+        "status": "passed",
+        "samples": 65536,
+        "maxAbsoluteError": 3
+      }
+    }
+  ]
+}

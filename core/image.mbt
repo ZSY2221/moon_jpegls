@@ -4,8 +4,9 @@ pub fn encode(
   frame : Frame,
   pixels : FixedArray[Int32],
   limits~ : Limits = Limits::default(),
+  preset~ : Preset = Preset::defaults(),
 ) -> Bytes raise CodecError {
-  let encoder = Encoder::new(frame, limits)
+  let encoder = Encoder::new(frame, limits, preset~)
   guard pixels.length() == frame.width * frame.height else {
     raise InvalidArgument("incorrect number of samples")
   }
@@ -40,6 +41,16 @@ pub fn decode(
   input : Bytes,
   limits~ : Limits = Limits::default(),
 ) -> (Frame, FixedArray[Int32]) raise CodecError {
+  let (frame, _, pixels) = decode_with_preset(input, limits~)
+  (frame, pixels)
+}
+
+///|
+/// Whole-image decode with the effective scan parameters.
+pub fn decode_with_preset(
+  input : Bytes,
+  limits~ : Limits = Limits::default(),
+) -> (Frame, Preset, FixedArray[Int32]) raise CodecError {
   let decoder = Decoder::new(limits)
   let mut position = 0
   let mut rows = 0
@@ -68,7 +79,10 @@ pub fn decode(
         guard decoder.frame() is Some(frame) else {
           raise InvalidData("missing frame")
         }
-        return (frame, pixels)
+        guard decoder.preset() is Some(preset) else {
+          raise InvalidData("missing scan parameters")
+        }
+        return (frame, preset, pixels)
       }
       Failed(error) => raise error
       NeedInput | NeedOutput => raise Truncated

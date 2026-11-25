@@ -94,20 +94,18 @@ async fn PgmHeader::token(self : PgmHeader) -> String {
 }
 
 ///|
-async fn read_pgm(source : Source, near : Int32) -> @jls.Frame {
+async fn read_pgm(source : Source, near : Int32) -> (@jls.Frame, Int32) {
   let header : PgmHeader = { source, bytes: 0, }
   guard header.token() == "P5" else { raise Input("expected a binary P5 PGM") }
   let width = @string.parse_int(header.token()[:])
   let height = @string.parse_int(header.token()[:])
   let maxval = @string.parse_int(header.token()[:])
-  let bits = match maxval {
-    255 => 8
-    4095 => 12
-    65535 => 16
-    _ =>
-      raise @jls.UnsupportedFeature("PGM MAXVAL; expected 255, 4095 or 65535")
+  guard maxval >= 1 && maxval <= 65535 else {
+    raise Input("PGM MAXVAL must be in 1..65535")
   }
-  { width, height, bits, near, }
+  let bits = 32 - maxval.clz()
+  let frame : @jls.Frame = { width, height, bits: if bits < 2 { 2 } else { bits }, near }
+  (frame, maxval)
 }
 
 ///|
@@ -117,24 +115,67 @@ async fn Source::samples(
   wide : Bool,
   big : Bool,
 ) -> Int32 {
-  for index in 0..<samples.length() {
-    let first = self.next()
-    if first < 0 {
-      return index
+  let target = samples.length()
+  let buf = self.buffer
+  let mut out = 0
+  if !wide {
+    while out < target {
+      if self.position == self.length && !self.fill() {
+        return out
+      }
+      let avail = self.length - self.position
+      let rem = target - out
+      let take = if rem < avail { rem } else { avail }
+      let mut p = self.position
+      let stop = out + take
+      while out < stop {
+        samples[out] = buf[p].to_int()
+        p += 1
+        out += 1
+      }
+      self.position = p
     }
-    if wide {
+    return out
+  }
+  while out < target {
+    if self.position == self.length && !self.fill() {
+      return out
+    }
+    let avail = self.length - self.position
+    let pairs = avail >> 1
+    if pairs > 0 {
+      let rem = target - out
+      let take = if rem < pairs { rem } else { pairs }
+      let mut p = self.position
+      let stop = out + take
+      if big {
+        while out < stop {
+          samples[out] = (buf[p].to_int() << 8) | buf[p + 1].to_int()
+          p += 2
+          out += 1
+        }
+      } else {
+        while out < stop {
+          samples[out] = (buf[p + 1].to_int() << 8) | buf[p].to_int()
+          p += 2
+          out += 1
+        }
+      }
+      self.position = p
+    } else {
+      let first = buf[self.position].to_int()
+      self.position += 1
       let second = self.next()
       guard second >= 0 else { raise Input("incomplete 16-bit sample") }
-      samples[index] = if big {
+      samples[out] = if big {
         (first << 8) | second
       } else {
         (second << 8) | first
       }
-    } else {
-      samples[index] = first
+      out += 1
     }
   }
-  samples.length()
+  out
 }
 
 ///|

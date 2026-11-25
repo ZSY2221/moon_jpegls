@@ -2,7 +2,7 @@
 
 ## MoonBit
 
-Import package `ZSY2221/moon_jpegls/core` as `@jls`. `Frame` holds `width`, `height`, `bits` and `near`. `Frame::maxval()` derives MAXVAL from a valid coded `bits`. `Limits::default()` allows up to 65535 on either axis, 100 million pixels and 1 MiB of APPn/COM marker segments. Applications may choose lower limits before accepting a stream.
+Import package `ZSY2221/moon_jpegls/core` as `@jls`. `Frame` holds `width`, `height`, `bits` and `near`. `Frame::maxval()` derives MAXVAL from a valid coded `bits`. For the current profile, coded precision is 2–16 and integer `near` runs through min(255, floor(effective MAXVAL/2)). Pass optional `preset~` to `Encoder::new` or `encode` for non-default MAXVAL, T1/T2/T3 or RESET. Accessors and `decode_with_preset` return the resolved preset. An out-of-range encode argument yields `InvalidArgument`; a coded NEAR beyond the legal MAXVAL bound yields `InvalidData`. `Limits::default()` allows up to 65535 on either axis, 100 million pixels and 1 MiB of APPn/COM marker segments. Applications may choose lower limits before accepting a stream.
 
 ```moonbit
 let frame : @jls.Frame = { width: 3, height: 2, bits: 16, near: 0 }
@@ -57,8 +57,10 @@ console.log(result.frame, result.stats);
 | --- | --- |
 | `start` | Main thread sends mode, limits, backend, chunk ceilings and encoder frame. One job per Worker. |
 | `needInput(seq, maxElements)` → `input(seq, chunk)` | Worker asks for one block. Host supplies `Uint8Array`, `Uint16Array`, or `null` for EOF. A subview is copied before transfer to prevent retaining or detaching a larger buffer. Full, owned input buffers are transferred and detached from the sender. |
-| `bytes`, `row`, `progress` → `ack(seq)` | Worker waits for the sink promise before proceeding. Byte and row buffers transfer ownership to the host. Rows are `Uint16Array`, accompanied by frame fields and zero-based row index. |
+| `bytes`, `row`, `rows`, `progress` → `ack(seq)` | Worker waits for the sink promise before proceeding. Byte and row buffers transfer ownership to the host. Rows are `Uint16Array`, accompanied by frame fields and zero-based row index. A `rows` event carries `startIndex`, `count` and a `samples` view of exactly `count * frame.width` elements. |
 | `pause`, `resume`, `cancel` | Pause stops new source reads and Worker requests at the next boundary. At most one already requested pull or event can be in flight. Cancel rejects the session. |
 | `done`, `error` | Terminal frame/metrics or error code and message. The client terminates its Worker. |
 
 Metrics expose rows, input and output units, consumed/produced totals, live and peak queue bytes, core and bridge payload, elapsed time, and first-row timing. A sink can block acknowledgements to impose backpressure. The demo's fixed preview and file download choices are host policy.
+
+Worker decode batching is optional: `maxBatchBytes` is an integer in `0..1048576`, with `0` disabling batching. The first row is immediate; wider-than-budget rows remain atomic. This is a batch-buffer budget, not a total memory ceiling. `outputQueueBytes` reports the allocated batch or the full backing buffer of an unacknowledged output; short views can therefore have a smaller `byteLength`. `outputPeakBytes` additionally counts the source row while copying into a batch, remains monotonic across progress/data/terminal records, and is retained after `done` clears the live queue. These are explicit output payloads, not JavaScript heap or browser RSS. See [SDK ownership and metrics](../sdk/README.md).

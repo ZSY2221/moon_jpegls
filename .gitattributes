@@ -1,0 +1,5 @@
+reports/** linguist-documentation
+REVIEW_EVIDENCE/** linguist-documentation
+submission/** linguist-documentation
+sdk/generated/** linguist-generated=true
+web/dist/** linguist-generated=true

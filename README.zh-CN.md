@@ -1,25 +1,33 @@
-# MoonJLS
+# MoonJLS——纯 MoonBit JPEG-LS Part 1 编解码内核与符合性验证工具链
 
 [English](README.md)
 
-MoonJLS 是纯 MoonBit 的高位深 JPEG-LS 流式编解码器，支持单通道、单帧、单扫描的 T.87 子集。有效位深支持 8、12、16 位。`NEAR=0` 逐样本无损，`NEAR=1–3` 对原始整数样本给出绝对误差上界。Native、Wasm GC 和 JS 共用两个预测行和同一状态机。 [支持范围](docs/SCOPE.md)
+**MoonJLS** 面向高精度整数图像的数据交换，提供纯 MoonBit 编写的 **ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1** 流式编解码核心、Native / JS / Wasm GC 三后端接入及可复现的符合性验证工具链。项目重点服务于高精度科研图像、遥感高程、工业灰度数据及 MoonBit 图像处理软件的无损与近无损交换，无需在核心内存缓冲整张图像。 [MoonBit 原生实现地图](docs/MOONBIT_IMPLEMENTATION_MAP.md) · [高精度图像接口](docs/HIGH_PRECISION_INTERFACES.md)
 
-## 构建与测试
+## 当前 M2 能力与最终 T.87 Part 1 目标
 
-实测使用 Moon `0.1.20261119`、`moonc v0.10.22+124d61d05` 和 Node `24.20.0`。Native 在 Ubuntu 22.04 WSL2 上运行。原生构建需要系统 C 编译器。
+- **① 最终目标**：完整实现 **ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1** 的编码、解码和数据格式能力（基础交换格式、表规范与简略格式、`§8` 与 Annex E 符合性），并按标准要求分阶段验证；**T.870 Part 2** 与 **DICOM 容器**属于独立扩展，**SPIFF**（`§4.8` / `Annex H.5`）按可选容器单列。 [T.87 能力矩阵与符合性计划](docs/T87_CONFORMANCE_PLAN.md)
+- **② 当前已完成（M2 阶段版本，非最终范围）**：单帧、单分量、单扫描（`ILV=0`、`Pt=0`），支持已知尺寸（`1..65,535`）、**`P=2–16`**、**独立 `MAXVAL`（`1..2^P−1`）**、**合法 `NEAR`（`0..min(255, floor(MAXVAL/2))`）**、**自定义 `LSE ID=1`（`T1/T2/T3/RESET`）预置参数**，以及 Native / JS / Wasm GC、流式 CLI/SDK/Worker 接口与科学工作台。流式编解码保持分块无关，并在 `EOI` 后严格拒绝尾随字节（核心“两条预测行”内存结论仅适用于当前单分量 `ILV=0, Pt=0` profile）。 [当前支持范围](docs/SCOPE.md) · [两分钟评审指南](docs/REVIEWER_GUIDE.md)
+- **③ 后续实现路径**：多分量与多扫描（`M3-A`）→ 交错、采样和点变换（`M3-B`）→ 其余格式与标记能力（`M4`）→ 完整符合性验收（`M5`）。下表未来日期均为内部开发目标，不代表赛事已认可的期限。 [完整兼容路线](docs/ROADMAP.md)
+
+## 构建与运行
+
+实测工具链：Moon `0.1.20261119`（`moonc v0.10.22+124d61d05`）、Node `24.20.0`，Native 在 Ubuntu 22.04 WSL2（`clang 14`）运行。
 
 ```sh
+# 1. 运行纯 MoonBit 核心单元测试（三后端各 15/15）
 moon test core --target js --deny-warn
 moon test core --target wasm-gc --deny-warn
-moon test core --target native --deny-warn
-moon build cmd/moonjls --target native --release
+CC=clang moon test core --target native --deny-warn
+
+# 2. 构建 Native CLI、JS/Wasm GC SDK 与浏览器科学工作台
+CC=clang moon build cmd/moonjls --target native --release
+node sdk/build.mjs
+node web/build.mjs
+python -m http.server 8000 --bind 127.0.0.1 --directory web/dist
 ```
 
-三个后端各运行 7 组核心测试，包含 12 组位深与 NEAR 组合、全部单切分位置、逐字节输入、单字节输出、长游程、结束标记和错误边界。外部验证另行执行 CharLS 双向互操作及同一码流逐样本对比。 [验证报告与复跑](docs/VALIDATION.md)
-
-## CLI 与流式管道
-
-在 Linux 或 WSL 的项目目录执行以下命令。示例下载公开 NASA 16 位月面高程样本，使用新文件名输出。
+Native CLI 文件与流式管道示例（下载公开 NASA 16 位月面高程数据并编解码核验）：
 
 ```sh
 python3 scripts/fetch_lunar_fixture.py .evidence/real/lola.pgm
@@ -29,22 +37,36 @@ moon run --target native cmd/moonjls -- inspect lola.jls
 moon run --target native cmd/moonjls -- verify lola.jls 17
 ```
 
-raw 编码使用 `encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK]`。8 位每样本 1 字节，12 和 16 位每样本 2 字节，PGM 高位深采用大端字节序。`-` 表示标准输入或输出。输出文件采用独占创建，失败时可能留下部分文件。`inspect` 和 `verify` 均验证至 EOI，并拒绝尾随数据。 [真实流式管道](examples/stream_pipeline.sh)
+- raw 编码使用 `encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--maxval N] [--t1 N --t2 N --t3 N --reset N]`（`P<=8` 每样本 1 字节，以上每样本 2 字节）；`encode-pgm` 从 `P5` 头读取实际 `MAXVAL`（>255 采用大端）。`-` 表示标准输入/输出。 [流式管道示例](examples/stream_pipeline.sh) · [SDK 指南](sdk/README.md) · [MoonImage Gray16 消费者](examples/consumer/README.md)
+- 打开 [本机科学工作台](http://127.0.0.1:8000/web/) 可试运行 Precision Lab、Streaming Lab 与 Compatibility Lab。 [浏览器验证](web/README.md) · [运行报告 v1](docs/VERIFICATION_REPORT.md)
 
-## 浏览器、SDK 与消费模块
+## 验证方法与真实证据口径
 
 ```sh
-node sdk/build.mjs
-node web/build.mjs
-python -m http.server 8000 --bind 127.0.0.1 --directory web/dist
+# 快速复跑三后端独立 M2 黄金回归 + Annex E 清单检查（CI 每次自动执行）
+node scripts/validate_annex_e.mjs --check-manifest
+node scripts/verify_m2_golden.mjs --native-exe _build/native/release/build/cmd/moonjls/moonjls.exe
 ```
 
-打开 [本机工作台](http://127.0.0.1:8000/web/)。可载入内置 16 位样例、P5 PGM 或 `.jls` 文件。对 PGM，Worker 对真实压缩流完成往返，热图和点读保留原始整数尺度，最大误差遍历全部样本计算。界面提供进度、暂停、恢复和取消。普通下载显式缓冲，页内限制 64 MiB。可以改用有界核验，或在支持文件保存 API 的浏览器选择直接写盘。 [浏览器复验](web/README.md)
+- **三后端核心测试**：Native、JS、Wasm GC 各通过 **15/15** 项 MoonBit 核心白盒回归。
+- **GitHub Actions CI 自动执行**（[CI 配置](.github/workflows/verification.yml)）：运行三后端 15/15 核心测试、Native 逐行交付与尾部矩阵、Worker/SDK/TS 严格类型检查、Annex E 清单检查、**12 组独立合成 HP/Annex A M2 黄金正例 + 18 个 LSE 变体 + 7 个非法编码边界 + 4 项 Native PGM 检查**（`scripts/verify_m2_golden.mjs`）以及**历史 640 组满量程 NEAR 矩阵**（`scripts/validate.py --near-matrix`）。说明：CI 的 `--check-manifest` 仅校验清单格式，且 12 组合成黄金用例用于核验 M2 单分量数值与 `LSE1` 边界，**不等于官方 Annex E 全部 12 项通过**。
+- **固定受测源码归档实证**（受测产品源码 [`fc43bc2`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44)，M2 证据冻结 [`a7d8c39`](https://github.com/ZSY2221/moon_jpegls/commit/a7d8c391b7af0d88bc5c912ed62c78eaf4c79565)；仅更新文档时沿用该固定源码证据，不代表在文档提交上重新跑过以下全部重型测试）：
+  - **388 组 M2 新增正例** + **18 个 LSE 码流变体**（5 有效 / 13 拒绝）+ **7 个非法编码用例** + **6 项 Native PGM 检查**在三后端完成 HP JPEG-LS V.1.00 与独立 Annex A 向量（`MAXVAL=1,2`）对照。 [M2 合成矩阵](reports/t87-m2-20261125/synthetic-matrix.md)
+  - **官方 Annex E Table E.2**：**`E.2-9` 至 `E.2-12`** 在三后端通过编码与解码验收，12 次 MoonJLS 候选编码与官方流逐字节一致；**`E.2-1` 至 `E.2-8`**（多分量/交错/子采样）解码按预期返回 `UnsupportedFeature`，对应编码尚未运行。 [Annex E 逐项结果](docs/CONFORMANCE_RESULTS.md)
+  - **历史 M1 满量程 NEAR 回归**：**640/640**（特定满量程 8 位 `NEAR=0–127`、12/16 位 `NEAR=0–255` 回归；**明确说明：这不是当前 M2 `P=2–16` × 任意 `MAXVAL` × 所有自定义预设的完整穷举**）。 [独立验证说明](docs/VALIDATION.md) · [M1 NEAR 报告](reports/review-near-20261125/README.md)
+  - **NASA LOLA 与 Chrome 实测**：**1,036,800** 个 16 位月面高程样本在 JS/Wasm GC（`NEAR=0–3`）及 Chrome 工作台完成真实逐样本核对、下载与取消重启检查。 [NASA 误差预算实测](reports/lunar-budget-20261125/README.md)
+  - **包消费与发布边界**：`0.1.0` 归档在本地回环 registry 通过三后端消费验证，**不等于 Mooncakes 公开发布成功**（Mooncakes 在线查询返回 HTTP 404）。 [Mooncakes 发布准备](docs/MOONCAKES_RELEASE.md) · 实测性能与内存数据均绑定对应实验条件，不扩写为所有配置保证。 [性能基准](docs/BENCHMARK.md)
 
-`sdk/index.mjs` 提供同步流式会话和异步源、消费回调，输出 `Uint16Array` 样本行。`worker-client.mjs` 提供逐次确认的背压和手动控制。独立 MoonBit 消费模块通过包依赖使用核心，并展示 MoonImage Gray16 整图适配。 [JS/TS 接口](sdk/README.md) · [独立消费者](examples/consumer/README.md)
+## 分阶段兼容路线（已完成 M0–M2 与后续开发目标）
 
-## 证据与边界
+| 阶段 | 状态 / 内部目标日期* | 交付范围与退出验收条件 |
+| --- | --- | --- |
+| **M0** | **已完成** | 纯 MoonBit 核心、Native/JS/Wasm GC、流式状态机、CLI/Worker/工作台及 3 处正确性修复（`16a7b49`）。 |
+| **M1** | **已完成** | 满量程 8/12/16 位合法 `NEAR` 扩展（`640/640` CharLS 双向互操作通过）。 |
+| **M2** | **已完成（2026-11-25）** | `P=2–16`、独立 `MAXVAL`、合法 `NEAR`、`LSE ID=1` 自定义预设，Precision/Streaming/Compatibility Labs（`fc43bc2`）。 |
+| **M3-A** | 开发目标 **2026-12-10** | 多分量帧、多 `SOS`、`ILV=0` 多扫描状态与跨扫描 LSE 参数继承、重复/遗漏/错序检查。首要验收：**Annex E `E.2-1`、`E.2-4`**。 |
+| **M3-B** | 开发目标 **2026-12-25** | 行交错 `ILV=1`、样本交错 `ILV=2`、合法 `H/V` 采样因子与边缘 MCU、点变换 `Pt` 及双尺度误差分离。首要验收：**Annex E `E.2-2`、`E.2-3`、`E.2-5`–`E.2-8`**。 |
+| **M4** | 开发目标 **2027-01-10** | `LSE ID=2/3` 映射表与续表、表规范与简略格式（`§7(b)(c)`）及外部表生命周期、`DRI/RST0–RST7`、`DNL`、`LSE ID=4` 扩展尺寸与剩余标记语法。 |
+| **M5** | 开发目标 **2027-01-20** | 完整 Part 1 符合性闭环：官方 Annex E（`12/12`）、T.87 `§8.2`/`§8.3`、适用独立参考实现、三后端完整能力矩阵与干净环境复现。 |
 
-对照预构建 CharLS 2.4.5 与官方 CharLS Wasm，覆盖满量程 16 位整数、合成边界与近无损条件。资源实验固定宽度并增加高度，分别记录核心分配载荷、进程峰值、首行时机与慢消费。压缩效果另用公开显微图和月面高程数据。 [基准与复现](docs/BENCHMARK.md)
-
-当前范围不含彩色、自定义 preset、映射表、重启间隔、DNL、扩展尺寸、Part 2 或 DICOM 容器。公开范围查重、未验证路径和下一步都随本地候选版本记录。 [查重证据](docs/ECOSYSTEM_AUDIT.md) · [项目状态](PROJECT_STATUS.md) · [Antigravity 交接](docs/ANTIGRAVITY_HANDOFF.md)
+*\*M3-A 至 M5 日期为项目内部开发目标，不代表组委会已认可最终验收日期。* [完整兼容路线](docs/ROADMAP.md) · [项目工程状态](PROJECT_STATUS.md) · [性能基准](docs/BENCHMARK.md)

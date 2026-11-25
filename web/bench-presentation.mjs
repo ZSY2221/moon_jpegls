@@ -213,7 +213,7 @@ try {
       const trial = await frame.evaluate(() => globalThis.awaitPresentationTrial());
       trials.push({ variant, phase, pair, order: trials.length + 1, ...trial });
       assert.deepEqual(errors, []);
-      assert.equal(variant === 'baseline' ? trial.status : trial.state, variant === 'baseline' ? 'Complete' : 'complete');
+      assert.equal(trial.state ?? trial.status, trial.state ? 'complete' : 'Complete');
       assert.match(trial.frame, /512 × 4096 · 16-bit · NEAR 0/);
       assert.equal(trial.rows, height);
       assert.equal(trial.maxError, '0');

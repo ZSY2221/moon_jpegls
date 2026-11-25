@@ -1,0 +1,1 @@
+{"status":"passed","browser":"158.0.8127.37","node":"v24.20.0","integerPixel":"(0, 0) · original 20000 · reconstructed 19999 · error 1","physicalPixel":"Elevation 0 → -0.5 m · difference 0.5 m","reports":["nasaRoundTrip","nasaDecodeOnly","sameSizeDifferentHash","ordinaryRoundTrip","cancelledBeforeEoi","failedWithTrailingByte"]}

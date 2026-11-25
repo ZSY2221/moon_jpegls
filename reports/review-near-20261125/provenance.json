@@ -1,0 +1,81 @@
+{
+  "timestamp": "2026-11-25T12:47:02.8451591+08:00",
+  "revisionBeforeP1Commit": "9ffa66c2069885519b2727bb05c6c4acd04b67ab",
+  "node": "v24.20.0",
+  "moon": [
+    "moon 0.1.20261119 (738607b 2026-11-19) ~\\.moon\\bin\\moon.exe",
+    "moonc v0.10.22+124d61d05 (2026-11-19) ~\\.moon\\bin\\moonc.exe",
+    "moonrun 0.1.20261119 (738607b 2026-11-19) ~\\.moon\\bin\\moonrun.exe"
+  ],
+  "nativeEnvironment": "Ubuntu 22.04 WSL2, clang 14.0.0, Python 3.10.12",
+  "python": "Python 3.12.10",
+  "charlsNative": "imagecodecs 2026.11.11, CharLS 2.4.5",
+  "charlsWasm": "@team-charls/charls-wasm 0.10.0",
+  "sha256": {
+    "scripts/validate.py": "9e2040b59215204a531d931867360ef820742588db7910c15d0a651f0dc96793",
+    "scripts/interop.mjs": "0974a70c931db3b3de31e28cb7d6ca6154e514c71f00868104a05b2469fe0f94",
+    "scripts/native_validate.py": "f50d0adda5fe6a0c257c405c583016905d15020c1f86f5209c2d99a77e0c3552",
+    "scripts/corpus.py": "6e259b6efd615895db93c212a59318464089e101917cadc1bac27f8b4a8be5fc",
+    "scripts/oracle.mjs": "c2dff32d4a696b421f293dd22f866c023cb6ae522c8bfdccaa3ca8a5663c6bbf",
+    "scripts/oracle.py": "b0988efaa4b15e846b583756d519a29f5f10be1a60f91776d8f992298074de8d",
+    "sdk/index.mjs": "eb0ab0c9470d8ce1b83e4dfeddc86bd9a930bff938d6fb8be801f73434f4a626",
+    "sdk/generated/core.mjs": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97",
+    "sdk/generated/core.wasm": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c",
+    ".tools/wsl-build/native/release/build/cmd/moonjls/moonjls.exe": "22fc4a85751202e655546a9902aaf587160426e070f39187c7bbfb4bdf5c21de",
+    ".tools/oracle-npm/node_modules/@team-charls/charls-wasm/charlsjs.wasm": "068064e4a632803de18e9fac6c70d9852900975f2c32ff9956a3d15e53e0bbd6",
+    ".tools/oracle-venv/Lib/site-packages/imagecodecs/_jpegls.pyd": "5f01d87668b83fbc6c5cde63f213e25a4181081006510f2ade96a60038b815a0",
+    ".evidence/run-near-boundary-shapes.py": "bbe47b65319c03e0f012aec12d4bf3846a59cff2c7d9df35c6a305aea5855150"
+  },
+  "primaryInvocation": [
+    "D:\\Program Files\\GPT_project\\moon_jpegls\\.tools\\oracle-venv\\Scripts\\python.exe",
+    "scripts/validate.py",
+    "--near-matrix",
+    "--directory",
+    ".evidence/validation-near-matrix-p1",
+    "--native-wsl",
+    "Ubuntu-22.04",
+    "--native-exe",
+    ".tools/wsl-build/native/release/build/cmd/moonjls/moonjls.exe"
+  ],
+  "verificationExitCodes": {
+    "nearMatrix": 0,
+    "boundaryShapes": 0,
+    "legacyRegression": 0,
+    "jsCore": 0,
+    "wasmGcCore": 0,
+    "nativeCore": 0,
+    "workerAndPageUnit": 0,
+    "typeScript": 0,
+    "nativeRowDelivery": 0,
+    "nativeTail": 0,
+    "chromeSmoke": 0,
+    "chromeWorkerProbe": 0,
+    "chromePreview": 0,
+    "coreFormatCheck": 1
+  },
+  "publishedSourceSha256": {
+    "core/encoder.mbt": "2cc8ec68739ae23fe5ce4a6f0543e31db9d1ef7f59e1d53a39b61d82b72a5268",
+    "core/markers.mbt": "c93901449efa426f418371e4691969bc9314287ab09be081ad66815244f36e63",
+    "core/parameters.mbt": "3ee99aa71fdaf0e1b9b55f3358c9e333085b6b9c47cde4ea3047ebfa644ee1f7",
+    "core/stream_wbtest.mbt": "7303228981e728950dcfa1ad23b5ee79a9c623ede7cf6892d399c6c121dd67b1",
+    "core/workspace_wbtest.mbt": "87b9ec205317ab8adb6325ab5601111656554e4839700f260e4431327d8a6b05",
+    "scripts/interop.mjs": "0974a70c931db3b3de31e28cb7d6ca6154e514c71f00868104a05b2469fe0f94",
+    "scripts/native_validate.py": "f50d0adda5fe6a0c257c405c583016905d15020c1f86f5209c2d99a77e0c3552",
+    "scripts/validate.py": "9e2040b59215204a531d931867360ef820742588db7910c15d0a651f0dc96793",
+    "sdk/README.md": "c0bbc9828f900db4e75a178b5379d3fbd02842923d5c9128aaa425276d9e3e48",
+    "sdk/index.mjs": "eb0ab0c9470d8ce1b83e4dfeddc86bd9a930bff938d6fb8be801f73434f4a626",
+    "web/README.md": "7f0445069c684b76dbd70f01c9ffecf4aab8ad98d04dd1ecaa7bed1ced0d7fe7",
+    "web/app.mjs": "3496e7c7fc2c81d8eb5e1d18f61981d1dd83eec9293e71ce98d18534f609d1e7",
+    "web/index.html": "1c4276dbc13115f32aa82453f29100f3d9e93a108b64ddb6d6228c247b328784",
+    "web/labels.mjs": "d25fbb95d411219d541c9ab700712f6956f6311b90765596c55690db8797ab11",
+    "web/pgm.mjs": "d8ff5960015d6ad4387ab1c63026abfdaf6e03b565451a03aa56aa0971806ba0",
+    "web/preview.mjs": "b7f2974a522324651b847329ff7add83a4a6d66119cc63e9a1ec4c0d60361072",
+    "web/preview.test.mjs": "9d101284e1a1377f3c8164de195d4f731860f6fe0775a96fe752d32ac1a560b4",
+    "web/smoke.mjs": "c5612258b8ed20c0c51e6402e35824e31f6ceafa73718216187a3396cb0efa03",
+    "web/style.css": "6881351d9a607e4359bfcb4f79b0e8340e1962828a1f3d71854f3348b2187cba"
+  },
+  "caseEvidence": {
+    "uncompressedSha256": "b2447966ce94755f1da781a227af972fcd7f2129169123b7dc30009bafed0fcb",
+    "gzipSha256": "2abbf4057a7745bc8f839062e6f36f4d753dbe6aef0d50f6eec6a6f1599bc65b"
+  }
+}
