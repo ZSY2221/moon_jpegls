@@ -7,6 +7,10 @@
 - 当前 P1 已扩展现有位深的合法 NEAR，8 位为 0–127、12/16 位为 0–255。640 组参数在 WSL Native、JS、Wasm GC 双向对照通过，实际 Chrome 核验了误差热图、原始整数读数、下载和取消重启。 [P1 本机实跑证据](reports/review-near-20261125/README.md)
 - 项目终点是完整的 JPEG-LS Part 1。阶段范围、编码与解码缺口和验收口径见 [T.87 能力矩阵](docs/T87_CONFORMANCE_PLAN.md) 与 [兼容路线](docs/ROADMAP.md)。完整实现的赛事验收日期待组委会确认。
 
+## 高精度验证工具链
+
+工作台、SDK CLI 和 Native 验证适配器支持同一运行报告。NASA LOLA 固定样例已在 JS 和 Wasm GC 各实测四档 NEAR。独立消费者用固定源码构建的包归档，在无主工作区的临时模块核验高位深 API。 [报告契约](docs/VERIFICATION_REPORT.md) · [NASA 实跑](reports/lunar-budget-20261125/README.md) · [独立消费证据](reports/review-consumer-20261125/README.md)
+
 ## 历史本地候选版
 
 2026-11-24（新加坡时间）完成 RC3。固定受测源码为 `2feb00b8ef657b7259ba70bccf1ff0ceaf08765b`，本地交接分支 `antigravity/rc3-20261124`。真实工作台保留 64 KiB 参考行窗口。原 Native 极小块慢消费在 20 秒预算内仍为历史超时，同一二进制的正常和受控暂停对照已通过。保持本地，未对外发布。 [RC3 实测证据](reports/rc3/README.md) · [Antigravity 固定版本交接](docs/RC3_HANDOFF.md)

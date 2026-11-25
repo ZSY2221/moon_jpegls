@@ -2,9 +2,13 @@
 
 [简体中文](README.zh-CN.md)
 
-MoonJLS is a pure MoonBit streaming JPEG-LS codec for 8-, 12- and 16-bit grayscale images. It implements a single-frame, single-component and single-scan T.87 baseline profile. `NEAR=0` preserves every sample. Positive integer `NEAR` bounds the absolute error in the original sample scale. The upper limit is 127 at 8 bits and 255 at 12 or 16 bits. The core keeps two prediction lines and operates on Native, Wasm GC and JS. [Support matrix](docs/SCOPE.md)
+**A native MoonBit JPEG-LS codec and verification toolkit**
 
-MoonJLS's final target is the full JPEG-LS Part 1 codec and data-format capabilities in ITU-T T.87 (06/1998) / ISO/IEC 14495-1. The grayscale profile above is the current implementation stage. The [T.87 capability matrix and acceptance plan](docs/T87_CONFORMANCE_PLAN.md) separates verified capabilities from upcoming work, and the [compatibility roadmap](docs/ROADMAP.md) gives the phases and their exit criteria.
+MoonJLS serves high-precision integer image interchange with a pure MoonBit codec, Native, JS and Wasm GC interfaces, and reproducible interoperability checks. The scientific image workbench shows original sample precision, compression error, streaming behavior and validation evidence. PGM, raw rasters and MoonImage are the first integration paths. [High-precision image interfaces](docs/HIGH_PRECISION_INTERFACES.md)
+
+The current implementation streams full-range 8-, 12- and 16-bit grayscale images with one frame, one component and one scan (ILV=0). `NEAR=0` preserves every sample. Positive integer `NEAR` bounds absolute error in the original sample scale, with a maximum of 127 at 8 bits and 255 at 12 or 16 bits. The streaming core keeps two prediction lines for this profile. [Support matrix](docs/SCOPE.md) · [Published NEAR validation](reports/review-near-20261125/README.md)
+
+The final target is the full JPEG-LS Part 1 codec and data-format capabilities in ITU-T T.87 (06/1998) / ISO/IEC 14495-1. The roadmap expands parameter, scan and marker support in phases, with separate acceptance criteria for encoding and decoding. [T.87 capability matrix](docs/T87_CONFORMANCE_PLAN.md) · [Compatibility roadmap](docs/ROADMAP.md)
 
 ## Build and test
 
@@ -42,6 +46,10 @@ python -m http.server 8000 --bind 127.0.0.1 --directory web/dist
 Open [the local workbench](http://127.0.0.1:8000/web/). Load the built-in 16-bit sample, a P5 PGM, or a `.jls` file. For a round trip, the Workers encode and decode the same bytes. The UI displays the bounded preview, full-resolution maximum error, dimensions, encoded bytes and elapsed time. The default browser download is explicitly buffered and capped at 64 MiB. Choose bounded verification for a discarding sink, or a direct file sink on browsers that expose the file picker. [Browser checks](web/README.md)
 
 The SDK exports `Uint16Array` decoded rows, typed declarations, chunk and pause controls, and observable backpressure. Use `loadCore`, `encodeStream` and `decodeStream` for programmatic access. The independent MoonBit example uses the public package dependency and includes a `moonimage` Gray16 adapter. [SDK guide](sdk/README.md) · [Independent consumer](examples/consumer/README.md)
+
+## Verification toolkit
+
+The SDK CLI, Native verification adapter and browser workbench export a shared [verification report](docs/VERIFICATION_REPORT.md). The [NASA LOLA experiment](reports/lunar-budget-20261125/README.md) provides measured NEAR candidates and a physical error scale bound to the exact input. [Scientific workbench handoff](docs/SCIENTIFIC_WORKBENCH_HANDOFF.md)
 
 ## Evidence and limits
 

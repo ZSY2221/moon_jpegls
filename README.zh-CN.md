@@ -1,10 +1,12 @@
-# MoonJLS
+# MoonJLS——面向高精度图像的 JPEG-LS 标准内核与验证工具链
 
 [English](README.md)
 
-MoonJLS 是纯 MoonBit 的高位深 JPEG-LS 流式编解码器，支持单通道、单帧、单扫描的 T.87 子集。有效位深支持 8、12、16 位。`NEAR=0` 逐样本无损，正整数 `NEAR` 表示原始整数样本的绝对误差上界，8 位上限为 127，12／16 位上限为 255。Native、Wasm GC 和 JS 共用两个预测行和同一状态机。 [支持范围](docs/SCOPE.md)
+MoonJLS 面向高精度整数图像的数据交换，提供纯 MoonBit JPEG-LS 编解码核心、Native／JS／Wasm GC 接入及可复现的互操作验证。项目以完整 JPEG-LS Part 1 为最终目标，当前阶段已完成高位深单分量流式处理，并逐步扩展参数、扫描和标记能力。科学图像工作台用于呈现原始样本精度、压缩误差、流式行为及验证证据，PGM、raw 和 MoonImage 是首批接入方式。 [高精度图像接口](docs/HIGH_PRECISION_INTERFACES.md)
 
-项目最终目标是实现 ITU-T T.87（06/1998）／ISO/IEC 14495-1 的完整 JPEG-LS Part 1 编解码与数据格式能力。上文的灰度子集是当前阶段成果。[标准能力矩阵与验收计划](docs/T87_CONFORMANCE_PLAN.md) 逐项列出已验证能力和待实现项，[分阶段兼容路线](docs/ROADMAP.md) 给出各阶段的交付物和通过条件。
+当前支持满量程 8／12／16 位的单帧、单分量、单扫描（ILV=0）灰度流。`NEAR=0` 逐样本无损，正整数 `NEAR` 表示原始整数样本的绝对误差上界，8 位上限为 127，12／16 位上限为 255。此子集的流式核心持有两条预测行。 [支持范围](docs/SCOPE.md) · [NEAR 扩展实跑](reports/review-near-20261125/README.md)
+
+完整目标采用 ITU-T T.87（06/1998）／ISO/IEC 14495-1，涵盖 Part 1 的编解码与数据格式能力。各阶段分别核验编码、解码和数据格式。 [标准能力矩阵与验收计划](docs/T87_CONFORMANCE_PLAN.md) · [分阶段兼容路线](docs/ROADMAP.md)
 
 ## 构建与测试
 
@@ -45,8 +47,14 @@ python -m http.server 8000 --bind 127.0.0.1 --directory web/dist
 
 `sdk/index.mjs` 提供同步流式会话和异步源、消费回调，输出 `Uint16Array` 样本行。`worker-client.mjs` 提供逐次确认的背压和手动控制。独立 MoonBit 消费模块通过包依赖使用核心，并展示 MoonImage Gray16 整图适配。 [JS/TS 接口](sdk/README.md) · [独立消费者](examples/consumer/README.md)
 
+## 验证工具链
+
+SDK CLI、Native 验证适配器和浏览器工作台可导出同一格式的[运行报告](docs/VERIFICATION_REPORT.md)。[NASA LOLA 实测](reports/lunar-budget-20261125/README.md)提供精确绑定输入的高程误差尺度和真实 NEAR 候选。[科学验证工作台交接](docs/SCIENTIFIC_WORKBENCH_HANDOFF.md)
+
 ## 证据与边界
 
-对照预构建 CharLS 2.4.5 与官方 CharLS Wasm，原语料覆盖满量程 16 位整数、合成边界与近无损条件。扩展矩阵另对拍当前子集下全部 640 组合法位深与 NEAR 组合。 [NEAR 扩展实跑](reports/review-near-20261125/README.md)资源实验固定宽度并增加高度，分别记录核心分配载荷、进程峰值、首行时机与慢消费。压缩效果另用公开显微图和月面高程数据。 [基准与复现](docs/BENCHMARK.md)
+对照预构建 CharLS 2.4.5 与官方 CharLS Wasm，原语料覆盖满量程 16 位整数、合成边界与近无损条件。扩展矩阵另对拍当前子集下全部 640 组合法位深与 NEAR 组合。 [NEAR 扩展实跑](reports/review-near-20261125/README.md)
+
+资源实验固定宽度并增加高度，分别记录核心分配载荷、进程峰值、首行时机与慢消费。压缩效果另用公开显微图和月面高程数据。 [基准与复现](docs/BENCHMARK.md)
 
 多分量、自定义预置参数、映射表、重启间隔、DNL 和扩展尺寸属于后续 Part 1 阶段。T.870 Part 2 与 DICOM 容器分别列为独立扩展。公开范围查重、未验证路径和下一步都随本地候选版本记录。 [查重证据](docs/ECOSYSTEM_AUDIT.md) · [项目状态](PROJECT_STATUS.md) · [Antigravity 交接](docs/ANTIGRAVITY_HANDOFF.md)

@@ -3,13 +3,14 @@ let help : String =
   #|moonjls encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK]
   #|moonjls encode-pgm NEAR INPUT OUTPUT [CHUNK]
   #|moonjls decode INPUT OUTPUT [raw-le|raw-be|pgm] [CHUNK]
-  #|moonjls inspect INPUT [CHUNK]
-  #|moonjls verify INPUT [CHUNK]
+  #|moonjls inspect INPUT [CHUNK] [--json]
+  #|moonjls verify INPUT [CHUNK] [--json]
   #|
   #|Use - for stdin or stdout. Files are created without overwriting.
   #|Raw samples use one byte at 8 bits and two bytes at 12/16 bits (default raw-le).
   #|CHUNK sets the byte buffer size (1–1048576, default 65536).
   #|Inspect and verify each read through EOI and reject trailing bytes.
+  #|With --json, inspect and verify write successful decoding statistics to stdout.
 
 ///|
 async fn log_line(message : String) -> Unit {
@@ -182,6 +183,7 @@ async fn decode_stream(
   format : Format,
   chunk : Int32,
   operation : String,
+  json~ : Bool = false,
 ) -> Unit {
   let decoder = @jls.Decoder::new(@jls.Limits::default())
   let output = FixedArray::make(if chunk < 2 { 2 } else { chunk }, b'\x00')
@@ -261,9 +263,18 @@ async fn decode_stream(
     }
   }
   guard decoder.frame() is Some(frame) else { raise Input("missing frame") }
-  log_line(
-    "\{operation} \{describe(frame)} rows=\{rows} input_bytes=\{consumed} output_bytes=\{bytes} first_row_at=\{first_row_at} core_payload_bytes=\{decoder.workspace_bytes()} input_high_water=\{source.high_water} output_high_water=\{high_water}",
-  )
+  let workspace = decoder.workspace_bytes()
+  if json {
+    let report = "{\"width\":\{frame.width},\"height\":\{frame.height},\"bits\":\{frame.bits}," +
+      "\"maxval\":\{frame.maxval()},\"near\":\{frame.near},\"rows\":\{rows}," +
+      "\"inputBytes\":\{consumed},\"corePayloadBytes\":\{workspace}," +
+      "\"inputPeakBytes\":\{source.high_water},\"firstRowInputConsumed\":\{first_row_at}}\n"
+    @stdio.stdout.text.write(report[:])
+  } else {
+    log_line(
+      "\{operation} \{describe(frame)} rows=\{rows} input_bytes=\{consumed} output_bytes=\{bytes} first_row_at=\{first_row_at} core_payload_bytes=\{workspace} input_high_water=\{source.high_water} output_high_water=\{high_water}",
+    )
+  }
 }
 
 ///|
@@ -338,8 +349,11 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
         })
       })
     }
-    ["inspect" | "verify" as operation, input, ..] if args.length() <= 3 => {
-      let chunk = parse_chunk(args, 2)
+    ["inspect" | "verify" as operation, input, ..] if args.length() <= 4 => {
+      let json = args.length() > 2 && args[args.length() - 1] == "--json"
+      guard args.length() <= 3 || json else { raise Usage(help) }
+      let positional = if json { args[:args.length() - 1] } else { args }
+      let chunk = parse_chunk(positional, 2)
       with_reader(input, reader => {
         decode_stream(
           Source::new(reader, chunk),
@@ -347,6 +361,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           RawLittle,
           chunk,
           operation,
+          json~,
         )
       })
     }

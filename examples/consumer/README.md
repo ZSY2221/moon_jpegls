@@ -1,4 +1,4 @@
-# Independent MoonBit consumer
+# MoonBit consumer examples
 
 Run from the MoonJLS checkout root with the current MoonBit toolchain.
 
@@ -9,6 +9,8 @@ moon -C examples/consumer run . --target js
 ```
 
 This module declares `ZSY2221/moon_jpegls@0.1.0` as a normal MoonBit dependency. The local `moon.work` resolves it from the checkout for pre-release testing. The first example encodes and reconstructs six 12-bit integer samples using only the public core API. The second encodes a strided 16-bit grayscale `Image` from `moonbitstack/moonimage@0.2.1` and verifies the reconstructed bytes, including samples on both sides of 32768.
+
+The public Mooncakes check returned HTTP 404 for this module on 2026-11-25. A separate temporary module installed the actual `moon package` archive through a local registry and ran public API checks at 12 and 16 bits with NEAR 0 and 255 on JS, Wasm GC and Native. That module used the pinned dependency declaration and ran without a workspace. [Independent archive consumption and reproduction](../../reports/review-consumer-20261125/README.md)
 
 Both checks also ran with `moon -C examples/consumer --target-dir ../../.evidence/native-consumer run . --target native` on Ubuntu 22.04.2 in WSL2 with GCC 11.4.0. All three backends reported 48 and 60 encoded bytes for the two examples.
 

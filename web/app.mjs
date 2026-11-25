@@ -1,5 +1,8 @@
 import { CodecError } from '../sdk/index.mjs';
 import { startWorker } from '../sdk/worker-client.mjs';
+import { lunarElevationMeters, lunarErrorMeters } from '../sdk/lunar.mjs';
+import { createRunId, serializeVerificationReport } from '../sdk/verification-report.mjs';
+import { finishWorkbenchReport, lunarIdentity, workbenchReport } from './run-report.mjs';
 import { strings } from './labels.mjs';
 import { openPgm, pgmHeader, pgmRow, readPgmHeader, samplePgm } from './pgm.mjs';
 import { createPreview, errorLegendStops, previewIds } from './preview.mjs';
@@ -116,6 +119,14 @@ function setViewMode(mode, { focus = false } = {}) {
 function renderPixel() {
   setText('pixel', selectedPixel ? translate('pixel', selectedPixel) : translate('pickPixel'));
   const frame = presented?.frame;
+  const physical = presented?.pgm?.lunar && selectedPixel?.original !== undefined;
+  setHidden('pixel-physical', !physical);
+  if (physical) {
+    setText('pixel-physical', translate('physicalPixel',
+      formatInt(lunarElevationMeters(selectedPixel.original)),
+      formatInt(lunarElevationMeters(selectedPixel.reconstructed)),
+      formatInt(lunarErrorMeters(selectedPixel.error))));
+  }
   const near = frame?.near ?? presented?.near;
   const nearText = near === undefined || near === null ? '—' : String(near);
   setText('inspect-near', selectedPixel || frame ? nearText : '—');
@@ -330,12 +341,27 @@ function renderResult(job) {
   renderErrorLegend();
 }
 
+function renderPhysicalBudget(job) {
+  const physical = job?.pgm?.lunar && job.frame;
+  setHidden('physical-budget', !physical);
+  if (physical) {
+    setText('physical-budget-value', translate('physicalBudget',
+      formatInt(lunarErrorMeters(job.frame.near)),
+      formatInt(job.observedError === undefined ? null : lunarErrorMeters(job.observedError))));
+  }
+}
+
 function clearOutput() {
   preview.clear();
   selectedPixel = undefined;
   setAttr('workspace-view', 'data-has-image', 'false');
   for (const id of measures) setText(id, '—');
   setHidden('download', true);
+  setHidden('export-report', true);
+  setHidden('physical-budget', true);
+  setHidden('pixel-physical', true);
+  setText('report-error', '');
+  setHidden('report-error', true);
   const download = get('download');
   if (download) {
     download.href = '';
@@ -353,6 +379,12 @@ function setSource(file) {
   const pgm = file && !isJls(file) ? {} : undefined;
   sourcePgm = pgm;
   if (pgm) {
+    void lunarIdentity(file).then((identity) => {
+      pgm.lunar = identity;
+      if (sourcePgm !== pgm || presented?.pgm !== pgm) return;
+      renderPixel();
+      renderPhysicalBudget(presented);
+    });
     pgm.pending = readPgmHeader(file).then(
       (header) => { pgm.header = header; },
       (error) => { pgm.error = error; },
@@ -383,6 +415,7 @@ function setFrame(job, frame) {
   if (!frame || job.frame) return;
   job.frame = frame;
   renderIdentity();
+  renderPhysicalBudget(job);
 }
 
 function recordStats(job, stats, frame) {
@@ -405,6 +438,7 @@ function recordStats(job, stats, frame) {
 
 function draw(job, index, reconstructed, original) {
   const firstCanvas = preview.drawRow(index, reconstructed, original);
+  job.rowsDelivered++;
   if (firstCanvas !== undefined && job.firstCanvas === undefined) job.firstCanvas = firstCanvas;
   if (!job.hasImageShown && firstCanvas !== undefined) {
     job.hasImageShown = true;
@@ -412,8 +446,15 @@ function draw(job, index, reconstructed, original) {
   }
 }
 
+async function writeOutput(job, sink, bytes) {
+  await sink.write(bytes);
+  requireActive(job);
+  job.outputBytes += bytes.byteLength;
+}
+
 function launch(job, options) {
   requireActive(job);
+  job.stages[options.mode] = 'incomplete';
   const worker = startWorker({
     ...options, signal: job.abort.signal,
     async read(capacity) {
@@ -425,19 +466,23 @@ function launch(job, options) {
   });
   job.workers.push(worker);
   if (job.paused) worker.pause();
-  return worker.result;
+  return worker.result.then((result) => {
+    if (!job.status) job.stages[options.mode] = 'passed';
+    return result;
+  }, (error) => {
+    if (!job.status) job.stages[options.mode] = error.code === 'Cancelled' ? 'cancelled' : 'failed';
+    throw error;
+  });
 }
 
 async function decodeFile(job, file, settings, sink) {
   const handleRow = async (frame, index, row) => {
     if (index === 0) {
       preview.configure(frame, false);
-      await sink.write(pgmHeader(frame));
-      requireActive(job);
+      await writeOutput(job, sink, pgmHeader(frame));
     }
     draw(job, index, row, null);
-    await sink.write(pgmRow(row, frame));
-    requireActive(job);
+    await writeOutput(job, sink, pgmRow(row, frame));
   };
   const result = await launch(job, {
     ...settings, mode: 'decode', read: readBlob(file),
@@ -468,11 +513,17 @@ async function roundTrip(job, file, near, settings, sink) {
     if (index === 0) preview.configure(frame, true);
     const original = await input.row(index);
     requireActive(job);
+    job.stages.compare = 'incomplete';
     for (let i = 0; i < row.length; i++) {
       const diff = original[i] >= row[i] ? original[i] - row[i] : row[i] - original[i];
       if (diff > maxError) maxError = diff;
     }
-    if (maxError > near) throw new Error(`Round-trip error ${maxError} exceeds NEAR ${near} at row ${index}`);
+    job.verifiedSamples = (job.verifiedSamples ?? 0) + row.length;
+    job.observedError = maxError;
+    if (maxError > near) {
+      job.stages.compare = 'failed';
+      throw new Error(`Round-trip error ${maxError} exceeds NEAR ${near} at row ${index}`);
+    }
     draw(job, index, row, original);
   };
   const decoded = launch(job, {
@@ -495,9 +546,9 @@ async function roundTrip(job, file, near, settings, sink) {
     async onEvent(event) {
       requireActive(job);
       job.encodeWorkspace = event.stats.coreWorkspaceBytes;
+      job.encodedStats = event.stats;
       if (event.type === 'bytes') {
-        await sink.write(event.chunk);
-        requireActive(job);
+        await writeOutput(job, sink, event.chunk);
         await pipe.write(event.chunk);
         requireActive(job);
       }
@@ -505,12 +556,18 @@ async function roundTrip(job, file, near, settings, sink) {
   }).then((result) => {
     requireActive(job);
     job.encodeWorkspace = result.stats.coreWorkspaceBytes;
+    job.encodedStats = result.stats;
     pipe.close();
     return result;
   });
   try {
     const [fromEncode, fromDecode] = await Promise.all([encoded, decoded]);
     requireActive(job);
+    if (job.verifiedSamples !== input.frame.width * input.frame.height) {
+      job.stages.compare = 'failed';
+      throw new Error('Round-trip comparison did not verify every sample');
+    }
+    job.stages.compare = 'passed';
     return { ...fromDecode, jlsBytes: fromEncode.stats.outputProduced, maxError };
   } catch (error) {
     pipe.fail(error);
@@ -543,7 +600,9 @@ async function run() {
   const outputName = file.name.replace(/\.[^.]+$/, '') + (decodeOnly ? '.pgm' : '.jls');
   const settings = { backend: get('backend').value, inputChunkSize: chunk, outputChunkSize: Math.min(chunk, 32 * 1024) };
   const job = {
-    id: ++sequence, backend: settings.backend, near, decodeOnly, pgmHeader: pgm?.header,
+    id: ++sequence, runId: createRunId(), backend: settings.backend, near, decodeOnly, pgmHeader: pgm?.header,
+    file, outputName, sinkMode, settings, pgm, rowsDelivered: 0,
+    stages: { encode: 'not_run', decode: 'not_run', compare: 'not_run' },
     abort: new AbortController(), paused: false, workers: [],
   };
   active = job;
@@ -563,6 +622,7 @@ async function run() {
     sink = await openSink(sinkMode, outputName, decodeOnly ? 'image/x-portable-graymap' : 'image/jls');
     requireActive(job);
     job.started = performance.now();
+    job.outputBytes = 0;
     if (!job.paused) transition('running');
     const result = await (decodeOnly ? decodeFile(job, file, settings, sink) : roundTrip(job, file, near, settings, sink));
     requireActive(job);
@@ -578,6 +638,7 @@ async function run() {
     job.elapsed = performance.now() - job.started;
     job.result = result;
     if (artifact instanceof Blob) {
+      job.artifact = artifact;
       artifactUrl = URL.createObjectURL(artifact);
       const download = get('download');
       if (download) {
@@ -586,6 +647,9 @@ async function run() {
         download.hidden = false;
       }
     }
+    finishWorkbenchReport(job, 'passed');
+    setHidden('export-report', false);
+    renderPhysicalBudget(job);
     renderResult(job);
     transition('complete', decodeOnly ? 'decodeOnly' : 'complete');
     renderProgress(job);
@@ -593,6 +657,9 @@ async function run() {
     const cancelled = job.abort.signal.aborted || error.code === 'Cancelled' || error.name === 'AbortError';
     job.abort.abort();
     if (active === job) {
+      finishWorkbenchReport(job, cancelled ? 'cancelled' : 'failed', error);
+      setHidden('export-report', false);
+      renderPhysicalBudget(job);
       active = undefined;
       lock(false);
       if (cancelled) transition('cancelled');
@@ -666,10 +733,34 @@ get('cancel').addEventListener('click', () => {
   const job = active;
   if (!job) return;
   job.abort.abort();
+  finishWorkbenchReport(job, 'cancelled', new CodecError('Cancelled', 'Operation cancelled'));
+  setHidden('export-report', false);
+  renderPhysicalBudget(job);
   active = undefined;
   lock(false);
   transition('cancelled');
   renderProgress(job);
+});
+
+get('export-report')?.addEventListener?.('click', async () => {
+  const job = presented;
+  if (!job?.status) return;
+  setText('report-error', '');
+  setHidden('report-error', true);
+  try {
+    const report = await workbenchReport(job);
+    if (presented !== job) return;
+    const url = URL.createObjectURL(new Blob([serializeVerificationReport(report)], { type: 'application/json' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `moonjls-${job.runId}.json`;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  } catch (error) {
+    if (presented !== job) return;
+    setText('report-error', translate('reportExportFailed', error.message));
+    setHidden('report-error', false);
+  }
 });
 
 for (const id of ['near', 'backend', 'sink']) {
@@ -763,6 +854,7 @@ function applyLocale() {
   renderIdentity();
   renderState();
   renderProgress(presented);
+  renderPhysicalBudget(presented);
   renderResult(presented);
   renderPixel();
   get('progress').setAttribute('aria-label', translate('reconstruction'));

@@ -129,6 +129,8 @@
           <button id="pause" type="button" disabled data-label="pause">Pause</button>
           <button id="cancel" type="button" disabled data-label="cancel">Cancel</button>
         </div>
+        <button type="button" id="export-report" class="button" hidden data-label="exportReport">Download verification report</button>
+        <p class="microcopy" id="report-error" aria-live="polite" hidden></p>
         <a id="download" class="button download-cta" hidden>
           <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M8 2.5v7.8m0 0-3-3m3 3 3-3M3 13.2h10"/>
@@ -263,6 +265,7 @@
             <strong id="inspect-near" class="inspect-val">—</strong>
           </div>
         </div>
+        <p id="pixel-physical" class="microcopy" hidden></p>
         <p id="pixel" class="visually-hidden" aria-live="polite" data-label="pickPixel">Select a pixel to read its integer samples.</p>
       </section>
 
@@ -297,6 +300,10 @@
             <div class="kpi-label-row">
               <span class="kpi-label" data-label="error">Max absolute error</span>
               <span id="error-bound" class="kpi-bound"></span>
+              <span id="physical-budget" class="microcopy" hidden>
+                <span id="physical-budget-value"></span>
+                <a href="https://svs.gsfc.nasa.gov/4720/#displacement">NASA LOLA</a>
+              </span>
             </div>
             <strong id="error" class="kpi-value">—</strong>
             <div class="kpi-sub">

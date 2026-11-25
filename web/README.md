@@ -18,6 +18,10 @@ Choose bounded verification to discard the output after acknowledgement. This ke
 
 The UI can be restyled in `style.css` and `index.html`. English and Chinese labels are in `labels.mjs`. File-format, transport, preview and state wiring are in `pgm.mjs`, `transport.mjs`, `preview.mjs` and `app.mjs`. See the [SDK guide](../sdk/README.md) for details of the codec interface.
 
+## Verification report and physical units
+
+Each completed, failed or cancelled job can export [verification report v1](../docs/VERIFICATION_REPORT.md). The workbench recognizes the [pinned NASA LOLA PGM](../tests/fixtures/LUNAR_DATA.md) by SHA-256 and shows codec-added elevation error in metres. Other inputs use integer sample units.
+
 ## Browser smoke
 
 With the local server running, install the pinned development-only driver and run the cases from the repository root. Set `MOONJLS_CHROME` to a Chromium-compatible executable path to choose another installed browser. `MOONJLS_WEB_URL` defaults to `http://127.0.0.1:8000`. The test uses Chromium's headless mode and can write a real screenshot via `MOONJLS_SCREENSHOT`.

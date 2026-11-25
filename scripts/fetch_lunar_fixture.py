@@ -39,13 +39,18 @@ def download():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path, help="destination binary PGM")
+    parser.add_argument("--source-tiff", type=Path, help="convert a local copy of the pinned NASA TIFF")
     args = parser.parse_args()
 
     try:
-        data = download()
+        if args.source_tiff is None:
+            data = download()
+        else:
+            with args.source_tiff.open("rb") as source:
+                data = source.read(SOURCE_SIZE + 1)
     except (OSError, ValueError) as error:
-        parser.exit(1, f"Could not download NASA TIFF: {error}\n")
-    if hashlib.sha256(data).hexdigest() != SOURCE_SHA256:
+        parser.exit(1, f"Could not read NASA TIFF: {error}\n")
+    if len(data) != SOURCE_SIZE or hashlib.sha256(data).hexdigest() != SOURCE_SHA256:
         parser.exit(1, "NASA TIFF differs from the recorded snapshot\n")
 
     # The verified TIFF stores 360 consecutive 5760-byte little-endian
