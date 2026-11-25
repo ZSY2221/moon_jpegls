@@ -1,6 +1,6 @@
 # MoonJLS 科学验证工作台交接
 
-从交接时给出的固定提交检出，使用报告中的 `source.revision` 和 `artifact.sha256` 核对实际构建。标准兼容基线为 [P1 9667375](https://github.com/ZSY2221/moon_jpegls/commit/9667375c42dd5d20aba832c1c07ebcd0fdfad214)。[当前范围](SCOPE.md) 与 [T.87 验收路线](T87_CONFORMANCE_PLAN.md) 记录各项能力的状态。
+从 [固定源码提交 `da0b52d`](https://github.com/ZSY2221/moon_jpegls/commit/da0b52d9992c956608039ce0d29060b5eeed2e84) 检出，使用报告中的 `source.revision` 和 `artifact.sha256` 核对实际构建。标准兼容基线为 [P1 9667375](https://github.com/ZSY2221/moon_jpegls/commit/9667375c42dd5d20aba832c1c07ebcd0fdfad214)。[当前范围](SCOPE.md) 与 [T.87 验收路线](T87_CONFORMANCE_PLAN.md) 记录各项能力的状态。
 
 ## 可用数据
 
@@ -25,3 +25,5 @@ Antigravity 可修改 [web/index.html](../web/index.html)、[web/style.css](../w
 - RowReady 和批量行可能早于 EOI，呈现为暂定预览。严格流终结和输出关闭都成功后显示最终成功。取消立即结束当前任务的可见生命周期，旧读取、写入、关闭或 ACK 的完成事件不能更新新任务。
 - Worker 峰值包含持有的输出 backing buffer，以及复制时同时存在的源行。Core、bridge、宿主下载、预览和浏览器分配器有不同边界。报告分别记录实测计数。
 - 复验实际 Chrome 的 NASA 与普通 PGM、下载样本及报告、暂停恢复、严格尾随失败和取消重启。入口见 [Web 测试说明](../web/README.md)。截图和结果注明提交、输入、后端与实际浏览器。历史与未执行项分别标明。
+
+固定源码的 [CLI 与 Chrome 运行证据](../reports/verification-toolkit-20261125/README.md) 可核对导出报告、资产指纹、取消和尾随终态。

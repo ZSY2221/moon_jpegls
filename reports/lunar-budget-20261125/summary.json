@@ -1,0 +1,1172 @@
+{
+  "fixture": {
+    "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+    "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+    "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+    "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+    "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+    "tiffBytes": 2076866,
+    "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+    "pgmBytes": 2073618,
+    "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+    "width": 1440,
+    "height": 720,
+    "bits": 16,
+    "sampleOffset": 20000,
+    "metersPerSample": 0.5,
+    "referenceRadiusMeters": 1737400,
+    "elevationUnit": "m"
+  },
+  "runtime": {
+    "node": "v24.20.0",
+    "platform": "win32",
+    "arch": "x64"
+  },
+  "sameJlsAndReconstructionAcrossBackends": true,
+  "rows": [
+    {
+      "report": {
+        "schemaVersion": "moonjls.verification/1",
+        "runId": "790916d8-2a8a-469d-b39c-6b0cab2cc1a6",
+        "host": "fixture-runner",
+        "backend": "js",
+        "status": "passed",
+        "error": null,
+        "source": {
+          "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+          "dirty": false
+        },
+        "artifact": {
+          "name": "core.mjs",
+          "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+        },
+        "input": {
+          "name": "lola.pgm",
+          "format": "pgm",
+          "bytes": 2073618,
+          "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "provenance": {
+            "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+            "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+            "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+            "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+            "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+            "tiffBytes": 2076866,
+            "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+            "pgmBytes": 2073618,
+            "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+            "width": 1440,
+            "height": 720,
+            "bits": 16,
+            "sampleOffset": 20000,
+            "metersPerSample": 0.5,
+            "referenceRadiusMeters": 1737400,
+            "elevationUnit": "m"
+          }
+        },
+        "output": {
+          "name": "lola.jls",
+          "format": "jls",
+          "bytes": 1363687,
+          "sha256": "38129e32c3a27c237628dcbf9b942e6ab35f52878c5e5a30d00e385bef89ab6c",
+          "retained": true,
+          "complete": true
+        },
+        "frame": {
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "near": 0,
+          "maxval": 65535,
+          "components": 1,
+          "scans": 1,
+          "interleave": 0,
+          "pointTransform": 0,
+          "mapping": false
+        },
+        "stages": {
+          "encode": "passed",
+          "decode": "passed",
+          "compare": "passed"
+        },
+        "samples": {
+          "total": 1036800,
+          "verified": 1036800,
+          "maxError": 0,
+          "errorBound": 0,
+          "unit": "sample"
+        },
+        "reference": {
+          "status": "not_run",
+          "name": null,
+          "version": null
+        },
+        "timing": {
+          "elapsedMs": 185.78070000000002,
+          "encodeMs": 91.283,
+          "decodeMs": 88.9332,
+          "compareMs": 5.5645000000000095,
+          "boundary": "SDK whole-image encode, strict decode and full-sample comparison. Input read, core load, hashing and artifact writes are outside the timer."
+        },
+        "memory": {
+          "encode": {
+            "scope": "sdk",
+            "corePayloadBytes": 19628,
+            "bridgeBufferPeakBytes": 163840,
+            "inputPayloadPeakBytes": 65536,
+            "outputPayloadPeakBytes": 2067,
+            "lastOutputQueueBytes": 0
+          },
+          "decode": {
+            "scope": "sdk",
+            "corePayloadBytes": 20387,
+            "bridgeBufferPeakBytes": 65536,
+            "inputPayloadPeakBytes": 32768,
+            "outputPayloadPeakBytes": 2880,
+            "lastOutputQueueBytes": 0
+          },
+          "host": null
+        },
+        "stream": {
+          "rowsDecoded": 720,
+          "rowsDelivered": 720,
+          "provisionalRows": 0,
+          "firstRowMs": 7.8459,
+          "firstRowInputConsumed": 404,
+          "trailingPolicy": "reject",
+          "strictEoi": true
+        },
+        "limits": {
+          "maxWidth": 65535,
+          "maxHeight": 65535,
+          "maxPixels": 100000000,
+          "maxMetadataBytes": 1048576,
+          "inputChunkSize": 32768,
+          "outputChunkSize": 32768
+        },
+        "physical": {
+          "unit": "m",
+          "quantity": "codec_added_elevation_error",
+          "errorBound": 0,
+          "maxError": 0
+        },
+        "unexecuted": [
+          "native",
+          "browser",
+          "worker",
+          "process_rss",
+          "independent_reference"
+        ]
+      },
+      "reconstructedSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+      "rawSamplesToJlsRatio": 1.520583535664709,
+      "maxErrorPixel": {
+        "x": 0,
+        "y": 0,
+        "original": 20000,
+        "reconstructed": 20000
+      }
+    },
+    {
+      "report": {
+        "schemaVersion": "moonjls.verification/1",
+        "runId": "c0d608de-c33e-4deb-9925-d79c00f99928",
+        "host": "fixture-runner",
+        "backend": "js",
+        "status": "passed",
+        "error": null,
+        "source": {
+          "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+          "dirty": false
+        },
+        "artifact": {
+          "name": "core.mjs",
+          "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+        },
+        "input": {
+          "name": "lola.pgm",
+          "format": "pgm",
+          "bytes": 2073618,
+          "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "provenance": {
+            "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+            "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+            "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+            "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+            "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+            "tiffBytes": 2076866,
+            "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+            "pgmBytes": 2073618,
+            "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+            "width": 1440,
+            "height": 720,
+            "bits": 16,
+            "sampleOffset": 20000,
+            "metersPerSample": 0.5,
+            "referenceRadiusMeters": 1737400,
+            "elevationUnit": "m"
+          }
+        },
+        "output": {
+          "name": "lola.jls",
+          "format": "jls",
+          "bytes": 1158560,
+          "sha256": "3251602938889ac3a0ac38d786aadace75788985ab8cd64f850fe38d5fc7160a",
+          "retained": true,
+          "complete": true
+        },
+        "frame": {
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "near": 1,
+          "maxval": 65535,
+          "components": 1,
+          "scans": 1,
+          "interleave": 0,
+          "pointTransform": 0,
+          "mapping": false
+        },
+        "stages": {
+          "encode": "passed",
+          "decode": "passed",
+          "compare": "passed"
+        },
+        "samples": {
+          "total": 1036800,
+          "verified": 1036800,
+          "maxError": 1,
+          "errorBound": 1,
+          "unit": "sample"
+        },
+        "reference": {
+          "status": "not_run",
+          "name": null,
+          "version": null
+        },
+        "timing": {
+          "elapsedMs": 162.82260000000002,
+          "encodeMs": 84.56690000000003,
+          "decodeMs": 76.95580000000001,
+          "compareMs": 1.2998999999999796,
+          "boundary": "SDK whole-image encode, strict decode and full-sample comparison. Input read, core load, hashing and artifact writes are outside the timer."
+        },
+        "memory": {
+          "encode": {
+            "scope": "sdk",
+            "corePayloadBytes": 19684,
+            "bridgeBufferPeakBytes": 163840,
+            "inputPayloadPeakBytes": 65536,
+            "outputPayloadPeakBytes": 1781,
+            "lastOutputQueueBytes": 0
+          },
+          "decode": {
+            "scope": "sdk",
+            "corePayloadBytes": 20443,
+            "bridgeBufferPeakBytes": 65536,
+            "inputPayloadPeakBytes": 32768,
+            "outputPayloadPeakBytes": 2880,
+            "lastOutputQueueBytes": 0
+          },
+          "host": null
+        },
+        "stream": {
+          "rowsDecoded": 720,
+          "rowsDelivered": 720,
+          "provisionalRows": 0,
+          "firstRowMs": 0.8584999999999923,
+          "firstRowInputConsumed": 319,
+          "trailingPolicy": "reject",
+          "strictEoi": true
+        },
+        "limits": {
+          "maxWidth": 65535,
+          "maxHeight": 65535,
+          "maxPixels": 100000000,
+          "maxMetadataBytes": 1048576,
+          "inputChunkSize": 32768,
+          "outputChunkSize": 32768
+        },
+        "physical": {
+          "unit": "m",
+          "quantity": "codec_added_elevation_error",
+          "errorBound": 0.5,
+          "maxError": 0.5
+        },
+        "unexecuted": [
+          "native",
+          "browser",
+          "worker",
+          "process_rss",
+          "independent_reference"
+        ]
+      },
+      "reconstructedSha256": "a6292e4695f2cdca63ab55c2e5153ae7ff7efe30d5b3646b0b20f6a7946f7e1c",
+      "rawSamplesToJlsRatio": 1.7898080375638723,
+      "maxErrorPixel": {
+        "x": 0,
+        "y": 0,
+        "original": 20000,
+        "reconstructed": 20001
+      }
+    },
+    {
+      "report": {
+        "schemaVersion": "moonjls.verification/1",
+        "runId": "0bdca4de-f72b-4525-bd17-66964e8975e0",
+        "host": "fixture-runner",
+        "backend": "js",
+        "status": "passed",
+        "error": null,
+        "source": {
+          "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+          "dirty": false
+        },
+        "artifact": {
+          "name": "core.mjs",
+          "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+        },
+        "input": {
+          "name": "lola.pgm",
+          "format": "pgm",
+          "bytes": 2073618,
+          "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "provenance": {
+            "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+            "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+            "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+            "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+            "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+            "tiffBytes": 2076866,
+            "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+            "pgmBytes": 2073618,
+            "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+            "width": 1440,
+            "height": 720,
+            "bits": 16,
+            "sampleOffset": 20000,
+            "metersPerSample": 0.5,
+            "referenceRadiusMeters": 1737400,
+            "elevationUnit": "m"
+          }
+        },
+        "output": {
+          "name": "lola.jls",
+          "format": "jls",
+          "bytes": 1063351,
+          "sha256": "0ee4a795713bca0664691b4b2eb60026b2386e7fc6ec25de0ae8f03271925649",
+          "retained": true,
+          "complete": true
+        },
+        "frame": {
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "near": 2,
+          "maxval": 65535,
+          "components": 1,
+          "scans": 1,
+          "interleave": 0,
+          "pointTransform": 0,
+          "mapping": false
+        },
+        "stages": {
+          "encode": "passed",
+          "decode": "passed",
+          "compare": "passed"
+        },
+        "samples": {
+          "total": 1036800,
+          "verified": 1036800,
+          "maxError": 2,
+          "errorBound": 2,
+          "unit": "sample"
+        },
+        "reference": {
+          "status": "not_run",
+          "name": null,
+          "version": null
+        },
+        "timing": {
+          "elapsedMs": 145.9907,
+          "encodeMs": 76.82570000000004,
+          "decodeMs": 57.54259999999999,
+          "compareMs": 11.62239999999997,
+          "boundary": "SDK whole-image encode, strict decode and full-sample comparison. Input read, core load, hashing and artifact writes are outside the timer."
+        },
+        "memory": {
+          "encode": {
+            "scope": "sdk",
+            "corePayloadBytes": 19740,
+            "bridgeBufferPeakBytes": 163840,
+            "inputPayloadPeakBytes": 65536,
+            "outputPayloadPeakBytes": 1650,
+            "lastOutputQueueBytes": 0
+          },
+          "decode": {
+            "scope": "sdk",
+            "corePayloadBytes": 20499,
+            "bridgeBufferPeakBytes": 65536,
+            "inputPayloadPeakBytes": 32768,
+            "outputPayloadPeakBytes": 2880,
+            "lastOutputQueueBytes": 0
+          },
+          "host": null
+        },
+        "stream": {
+          "rowsDecoded": 720,
+          "rowsDelivered": 720,
+          "provisionalRows": 0,
+          "firstRowMs": 0.36799999999993815,
+          "firstRowInputConsumed": 298,
+          "trailingPolicy": "reject",
+          "strictEoi": true
+        },
+        "limits": {
+          "maxWidth": 65535,
+          "maxHeight": 65535,
+          "maxPixels": 100000000,
+          "maxMetadataBytes": 1048576,
+          "inputChunkSize": 32768,
+          "outputChunkSize": 32768
+        },
+        "physical": {
+          "unit": "m",
+          "quantity": "codec_added_elevation_error",
+          "errorBound": 1,
+          "maxError": 1
+        },
+        "unexecuted": [
+          "native",
+          "browser",
+          "worker",
+          "process_rss",
+          "independent_reference"
+        ]
+      },
+      "reconstructedSha256": "e4f2eb0d2c599cc3d3ce9a0ef4ad73ee520d90164457e1752cec0ba605dd252c",
+      "rawSamplesToJlsRatio": 1.9500616447438335,
+      "maxErrorPixel": {
+        "x": 722,
+        "y": 0,
+        "original": 19764,
+        "reconstructed": 19762
+      }
+    },
+    {
+      "report": {
+        "schemaVersion": "moonjls.verification/1",
+        "runId": "eacf91ed-4185-4a23-898d-086dd7b2cb9a",
+        "host": "fixture-runner",
+        "backend": "js",
+        "status": "passed",
+        "error": null,
+        "source": {
+          "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+          "dirty": false
+        },
+        "artifact": {
+          "name": "core.mjs",
+          "sha256": "311bd8d17cccb6afa9734b301a8a2519a4846b221002b855ed1d0e19f5762d97"
+        },
+        "input": {
+          "name": "lola.pgm",
+          "format": "pgm",
+          "bytes": 2073618,
+          "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "provenance": {
+            "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+            "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+            "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+            "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+            "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+            "tiffBytes": 2076866,
+            "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+            "pgmBytes": 2073618,
+            "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+            "width": 1440,
+            "height": 720,
+            "bits": 16,
+            "sampleOffset": 20000,
+            "metersPerSample": 0.5,
+            "referenceRadiusMeters": 1737400,
+            "elevationUnit": "m"
+          }
+        },
+        "output": {
+          "name": "lola.jls",
+          "format": "jls",
+          "bytes": 999459,
+          "sha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+          "retained": true,
+          "complete": true
+        },
+        "frame": {
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "near": 3,
+          "maxval": 65535,
+          "components": 1,
+          "scans": 1,
+          "interleave": 0,
+          "pointTransform": 0,
+          "mapping": false
+        },
+        "stages": {
+          "encode": "passed",
+          "decode": "passed",
+          "compare": "passed"
+        },
+        "samples": {
+          "total": 1036800,
+          "verified": 1036800,
+          "maxError": 3,
+          "errorBound": 3,
+          "unit": "sample"
+        },
+        "reference": {
+          "status": "not_run",
+          "name": null,
+          "version": null
+        },
+        "timing": {
+          "elapsedMs": 148.49419999999998,
+          "encodeMs": 76.9651,
+          "decodeMs": 60.82349999999997,
+          "compareMs": 10.705600000000004,
+          "boundary": "SDK whole-image encode, strict decode and full-sample comparison. Input read, core load, hashing and artifact writes are outside the timer."
+        },
+        "memory": {
+          "encode": {
+            "scope": "sdk",
+            "corePayloadBytes": 19796,
+            "bridgeBufferPeakBytes": 163840,
+            "inputPayloadPeakBytes": 65536,
+            "outputPayloadPeakBytes": 1560,
+            "lastOutputQueueBytes": 0
+          },
+          "decode": {
+            "scope": "sdk",
+            "corePayloadBytes": 20555,
+            "bridgeBufferPeakBytes": 65536,
+            "inputPayloadPeakBytes": 32768,
+            "outputPayloadPeakBytes": 2880,
+            "lastOutputQueueBytes": 0
+          },
+          "host": null
+        },
+        "stream": {
+          "rowsDecoded": 720,
+          "rowsDelivered": 720,
+          "provisionalRows": 0,
+          "firstRowMs": 0.947400000000016,
+          "firstRowInputConsumed": 287,
+          "trailingPolicy": "reject",
+          "strictEoi": true
+        },
+        "limits": {
+          "maxWidth": 65535,
+          "maxHeight": 65535,
+          "maxPixels": 100000000,
+          "maxMetadataBytes": 1048576,
+          "inputChunkSize": 32768,
+          "outputChunkSize": 32768
+        },
+        "physical": {
+          "unit": "m",
+          "quantity": "codec_added_elevation_error",
+          "errorBound": 1.5,
+          "maxError": 1.5
+        },
+        "unexecuted": [
+          "native",
+          "browser",
+          "worker",
+          "process_rss",
+          "independent_reference"
+        ]
+      },
+      "reconstructedSha256": "0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002",
+      "rawSamplesToJlsRatio": 2.074722424831834,
+      "maxErrorPixel": {
+        "x": 725,
+        "y": 0,
+        "original": 19773,
+        "reconstructed": 19776
+      }
+    },
+    {
+      "report": {
+        "schemaVersion": "moonjls.verification/1",
+        "runId": "e08a7b9d-5e7b-4024-9780-fe41f7b942f0",
+        "host": "fixture-runner",
+        "backend": "wasm-gc",
+        "status": "passed",
+        "error": null,
+        "source": {
+          "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+          "dirty": false
+        },
+        "artifact": {
+          "name": "core.wasm",
+          "sha256": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c"
+        },
+        "input": {
+          "name": "lola.pgm",
+          "format": "pgm",
+          "bytes": 2073618,
+          "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "provenance": {
+            "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+            "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+            "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+            "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+            "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+            "tiffBytes": 2076866,
+            "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+            "pgmBytes": 2073618,
+            "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+            "width": 1440,
+            "height": 720,
+            "bits": 16,
+            "sampleOffset": 20000,
+            "metersPerSample": 0.5,
+            "referenceRadiusMeters": 1737400,
+            "elevationUnit": "m"
+          }
+        },
+        "output": {
+          "name": "lola.jls",
+          "format": "jls",
+          "bytes": 1363687,
+          "sha256": "38129e32c3a27c237628dcbf9b942e6ab35f52878c5e5a30d00e385bef89ab6c",
+          "retained": true,
+          "complete": true
+        },
+        "frame": {
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "near": 0,
+          "maxval": 65535,
+          "components": 1,
+          "scans": 1,
+          "interleave": 0,
+          "pointTransform": 0,
+          "mapping": false
+        },
+        "stages": {
+          "encode": "passed",
+          "decode": "passed",
+          "compare": "passed"
+        },
+        "samples": {
+          "total": 1036800,
+          "verified": 1036800,
+          "maxError": 0,
+          "errorBound": 0,
+          "unit": "sample"
+        },
+        "reference": {
+          "status": "not_run",
+          "name": null,
+          "version": null
+        },
+        "timing": {
+          "elapsedMs": 119.46500000000003,
+          "encodeMs": 60.279399999999896,
+          "decodeMs": 57.474000000000046,
+          "compareMs": 1.7116000000000895,
+          "boundary": "SDK whole-image encode, strict decode and full-sample comparison. Input read, core load, hashing and artifact writes are outside the timer."
+        },
+        "memory": {
+          "encode": {
+            "scope": "sdk",
+            "corePayloadBytes": 19628,
+            "bridgeBufferPeakBytes": 163840,
+            "inputPayloadPeakBytes": 65536,
+            "outputPayloadPeakBytes": 2067,
+            "lastOutputQueueBytes": 0
+          },
+          "decode": {
+            "scope": "sdk",
+            "corePayloadBytes": 20387,
+            "bridgeBufferPeakBytes": 65536,
+            "inputPayloadPeakBytes": 32768,
+            "outputPayloadPeakBytes": 2880,
+            "lastOutputQueueBytes": 0
+          },
+          "host": null
+        },
+        "stream": {
+          "rowsDecoded": 720,
+          "rowsDelivered": 720,
+          "provisionalRows": 0,
+          "firstRowMs": 2.132000000000062,
+          "firstRowInputConsumed": 404,
+          "trailingPolicy": "reject",
+          "strictEoi": true
+        },
+        "limits": {
+          "maxWidth": 65535,
+          "maxHeight": 65535,
+          "maxPixels": 100000000,
+          "maxMetadataBytes": 1048576,
+          "inputChunkSize": 32768,
+          "outputChunkSize": 32768
+        },
+        "physical": {
+          "unit": "m",
+          "quantity": "codec_added_elevation_error",
+          "errorBound": 0,
+          "maxError": 0
+        },
+        "unexecuted": [
+          "native",
+          "browser",
+          "worker",
+          "process_rss",
+          "independent_reference"
+        ]
+      },
+      "reconstructedSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+      "rawSamplesToJlsRatio": 1.520583535664709,
+      "maxErrorPixel": {
+        "x": 0,
+        "y": 0,
+        "original": 20000,
+        "reconstructed": 20000
+      }
+    },
+    {
+      "report": {
+        "schemaVersion": "moonjls.verification/1",
+        "runId": "b06c5dec-0e76-475c-8d04-a1f778888a6b",
+        "host": "fixture-runner",
+        "backend": "wasm-gc",
+        "status": "passed",
+        "error": null,
+        "source": {
+          "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+          "dirty": false
+        },
+        "artifact": {
+          "name": "core.wasm",
+          "sha256": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c"
+        },
+        "input": {
+          "name": "lola.pgm",
+          "format": "pgm",
+          "bytes": 2073618,
+          "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "provenance": {
+            "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+            "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+            "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+            "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+            "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+            "tiffBytes": 2076866,
+            "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+            "pgmBytes": 2073618,
+            "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+            "width": 1440,
+            "height": 720,
+            "bits": 16,
+            "sampleOffset": 20000,
+            "metersPerSample": 0.5,
+            "referenceRadiusMeters": 1737400,
+            "elevationUnit": "m"
+          }
+        },
+        "output": {
+          "name": "lola.jls",
+          "format": "jls",
+          "bytes": 1158560,
+          "sha256": "3251602938889ac3a0ac38d786aadace75788985ab8cd64f850fe38d5fc7160a",
+          "retained": true,
+          "complete": true
+        },
+        "frame": {
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "near": 1,
+          "maxval": 65535,
+          "components": 1,
+          "scans": 1,
+          "interleave": 0,
+          "pointTransform": 0,
+          "mapping": false
+        },
+        "stages": {
+          "encode": "passed",
+          "decode": "passed",
+          "compare": "passed"
+        },
+        "samples": {
+          "total": 1036800,
+          "verified": 1036800,
+          "maxError": 1,
+          "errorBound": 1,
+          "unit": "sample"
+        },
+        "reference": {
+          "status": "not_run",
+          "name": null,
+          "version": null
+        },
+        "timing": {
+          "elapsedMs": 96.07670000000007,
+          "encodeMs": 47.37819999999988,
+          "decodeMs": 47.568700000000035,
+          "compareMs": 1.1298000000001593,
+          "boundary": "SDK whole-image encode, strict decode and full-sample comparison. Input read, core load, hashing and artifact writes are outside the timer."
+        },
+        "memory": {
+          "encode": {
+            "scope": "sdk",
+            "corePayloadBytes": 19684,
+            "bridgeBufferPeakBytes": 163840,
+            "inputPayloadPeakBytes": 65536,
+            "outputPayloadPeakBytes": 1781,
+            "lastOutputQueueBytes": 0
+          },
+          "decode": {
+            "scope": "sdk",
+            "corePayloadBytes": 20443,
+            "bridgeBufferPeakBytes": 65536,
+            "inputPayloadPeakBytes": 32768,
+            "outputPayloadPeakBytes": 2880,
+            "lastOutputQueueBytes": 0
+          },
+          "host": null
+        },
+        "stream": {
+          "rowsDecoded": 720,
+          "rowsDelivered": 720,
+          "provisionalRows": 0,
+          "firstRowMs": 0.1411000000000513,
+          "firstRowInputConsumed": 319,
+          "trailingPolicy": "reject",
+          "strictEoi": true
+        },
+        "limits": {
+          "maxWidth": 65535,
+          "maxHeight": 65535,
+          "maxPixels": 100000000,
+          "maxMetadataBytes": 1048576,
+          "inputChunkSize": 32768,
+          "outputChunkSize": 32768
+        },
+        "physical": {
+          "unit": "m",
+          "quantity": "codec_added_elevation_error",
+          "errorBound": 0.5,
+          "maxError": 0.5
+        },
+        "unexecuted": [
+          "native",
+          "browser",
+          "worker",
+          "process_rss",
+          "independent_reference"
+        ]
+      },
+      "reconstructedSha256": "a6292e4695f2cdca63ab55c2e5153ae7ff7efe30d5b3646b0b20f6a7946f7e1c",
+      "rawSamplesToJlsRatio": 1.7898080375638723,
+      "maxErrorPixel": {
+        "x": 0,
+        "y": 0,
+        "original": 20000,
+        "reconstructed": 20001
+      }
+    },
+    {
+      "report": {
+        "schemaVersion": "moonjls.verification/1",
+        "runId": "5acd44aa-8e88-465f-9dd2-070f0fffa815",
+        "host": "fixture-runner",
+        "backend": "wasm-gc",
+        "status": "passed",
+        "error": null,
+        "source": {
+          "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+          "dirty": false
+        },
+        "artifact": {
+          "name": "core.wasm",
+          "sha256": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c"
+        },
+        "input": {
+          "name": "lola.pgm",
+          "format": "pgm",
+          "bytes": 2073618,
+          "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "provenance": {
+            "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+            "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+            "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+            "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+            "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+            "tiffBytes": 2076866,
+            "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+            "pgmBytes": 2073618,
+            "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+            "width": 1440,
+            "height": 720,
+            "bits": 16,
+            "sampleOffset": 20000,
+            "metersPerSample": 0.5,
+            "referenceRadiusMeters": 1737400,
+            "elevationUnit": "m"
+          }
+        },
+        "output": {
+          "name": "lola.jls",
+          "format": "jls",
+          "bytes": 1063351,
+          "sha256": "0ee4a795713bca0664691b4b2eb60026b2386e7fc6ec25de0ae8f03271925649",
+          "retained": true,
+          "complete": true
+        },
+        "frame": {
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "near": 2,
+          "maxval": 65535,
+          "components": 1,
+          "scans": 1,
+          "interleave": 0,
+          "pointTransform": 0,
+          "mapping": false
+        },
+        "stages": {
+          "encode": "passed",
+          "decode": "passed",
+          "compare": "passed"
+        },
+        "samples": {
+          "total": 1036800,
+          "verified": 1036800,
+          "maxError": 2,
+          "errorBound": 2,
+          "unit": "sample"
+        },
+        "reference": {
+          "status": "not_run",
+          "name": null,
+          "version": null
+        },
+        "timing": {
+          "elapsedMs": 90.67060000000015,
+          "encodeMs": 44.50040000000013,
+          "decodeMs": 45.09619999999995,
+          "compareMs": 1.0740000000000691,
+          "boundary": "SDK whole-image encode, strict decode and full-sample comparison. Input read, core load, hashing and artifact writes are outside the timer."
+        },
+        "memory": {
+          "encode": {
+            "scope": "sdk",
+            "corePayloadBytes": 19740,
+            "bridgeBufferPeakBytes": 163840,
+            "inputPayloadPeakBytes": 65536,
+            "outputPayloadPeakBytes": 1650,
+            "lastOutputQueueBytes": 0
+          },
+          "decode": {
+            "scope": "sdk",
+            "corePayloadBytes": 20499,
+            "bridgeBufferPeakBytes": 65536,
+            "inputPayloadPeakBytes": 32768,
+            "outputPayloadPeakBytes": 2880,
+            "lastOutputQueueBytes": 0
+          },
+          "host": null
+        },
+        "stream": {
+          "rowsDecoded": 720,
+          "rowsDelivered": 720,
+          "provisionalRows": 0,
+          "firstRowMs": 0.14470000000005712,
+          "firstRowInputConsumed": 298,
+          "trailingPolicy": "reject",
+          "strictEoi": true
+        },
+        "limits": {
+          "maxWidth": 65535,
+          "maxHeight": 65535,
+          "maxPixels": 100000000,
+          "maxMetadataBytes": 1048576,
+          "inputChunkSize": 32768,
+          "outputChunkSize": 32768
+        },
+        "physical": {
+          "unit": "m",
+          "quantity": "codec_added_elevation_error",
+          "errorBound": 1,
+          "maxError": 1
+        },
+        "unexecuted": [
+          "native",
+          "browser",
+          "worker",
+          "process_rss",
+          "independent_reference"
+        ]
+      },
+      "reconstructedSha256": "e4f2eb0d2c599cc3d3ce9a0ef4ad73ee520d90164457e1752cec0ba605dd252c",
+      "rawSamplesToJlsRatio": 1.9500616447438335,
+      "maxErrorPixel": {
+        "x": 722,
+        "y": 0,
+        "original": 19764,
+        "reconstructed": 19762
+      }
+    },
+    {
+      "report": {
+        "schemaVersion": "moonjls.verification/1",
+        "runId": "f25ec848-9958-4edb-aae1-01a12e6204d0",
+        "host": "fixture-runner",
+        "backend": "wasm-gc",
+        "status": "passed",
+        "error": null,
+        "source": {
+          "revision": "da0b52d9992c956608039ce0d29060b5eeed2e84",
+          "dirty": false
+        },
+        "artifact": {
+          "name": "core.wasm",
+          "sha256": "783d155a93e55e2b9c0d65e2f3cd0648065cecf6d01800d5819dacf86848fb5c"
+        },
+        "input": {
+          "name": "lola.pgm",
+          "format": "pgm",
+          "bytes": 2073618,
+          "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "provenance": {
+            "id": "nasa-svs-cgi-moon-kit-lola-ldem-4-uint",
+            "title": "NASA CGI Moon Kit · LOLA lunar elevation",
+            "sourcePage": "https://svs.gsfc.nasa.gov/4720/#displacement",
+            "sourceUrl": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/ldem_4_uint.tif",
+            "credit": "NASA Scientific Visualization Studio, Lunar Reconnaissance Orbiter LOLA team, and Ernie Wright",
+            "tiffBytes": 2076866,
+            "tiffSha256": "e6668bec27fc9b8fbb02d198c7ddfb08eedeeb790167b494f95e6b34201da05e",
+            "pgmBytes": 2073618,
+            "pgmSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+            "width": 1440,
+            "height": 720,
+            "bits": 16,
+            "sampleOffset": 20000,
+            "metersPerSample": 0.5,
+            "referenceRadiusMeters": 1737400,
+            "elevationUnit": "m"
+          }
+        },
+        "output": {
+          "name": "lola.jls",
+          "format": "jls",
+          "bytes": 999459,
+          "sha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+          "retained": true,
+          "complete": true
+        },
+        "frame": {
+          "width": 1440,
+          "height": 720,
+          "bits": 16,
+          "near": 3,
+          "maxval": 65535,
+          "components": 1,
+          "scans": 1,
+          "interleave": 0,
+          "pointTransform": 0,
+          "mapping": false
+        },
+        "stages": {
+          "encode": "passed",
+          "decode": "passed",
+          "compare": "passed"
+        },
+        "samples": {
+          "total": 1036800,
+          "verified": 1036800,
+          "maxError": 3,
+          "errorBound": 3,
+          "unit": "sample"
+        },
+        "reference": {
+          "status": "not_run",
+          "name": null,
+          "version": null
+        },
+        "timing": {
+          "elapsedMs": 92.12419999999997,
+          "encodeMs": 45.76749999999993,
+          "decodeMs": 45.25729999999999,
+          "compareMs": 1.0994000000000597,
+          "boundary": "SDK whole-image encode, strict decode and full-sample comparison. Input read, core load, hashing and artifact writes are outside the timer."
+        },
+        "memory": {
+          "encode": {
+            "scope": "sdk",
+            "corePayloadBytes": 19796,
+            "bridgeBufferPeakBytes": 163840,
+            "inputPayloadPeakBytes": 65536,
+            "outputPayloadPeakBytes": 1560,
+            "lastOutputQueueBytes": 0
+          },
+          "decode": {
+            "scope": "sdk",
+            "corePayloadBytes": 20555,
+            "bridgeBufferPeakBytes": 65536,
+            "inputPayloadPeakBytes": 32768,
+            "outputPayloadPeakBytes": 2880,
+            "lastOutputQueueBytes": 0
+          },
+          "host": null
+        },
+        "stream": {
+          "rowsDecoded": 720,
+          "rowsDelivered": 720,
+          "provisionalRows": 0,
+          "firstRowMs": 0.13840000000004693,
+          "firstRowInputConsumed": 287,
+          "trailingPolicy": "reject",
+          "strictEoi": true
+        },
+        "limits": {
+          "maxWidth": 65535,
+          "maxHeight": 65535,
+          "maxPixels": 100000000,
+          "maxMetadataBytes": 1048576,
+          "inputChunkSize": 32768,
+          "outputChunkSize": 32768
+        },
+        "physical": {
+          "unit": "m",
+          "quantity": "codec_added_elevation_error",
+          "errorBound": 1.5,
+          "maxError": 1.5
+        },
+        "unexecuted": [
+          "native",
+          "browser",
+          "worker",
+          "process_rss",
+          "independent_reference"
+        ]
+      },
+      "reconstructedSha256": "0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002",
+      "rawSamplesToJlsRatio": 2.074722424831834,
+      "maxErrorPixel": {
+        "x": 725,
+        "y": 0,
+        "original": 19773,
+        "reconstructed": 19776
+      }
+    }
+  ]
+}
