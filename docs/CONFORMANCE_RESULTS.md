@@ -1,44 +1,53 @@
-# T.87 Annex E 验证结果
+# T.87 Annex E 与 M2 独立验证结果
 
-2026-11-25（新加坡时间）。在固定 M2 源码 `fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44` 上，运行了 Annex E Table E.2 全部 12 条官方流。JS、Wasm GC、WSL Native 各有四条编码通过、四条解码通过。其余八条多分量流在三后端均按当前范围返回 `UnsupportedFeature`。这些多分量模式的编码未运行。
+状态日期：**2026-11-25**。受测 M2 产品源码固定为 [`fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44`](https://github.com/ZSY2221/moon_jpegls/commit/fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44)（M2 证据冻结提交 [`a7d8c39`](https://github.com/ZSY2221/moon_jpegls/commit/a7d8c391b7af0d88bc5c912ed62c78eaf4c79565)）。下文完整列示官方 Annex E Table E.2 全部 12 条测试流、历史失败与修复记录，以及本机全量运行与 GitHub Actions CI 自动运行的准确区别。
 
-| 用例 | 官方码流 | P / NEAR | 数据路径 | 编码（JS、Wasm GC、Native） | 解码（JS、Wasm GC、Native） |
-| --- | --- | --- | --- | --- | --- |
-| E.2-1 | `T8C0E0.JLS` | 8 / 0 | 三分量、分离扫描 | 未运行 | 预期 `UnsupportedFeature` |
-| E.2-2 | `T8C1E0.JLS` | 8 / 0 | 三分量、行交错 | 未运行 | 预期 `UnsupportedFeature` |
-| E.2-3 | `T8C2E0.JLS` | 8 / 0 | 三分量、样本交错 | 未运行 | 预期 `UnsupportedFeature` |
-| E.2-4 | `T8C0E3.JLS` | 8 / 3 | 三分量、分离扫描 | 未运行 | 预期 `UnsupportedFeature` |
-| E.2-5 | `T8C1E3.JLS` | 8 / 3 | 三分量、行交错 | 未运行 | 预期 `UnsupportedFeature` |
-| E.2-6 | `T8C2E3.JLS` | 8 / 3 | 三分量、样本交错 | 未运行 | 预期 `UnsupportedFeature` |
-| E.2-7 | `T8SSE0.JLS` | 8 / 0 | 三分量、子采样和行交错 | 未运行 | 预期 `UnsupportedFeature` |
-| E.2-8 | `T8SSE3.JLS` | 8 / 3 | 三分量、子采样和行交错 | 未运行 | 预期 `UnsupportedFeature` |
-| E.2-9 | `T8NDE0.JLS` | 8 / 0 | `TEST8BS2`，T1=T2=T3=9，RESET=31 | 通过，最大误差 0 | 通过，16,384 个样本一致 |
-| E.2-10 | `T8NDE3.JLS` | 8 / 3 | `TEST8BS2`，T1=T2=T3=9，RESET=31 | 通过，最大误差 3 | 通过，16,384 个样本一致 |
-| E.2-11 | `T16E0.JLS` | 12 / 0 | `TEST16`，有效精度 12 位，默认预置 | 通过，最大误差 0 | 通过，65,536 个样本一致 |
-| E.2-12 | `T16E3.JLS` | 12 / 3 | `TEST16`，有效精度 12 位，默认预置 | 通过，最大误差 3 | 通过，65,536 个样本一致 |
+## 1. 官方 Annex E Table E.2 逐项结果（全部 12 条流）
 
-## 实跑与判定
+| 用例 | 官方码流 | P / NEAR | 数据路径与标准特征 | 编码（JS / Wasm GC / Native） | 解码（JS / Wasm GC / Native） | 后续目标阶段 |
+| --- | --- | --- | --- | --- | --- | --- |
+| **E.2-1** | `T8C0E0.JLS` | 8 / 0 | 三分量、分离扫描（`ILV=0`） | `not_run` | 预期 `UnsupportedFeature` | **M3-A**（2026-12-10） |
+| **E.2-2** | `T8C1E0.JLS` | 8 / 0 | 三分量、行交错（`ILV=1`） | `not_run` | 预期 `UnsupportedFeature` | **M3-B**（2026-12-25） |
+| **E.2-3** | `T8C2E0.JLS` | 8 / 0 | 三分量、样本交错（`ILV=2`） | `not_run` | 预期 `UnsupportedFeature` | **M3-B**（2026-12-25） |
+| **E.2-4** | `T8C0E3.JLS` | 8 / 3 | 三分量、分离扫描（`ILV=0`） | `not_run` | 预期 `UnsupportedFeature` | **M3-A**（2026-12-10） |
+| **E.2-5** | `T8C1E3.JLS` | 8 / 3 | 三分量、行交错（`ILV=1`） | `not_run` | 预期 `UnsupportedFeature` | **M3-B**（2026-12-25） |
+| **E.2-6** | `T8C2E3.JLS` | 8 / 3 | 三分量、样本交错（`ILV=2`） | `not_run` | 预期 `UnsupportedFeature` | **M3-B**（2026-12-25） |
+| **E.2-7** | `T8SSE0.JLS` | 8 / 0 | 三分量、子采样与行交错 | `not_run` | 预期 `UnsupportedFeature` | **M3-B**（2026-12-25） |
+| **E.2-8** | `T8SSE3.JLS` | 8 / 3 | 三分量、子采样与行交错 | `not_run` | 预期 `UnsupportedFeature` | **M3-B**（2026-12-25） |
+| **E.2-9** | `T8NDE0.JLS` | 8 / 0 | `TEST8BS2`，`T1=T2=T3=9, RESET=31` | **`passed`**（最大误差 0，3 后端编码均与官方流逐字节一致） | **`passed`**（16,384 样本与参考一致） | **M2 已验收** |
+| **E.2-10** | `T8NDE3.JLS` | 8 / 3 | `TEST8BS2`，`T1=T2=T3=9, RESET=31` | **`passed`**（最大误差 3，3 后端编码均与官方流逐字节一致） | **`passed`**（16,384 样本与参考一致） | **M2 已验收** |
+| **E.2-11** | `T16E0.JLS` | 12 / 0 | `TEST16`，有效精度 12 位，默认预设 | **`passed`**（最大误差 0，3 后端编码均与官方流逐字节一致） | **`passed`**（65,536 样本与参考一致） | **M2 已验收** |
+| **E.2-12** | `T16E3.JLS` | 12 / 3 | `TEST16`，有效精度 12 位，默认预设 | **`passed`**（最大误差 3，3 后端编码均与官方流逐字节一致） | **`passed`**（65,536 样本与参考一致） | **M2 已验收** |
 
-- §8.2 编码用官方 PGM 原图生成 MoonJLS 码流，由参考程序解码。NEAR=0 的重建对拍原图，NEAR>0 的重建对拍同一参考程序对官方流的重建，另核验相对原图的整数误差界。当前四个配置的三个后端还分别生成了与官方文件逐字节相同的码流。
-- §8.3 解码用字节和 SHA-256 均核验的官方 `.JLS`，逐样本比较独立参考重建。在支持的四个用例中，JS、Wasm GC、Native 各匹配 163,840 个样本。多分量流的拒绝记录只用于范围边界。
-- 官方软件轮使用 ITU-T 附件中的 HP JPEG-LS reference software 1.00，32 位 Windows 程序分别调用 `locod.exe`、`nlocod.exe`、`loco16d.exe` 和 `nloco16d.exe`。另以 `@team-charls/charls-wasm@0.10.0` 独立重测，得到相同的编码／解码结论。 [HP 实跑](../reports/t87-m2-20261125/annex-e-hp.json) · [CharLS 实跑](../reports/t87-m2-20261125/annex-e-charls.json)
-- 初次运行的自定义 LSE1 输出以 0 请求默认 MAXVAL。HP 1.00 将它当作字母表大小 1，导致 E.2-9／10 的六个参考解码请求失败。改成在实际输出的 LSE1 明示全部解析后的值后，六项通过。MoonJLS 继续接收 Annex C 允许的零默认字段。 [初次失败](../reports/t87-m2-20261125/annex-e-hp-initial.json) · [LSE 生成](../core/bits.mbt)
+## 2. 实跑细节、历史初次失败与工具限制
 
-Annex E 表只覆盖测试所列条件。M2 的独立合成矩阵另验证 388 个有效配置、18 项码流变体、7 项非法编码输入和 6 项 Native PGM 检查。参考结果区分历史 HP 程序直接处理、等价头适配和独立计算的 Annex A 小向量。完整 Part 1 继续覆盖多分量、采样、点变换、映射、简略格式、重启、DNL 和剩余语法。 [M2 合成矩阵](../reports/t87-m2-20261125/synthetic-matrix.md) · [机器可读矩阵](../tests/conformance/manifest.json) · [完整验收计划](T87_CONFORMANCE_PLAN.md)
+- **§8.2 编码验收**：以官方 PGM 原图经 MoonJLS 编码后交由独立参考解码；`NEAR=0` 比对原图，`NEAR>0` 比对同一参考解码器对官方 `.JLS` 的重建，并验证相对原图的整数误差界。`E.2-9` 至 `E.2-12` 在 JS、Wasm GC、Native 产生的全部 **12 次候选编码均与官方 `.JLS` 文件逐字节一致**。
+- **§8.3 解码验收**：直接输入 SHA-256 核验后的官方 `.JLS` 码流，`E.2-9` 至 `E.2-12` 在三后端各匹配 **163,840 个样本**。`E.2-1` 至 `E.2-8` 的拒绝仅代表 M2 单分量范围边界已正确守住，**不**表示已支持多分量功能。
+- **双独立参考核对**：官方 HP JPEG-LS Reference Software 1.00（32 位 Windows 程序 `locod.exe` / `nlocod.exe` / `loco16d.exe` / `nloco16d.exe`）与 `@team-charls/charls-wasm@0.10.0` 各自得出完全一致的编码与解码结论。 [HP 实跑记录](../reports/t87-m2-20261125/annex-e-hp.json) · [CharLS 实跑记录](../reports/t87-m2-20261125/annex-e-charls.json)
+- **保留历史初次 HP 失败记录**：初次测试自定义 `LSE1` 时，编码器按 `MAXVAL=0`（Annex C 哨兵默认值）输出 `LSE1` 字段，HP 1.00 将 `0` 误解析为字母表大小 `1`，导致 `E.2-9` 与 `E.2-10` 共 **6 个参考解码请求失败**（见 [初次失败归档](../reports/t87-m2-20261125/annex-e-hp-initial.json)）。将 [`core/bits.mbt`](../core/bits.mbt) 改为写出 `LSE1` 时明示解析后的实际 `MAXVAL/T1/T2/T3/RESET` 后全部通过；同时 MoonJLS 解码器仍保留对 Annex C 允许的零默认字段的完整兼容。
+- **其他非 Annex E 独立证据与局限**：
+  - **M2 本机合成矩阵（388 正例 + 18 LSE 变体 + 7 非法编码 + 6 Native PGM）**：由于 HP 1.00 拒绝 `MAXVAL=1,2` 且低 `MAXVAL` 默认阈值与 T.87 公式有差异，而 CharLS 2.4.5 部分参数路径与满量程耦合，因此本机矩阵综合采用 HP 1.00（原样或保持熵段的等效头部适配）与 T.87 Annex A 独立推导 `1×1` 位流向量。详见 [synthetic-matrix.md](../reports/t87-m2-20261125/synthetic-matrix.md)。
+  - **历史满量程 NEAR 640 组回归**：固定二进制复跑 **640/640** 通过，但仅限满量程 8/12/16 位 NEAR，不是 M2 全参数空间笛卡尔积。 [p1-near-regression.json](../reports/t87-m2-20261125/p1-near-regression.json)
 
-## 复跑
+## 3. GitHub Actions CI vs. 本机完整复跑范围区分
 
-从 ITU-T T.87 英文 PDF ZIP 中取出 `jlsimgV100.zip` 和 `jlsrefV100.zip`，分别解入 `.tools/annex-e` 和 `.tools/annex-e-hp`。官方数据、参考程序及其许可留在本地。数据和程序的归档及使用项 SHA-256 均记录在 [manifest](../tests/conformance/manifest.json)。 [ITU 下载与附件](https://www.itu.int/rec/T-REC-T.87-199806-I/en)
+- **GitHub Actions CI（[verification.yml](../.github/workflows/verification.yml)）每次运行**：
+  - 三后端 15/15 核心白盒测试、Native 行交付与尾部矩阵、Worker/SDK/TS 严格类型检查；
+  - `node scripts/validate_annex_e.mjs --check-manifest`（**仅校验清单字段与哈希格式，不在 CI 上运行 ITU 12 条官方流编解码**）；
+  - `node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY"`（在三后端实际运行固定 SHA-256 的 **12 组独立 HP/Annex A 黄金正例 + 18 个 LSE 变体 + 7 个非法编码 + 4 项 Native PGM 检查**，夹具来源 [`tests/conformance/m2_golden/`](../tests/conformance/m2_golden/README.md)）；
+  - `scripts/validate.py --near-matrix`（历史 **640 组**满量程 NEAR 双向互操作）。
+- **需在本机额外获取 ITU 官方附件后复跑**：
+  - 完整 12 条官方 Annex E 编解码验证（需要从 [ITU-T T.87 页面](https://www.itu.int/rec/T-REC-T.87-199806-I/en) 下载的 `jlsimgV100.zip` 与 `jlsrefV100.zip`）；
+  - 完整 **388 组** M2 合成矩阵（`scripts/test_m2.py`）。
 
-使用 Moon `0.1.20261119`、`moonc v0.10.22+124d61d05`、Node `24.20.0`。Native 环境为 Ubuntu 22.04 WSL2 与 Clang。以下命令在 Windows PowerShell 仓库根执行。
+## 4. 本机完整复跑命令（Windows PowerShell + WSL2）
+
+将官方 `jlsimgV100.zip` 和 `jlsrefV100.zip` 分别解压至 `.tools/annex-e` 和 `.tools/annex-e-hp`（SHA-256 均在 [manifest.json](../tests/conformance/manifest.json) 登记）：
 
 ```powershell
 node sdk/build.mjs
 wsl -d Ubuntu-22.04 --exec bash -lc 'CC=clang ~/.moon/bin/moon build cmd/moonjls --target native --release --target-dir .tools/wsl-build'
 node scripts/validate_annex_e.mjs --check-manifest
+node scripts/verify_m2_golden.mjs --native-exe .tools/wsl-build/native/release/build/cmd/moonjls/moonjls.exe --native-wsl Ubuntu-22.04
 node scripts/validate_annex_e.mjs --fixtures .tools/annex-e --hp-reference .tools/annex-e-hp --native-wsl Ubuntu-22.04 --native-exe .tools/wsl-build/native/release/build/cmd/moonjls/moonjls.exe
-npm.cmd install --prefix .tools/oracle-npm --ignore-scripts --save-exact @team-charls/charls-wasm@0.10.0
-node scripts/validate_annex_e.mjs --fixtures .tools/annex-e --native-wsl Ubuntu-22.04 --native-exe .tools/wsl-build/native/release/build/cmd/moonjls/moonjls.exe
 ```
-
-Linux 上使用本地 Native 二进制，并省去 `--native-wsl`。Windows HP 参考程序需能执行 32 位 x86 程序。测试脚本按码流记录失败与非零进程退出。CI 配置运行三后端构建和核心测试、Native 流式检查、Worker、报告与类型检查、矩阵清单检查及既有 640 组 NEAR 互操作。官方 HP 档案轮使用单独的本机实跑记录。CI 的工具链从 MoonBit 官方版本化归档取得，下载时核验工具链和核心库的 SHA-256，运行时核验 Moon 和 moonc 版本。CI 的运行结论以对应 GitHub Actions 记录为准。 [CI 配置](../.github/workflows/verification.yml)

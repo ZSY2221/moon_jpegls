@@ -1,4 +1,6 @@
-# Antigravity 交接
+# Antigravity 交接（rc.1 历史归档）
+
+> **历史归档提示**：以下为 2026-11-23 `v0.1.0-rc.1` 的历史交接记录（保留原貌供追溯）。当前项目最新工程状态、评审入口与科学工作台维护说明请直接查阅 [PROJECT_STATUS.md](../PROJECT_STATUS.md)、[两分钟评审指南](REVIEWER_GUIDE.md)、[T.87 标准能力矩阵](T87_CONFORMANCE_PLAN.md) 与 [科学验证工作台说明](SCIENTIFIC_WORKBENCH_HANDOFF.md)。
 
 接续当前候选版请使用 [RC2 固定版本交接](RC2_HANDOFF.md)。以下为原 rc.1 的交接记录。
 

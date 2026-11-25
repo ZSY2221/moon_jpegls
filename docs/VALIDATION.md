@@ -2,9 +2,9 @@
 
 MoonJLS uses one MoonBit codec across Native, JS and Wasm GC. The external oracle exercises both directions. Each decoder is compared sample by sample against the CharLS decoder for the same byte stream. For lossless frames each reconstruction also equals the original. For near-lossless frames each sample satisfies `abs(original - reconstructed) <= NEAR`.
 
-## Verified NEAR expansion
+## Verified NEAR expansion (Historical M1 Full-Range Regression)
 
-For the current full-range, single-component profile, the expansion matrix covers 8-bit NEAR 0–127 and 12- and 16-bit NEAR 0–255. It uses independently encoded CharLS Wasm input for all 640 configurations and checks Native, JS and Wasm GC in both directions. The older corpus and Annex E subset remain separately reproducible. [Matrix results and reproduction commands](../reports/review-near-20261125/README.md)
+For the historical M1 full-range, single-component profile (`P=8/12/16`, default full-scale `MAXVAL = 2^P - 1`), the expansion matrix covers 8-bit NEAR 0–127 and 12- and 16-bit NEAR 0–255. It uses independently encoded CharLS Wasm input for all 640 configurations and checks Native, JS and Wasm GC in both directions (re-run and passed 640/640 on M2 frozen binaries as well). **Explicit scope note**: this 640-configuration suite is the historical full-range 8/12/16-bit NEAR regression, NOT the full Cartesian product of M2's `P=2–16`, arbitrary `MAXVAL`, and custom `LSE1` presets. For M2 numeric/preset/LSE1 validation and official Annex E results, see [Conformance Results](CONFORMANCE_RESULTS.md), [CI M2 Golden Fixtures](../tests/conformance/m2_golden/README.md), and [M2 Acceptance Summary](../reports/t87-m2-20261125/README.md). [M1 NEAR matrix results and reproduction commands](../reports/review-near-20261125/README.md)
 
 ## Reproduce
 
