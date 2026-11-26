@@ -21,6 +21,7 @@ export interface WorkerRowMeta {
   interleave?: number;
   pointTransform?: number;
   layout?: 'planar';
+  width?: number;
   stride?: number;
   sampleBytes?: 2;
   endianness?: 'host-u16';

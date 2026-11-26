@@ -1,7 +1,8 @@
 ///|
 /// Convenience arbitrary-scan encoder. Samples match the scan traversal order:
 /// - ILV=0: full plane for each scan's component;
-/// - ILV=1: MCU-row line-interleaved (V=1: row y comp 0, row y comp 1, ...);
+/// - ILV=1: each component's group of V_i real rows in scan order per MCU.
+///   Each row has that component's width; the encoder supplies any final padding rows.
 /// - ILV=2: each pixel's samples in scan component order, then the next pixel.
 pub fn encode_scans(
   frame : FrameInfo,

@@ -185,12 +185,18 @@ fn Scan::workspace_bytes(self : Scan) -> Int32 {
 }
 
 ///|
-fn Scan::is_finished(self : Scan, frame_height : Int32) -> Bool {
-  if self.comp_prev.length() == 0 {
-    self.rows >= frame_height
+fn Scan::is_finished(self : Scan) -> Bool {
+  if self.ilv == 0 {
+    self.rows >= self.mcu_rows
   } else {
     self.mcu_row >= self.mcu_rows
   }
+}
+
+///|
+fn Scan::is_padding_line(self : Scan) -> Bool {
+  self.ilv == 1 &&
+  self.comp_rows[self.active_comp] == self.comp_heights[self.active_comp]
 }
 
 ///|
@@ -203,19 +209,15 @@ fn Scan::next_line_or_finish(self : Scan) -> Bool {
     return true
   }
   let c = self.active_comp
-  let line_y = if self.ilv == 2 {
-    self.mcu_row
-  } else {
-    self.mcu_row * self.comp_v_samplings[c] + self.mcu_v_step
-  }
-  let is_real = line_y < self.comp_heights[c]
+  let is_real = !self.is_padding_line()
+  // B.4 padding participates in prediction and entropy coding, then is removed from delivery.
+  let reusable = self.comp_prev[c]
+  self.comp_prev_left[c] = reusable[0]
+  self.comp_prev[c] = self.comp_curr[c]
+  self.comp_curr[c] = reusable
   if is_real {
     self.last_row_comp = c
     self.last_row_idx = self.comp_rows[c]
-    let reusable = self.comp_prev[c]
-    self.comp_prev_left[c] = reusable[0]
-    self.comp_prev[c] = self.comp_curr[c]
-    self.comp_curr[c] = reusable
     self.comp_rows[c] += 1
     self.total_rows += 1
   }

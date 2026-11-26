@@ -3,7 +3,7 @@ let help : String =
   #|moonjls encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--maxval N] [preset flags]
   #|moonjls encode-planar WIDTH HEIGHT BITS COMPONENTS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--ilv 0|1|2] [--comp-ids LIST] [--scan-order LIST] [--scan-near LIST] [--maxval N] [preset flags]
   #|moonjls encode-pgm NEAR INPUT OUTPUT [CHUNK] [preset flags]
-  #|moonjls encode-pgms NEAR OUTPUT [--ilv 0|1|2] [--chunk N] [preset flags] IN1 [IN2 ...]
+  #|moonjls encode-pgms NEAR OUTPUT [--ilv 0|1|2] [--sampling HxV,...] [--chunk N] [preset flags] IN1 [IN2 ...]
   #|moonjls encode-ppm NEAR INPUT OUTPUT [CHUNK] [--ilv 0|1|2] [preset flags]
   #|moonjls decode INPUT OUTPUT [raw-le|raw-be|pgm|ppm] [CHUNK]
   #|moonjls decode-pgms [--chunk N] INPUT OUT1 [OUT2 ...]
@@ -13,6 +13,7 @@ let help : String =
   #|Use - for stdin or stdout. Files are created without overwriting.
   #|Raw samples use one byte for P<=8, two bytes for P>8 (default raw-le).
   #|PGM/PPM use header MAXVAL. P6 ILV=0 converts the full image. ILV=1 and ILV=2 stream rows.
+  #|PGM sampling factors follow input component order. Frame size is the largest input width and height.
   #|CHUNK sets the byte buffer size (1–1048576, default 65536).
   #|Inspect and verify each read through EOI and reject trailing bytes.
 
@@ -72,6 +73,55 @@ fn parse_int_list(arg : String) -> Array[Int32] raise {
   guard !cur.is_empty() else { raise Usage("empty entry in integer list") }
   parts.push(@string.parse_int(cur.to_string()[:]))
   parts
+}
+
+///|
+fn parse_sampling(arg : String) -> Array[(Int32, Int32)] raise {
+  let factors : Array[(Int32, Int32)] = []
+  guard arg.length() % 4 == 3 else { raise Usage("expected --sampling HxV,...") }
+  for i in 0..<((arg.length() + 1) / 4) {
+    let pos = i * 4
+    let h = arg.code_unit_at(pos).to_int() - 48
+    let v = arg.code_unit_at(pos + 2).to_int() - 48
+    guard arg.code_unit_at(pos + 1) == 120 &&
+      (pos == 0 || arg.code_unit_at(pos - 1) == 44) &&
+      h >= 1 && h <= 4 && v >= 1 && v <= 4 else {
+      raise Usage("sampling factors must be 1..4 in HxV,... form")
+    }
+    factors.push((h, v))
+  }
+  factors
+}
+
+///|
+async fn encode_input(
+  encoder : @jls.Encoder,
+  sink : &@io.BinaryWriter,
+  input : FixedArray[Int32],
+  output : FixedArray[Byte],
+  eof : Bool,
+) -> (Int64, Int32) {
+  let mut pos = 0
+  let mut written = 0L
+  let mut peak = 0
+  while true {
+    let step = encoder.step(input, pos, input.length() - pos, output, eof)
+    pos += step.consumed
+    if step.produced > 0 {
+      let bytes = Bytes::from_array(output[:step.produced])
+      sink.write(bytes[:])
+      written += step.produced.to_int64()
+      peak = peak.max(step.produced)
+    }
+    match step.status {
+      Done => break
+      Failed(err) => raise err
+      NeedInput if eof => raise @jls.Truncated
+      NeedInput => break
+      NeedOutput | RowReady => ()
+    }
+  }
+  (written, peak)
 }
 
 ///|
@@ -401,7 +451,11 @@ fn structure_json(
       comps.write_char(',')
     }
     let c = st.frame.components[i]
-    comps.write_string("{\"id\":\{c.id},\"h\":\{c.h_sampling},\"v\":\{c.v_sampling}}")
+    let cw = st.frame.component_width(i)
+    let ch = st.frame.component_height(i)
+    comps.write_string(
+      "{\"id\":\{c.id},\"h\":\{c.h_sampling},\"v\":\{c.v_sampling},\"width\":\{cw},\"height\":\{ch}}",
+    )
   }
   comps.write_char(']')
 
@@ -456,6 +510,7 @@ fn structure_json(
   let pt = if st.scans.length() > 0 { st.scans[0].point_transform } else { 0 }
   "{\"width\":\{st.frame.width},\"height\":\{st.frame.height},\"bits\":\{st.frame.bits}," +
   "\"maxval\":\{first_preset.maxval},\"near\":\{first_near},\"rows\":\{rows}," +
+  "\"samples\":\{st.frame.total_samples()}," +
   "\"componentCount\":\{st.frame.components.length()},\"components\":\{comps.to_string()}," +
   "\"scanCount\":\{st.scans.length()},\"interleave\":\{ilv},\"pointTransform\":\{pt}," +
   "\"soiOffset\":\{st.soi_offset},\"sofOffset\":\{st.sof_offset},\"sofLength\":\{st.sof_length},\"eoiOffset\":\{st.eoi_offset}," +
@@ -534,6 +589,12 @@ async fn decode_stream(
             } else if format is Ppm {
               guard comp_count == 3 else {
                 raise Input("PPM P6 output requires 3 components")
+              }
+              for ci in 0..<comp_count {
+                guard frame_info.component_width(ci) == frame.width &&
+                  frame_info.component_height(ci) == frame.height else {
+                  raise Input("PPM requires equal-size components. Use decode-pgms for sampled components")
+                }
               }
               let total = @jls.checked_total_samples(frame.width, frame.height, 3)
               guard total <= 2_147_483_647L else {
@@ -982,12 +1043,19 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
       let mut chunk = 65536
       let mut ilv = 0
       let mut preset = @jls.Preset::defaults()
+      let mut sampling : Array[(Int32, Int32)]? = None
       let mut seen = 0
       let inputs : Array[String] = []
       while index < args.length() {
         let token = args[index]
         if token.has_prefix("--") {
           guard index + 1 < args.length() else { raise Usage("missing flag value") }
+          if token == "--sampling" {
+            guard sampling is None else { raise Usage("duplicate --sampling") }
+            sampling = Some(parse_sampling(args[index + 1]))
+            index += 2
+            continue
+          }
           let value = @string.parse_int(args[index + 1][:])
           match token {
             "--chunk" => {
@@ -1034,6 +1102,13 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
       guard ilv == 0 || (inputs.length() >= 2 && inputs.length() <= 4) else {
         raise Usage("interleaved encoding requires 2..4 input PGM files")
       }
+      let factors = match sampling {
+        Some(values) => values
+        None => Array::make(inputs.length(), (1, 1))
+      }
+      guard factors.length() == inputs.length() else {
+        raise Usage("--sampling factor count must match the number of input PGMs")
+      }
       let sources : Array[(String, @jls.Frame, Int32)] = []
       let components : Array[@jls.ComponentSpec] = []
       let mut width = 0
@@ -1047,21 +1122,27 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           let s = Source::new(file, 4096)
           read_pgm(s, near)
         }
-        if i == 0 {
-          width = f.width
-          height = f.height
-        } else {
-          guard f.width == width && f.height == height else {
-            raise Input("component PGM dimensions do not match")
-          }
+        guard f.width > 0 && f.width <= 65535 && f.height > 0 && f.height <= 65535 else {
+          raise Input("component PGM dimensions must be in 1..65535")
         }
+        width = width.max(f.width)
+        height = height.max(f.height)
         if f.bits > max_bits {
           max_bits = f.bits
         }
         sources.push((path, f, mv))
-        components.push({ id: i + 1, h_sampling: 1, v_sampling: 1 })
+        let (h, v) = factors[i]
+        components.push({ id: i + 1, h_sampling: h, v_sampling: v })
       }
       let frame_info : @jls.FrameInfo = { width, height, bits: max_bits, components }
+      for i in 0..<sources.length() {
+        let (path, f, _) = sources[i]
+        let cw = frame_info.component_width(i)
+        let ch = frame_info.component_height(i)
+        guard f.width == cw && f.height == ch else {
+          raise Input("component PGM \{path} is \{f.width}x\{f.height}, expected \{cw}x\{ch} from H/V")
+        }
+      }
       if ilv == 0 {
         let scans : Array[@jls.ScanSpec] = []
         for i in 0..<sources.length() {
@@ -1085,79 +1166,42 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           let mut in_peak = 0
           let mut out_peak = 0
           for i in 0..<sources.length() {
-            let (path, _, mv) = sources[i]
+            let (path, geometry, mv) = sources[i]
             let wide = mv > 255
-            let storage = if wide { 2 } else { 1 }
-            let samples = FixedArray::make(
-              if chunk >= storage { chunk / storage } else { 1 },
-              0,
-            )
+            let row = FixedArray::make(geometry.width, 0)
             let file = @fs.open(path[:], mode=ReadOnly)
             defer file.close()
             let src = Source::new(file, chunk)
             let _ = read_pgm(src, near)
-            let mut pos = 0
-            let mut len = 0
-            let mut file_eof = false
-            let is_last = i == sources.length() - 1
-            let target_scan = i
-            let mut remaining_plane = width * height
-            while encoder.scan_index() == target_scan {
-              if pos == len && !file_eof && remaining_plane > 0 {
-                len = src.samples(samples, wide, true)
-                pos = 0
-                file_eof = len < samples.length()
-                if len > remaining_plane {
-                  raise Input("extra samples in component PGM")
-                }
-                remaining_plane -= len
+            for _ in 0..<geometry.height {
+              guard src.samples(row, wide, true) == row.length() else {
+                raise Input("truncated component PGM")
               }
-              let eof_flag = is_last && file_eof && remaining_plane == 0
-              let step = encoder.step(
-                samples,
-                pos,
-                len - pos,
-                out_buf,
-                eof_flag,
+              let (written, peak) = encode_input(
+                encoder, writer, row, out_buf, false,
               )
-              pos += step.consumed
-              if step.produced > 0 {
-                let written = Bytes::from_array(out_buf[:step.produced])
-                writer.write(written[:])
-                total_out += step.produced.to_int64()
-                if step.produced > out_peak {
-                  out_peak = step.produced
-                }
-              }
-              match step.status {
-                Done => break
-                Failed(err) => raise err
-                NeedInput if remaining_plane == 0 && pos == len && !is_last => {
-                  if src.samples(FixedArray::make(1, 0), wide, true) != 0 ||
-                    src.fill() {
-                    raise Input("extra samples in component PGM")
-                  }
-                }
-                NeedInput if file_eof && remaining_plane > 0 =>
-                  raise Input("truncated component PGM")
-                NeedInput | NeedOutput | RowReady => ()
-              }
+              total_out += written
+              out_peak = out_peak.max(peak)
             }
+            guard !src.fill() else { raise Input("extra samples in component PGM") }
             total_in += src.byte_count
             if src.high_water > in_peak {
               in_peak = src.high_water
             }
           }
+          let (written, peak) = encode_input(encoder, writer, [], out_buf, true)
+          total_out += written
+          out_peak = out_peak.max(peak)
           log_line(
-            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} ilv=0 components=\{sources.length()} scans=\{sources.length()} input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=0 input_high_water=\{in_peak} output_high_water=\{out_peak}",
+            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} ilv=0 components=\{sources.length()} scans=\{sources.length()} input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=0 host_row_buffer_bytes=\{width.to_int64() * 4L} input_high_water=\{in_peak} output_high_water=\{out_peak}",
           )
         })
       } else {
         let first_mv = sources[0].2
-        if ilv == 2 {
+        if ilv == 2 || sampling is Some(_) {
           for source in sources {
             guard source.2 == first_mv else {
-              raise Input("sample-interleaved PGM inputs require the same MAXVAL")
+              raise Input("interleaved PGM inputs require the same MAXVAL")
             }
           }
         }
@@ -1194,77 +1238,71 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             }
           }
           for i in 0..<sources.length() {
-            let (path, _, mv) = sources[i]
+            let (path, geometry, mv) = sources[i]
             let f = @fs.open(path[:], mode=ReadOnly)
             files[i] = Some(f)
             let s = Source::new(f, chunk)
             let _ = read_pgm(s, near)
             srcs.push(s)
-            row_bufs.push(FixedArray::make(width, 0))
+            row_bufs.push(FixedArray::make(geometry.width, 0))
             wides.push(mv > 255)
           }
           let out_buf = FixedArray::make(chunk, b'\x00')
           let mut total_out = 0L
           let mut out_peak = 0
           let packed = if ilv == 2 {
-            FixedArray::make(width * sources.length(), 0)
+            FixedArray::make(sources[0].1.width * sources.length(), 0)
           } else {
             []
           }
-          let input_rows = if ilv == 2 { [packed] } else { row_bufs }
-          for y in 0..<height {
-            for ci in 0..<sources.length() {
-              let got = srcs[ci].samples(row_bufs[ci], wides[ci], true)
-              guard got == width else { raise Input("truncated component PGM") }
+          if ilv == 1 {
+            let max_v = frame_info.max_v_sampling()
+            let groups = (height + max_v - 1) / max_v
+            for mcu in 0..<groups {
+              for ci in 0..<sources.length() {
+                let row = row_bufs[ci]
+                let v = components[ci].v_sampling
+                let first = mcu * v
+                let last = (first + v).min(sources[ci].1.height)
+                for _ in first..<last {
+                  guard srcs[ci].samples(row, wides[ci], true) == row.length() else {
+                    raise Input("truncated component PGM")
+                  }
+                  let (written, peak) = encode_input(
+                    encoder, writer, row, out_buf, false,
+                  )
+                  total_out += written
+                  out_peak = out_peak.max(peak)
+                }
+              }
             }
-            if ilv == 2 {
-              for x in 0..<width {
+          } else {
+            let geometry = sources[0].1
+            for _ in 0..<geometry.height {
+              for ci in 0..<sources.length() {
+                let row = row_bufs[ci]
+                guard srcs[ci].samples(row, wides[ci], true) == row.length() else {
+                  raise Input("truncated component PGM")
+                }
+              }
+              for x in 0..<geometry.width {
                 for ci in 0..<sources.length() {
                   packed[x * sources.length() + ci] = row_bufs[ci][x]
                 }
               }
-            }
-            for ri in 0..<input_rows.length() {
-              let row_buf = input_rows[ri]
-              let row_len = row_buf.length()
-              let is_last = y == height - 1 && ri == input_rows.length() - 1
-              if is_last {
-                for j in 0..<sources.length() {
-                  if srcs[j].samples(FixedArray::make(1, 0), wides[j], true) !=
-                    0 ||
-                    srcs[j].fill() {
-                    raise Input("extra samples in component PGM")
-                  }
-                }
-              }
-              let mut pos = 0
-              while pos < row_len || is_last {
-                let step = encoder.step(
-                  row_buf,
-                  pos,
-                  row_len - pos,
-                  out_buf,
-                  is_last,
-                )
-                pos += step.consumed
-                if step.produced > 0 {
-                  let written = Bytes::from_array(out_buf[:step.produced])
-                  writer.write(written[:])
-                  total_out += step.produced.to_int64()
-                  if step.produced > out_peak {
-                    out_peak = step.produced
-                  }
-                }
-                match step.status {
-                  Done => break
-                  Failed(err) => raise err
-                  NeedInput if !is_last && pos == row_len => break
-                  NeedInput if is_last => raise @jls.Truncated
-                  NeedInput | NeedOutput | RowReady => ()
-                }
-              }
+              let (written, peak) = encode_input(
+                encoder, writer, packed, out_buf, false,
+              )
+              total_out += written
+              out_peak = out_peak.max(peak)
             }
           }
+          for s in srcs {
+            guard !s.fill() else { raise Input("extra samples in component PGM") }
+          }
+          let (written, peak) = encode_input(encoder, writer, [], out_buf, true)
+          total_out += written
+          out_peak = out_peak.max(peak)
           let mut total_in = 0L
           let mut in_peak = 0
           for s in srcs {
@@ -1274,8 +1312,12 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             }
           }
           let conv_bytes = packed.length().to_int64() * 4L
+          let mut row_bytes = 0L
+          for row in row_bufs {
+            row_bytes += row.length().to_int64() * 4L
+          }
           log_line(
-            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} ilv=\{ilv} components=\{sources.length()} scans=1 input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} input_high_water=\{in_peak} output_high_water=\{out_peak}",
+            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} ilv=\{ilv} components=\{sources.length()} scans=1 input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} host_row_buffer_bytes=\{row_bytes} input_high_water=\{in_peak} output_high_water=\{out_peak}",
           )
         })
       }
@@ -1452,7 +1494,13 @@ async fn main {
   let args = @env.args()
   dispatch(args[1:]) catch {
     error => {
-      log_line(error.to_string())
+      let category = error.to_string()
+      match error {
+        Input(message) | Usage(message) | @jls.InvalidData(message) |
+        @jls.InvalidArgument(message) | @jls.UnsupportedFeature(message) |
+        @jls.ResourceLimit(message) => log_line("\{category}: \{message}")
+        _ => log_line(category)
+      }
       @env.exit(1)
     }
   }

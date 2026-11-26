@@ -499,8 +499,8 @@ pub fn Decoder::step(
       raise InvalidArgument("input byte slice")
     }
     while true {
-      match (self.frame, self.scan) {
-        (Some(frame), Some(scan)) if !scan.is_finished(frame.height) => {
+      match self.scan {
+        Some(scan) if !scan.is_finished() => {
           if scan.x == scan.active_width {
             let is_real = scan.next_line_or_finish()
             if self.current_scan >= 0 && self.current_scan < self.scans.length() {
@@ -510,11 +510,7 @@ pub fn Decoder::step(
                 rows_decoded: scan.total_rows,
               }
             }
-            self.phase = if scan.is_finished(frame.height) {
-              Padding
-            } else {
-              Sample
-            }
+            self.phase = if scan.is_finished() { Padding } else { Sample }
             if is_real {
               break RowReady
             }
@@ -1008,7 +1004,7 @@ pub fn Decoder::step(
             }
           }
         }
-        (Some(_), Some(_)) if self.phase is Padding => {
+        Some(_) if self.phase is Padding => {
           guard self.bits.take(self.bits.left) == 0 else {
             raise InvalidData("nonzero entropy padding")
           }

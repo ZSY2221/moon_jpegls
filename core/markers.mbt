@@ -157,7 +157,10 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
   guard width != 0 && height != 0 else {
     raise UnsupportedFeature("deferred or extended dimensions")
   }
-  validate_frame_dimensions(width, height, count, self.limits)
+  validate_frame_dimensions(
+    { width, height, bits, components: parsed, },
+    self.limits,
+  )
   self.width = width
   self.height = height
   self.bits = bits
@@ -276,11 +279,6 @@ fn HeaderParser::scan_segment(
     guard !self.seen_components[comp_idx] else {
       self.last_component_id = self.components[comp_idx].id
       raise InvalidData("duplicate scan for component")
-    }
-  }
-  for comp in self.components {
-    guard comp.h_sampling == 1 && comp.v_sampling == 1 else {
-      raise UnsupportedFeature("component subsampling")
     }
   }
   let comp_idx = selected[0]

@@ -1,3 +1,5 @@
+import { componentDimensions } from '../sdk/index.mjs';
+
 const MARKER_NAMES = new Map([
   [0xD8, 'SOI'],
   [0xF7, 'SOF55'],
@@ -66,6 +68,7 @@ export function renderScanInspector({
   const eoiText = eoiOffset >= 0 ? `EOI @${eoiOffset}` : translate('scanPending');
   summaryEl.textContent = `${frame.width}×${frame.height} · P=${frame.bits} · SOI @${soiOffset} · SOF55 @${sofOffset} (${sofLength} B) · ${eoiText}`;
 
+  const { widths, heights, maxV } = componentDimensions(frame);
   sofBody.replaceChildren(...frame.components.map((comp, idx) => {
     const tr = el('tr');
     const role = channelNames?.[idx] ?? `C${idx}`;
@@ -74,6 +77,7 @@ export function renderScanInspector({
       el('td', 'mono', comp.id),
       el('td', '', role),
       el('td', 'mono', `${comp.hSampling}×${comp.vSampling}`),
+      el('td', 'mono', `${widths[idx]}×${heights[idx]}`),
     );
     return tr;
   }));
@@ -91,16 +95,26 @@ export function renderScanInspector({
         select();
       }
     });
-    const role = channelNames?.[scan.componentIndex] ?? `C${scan.componentIndex}`;
+    const indices = scan.componentIndices ?? [scan.componentIndex];
+    const mcuRows = Math.ceil(frame.height / maxV);
+    const order = indices.map((idx) => {
+      const comp = frame.components[idx];
+      const name = channelNames?.[idx] ?? `C${idx}`;
+      const lines = scan.interleave === 1 ? comp.vSampling : 1;
+      const pad = scan.interleave === 1 ? mcuRows * lines - heights[idx] : 0;
+      const group = scan.interleave === 1 ? ` ×${lines}${pad ? ` (${translate('padRows', pad)})` : ''}` : '';
+      return `${name} (ID ${comp.id})${group}`;
+    }).join(' → ');
+    const rowCount = indices.reduce((sum, idx) => sum + heights[idx], 0);
     const p = scan.preset;
     const presetText = p ? `${p.maxval} · ${p.t1}/${p.t2}/${p.t3} r=${p.reset}` : '—';
     const rangeText = scan.endOffset >= 0
       ? `@${scan.headerOffset}..${scan.endOffset} (${scan.endOffset - scan.headerOffset} B)`
       : `@${scan.headerOffset} (entropy @${scan.entropyOffset})`;
-    const stText = scan.completed ? translate('scanStateDone') : `${scan.rows ?? 0}/${frame.height}`;
+    const stText = scan.completed ? translate('scanStateDone') : `${scan.rows ?? 0}/${rowCount}`;
     tr.append(
       el('td', 'mono', scan.scanIndex),
-      el('td', '', `${role} (ID ${scan.componentId})`),
+      el('td', '', `ILV=${scan.interleave} · ${order}`),
       el('td', 'mono', scan.near),
       el('td', 'mono', presetText),
       el('td', 'mono', rangeText),

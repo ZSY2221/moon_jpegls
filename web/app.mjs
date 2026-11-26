@@ -1,4 +1,4 @@
-import { CodecError } from '../sdk/index.mjs';
+import { CodecError, componentDimensions } from '../sdk/index.mjs';
 import { startWorker } from '../sdk/worker-client.mjs';
 import { lunarElevationMeters, lunarErrorMeters } from '../sdk/lunar.mjs';
 import { createRunId, serializeVerificationReport } from '../sdk/verification-report.mjs';
@@ -155,14 +155,21 @@ function renderMulticomponent(job) {
   if (!show) return;
   const labels = channelLabelsFor(job);
   setText('mc-provenance-badge', translate(provenanceKeyFor(job)));
+  setHidden('sampled-preview-note', !job.sampledGeometry);
+  if (job.sampledGeometry) {
+    const c = job.activeChannel ?? 0;
+    const { widths, heights } = job.componentGeometry;
+    setText('reconstruction-scale', `${widths[c]} × ${heights[c]} · ${job.frame.bits}-bit`);
+  }
 
   const btnWrap = get('channel-buttons');
   if (btnWrap && typeof document.createElement === 'function') {
-    const options = count === 3
+    const composite = count === 3 && !job.sampledGeometry;
+    const options = composite
       ? [{ id: 'composite', label: translate('channelComposite'), compAttr: 'composite' },
          ...labels.map((label, idx) => ({ id: idx, label, compAttr: String(idx) }))]
       : labels.map((label, idx) => ({ id: idx, label, compAttr: String(idx) }));
-    const activeCh = job.activeChannel ?? (count === 3 ? 'composite' : 0);
+    const activeCh = job.activeChannel ?? (composite ? 'composite' : 0);
     btnWrap.replaceChildren(...options.map((opt) => {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -181,11 +188,11 @@ function renderMulticomponent(job) {
 
   const progWrap = get('multicomponent-progress');
   if (progWrap && typeof document.createElement === 'function') {
-    const height = job.frame.height;
+    const { heights } = job.componentGeometry;
     const scans = job.structure?.scans ?? [];
     const eoiDone = job.status === 'passed';
     progWrap.replaceChildren(...labels.map((label, idx) => {
-      const scan = scans.find((entry) => entry.componentIndex === idx);
+      const scan = scans.find((entry) => (entry.componentIndices ?? [entry.componentIndex]).includes(idx));
       const delivered = job.compRows?.[idx] ?? 0;
       let statusKey = 'mcWait';
       let stateAttr = 'wait';
@@ -203,7 +210,7 @@ function renderMulticomponent(job) {
       chip.className = 'mc-progress-chip';
       chip.dataset.comp = String(idx);
       chip.dataset.scanState = stateAttr;
-      chip.textContent = `${label}: ${delivered}/${height} · ${translate(statusKey)}`;
+      chip.textContent = `${label}: ${delivered}/${heights[idx]} · ${translate(statusKey)}`;
       return chip;
     }));
   }
@@ -474,7 +481,7 @@ function lock(running) {
 function renderProgress(job) {
   const { frame, stats } = job ?? {};
   const rows = stats?.rows ?? 0;
-  const totalRows = frame ? frame.height * compCountOf(frame) : 1;
+  const totalRows = job?.totalRows ?? 1;
   const progress = get('progress');
   if (progress) {
     progress.max = totalRows;
@@ -504,7 +511,7 @@ function renderProgress(job) {
 function renderResult(job) {
   if (!job?.result) return;
   const { frame, jlsBytes, maxError } = job.result;
-  const raw = frame.width * frame.height * compCountOf(frame) * sampleByteWidth(sampleMaximum(frame));
+  const raw = job.componentGeometry.total * sampleByteWidth(sampleMaximum(frame));
   setText('raw-size', bytes(raw));
   setText('encoded', bytes(jlsBytes));
   setText('ratio', `${(raw / jlsBytes).toFixed(2)}×`);
@@ -597,7 +604,11 @@ function setFrame(job, frame) {
   job.frame = frame;
   const count = compCountOf(frame);
   job.compRows ??= Array(count).fill(0);
-  if (job.activeChannel === undefined) job.activeChannel = count === 3 ? 'composite' : 0;
+  job.componentGeometry = componentDimensions(frame);
+  const { widths, heights } = job.componentGeometry;
+  job.totalRows = heights.reduce((total, height) => total + height, 0);
+  job.sampledGeometry = widths.some((width, i) => width !== frame.width || heights[i] !== frame.height);
+  if (job.activeChannel === undefined) job.activeChannel = count === 3 && !job.sampledGeometry ? 'composite' : 0;
   renderIdentity();
   renderPhysicalBudget(job);
 }
@@ -607,7 +618,7 @@ function recordStats(job, stats, frame, structure) {
   setFrame(job, frame);
   if (structure) job.structure = structure;
   job.stats = stats;
-  const totalRows = job.frame ? job.frame.height * compCountOf(job.frame) : 0;
+  const totalRows = job.totalRows ?? 0;
   if (totalRows > 0 && stats.rows === totalRows && !job.rowsArrived) {
     job.rowsArrived = true;
     if (!job.paused) transition('finalizing', 'finishingStream');
@@ -640,8 +651,9 @@ function draw(job, index, reconstructed, original, meta) {
   }
 }
 
-async function writeOutput(job, sink, bytes) {
-  await sink.write(bytes);
+async function writeOutput(job, sink, bytes, position = undefined) {
+  if (position === undefined) await sink.write(bytes);
+  else await sink.writeAt(bytes, position);
   requireActive(job);
   job.outputBytes += bytes.byteLength;
 }
@@ -698,6 +710,7 @@ async function decodeFile(job, file, settings, sink) {
   let configured = false;
   let planes = null;
   let componentCount = 1;
+  let planar = false;
   const baseName = file.name.replace(/\.[^.]+$/, '');
   const handleRow = async (frame, index, row, meta) => {
     if (!configured) {
@@ -707,29 +720,37 @@ async function decodeFile(job, file, settings, sink) {
       preview.configure(frame, false, {
         componentCount,
         componentLabels: channelLabelsFor(job),
-        initialChannel: componentCount === 3 ? 'composite' : 0,
+        initialChannel: job.activeChannel,
       });
       if (componentCount === 1) {
         job.outputName = `${baseName}.pgm`;
         job.outputFormat = 'pgm';
         job.hostConversionBufferBytes = 0;
         await writeOutput(job, sink, pgmHeader(frame));
-      } else if (componentCount === 3) {
+      } else if (componentCount === 3 && !job.sampledGeometry) {
         job.outputName = `${baseName}.ppm`;
         job.outputFormat = 'ppm';
         const px = frame.width * frame.height;
         planes = [new Uint16Array(px), new Uint16Array(px), new Uint16Array(px)];
         job.hostConversionBufferBytes = planes.reduce((acc, p) => acc + p.byteLength, 0);
       } else {
-        job.outputName = `${baseName}.planar.raw`;
-        job.outputFormat = 'planar-raw';
+        planar = true;
+        job.outputName = `${baseName}.planar-u16le.raw`;
+        job.outputFormat = 'planar-u16le';
         job.hostConversionBufferBytes = 0;
       }
     }
     draw(job, index, row, null, meta);
+    const compIdx = meta.componentIndex;
     if (planes) {
-      const compIdx = meta?.componentIndex ?? 0;
       planes[compIdx].set(row, index * frame.width);
+    } else if (planar) {
+      const { widths, offsets } = job.componentGeometry;
+      const samples = new Uint8Array(row.length * 2);
+      const view = new DataView(samples.buffer);
+      for (let x = 0; x < row.length; x++) view.setUint16(x * 2, row[x], true);
+      job.hostConversionBufferBytes = Math.max(job.hostConversionBufferBytes, samples.byteLength);
+      await writeOutput(job, sink, samples, (offsets[compIdx] + index * widths[compIdx]) * 2);
     } else {
       await writeOutput(job, sink, pgmRow(row, frame));
     }
@@ -749,7 +770,7 @@ async function decodeFile(job, file, settings, sink) {
       if (event.type === 'row') {
         await handleRow(event.frame, event.index, event.row, rowMeta);
       } else if (event.type === 'rows') {
-        const w = event.frame.width;
+        const w = event.stride ?? event.frame.width;
         for (let i = 0; i < event.count; i++) {
           await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w), rowMeta);
         }
@@ -820,7 +841,7 @@ async function roundTrip(job, file, near, settings, sink) {
       if (event.type === 'row') {
         await handleRow(event.frame, event.index, event.row, rowMeta);
       } else if (event.type === 'rows') {
-        const w = event.frame.width;
+        const w = event.stride ?? event.frame.width;
         for (let i = 0; i < event.count; i++) {
           await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w), rowMeta);
         }
@@ -883,7 +904,7 @@ async function run() {
   const sinkMode = get('sink').value;
   const file = source;
   const decodeOnly = isJls(file);
-  const defaultOutExt = decodeOnly ? '.pgm' : '.jls';
+  const defaultOutExt = decodeOnly ? (sinkMode === 'file' ? '.decoded' : '.pgm') : '.jls';
   const outputName = file.name.replace(/\.[^.]+$/, '') + defaultOutExt;
   const settings = { backend: get('backend').value, inputChunkSize: chunk, outputChunkSize: Math.min(chunk, 32 * 1024) };
   const requestedPreset = Object.fromEntries(presetFields.map((field) => [field, Number(get(`preset-${field}`)?.value ?? 0)]));
@@ -927,7 +948,10 @@ async function run() {
     lock(true);
     transition('finalizing', 'closingOutput');
     renderProgress(job);
-    const artifact = await sink.close();
+    const mimeType = job.outputFormat === 'pgm' ? 'image/x-portable-graymap'
+      : job.outputFormat === 'ppm' ? 'image/x-portable-pixmap'
+      : job.outputFormat === 'jls' ? 'image/jls' : 'application/octet-stream';
+    const artifact = await sink.close(mimeType);
     requireActive(job);
     job.elapsed = performance.now() - job.started;
     job.result = result;

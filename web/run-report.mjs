@@ -64,7 +64,7 @@ export async function workbenchReport(job) {
       name: job.outputName, format: job.outputFormat ?? (job.decodeOnly ? 'pgm' : 'jls'), bytes: job.outputBytes ?? null,
       sha256: outputSha, retained: outputRetained, complete: outputRetained,
     },
-    frame: job.frame,
+    frame: job.frame && { ...job.frame, scans: job.structure?.scans ?? job.frame.scans },
     preset: job.preset,
     stages: job.stages,
     samples: { verified: job.verifiedSamples, maxError: job.observedError },

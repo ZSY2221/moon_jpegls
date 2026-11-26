@@ -21,7 +21,7 @@ if (!isMainThread) {
   for (const data of inbox) self.onmessage({ data });
 } else {
   const root = process.env.MOONJLS_WORKER_SOURCE_ROOT || fileURLToPath(new URL('../', import.meta.url));
-  const { loadCore, encodeImage, encodePlanarImage, inspectStream } = await import(pathToFileURL(path.join(root, 'sdk/index.mjs')).href);
+  const { loadCore, encodeImage, encodePlanarImage, decodePlanarImage, inspectStream } = await import(pathToFileURL(path.join(root, 'sdk/index.mjs')).href);
   class WebWorkerAdapter {
     constructor(url) {
       this.thread = new NodeWorker(new URL(import.meta.url), { workerData: { workerUrl: url.href } });
@@ -37,6 +37,16 @@ if (!isMainThread) {
   const frame = { width: 8, height: 12, bits: 16, near: 0 };
   const samples = Uint16Array.from({ length: frame.width * frame.height }, (_, i) => i * 123);
   const reference = await encodeImage(await loadCore({ backend: 'js' }), frame, samples);
+
+  function readBytes(bytes) {
+    let offset = 0;
+    return (size) => {
+      if (offset === bytes.length) return null;
+      const chunk = bytes.slice(offset, offset + size);
+      offset += chunk.length;
+      return chunk;
+    };
+  }
 
   for (const backend of ['js', 'wasm-gc']) {
     test(`real ${backend} codec + real Worker/client: pixels, buffer high water, terminal queue`, { timeout: 10000 }, async () => {
@@ -311,6 +321,105 @@ if (!isMainThread) {
       assert.equal(done.stats.outputQueueBytes, 0);
       assert.equal(done.stats.outputPeakBytes, 72, '54-byte batch and 18-byte source row');
       assert.ok(done.scans[0].completed);
+    });
+
+    test(`real ${backend} sampled Worker keeps real rows through ACK, cancellation, and finalization`, { timeout: 15000 }, async () => {
+      const sampled = {
+        width: 9, height: 7, bits: 8, near: 0, interleave: 1,
+        components: [{ id: 10, hSampling: 1, vSampling: 2 }, { id: 20, hSampling: 2, vSampling: 1 }],
+      };
+      const widths = [5, 9];
+      const heights = [7, 4];
+      const planes = widths.map((width, ci) =>
+        Uint16Array.from({ length: width * heights[ci] }, (_, p) => (p * 23 + ci * 75) & 255));
+      const core = await loadCore({ backend });
+      const { bytes: coded } = await encodePlanarImage(core, sampled, planes, {
+        inputChunkSize: 7, outputChunkSize: 1, limits: { maxPixels: 71 },
+      });
+      await assert.rejects(decodePlanarImage(core, coded, { limits: { maxPixels: 70 } }), { code: 'ResourceLimit' });
+      await assert.rejects(encodePlanarImage(core, { ...sampled, interleave: 2 }, planes), { code: 'InvalidArgument' });
+
+      let heldBatch;
+      const firstBatch = new Promise(resolve => { heldBatch = resolve; });
+      let releaseAck;
+      const ack = new Promise(resolve => { releaseAck = resolve; });
+      let cancelledAcks = 0;
+      const cancelledJob = startWorker({
+        mode: 'decode', backend, inputChunkSize: 7, maxBatchBytes: 28,
+        read: readBytes(coded),
+        async onEvent(event) {
+          if (event.type !== 'rows') return;
+          heldBatch();
+          await ack;
+        },
+        onAck(event) { if (event.type === 'rows') cancelledAcks++; },
+      });
+      await Promise.race([firstBatch, cancelledJob.result.then(() => assert.fail('Expected a held component batch ACK'))]);
+      const cancelled = assert.rejects(cancelledJob.result, { code: 'Cancelled' });
+      cancelledJob.pause();
+      cancelledJob.cancel();
+
+      let offset = 0;
+      const eoi = coded.length - 2;
+      const emitted = [];
+      let deliveredSamples = 0;
+      let reachedEoi;
+      const eoiRequested = new Promise(resolve => { reachedEoi = resolve; });
+      let resumeEoi;
+      const heldEoi = new Promise(resolve => { resumeEoi = resolve; });
+      const job = startWorker({
+        mode: 'decode', backend, inputChunkSize: 7, maxBatchBytes: 28,
+        limits: { maxPixels: 71 },
+        async read(size) {
+          if (offset === coded.length) return null;
+          if (offset === eoi) {
+            assert.equal(emitted.length, 11, 'All valid rows are delivered before requesting EOI');
+            reachedEoi();
+            await heldEoi;
+          }
+          const end = Math.min(offset + size, offset < eoi ? eoi : coded.length);
+          const bytes = coded.slice(offset, end);
+          offset = end;
+          return bytes;
+        },
+        onEvent(event) {
+          if (event.type !== 'row' && event.type !== 'rows') return;
+          const ci = event.componentIndex;
+          const index = event.index ?? event.startIndex;
+          const count = event.count ?? 1;
+          const row = event.row ?? event.samples;
+          assert.equal(event.width, widths[ci]);
+          assert.equal(event.stride, widths[ci]);
+          assert.equal(event.height, heights[ci]);
+          assert.equal(event.interleave, 1);
+          assert.equal(event.layout, 'planar');
+          assert.equal(event.sampleBytes, 2);
+          assert.deepEqual(row, planes[ci].slice(index * event.stride, (index + count) * event.stride));
+          assert.equal(event.stats.outputQueueBytes, row.buffer.byteLength);
+          deliveredSamples += row.length;
+          for (let i = 0; i < count; i++) emitted.push([event.componentId, index + i]);
+        },
+      });
+      await cancelled;
+      releaseAck();
+      try {
+        await Promise.race([eoiRequested, job.result.then(() => assert.fail('Expected the EOI request'))]);
+        assert.equal(cancelledAcks, 0);
+        assert.equal(deliveredSamples, 71);
+        assert.deepEqual(emitted, [
+          [10, 0], [10, 1], [20, 0],
+          [10, 2], [10, 3], [20, 1],
+          [10, 4], [10, 5], [20, 2],
+          [10, 6], [20, 3],
+        ]);
+      } finally {
+        resumeEoi();
+      }
+      const done = await job.result;
+      assert.equal(done.stats.outputQueueBytes, 0);
+      assert.equal(done.stats.rows, 11);
+      assert.equal(done.stats.outputProduced, 71);
+      assert.equal(done.scans[0].completed, true);
     });
   }
 }

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname } from 'node:path';
+import { dirname, join } from 'node:path';
 import { chromium } from 'playwright-core';
 
 const origin = process.env.MOONJLS_WEB_URL ?? 'http://127.0.0.1:8000';
@@ -559,6 +559,70 @@ async function verifyLunarDownload(sourcePath) {
     fixtureSha256, jlsBytes: jls.length, jlsSha256: fingerprint(jls), pgmBytes: pgm.length, pgmSha256: fingerprint(pgm) }));
 }
 
+async function verifySampledAnnexWorkbench(directory) {
+  // SHA-256 of HP 1.00 *.pgm raster samples, converted to declared-order U16LE.
+  const cases = [
+    ['T8SSE0', 'js', 'bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26',
+      '463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec', '61'],
+    ['T8SSE3', 'wasm-gc', '215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f',
+      'e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af', '64'],
+  ];
+  const fingerprint = (value) => createHash('sha256').update(value).digest('hex');
+  for (const [fixture, backend, inputSha256, expectedSha256, secondBlue] of cases) {
+    await page.goto(`${origin}/web/`);
+    const input = await readFile(join(directory, `${fixture}.JLS`));
+    assert.equal(fingerprint(input), inputSha256);
+    await upload(`${fixture}.jls`, input);
+    await select('backend', backend);
+    await select('sink', 'buffered');
+    await chunkSize('4096');
+    await click('run');
+    await phase('complete');
+    assert.deepEqual(await page.locator('#progress').evaluate((el) => [el.value, el.max]), [448, 448]);
+    const chips = await page.locator('#multicomponent-progress .mc-progress-chip').allTextContents();
+    assert.match(chips[0], /256\/256/);
+    assert.match(chips[1], /64\/64/);
+    assert.match(chips[2], /128\/128/);
+    const sof = await page.locator('#sof-components-body tr').allTextContents();
+    assert.match(sof[0], /2×4.*256×256/);
+    assert.match(sof[1], /2×1.*256×64/);
+    assert.match(sof[2], /1×2.*128×128/);
+    assert.match(await text('scan-table-body'), /ILV=1.*ID 1.*×4.*ID 2.*×1.*ID 3.*×2/);
+    assert.equal(await page.locator('#channel-buttons [data-comp="composite"]').count(), 0);
+    assert.equal(await page.locator('#sampled-preview-note').isVisible(), true);
+    await page.locator('#channel-buttons [data-comp="2"]').click();
+    assert.equal(await text('reconstruction-scale'), '128 × 128 · 8-bit');
+    await page.locator('#reconstruction').press('Enter');
+    await page.locator('#reconstruction').press('ArrowRight');
+    await page.locator('#reconstruction').press('ArrowRight');
+    assert.equal(await text('inspect-coord'), '(1, 0)');
+    assert.equal(await text('inspect-reconstructed'), secondBlue);
+    assert.equal(await text('inspect-original'), 'Not compared');
+    const pendingRaw = page.waitForEvent('download');
+    await click('download');
+    const raw = await pendingRaw;
+    assert.equal(raw.suggestedFilename(), `${fixture}.planar-u16le.raw`);
+    const bytes = await readFile(await raw.path());
+    assert.equal(bytes.byteLength, 196608);
+    assert.equal(fingerprint(bytes), expectedSha256);
+    const pendingReport = page.waitForEvent('download');
+    await click('export-report');
+    const report = JSON.parse(await readFile(await (await pendingReport).path(), 'utf8'));
+    assert.equal(report.frame.interleave, 1);
+    assert.equal(report.samples.total, 98304);
+    assert.equal(report.samples.verified, null);
+    assert.equal(report.stages.compare, 'not_run');
+    assert.equal(report.stream.rowsDelivered, 448);
+    assert.equal(report.stream.strictEoi, true);
+    assert.equal(report.output.format, 'planar-u16le');
+    assert.equal(report.output.sha256, expectedSha256);
+    assert.equal(report.memory.host.hostConversionBufferBytes, 512);
+    await capture(`sampled-${fixture}`);
+    console.log(JSON.stringify({ test: 'sampled Annex E browser decode and planar export', fixture, backend,
+      inputSha256, outputSha256: expectedSha256, rows: 448, samples: 98304, hostConversionBufferBytes: 512 }));
+  }
+}
+
 async function verifyMulticomponentWorkbench() {
   const downloadBytes = async (expectedName) => {
     const pending = page.waitForEvent('download');
@@ -854,6 +918,8 @@ try {
   await expandedNear();
   await verifyM2Workbench();
   await verifyMulticomponentWorkbench();
+  if (process.env.MOONJLS_ANNEX_FIXTURES) await verifySampledAnnexWorkbench(process.env.MOONJLS_ANNEX_FIXTURES);
+  else console.log(JSON.stringify({ test: 'sampled Annex E browser decode', status: 'not_run', reason: 'MOONJLS_ANNEX_FIXTURES is unset' }));
   if (process.env.MOONJLS_LOLA) await verifyLunarDownload(process.env.MOONJLS_LOLA);
 
   assert.deepEqual(pageErrors, []);

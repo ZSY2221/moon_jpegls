@@ -7,7 +7,6 @@ priv struct ResolvedScan {
 
 ///|
 pub struct Encoder {
-  priv mut frame : Frame
   priv frame_info : FrameInfo
   priv scans : Array[ResolvedScan]
   priv mut scan_index : Int32
@@ -33,7 +32,6 @@ pub fn Encoder::new_scans(
   guard frame_info.bits >= 2 && frame_info.bits <= 16 else {
     raise InvalidArgument("sample precision must be in 2..16")
   }
-  validate_frame_dimensions(frame_info.width, frame_info.height, count, limits)
   for index in 0..<count {
     let comp = frame_info.components[index]
     guard comp.id >= 0 && comp.id <= 255 else {
@@ -51,6 +49,7 @@ pub fn Encoder::new_scans(
       }
     }
   }
+  validate_frame_dimensions(frame_info, limits)
   guard scans.length() > 0 else {
     raise InvalidArgument("at least one scan is required")
   }
@@ -146,11 +145,6 @@ pub fn Encoder::new_scans(
   guard scanned_count == count else {
     raise InvalidArgument("scans must cover every declared frame component")
   }
-  for comp in frame_info.components {
-    guard comp.h_sampling == 1 && comp.v_sampling == 1 else {
-      raise UnsupportedFeature("component sampling factors must be 1x1")
-    }
-  }
   // A vector can emit four 64-bit Golomb symbols plus the run prefix.
   // Include the partially filled byte and allow as few as seven bits per byte.
   let vector_bytes = ceil_div(64 * max_vector_size + 16 + 7, 7)
@@ -159,12 +153,6 @@ pub fn Encoder::new_scans(
   bits.frame_header(frame_info)
   let first = resolved[0]
   {
-    frame: {
-      width: frame_info.width,
-      height: frame_info.height,
-      bits: frame_info.bits,
-      near: first.scan_info.near,
-    },
     frame_info,
     scans: resolved,
     scan_index: 0,
@@ -512,7 +500,7 @@ pub fn Encoder::step(
         }
         continue
       }
-      if self.scan.is_finished(self.frame.height) {
+      if self.scan.is_finished() {
         if self.scan_index + 1 < self.scans.length() {
           self.bits.finish_scan()
           self.scan_index += 1
@@ -522,12 +510,6 @@ pub fn Encoder::step(
             next_cfg.scan_info,
             next_cfg.params,
           )
-          self.frame = {
-            width: self.frame_info.width,
-            height: self.frame_info.height,
-            bits: self.frame_info.bits,
-            near: next_cfg.scan_info.near,
-          }
           self.run = -1
           self.scan_header = false
           continue
@@ -540,6 +522,11 @@ pub fn Encoder::step(
         }
         self.bits.finish()
         self.trailer = true
+        continue
+      }
+      if self.scan.is_padding_line() {
+        // Repeat the preceding reconstructed line using the existing prediction buffer.
+        self.sample(self.scan.previous[self.scan.x])
         continue
       }
       if consumed == length {

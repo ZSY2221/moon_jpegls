@@ -212,6 +212,7 @@
             <div id="channel-buttons" class="channel-buttons" role="group" aria-label="Component display channels"></div>
           </div>
           <div id="multicomponent-progress" class="mc-progress-list"></div>
+          <p id="sampled-preview-note" class="microcopy" data-label="sampledPreviewNote" hidden></p>
         </section>
         <div class="previews">
           <figure class="panel preview-card" data-pane="original">
@@ -460,6 +461,7 @@
                       <th data-label="compIdCol">ID</th>
                       <th data-label="compRoleCol">Label / Role</th>
                       <th data-label="compSamplingCol">H×V</th>
+                      <th data-label="compDimensionsCol">Dimensions</th>
                     </tr></thead>
                     <tbody id="sof-components-body"></tbody>
                   </table>
@@ -513,7 +515,7 @@
         <details id="scope-details" class="panel disclosure">
           <summary data-label="scopeAndNotes">Format scope &amp; measurement notes</summary>
           <div class="disclosure-body notes-body">
-            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset · grayscale, single frame, single component and single scan · NEAR 0–127 for 8-bit and 0–255 for 12- and 16-bit.</p>
+            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset · single frame · ILV=0/1/2 · component sampling · Pt=0 · P=2–16 · legal MAXVAL, LSE presets and NEAR.</p>
             <p class="microcopy" data-label="timingHelp">Starts after the sink opens. Includes validation and output close. Excludes file and save-location selection and sink setup. First Canvas update is when the first reconstruction draw returns.</p>
             <p class="microcopy" data-label="ratioHelp">Raw storage uses 1 byte per 8-bit sample and 2 bytes per 12- or 16-bit sample.</p>
           </div>

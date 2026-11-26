@@ -413,6 +413,7 @@ class Session {
               pointTransform: bindings.decoder_current_scan(port, 7),
               preset: this.#preset,
               layout: 'planar',
+              width: stride,
               stride,
               sampleBytes: 2,
               endianness: 'host-u16',
@@ -423,7 +424,7 @@ class Session {
         this.#rowMeta = Object.freeze({
           scanIndex: 0, componentIndex: 0, componentId: 1, rowIndex: null, height,
           near: activeNear, interleave: 0, pointTransform: 0,
-          preset: this.#preset, layout: 'planar', stride: width, sampleBytes: 2, endianness: 'host-u16',
+          preset: this.#preset, layout: 'planar', width, stride: width, sampleBytes: 2, endianness: 'host-u16',
         });
       }
     }

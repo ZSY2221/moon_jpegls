@@ -758,7 +758,7 @@
       "scans": 1,
       "interleave": 1,
       "feature": "Three components with subsampling",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
@@ -787,7 +787,24 @@
         }
       },
       "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa",
+      "sampling": [
+        {
+          "h": 2,
+          "v": 4,
+          "id": 1
+        },
+        {
+          "h": 2,
+          "v": 1,
+          "id": 2
+        },
+        {
+          "h": 1,
+          "v": 2,
+          "id": 3
+        }
+      ]
     },
     {
       "id": 8,
@@ -808,7 +825,7 @@
       "scans": 1,
       "interleave": 1,
       "feature": "Three components with subsampling",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
@@ -837,7 +854,24 @@
         }
       },
       "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa",
+      "sampling": [
+        {
+          "h": 2,
+          "v": 4,
+          "id": 1
+        },
+        {
+          "h": 2,
+          "v": 1,
+          "id": 2
+        },
+        {
+          "h": 1,
+          "v": 2,
+          "id": 3
+        }
+      ]
     },
     {
       "id": 9,

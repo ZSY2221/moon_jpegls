@@ -287,18 +287,18 @@ fn validate_limits(limits : Limits) -> Unit raise CodecError {
 
 ///|
 fn validate_frame_dimensions(
-  width : Int32,
-  height : Int32,
-  components : Int32,
+  frame : FrameInfo,
   limits : Limits,
 ) -> Unit raise CodecError {
+  let { width, height, .. } = frame
+  let count = frame.components.length()
   guard width > 0 && height > 0 && width <= 65535 && height <= 65535 else {
     raise InvalidArgument("dimensions must be in 1..65535")
   }
-  guard components > 0 && components <= 255 else {
+  guard count > 0 && count <= 255 else {
     raise InvalidArgument("component count must be in 1..255")
   }
-  let total_samples = checked_total_samples(width, height, components)
+  let total_samples = frame.total_samples()
   guard width <= limits.max_width &&
     height <= limits.max_height &&
     total_samples <= limits.max_pixels.to_int64() else {

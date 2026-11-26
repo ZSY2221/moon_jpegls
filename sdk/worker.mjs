@@ -54,8 +54,8 @@ async function run(message) {
   let outputPeakBytes = 0;
   const outputQueueBytes = () => (batch?.samples.buffer.byteLength ?? 0) + inFlightOutputBytes;
   const recordOutput = (stats, sourceBytes = 0) => {
-    // Count explicit ArrayBuffer payloads, including the source row while it
-    // is copied into a batch. This is not JS heap/RSS or consumer retention.
+    // Include the current source row during batch copies and component switches.
+    // This counts explicit output payloads throughout the ACK lifetime.
     outputPeakBytes = Math.max(outputPeakBytes, stats.outputPeakBytes, outputQueueBytes() + sourceBytes);
   };
   const outputStats = (stats) => {
@@ -77,27 +77,11 @@ async function run(message) {
     const { startIndex, count, samples, frame: info, preset, stats, meta, stride } = batch;
     batch = null;
     lastBatchFlush = stats.elapsedMs;
-    const rowWidth = stride ?? info.width;
-    const used = count * rowWidth;
+    const used = count * stride;
     // Keep a short view for the final/time-limited batch without a second copy.
     const payload = used === samples.length ? samples : samples.subarray(0, used);
     return sendOutput('rows', {
-      startIndex,
-      count,
-      samples: payload,
-      frame: info,
-      preset,
-      scanIndex: meta?.scanIndex ?? 0,
-      componentIndex: meta?.componentIndex ?? 0,
-      componentId: meta?.componentId ?? 1,
-      near: meta?.near ?? info.near,
-      height: meta?.height ?? info.height,
-      interleave: meta?.interleave ?? 0,
-      pointTransform: meta?.pointTransform ?? 0,
-      layout: meta?.layout ?? 'planar',
-      stride: rowWidth,
-      sampleBytes: meta?.sampleBytes ?? 2,
-      endianness: meta?.endianness ?? 'host-u16',
+      startIndex, count, samples: payload, frame: info, preset, ...meta,
     }, payload, stats);
   };
   const settings = {
@@ -125,8 +109,10 @@ async function run(message) {
       lastProgress = stats.elapsedMs;
       const scanKey = rowMeta ? `${rowMeta.scanIndex}:${rowMeta.componentIndex}` : '0:0';
       if (batch && batch.scanKey !== scanKey) {
+        recordOutput(stats, row.buffer.byteLength);
         await flushBatch();
       }
+      const stride = rowMeta?.stride ?? info.width;
       const metaFields = {
         scanIndex: rowMeta?.scanIndex ?? 0,
         componentIndex: rowMeta?.componentIndex ?? 0,
@@ -136,28 +122,19 @@ async function run(message) {
         interleave: rowMeta?.interleave ?? 0,
         pointTransform: rowMeta?.pointTransform ?? 0,
         layout: rowMeta?.layout ?? 'planar',
-        stride: rowMeta?.stride ?? info.width,
+        width: rowMeta?.width ?? stride,
+        stride,
         sampleBytes: rowMeta?.sampleBytes ?? 2,
         endianness: rowMeta?.endianness ?? 'host-u16',
       };
-      if (index === 0 || maxBatchBytes <= 0) {
+      const maxRows = Math.floor(maxBatchBytes / (stride * 2));
+      if (index === 0 || maxRows <= 1) {
         lastBatchFlush = stats.elapsedMs;
         return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
       }
-      const maxRows = Math.max(1, Math.floor(maxBatchBytes / (info.width * 2)));
-      if (maxRows <= 1) {
-        lastBatchFlush = stats.elapsedMs;
-        return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
-      }
-      const stride = rowMeta?.stride ?? info.width;
       if (!batch) {
         const compHeight = rowMeta?.height ?? info.height;
-        const maxRowsForStride = Math.max(1, Math.floor(maxBatchBytes / (stride * 2)));
-        if (maxRowsForStride <= 1) {
-          lastBatchFlush = stats.elapsedMs;
-          return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
-        }
-        const capacityRows = Math.min(maxRowsForStride, compHeight - index);
+        const capacityRows = Math.min(maxRows, compHeight - index);
         batch = {
           scanKey,
           meta: metaFields,

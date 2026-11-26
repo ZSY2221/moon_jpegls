@@ -1,3 +1,5 @@
+import { componentDimensions } from '../sdk/index.mjs';
+
 const ids = ['original', 'reconstruction', 'difference'];
 
 const ERROR_STOPS = {
@@ -266,9 +268,15 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     const scale = Math.min(1, 480 / frame.width, 320 / frame.height);
     const width = Math.max(1, Math.floor(frame.width * scale));
     const height = Math.max(1, Math.floor(frame.height * scale));
-    const xMap = Uint16Array.from({ length: width }, (_, x) => Math.floor(x * frame.width / width));
     const componentCount = options.componentCount ?? frame.components?.length ?? 1;
-    const channel = options.initialChannel ?? (componentCount === 3 ? 'composite' : 0);
+    const { widths, heights } = componentDimensions(frame);
+    const sourceHeights = Array.from({ length: componentCount }, (_, c) => heights[c] ?? frame.height);
+    const xMaps = Array.from({ length: componentCount }, (_, c) =>
+      Uint16Array.from({ length: width }, (_, x) => Math.floor(x * (widths[c] ?? frame.width) / width)));
+    const sampled = widths.some((w, c) => w !== frame.width || heights[c] !== frame.height);
+    const composite = componentCount >= 3 && !sampled;
+    const requestedChannel = options.initialChannel ?? (componentCount === 3 ? 'composite' : 0);
+    const channel = requestedChannel === 'composite' && !composite ? 0 : requestedChannel;
     for (const [index, canvas] of canvases.entries()) {
       canvas.width = width;
       canvas.height = height;
@@ -284,10 +292,12 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     const initialLut = buildErrorLut(frame.near);
     errorLuts.set(initialLut.near, initialLut);
     state = {
-      frame,
       width,
       height,
-      xMap,
+      xMaps,
+      sourceHeights,
+      sampled,
+      composite,
       contexts,
       componentCount,
       channel,
@@ -304,32 +314,33 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
   }
 
   function drawRow(index, reconstructed, original, meta = undefined) {
-    const { frame, width, height, xMap, nextY, componentCount } = state;
+    const { width, height, xMaps, sourceHeights, nextY, componentCount } = state;
     const c = meta?.componentIndex ?? 0;
     if (c < 0 || c >= componentCount) return;
     if (meta?.near !== undefined) state.componentNears[c] = meta.near;
     if (meta?.preset?.maxval !== undefined) state.componentMaxvals[c] = meta.preset.maxval;
-    const py = nextY[c];
-    if (py === height || index !== Math.floor(py * frame.height / height)) return;
-    const base = py * width;
+    const xMap = xMaps[c];
     const recPlane = state.reconstruction[c];
     const origPlane = state.original?.[c] ?? null;
-    for (let x = 0; x < width; x++) {
-      recPlane[base + x] = reconstructed[xMap[x]];
-      if (original !== null && origPlane !== null) {
-        origPlane[base + x] = original[xMap[x]];
+    let firstCanvasAt;
+    for (let py = nextY[c]; py < height && index === Math.floor(py * sourceHeights[c] / height); py++) {
+      const base = py * width;
+      for (let x = 0; x < width; x++) {
+        recPlane[base + x] = reconstructed[xMap[x]];
+        if (original !== null && origPlane !== null) origPlane[base + x] = original[xMap[x]];
+      }
+      nextY[c] = py + 1;
+      if (state.channel === c || state.channel === 'composite') {
+        const painted = renderCanvasRow(py);
+        firstCanvasAt ??= painted;
       }
     }
-    nextY[c] = py + 1;
-    if (state.channel === c || (state.channel === 'composite' && componentCount >= 3)) {
-      return renderCanvasRow(py);
-    }
-    return undefined;
+    return firstCanvasAt;
   }
 
   function setChannel(channel) {
     if (!state) return;
-    const nextChannel = channel === 'composite' && state.componentCount >= 3
+    const nextChannel = channel === 'composite' && state.composite
       ? 'composite'
       : Math.max(0, Math.min(state.componentCount - 1, Number(channel) || 0));
     state.channel = nextChannel;
@@ -343,6 +354,11 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     if (state.selected) {
       const [sx, sy] = state.selected;
       if (sy < maxPy) inspect(sx, sy);
+      else {
+        state.selected = undefined;
+        reportPixel(undefined);
+        syncOverlays();
+      }
     }
   }
 
@@ -409,12 +425,14 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     const position = y * state.width + x;
     syncOverlays();
     drawMagnifiers(x, y);
-    if (state.componentCount === 1) {
-      const reconstructed = state.reconstruction[0][position];
-      const original = state.original?.[0][position];
+    if (state.componentCount === 1 || state.sampled) {
+      const c = state.sampled ? state.channel : 0;
+      const reconstructed = state.reconstruction[c][position];
+      const original = state.original?.[c][position];
       reportPixel({
-        x: state.xMap[x],
-        y: Math.floor(y * state.frame.height / state.height),
+        x: state.xMaps[c][x],
+        y: Math.floor(y * state.sourceHeights[c] / state.height),
+        ...(state.sampled ? { near: state.componentNears[c] } : {}),
         original,
         reconstructed,
         error: original === undefined ? undefined : Math.abs(original - reconstructed),
@@ -436,8 +454,8 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     });
     const activeComp = typeof state.channel === 'number' ? components[state.channel] : components[0];
     reportPixel({
-      x: state.xMap[x],
-      y: Math.floor(y * state.frame.height / state.height),
+      x: state.xMaps[0][x],
+      y: Math.floor(y * state.sourceHeights[0] / state.height),
       channel: state.channel,
       original: activeComp.original,
       reconstructed: activeComp.reconstructed,

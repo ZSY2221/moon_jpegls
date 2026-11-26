@@ -39,3 +39,11 @@ node web/capture-presentation.mjs --output .evidence/presentation
 ```
 
 See the [presentation handoff](../docs/PRESENTATION_HANDOFF.md) for the 90-second operation sequence, controlled output failure tests and paired performance guard.
+
+### Sampled JPEG-LS decode
+
+The Scan Structure Inspector shows the stored sampling factors, real plane sizes, and lines per MCU. The component preview resamples for display. Pixel inspection reports the selected component's coordinates and original-width integer sample values from the decoder.
+
+Sampled images with unequal component sizes export as planar U16LE. Planes follow SOF55 declaration order and contain their actual width × height samples, with rows in raster order. The JSON report lists plane dimensions and sample offsets. The file sink suggests the neutral `.decoded` suffix because it opens before the frame header is parsed. Buffered downloads receive the format-specific suffix. The worker delivers rows incrementally and the browser writes each raw row directly to its plane offset. The host conversion measurement includes one U16LE row, and the buffered sink's retained output is reported separately.
+
+Set `MOONJLS_ANNEX_FIXTURES` to the extracted official Annex E image directory when running `npm run smoke` to check both sampled fixtures against pinned HP 1.00 reconstruction hashes.

@@ -88,6 +88,7 @@ export interface RowMeta {
   readonly pointTransform?: number;
   readonly preset: Preset | null;
   readonly layout: 'planar';
+  readonly width?: number;
   readonly stride: number;
   readonly sampleBytes: 2;
   readonly endianness: 'host-u16';

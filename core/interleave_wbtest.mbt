@@ -595,3 +595,189 @@ test "ILV=2 initializes shared state per scan and inherits raw LSE1 defaults" {
   assert_eq(parsed[0].preset, default_preset(1000, 3))
   assert_eq(parsed[1].preset, default_preset(1000, 0))
 }
+
+///|
+test "sampled ILV=1 coded padding participates in entropy and never leaves the decoder" {
+  let frame : FrameInfo = {
+    width: 3,
+    height: 1,
+    bits: 8,
+    components: [
+      { id: 1, h_sampling: 1, v_sampling: 2, },
+      { id: 2, h_sampling: 1, v_sampling: 1, },
+    ],
+  }
+  let spec : MultiScanSpec = {
+    component_ids: [1, 2],
+    interleave: 1,
+    near: 0,
+    point_transform: 0,
+    preset: Preset::defaults(),
+  }
+  // B.4 requires one more component-1 line. For zeros the lines encode
+  // 111 (real), 11 (same component RUNindex), 111 (component 2), then stuffing.
+  let header = b"\xff\xd8\xff\xf7\x00\x0e\x08\x00\x01\x00\x03\x02\x01\x12\x00\x02\x11\x00\xff\xda\x00\x0a\x02\x01\x00\x02\x00\x00\x01\x00"
+  let zeros = FixedArray::make(6, 0)
+  let expected = header + b"\xff\x00\xff\xd9"
+  assert_eq(encode_scans_chunks(frame, [spec], zeros, 1, 1), expected)
+  // A second literal has a coded nonzero pad [1, 0, 0], confirmed by HP 1.00.
+  let nonzero_pad = header + b"\xeb\xbc\xff\xd9"
+  for coded in [expected, nonzero_pad] {
+    for span in [1, 7, 4096] {
+      let (parsed, scans, samples, delivery) = decode_chunked(coded, span)
+      assert_eq(parsed, frame)
+      assert_eq(samples, zeros)
+      assert_eq(delivery, [(0, 0), (1, 0)])
+      assert_eq(scans[0].rows_decoded, 2)
+      assert_true(scans[0].completed)
+    }
+    let dec = Decoder::new(Limits::default())
+    let mut at = 0
+    let entropy_end = coded.length() - 2
+    for slot in 0..<2 {
+      let operation = dec.step(coded, at, entropy_end - at, false)
+      at += operation.consumed
+      assert_eq(operation.status, RowReady)
+      assert_eq(dec.current_component_index(), slot)
+    }
+    let held = dec.step(coded, at, entropy_end - at, false)
+    at += held.consumed
+    assert_eq(at, entropy_end)
+    assert_eq(held.status, NeedInput)
+    assert_eq(dec.step(coded, at, 0, false).status, NeedInput)
+    assert_eq(dec.step(coded, at, 2, true).status, Done)
+    assert_true(
+      (Ok(decode_multicomponent(coded + b"\x00")) catch { err => Err(err) })
+      is Err(InvalidData(_)),
+    )
+  }
+  assert_true(
+    (Ok(decode_multicomponent(header + b"\xff\xd9")) catch { err => Err(err) })
+    is Err(InvalidData(_)),
+  )
+}
+
+///|
+test "sampled ILV=1 rounds component dimensions up and clips every partial MCU row" {
+  let frame : FrameInfo = {
+    width: 5,
+    height: 5,
+    bits: 12,
+    components: [
+      { id: 117, h_sampling: 2, v_sampling: 4, },
+      { id: 7, h_sampling: 1, v_sampling: 3, },
+      { id: 9, h_sampling: 2, v_sampling: 1, },
+    ],
+  }
+  let preset = { ..Preset::defaults(), maxval: 1000, }
+  let scans : Array[MultiScanSpec] = [
+    {
+      component_ids: [117, 7, 9],
+      interleave: 1,
+      near: 3,
+      point_transform: 0,
+      preset,
+    },
+  ]
+  let planes = make_pattern_planes(frame, [1000, 1000, 1000])
+  assert_eq(planes[0].length(), 25)
+  assert_eq(planes[1].length(), 12)
+  assert_eq(planes[2].length(), 10)
+  let samples = pack_scan_samples(frame, scans, planes)
+  let limits = { ..Limits::default(), max_pixels: 47, }
+  let coded = encode_scans(frame, scans, samples, limits~)
+  for span in [1, 7, 4096] {
+    assert_eq(encode_scans_chunks(frame, scans, samples, span, 1), coded)
+    let (info, parsed, recon, rows) = decode_chunked(coded, span)
+    assert_eq(info, frame)
+    assert_eq(parsed[0].rows_decoded, 11)
+    assert_true(parsed[0].completed)
+    assert_eq(rows, [
+      (0, 0),
+      (0, 1),
+      (0, 2),
+      (0, 3),
+      (1, 0),
+      (1, 1),
+      (1, 2),
+      (2, 0),
+      (0, 4),
+      (1, 3),
+      (2, 1),
+    ])
+    assert_eq(recon.length(), 47)
+    let mut at = 0
+    for plane in planes {
+      for valid in plane {
+        assert_true(abs_i32(valid - recon[at]) <= 3)
+        at += 1
+      }
+    }
+  }
+  let (_, _, actual) = decode_multicomponent(coded, limits~)
+  assert_eq(actual.length(), 47)
+  let rejected = { ..limits, max_pixels: 46, }
+  assert_true(
+    (Ok(encode_scans(frame, scans, samples, limits=rejected)) catch {
+      err => Err(err)
+    })
+    is Err(ResourceLimit(_)),
+  )
+  assert_true(
+    (Ok(decode_multicomponent(coded, limits=rejected)) catch {
+      err => Err(err)
+    })
+    is Err(ResourceLimit(_)),
+  )
+  let illegal = Bytes::makei(coded.length(), i => {
+    if i == 12 {
+      b'\x20'
+    } else {
+      coded[i]
+    }
+  })
+  assert_true(
+    (Ok(decode_multicomponent(illegal)) catch { err => Err(err) })
+    is Err(InvalidData(_)),
+  )
+}
+
+///|
+test "sampled ILV=0 and equal-sized ILV=2 subsets use their own scan height" {
+  let frame : FrameInfo = {
+    width: 11,
+    height: 7,
+    bits: 8,
+    components: [
+      { id: 1, h_sampling: 4, v_sampling: 4, },
+      { id: 9, h_sampling: 1, v_sampling: 1, },
+      { id: 7, h_sampling: 2, v_sampling: 2, },
+      { id: 5, h_sampling: 2, v_sampling: 2, },
+    ],
+  }
+  let preset = Preset::defaults()
+  let scans : Array[MultiScanSpec] = [
+    { component_ids: [9], interleave: 0, near: 0, point_transform: 0, preset, },
+    {
+      component_ids: [7, 5],
+      interleave: 2,
+      near: 0,
+      point_transform: 0,
+      preset,
+    },
+    { component_ids: [1], interleave: 0, near: 0, point_transform: 0, preset, },
+  ]
+  let planes = make_pattern_planes(frame, [255, 255, 255, 255])
+  let input = pack_scan_samples(frame, scans, planes)
+  let coded = encode_scans_chunks(frame, scans, input, 1, 1)
+  let (_, parsed, recon, _) = decode_chunked(coded, 7)
+  assert_eq(parsed.map(scan => scan.rows_decoded), [2, 8, 7])
+  assert_eq(recon.length(), 131)
+  let mut at = 0
+  for plane in planes {
+    for expected in plane {
+      assert_eq(recon[at], expected)
+      at += 1
+    }
+  }
+}

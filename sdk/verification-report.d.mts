@@ -25,7 +25,10 @@ export interface VerificationReport {
   input: Input | null;
   output: Output | null;
   frame: (Omit<Frame, 'maxval' | 'preset' | 'components' | 'scans'> & {
-    maxval: number; components: number; scans: number; interleave: 0; pointTransform: 0; mapping: false;
+    maxval: number; components: number; scans: number; interleave: number; pointTransform: number; mapping: false;
+    componentGeometry?: readonly {
+      id: number; hSampling: number; vSampling: number; width: number; height: number; sampleOffset: number;
+    }[];
     preset: Preset | null;
   }) | null;
   stages: Record<'encode' | 'decode' | 'compare', Stage>;

@@ -24,12 +24,16 @@ async function until(predicate, label) {
   assert.fail(`Timed out waiting for ${label}`);
 }
 
-async function fixture({ width = 8, height = 12, partialInput = false, earlyFlush = false } = {}) {
-  const frame = { width, height, bits: 16, near: 0 };
+async function fixture({ width = 8, height = 12, partialInput = false, earlyFlush = false, sampled = false } = {}) {
+  const components = sampled ? [{ id: 10, hSampling: 1, vSampling: 2 }, { id: 20, hSampling: 2, vSampling: 1 }] : null;
+  const frame = { width, height, bits: 16, near: 0, ...(sampled ? { components } : {}) };
   const state = { clock: 0, steps: 0, reads: 0, loads: 0, cancellations: 0, workerMessages: [], clientMessages: [], terminated: false };
   const program = [{ status: 'NeedInput', at: 0 }];
   for (let row = 0; row < height; row++) {
-    program.push({ status: 'RowReady', row, at: row + 1 + (partialInput && row >= 3 ? 100 : 0) + (earlyFlush && row >= 2 ? 20 : 0) });
+    program.push({ status: 'RowReady', row, component: 0, at: row + 1 + (partialInput && row >= 3 ? 100 : 0) + (earlyFlush && row >= 2 ? 20 : 0) });
+    if (sampled && (row % 2 === 1 || row === height - 1)) {
+      program.push({ status: 'RowReady', row: Math.floor(row / 2), component: 1, at: row + 1 });
+    }
     if (partialInput && row === 2) program.push({ status: 'NeedInput', at: 100 });
   }
   program.push({ status: 'Done', at: height + 2 + (partialInput ? 100 : 0) + (earlyFlush ? 20 : 0) });
@@ -48,8 +52,15 @@ async function fixture({ width = 8, height = 12, partialInput = false, earlyFlus
       state.clock = entry.at;
       const consumed = this.remaining;
       this.remaining = 0;
-      const chunk = entry.row === undefined ? undefined : Uint16Array.from({ length: width }, (_, x) => entry.row * width + x);
-      return { status: entry.status, consumed, produced: chunk?.length ?? 0, chunk };
+      const stride = sampled && entry.component === 0 ? Math.ceil(width / 2) : width;
+      const chunk = entry.row === undefined ? undefined : Uint16Array.from({ length: stride }, (_, x) => entry.row * stride + x);
+      const rowMeta = sampled && chunk ? {
+        scanIndex: 0, componentIndex: entry.component, componentId: components[entry.component].id,
+        rowIndex: entry.row, width: stride, stride,
+        height: entry.component === 0 ? height : Math.ceil(height / 2),
+        layout: 'planar', interleave: 1, sampleBytes: 2,
+      } : undefined;
+      return { status: entry.status, consumed, produced: chunk?.length ?? 0, chunk, rowMeta };
     }
   }
   const globals = { AbortController, ArrayBuffer, Uint8Array, Uint16Array, URL, WebAssembly, console,
@@ -325,4 +336,41 @@ test('multi-scan fixture flushes batch at scan boundary and tracks component ide
   assert.equal(state.workerMessages.filter(m => m.type === 'scanComplete').length, 2);
   monotonic(state.workerMessages);
   assert.equal(done.stats.outputQueueBytes, 0);
+});
+
+test('sampling batches by component stride and counts the next row during preceding ACK', async () => {
+  const run = await fixture({ width: 9, height: 7, sampled: true });
+  const held = deferred();
+  let narrowBatch;
+  const job = run.start({ maxBatchBytes: 28, onEvent(event) {
+    if (event.type === 'rows' && !narrowBatch) {
+      narrowBatch = event;
+      return held.promise;
+    }
+  } });
+  await until(() => narrowBatch, 'narrow component batch');
+  const steps = run.state.steps;
+  await tick();
+  await tick();
+  try {
+    assert.equal(run.state.steps, steps, 'Decoder waits for the transferred batch ACK');
+    assert.equal(narrowBatch.componentId, 10);
+    assert.equal(narrowBatch.startIndex, 1);
+    assert.equal(narrowBatch.count, 1);
+    assert.equal(narrowBatch.width, 5);
+    assert.equal(narrowBatch.stride, 5);
+    assert.equal(narrowBatch.height, 7);
+    assert.equal(narrowBatch.samples.byteLength, 10);
+    assert.equal(narrowBatch.samples.buffer.byteLength, 20);
+    assert.equal(narrowBatch.stats.outputQueueBytes, 20);
+    assert.equal(narrowBatch.stats.outputPeakBytes, 38, '20-byte narrow batch plus 18-byte next component row');
+  } finally {
+    held.resolve();
+  }
+  const done = await job.result;
+  monotonic(run.state.workerMessages);
+  assert.equal(done.stats.outputPeakBytes, 38);
+  assert.equal(done.stats.outputQueueBytes, 0);
+  assert.equal(done.stats.rows, 11);
+  assert.equal(done.stats.outputProduced, 71);
 });

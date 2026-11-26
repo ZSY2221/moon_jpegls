@@ -15,7 +15,7 @@ const backends = ['js', 'wasm-gc'];
 
 function checkManifest() {
   const digest = /^[0-9a-f]{64}$/;
-  const states = new Set(['passed', 'unsupported', 'recognized_only', 'not_run', 'planned', 'blocked', 'failed']);
+  const states = new Set(['passed', 'unsupported', 'recognized_only', 'not_run', 'planned', 'blocked', 'failed', 'reference_unsupported']);
   assert.equal(manifest.schemaVersion, 1);
   assert.match(manifest.fixtureArchive.sha256, digest);
   assert.match(manifest.officialReference.sha256, digest);
@@ -27,6 +27,13 @@ function checkManifest() {
     assert.ok(['supported', 'unsupported'].includes(item.expected), `${item.test_id} scope`);
     assert.ok([0, 1, 2].includes(item.interleave), `${item.test_id} interleave`);
     for (const name of item.sourceFiles) assert.match(manifest.sourceFiles[name].sha256, digest);
+    if (item.sampling) {
+      assert.equal(item.sampling.length, item.components, `${item.test_id} sampling count`);
+      item.sampling.forEach(({ id, h, v }, index) => {
+        assert.equal(id, index + 1, `${item.test_id} component ID`);
+        assert.ok([h, v].every((factor) => Number.isInteger(factor) && factor >= 1 && factor <= 4));
+      });
+    }
   }
   const ids = manifest.features.map((feature) => feature.feature_id);
   assert.equal(new Set(ids).size, ids.length, 'Unique feature identifiers');
@@ -69,17 +76,22 @@ function selectedCases(value) {
 function child(command, args, options = {}) {
   const result = spawnSync(command, args, { timeout: 30_000, ...options });
   const run = { command: [command, ...args], exitCode: result.status, signal: result.signal };
+  if (options.cwd) run.cwd = options.cwd;
   if (result.error) throw Object.assign(result.error, { run });
   return { run, stdout: result.stdout, stderr: result.stderr.toString('utf8').trimEnd() };
 }
 
 function nativeCommand(file, distro) {
   const binary = resolve(file);
-  if (!distro) return { binary, run: (args, input) => child(binary, args, { input }) };
+  if (!distro) return { binary, path: resolve, run: (args, input) => child(binary, args, { input }) };
   const args = ['--distribution', distro, '--exec'];
-  const converted = child('wsl.exe', [...args, 'wslpath', '-a', '-u', binary]);
-  assert.equal(converted.run.exitCode, 0, converted.stderr);
-  return { binary, run: (parameters, input) => child('wsl.exe', [...args, converted.stdout.toString().trim(), ...parameters], { input }) };
+  const path = (hostPath) => {
+    const converted = child('wsl.exe', [...args, 'wslpath', '-a', '-u', resolve(hostPath)]);
+    assert.equal(converted.run.exitCode, 0, converted.stderr);
+    return converted.stdout.toString().trim();
+  };
+  const nativeBinary = path(binary);
+  return { binary, path, run: (parameters, input) => child('wsl.exe', [...args, nativeBinary, ...parameters], { input }) };
 }
 
 async function knownBytes(directory, name, metadata) {
@@ -87,6 +99,10 @@ async function knownBytes(directory, name, metadata) {
   assert.equal(bytes.length, metadata.bytes, `${name} byte count`);
   assert.equal(sha256(bytes), metadata.sha256, `${name} SHA-256`);
   return bytes;
+}
+
+function removeIfPresent(file) {
+  return unlink(file).catch((error) => { if (error.code !== 'ENOENT') throw error; });
 }
 
 function samplesFromPnm(bytes, expected, magic = 'P5', comps = 1) {
@@ -104,7 +120,34 @@ function samplesFromPgm(bytes, expected) {
   return samplesFromPnm(bytes, expected, 'P5', 1);
 }
 
+function withGeometry(spec) {
+  const sampling = spec.sampling ?? Array.from({ length: spec.components }, (_, i) => ({ id: i + 1, h: 1, v: 1 }));
+  const maxH = Math.max(...sampling.map(({ h }) => h));
+  const maxV = Math.max(...sampling.map(({ v }) => v));
+  let samples = 0;
+  const planes = sampling.map(({ id, h, v }) => {
+    const width = Math.ceil(spec.width * h / maxH);
+    const height = Math.ceil(spec.height * v / maxV);
+    const plane = { id, h, v, width, height, bits: spec.bits, offset: samples };
+    samples += width * height;
+    return plane;
+  });
+  const sampled = sampling.some(({ h, v }) => h !== 1 || v !== 1);
+  return { ...spec, sampling, planes, samples, sampled };
+}
+
+async function readPgmPlanes(paths, item) {
+  assert.equal(paths.length, item.planes.length, 'PGM plane count');
+  const planar = new Uint16Array(item.samples);
+  for (const [index, path] of paths.entries()) {
+    const plane = item.planes[index];
+    planar.set(samplesFromPgm(await readFile(path), plane), plane.offset);
+  }
+  return planar;
+}
+
 function planarFromInterleaved(interleaved, item) {
+  assert.ok(!item.sampled, 'Interleaved source requires full-resolution planes');
   const planeSize = item.width * item.height;
   assert.equal(interleaved.length, planeSize * item.components, 'Interleaved sample count');
   const planar = new Uint16Array(interleaved.length);
@@ -135,15 +178,20 @@ function nativeRaw(pixels, bits) {
 
 function compare(actual, expected, item, tolerance = 0) {
   assert.equal(actual.length, expected.length, 'Sample count');
-  const planeSize = item.width * item.height;
+  assert.equal(actual.length, item.samples, 'Annex E sample count');
   let maxAbsoluteError = 0;
   let firstDifference = null;
+  let componentIndex = 0;
   for (let i = 0; i < actual.length; i++) {
     const difference = Math.abs(actual[i] - expected[i]);
     if (difference > tolerance && firstDifference === null) {
-      const withinPlane = i % planeSize;
+      while (componentIndex + 1 < item.planes.length && i >= item.planes[componentIndex + 1].offset) {
+        componentIndex += 1;
+      }
+      const plane = item.planes[componentIndex];
+      const withinPlane = i - plane.offset;
       firstDifference = {
-        componentIndex: Math.floor(i / planeSize), x: withinPlane % item.width, y: Math.floor(withinPlane / item.width),
+        componentIndex, componentId: plane.id, x: withinPlane % plane.width, y: Math.floor(withinPlane / plane.width),
         actual: actual[i], expected: expected[i],
       };
     }
@@ -171,24 +219,26 @@ function checkFrame(actual, item) {
 function streamEvidence(bytes, frame, components, scans, item) {
   checkFrame(frame, item);
   assert.equal(scans.length, item.scans, 'Scan count');
-  const expectedIds = Array.from({ length: item.components }, (_, i) => i + 1);
+  const expectedIds = item.sampling.map(({ id }) => id);
   const sampling = components.map((comp) => ({
     id: comp.id, h: comp.hSampling ?? comp.h, v: comp.vSampling ?? comp.v,
   }));
-  assert.deepEqual(sampling, expectedIds.map((id) => ({ id, h: 1, v: 1 })), 'Frame components and sampling');
+  assert.deepEqual(sampling, item.sampling, 'Frame components and sampling');
   return {
-    components: sampling,
+    components: item.planes.map(({ id, h, v, width, height }) => ({ id, h, v, width, height })),
     scans: scans.map((scan, index) => {
       assert.ok(scan.completed, 'Complete scan');
       assert.equal(scan.near, item.near, 'Scan NEAR');
       assert.equal(scan.interleave, item.interleave, 'Scan ILV');
       assert.equal(scan.pointTransform, 0, 'Point transform');
       assert.deepEqual(scan.componentIds, item.interleave === 0 ? [expectedIds[index]] : expectedIds, 'Scan order');
+      const rows = item.interleave === 0 ? item.planes[index].height : item.planes.reduce((sum, plane) => sum + plane.height, 0);
+      assert.equal(scan.rows, rows, 'Valid decoded rows in scan');
       assert.ok(scan.entropyOffset < scan.endOffset && scan.endOffset <= bytes.length, 'Entropy bounds');
       const coded = bytes.subarray(scan.entropyOffset, scan.endOffset);
       return {
         componentIds: scan.componentIds, near: scan.near, interleave: scan.interleave,
-        pointTransform: scan.pointTransform, preset: scan.preset, codedBytes: coded.length, codedSha256: sha256(coded),
+        pointTransform: scan.pointTransform, preset: scan.preset, rows, codedBytes: coded.length, codedSha256: sha256(coded),
       };
     }),
   };
@@ -248,7 +298,6 @@ async function createReference(hpDirectory) {
   const work = await mkdtemp(join(tmpdir(), 'moonjls-annex-e-'));
   const input = join(work, 'stream.jls');
   const createdOutputs = new Set();
-  const remove = (file) => unlink(file).catch((error) => { if (error.code !== 'ENOENT') throw error; });
   return {
     identity: { name: 'HP JPEG-LS reference software', version: '1.00', officialSoftware: true,
       executableSha256: Object.fromEntries(binaries) },
@@ -259,23 +308,15 @@ async function createReference(hpDirectory) {
         ? ['result.pgm'] : Array.from({ length: item.components }, (_, idx) => `comp${idx}.pgm`);
       const outPaths = outNames.map((n) => join(work, n));
       outPaths.forEach((p) => createdOutputs.add(p));
-      await Promise.all(outPaths.map(remove));
+      await Promise.all(outPaths.map(removeIfPresent));
       const result = child(join(path, name), ['stream.jls', ...outNames], { cwd: work });
       evidence.run = result.run;
       assert.equal(result.run.exitCode, 0, `${name}: ${result.stderr}\n${result.stdout}`);
       if (item.interleave === 2) return planarFromPpm(await readFile(outPaths[0]), item);
-      if (item.components === 1) {
-        return samplesFromPgm(await readFile(outPaths[0]), item);
-      }
-      const planeSize = item.width * item.height;
-      const planar = new Uint16Array(planeSize * item.components);
-      for (let c = 0; c < item.components; c++) {
-        planar.set(samplesFromPgm(await readFile(outPaths[c]), item), c * planeSize);
-      }
-      return planar;
+      return readPgmPlanes(outPaths, item);
     },
     async close() {
-      await Promise.all([remove(input), ...[...createdOutputs].map(remove)]);
+      await Promise.all([removeIfPresent(input), ...[...createdOutputs].map(removeIfPresent)]);
       await rmdir(work);
     },
   };
@@ -302,12 +343,14 @@ async function readOriginal(fixtures, item, evidence) {
     [name, { bytes: bytes.length, sha256: sha256(bytes) }]));
   const pgms = [...sources].filter(([name]) => name.endsWith('.PGM'));
   const ppm = [...sources].find(([name]) => name.endsWith('.PPM'));
-  const planeSize = item.width * item.height;
   let pixels;
   if (pgms.length) {
     assert.equal(pgms.length, item.components, 'Source plane count');
-    pixels = new Uint16Array(planeSize * item.components);
-    pgms.forEach(([, bytes], c) => pixels.set(samplesFromPgm(bytes, item), c * planeSize));
+    pixels = new Uint16Array(item.samples);
+    pgms.forEach(([, bytes], c) => {
+      const plane = item.planes[c];
+      pixels.set(samplesFromPgm(bytes, plane), plane.offset);
+    });
   }
   if (ppm) {
     const ppmPixels = planarFromPpm(ppm[1], item);
@@ -323,14 +366,12 @@ async function readOriginal(fixtures, item, evidence) {
 async function decodeTarget(core, native, bytes, item, evidence) {
   if (core) {
     evidence.decodeRun = { api: 'SDK decodePlanarImage', exitCode: null };
-    const result = await decodePlanarImage(core, bytes);
+    const result = await decodePlanarImage(core, bytes, { trailing: 'reject' });
     const structure = streamEvidence(bytes, result.frame, result.frameInfo.components, result.scans, item);
+    assert.deepEqual(result.planes.map(({ length }) => length), item.planes.map(({ width, height }) => width * height));
     return { pixels: result.samples, structure };
   }
-  const result = native.run(['decode', '-', '-', item.components > 1 ? 'ppm' : 'raw-le', '4096'], bytes);
-  evidence.decodeRun = result.run;
-  assert.equal(result.run.exitCode, 0, result.stderr);
-  const pixels = item.components > 1 ? planarFromPpm(result.stdout, item) : nativeSamples(result.stdout, item.bits);
+  const pixels = await decodeNativePixels(native, bytes, item, evidence);
   const inspected = native.run(['inspect', '-', '4096', '--json'], bytes);
   evidence.inspectRun = inspected.run;
   assert.equal(inspected.run.exitCode, 0, inspected.stderr);
@@ -339,21 +380,49 @@ async function decodeTarget(core, native, bytes, item, evidence) {
   return { pixels, structure };
 }
 
-async function encodeTarget(core, native, original, item, evidence) {
+async function decodeNativePixels(native, bytes, item, evidence) {
+  if (!item.sampled) {
+    const result = native.run(['decode', '-', '-', item.components > 1 ? 'ppm' : 'raw-le', '4096'], bytes);
+    evidence.decodeRun = result.run;
+    assert.equal(result.run.exitCode, 0, result.stderr);
+    return item.components > 1 ? planarFromPpm(result.stdout, item) : nativeSamples(result.stdout, item.bits);
+  }
+  const work = await mkdtemp(join(tmpdir(), 'moonjls-annex-native-'));
+  const paths = item.planes.map(({ id }) => join(work, `comp${id}.pgm`));
+  try {
+    const args = ['decode-pgms', '-', ...paths.map((path) => native.path(path)), '--chunk', '4096'];
+    const result = native.run(args, bytes);
+    evidence.decodeRun = result.run;
+    assert.equal(result.run.exitCode, 0, result.stderr);
+    return await readPgmPlanes(paths, item);
+  } finally {
+    await Promise.all(paths.map(removeIfPresent));
+    await rmdir(work);
+  }
+}
+
+async function encodeTarget(core, native, fixtures, original, item, evidence) {
   const { width, height, bits, near, preset, components, interleave } = item;
-  const componentIds = Array.from({ length: components }, (_, i) => i + 1);
   if (core) {
     const frame = { width, height, bits, near, ...(preset && { preset }) };
     if (components > 1) {
-      frame.components = componentIds.map((id) => ({ id }));
+      frame.components = item.sampling.map(({ id, h, v }) => ({ id, hSampling: h, vSampling: v }));
       frame.interleave = interleave;
     }
-    const planeSize = width * height;
-    const planes = componentIds.map((_, c) => original.subarray(c * planeSize, (c + 1) * planeSize));
+    const planes = item.planes.map((plane) => original.subarray(plane.offset, plane.offset + plane.width * plane.height));
     evidence.encodeRun = { api: 'SDK encodePlanarImage', exitCode: null };
     return Buffer.from((await encodePlanarImage(core, frame, planes)).bytes);
   }
   const flags = preset ? Object.entries(preset).flatMap(([name, value]) => [`--${name}`, String(value)]) : [];
+  if (item.sampled) {
+    const paths = item.sourceFiles.map((name) => native.path(join(fixtures, name)));
+    const sampling = item.sampling.map(({ h, v }) => `${h}x${v}`).join(',');
+    const result = native.run(['encode-pgms', String(near), '-', '--ilv', String(interleave),
+      '--chunk', '4096', '--sampling', sampling, ...flags, ...paths]);
+    evidence.encodeRun = result.run;
+    assert.equal(result.run.exitCode, 0, result.stderr);
+    return result.stdout;
+  }
   const args = components > 1
     ? ['encode-planar', ...[width, height, bits, components, near].map(String), '-', '-', 'raw-le', '4096',
       '--ilv', String(interleave), ...flags]
@@ -388,12 +457,17 @@ async function run(args) {
   const rows = [];
   let failed = false;
   try {
-    for (const item of manifest.cases) {
-      if (selected && !selected.has(item.id)) continue;
+    for (const spec of manifest.cases) {
+      if (selected && !selected.has(spec.id)) continue;
+      const item = withGeometry(spec);
       const official = await knownBytes(fixtures, item.file, item);
       const outside = item.expected === 'unsupported' && !selected;
       const row = { id: item.id, test_id: item.test_id, file: item.file, bytes: item.bytes, sha256: item.sha256,
         expected: outside ? 'unsupported' : 'supported', backends: {} };
+      if (item.sampled) row.geometry = {
+        width: item.width, height: item.height, bits: item.bits, near: item.near, interleave: item.interleave,
+        pointTransform: 0, components: item.planes, samples: item.samples,
+      };
       let original;
       let expected;
       if (!outside) {
@@ -431,7 +505,7 @@ async function run(args) {
           Object.assign(evidence, compare(result.pixels, original, item, item.near));
         });
         const encode = await classified({}, async (evidence) => {
-          const bytes = await encodeTarget(core, native, original, item, evidence);
+          const bytes = await encodeTarget(core, native, fixtures, original, item, evidence);
           evidence.bytes = bytes.length;
           evidence.sha256 = sha256(bytes);
           evidence.byteIdenticalToOfficial = bytes.equals(official);
