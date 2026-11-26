@@ -189,27 +189,28 @@
         "E.2-5",
         "E.2-6"
       ],
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
       "target_milestone": "M3-B",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
       "evidence_ref": "antigravity/t87-m3b-20261125"
     },
     {
       "feature_id": "sampling",
-      "display_name": "Component subsampling and MCU boundaries",
+      "display_name": "H/V sampling and ILV=1 edge MCU clipping",
       "standard_clause": "§4.3.1; Annex B; Annex D",
-      "encode_status": "unsupported",
-      "decode_status": "unsupported",
-      "format_status": "recognized_only",
-      "reference_support": "Official subsampled streams available. Check each intended reference separately.",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "HP 1.00 on E.2-7/8. CharLS Wasm 0.10.0 returns reference_unsupported.",
       "test_ids": [
         "E.2-7",
         "E.2-8"
       ],
-      "evidence_path": "docs/CONFORMANCE_RESULTS.md",
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
       "target_milestone": "M3-B",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5",
-      "evidence_ref": "main"
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
+      "evidence_ref": "antigravity/t87-m3b-20261125",
+      "notes": "For odd dimensions, MoonJLS rounds both axes up. HP 1.00 has narrower edge compatibility. Padding literals and row-delivery tests cover additional cases."
     },
     {
       "feature_id": "point_transform",
@@ -397,8 +398,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 2,
@@ -466,8 +467,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 3,
@@ -532,8 +533,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 4,
@@ -601,8 +602,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 5,
@@ -670,8 +671,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 6,
@@ -736,8 +737,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 7,
@@ -763,31 +764,49 @@
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 51781,
+            "samples": 98304,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 0
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 51781,
+            "samples": 98304,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 0
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 51781,
+            "samples": 98304,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 0
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa",
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
       "sampling": [
         {
           "h": 2,
@@ -830,31 +849,49 @@
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 32231,
+            "samples": 98304,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 3
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 32231,
+            "samples": 98304,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 3
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 32231,
+            "samples": 98304,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 3
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa",
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
       "sampling": [
         {
           "h": 2,
@@ -941,8 +978,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 10,
@@ -1012,8 +1049,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 11,
@@ -1078,8 +1115,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     },
     {
       "id": 12,
@@ -1144,8 +1181,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-hp.json",
-      "source_revision": "25fadceb8de039a76e749ff368993a30926176aa"
+      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
     }
   ],
   "officialReference": {
