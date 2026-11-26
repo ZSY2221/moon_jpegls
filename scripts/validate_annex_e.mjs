@@ -9,9 +9,13 @@ import { decodePlanarImage, encodePlanarImage, loadCore } from '../sdk/index.mjs
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const manifest = JSON.parse(await readFile(join(root, 'tests/conformance/manifest.json'), 'utf8'));
-const usage = 'Usage: node scripts/validate_annex_e.mjs --check-manifest | --fixtures DIR [--cases ID,ID,...] [--native-exe FILE [--native-wsl DISTRO]] [--hp-reference DIR]';
+const usage = 'Usage: node scripts/validate_annex_e.mjs --check-manifest | --fixtures DIR [--cases ID,ID,...] [--native-exe FILE [--native-wsl DISTRO]] [--hp-reference DIR | --hp-receipt FILE]';
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const backends = ['js', 'wasm-gc'];
+const archivedHp = {
+  receiptSha256: 'a0bbe83fdef589eadc2e1f735c0944b3b17348d516ec15e53f796a84b9a2bb88',
+  sourceRevision: '1b2d959015d15717b972c5a8bac35178b418d2d6',
+};
 
 function checkManifest() {
   const digest = /^[0-9a-f]{64}$/;
@@ -53,12 +57,13 @@ function parse(args) {
   const options = new Map();
   for (let index = 0; index < args.length; index += 2) {
     const [flag, value] = args.slice(index, index + 2);
-    if (!['--fixtures', '--cases', '--native-exe', '--native-wsl', '--hp-reference'].includes(flag) || !value || options.has(flag)) {
+    if (!['--fixtures', '--cases', '--native-exe', '--native-wsl', '--hp-reference', '--hp-receipt'].includes(flag) || !value || options.has(flag)) {
       throw new Error(usage);
     }
     options.set(flag, value);
   }
   if (!options.has('--fixtures') || (options.has('--native-wsl') && !options.has('--native-exe'))) throw new Error(usage);
+  if (options.has('--hp-receipt') && (options.has('--hp-reference') || !options.has('--cases'))) throw new Error(usage);
   return options;
 }
 
@@ -208,6 +213,46 @@ function compare(actual, expected, item, tolerance = 0) {
 
 function sampleDigest(samples) {
   return sha256(nativeRaw(samples, 16));
+}
+
+function compareReference(actual, expected, item) {
+  if (expected instanceof Uint16Array) return compare(actual, expected, item);
+  assert.equal(actual.length, item.samples, 'Archived reference sample count');
+  const actualSha256 = sampleDigest(actual);
+  assert.equal(actualSha256, expected.planarU16leSha256, 'Archived HP reconstruction SHA-256');
+  return { samples: actual.length, maxAbsoluteError: 0, firstDifference: null,
+    comparisonMode: 'archived-planar-u16le-sha256', actualSha256 };
+}
+
+async function createArchivedHpReference(path) {
+  const receiptPath = resolve(path);
+  const raw = (await readFile(receiptPath, 'utf8')).replace(/\r\n/g, '\n');
+  assert.equal(sha256(raw), archivedHp.receiptSha256, 'Archived HP receipt SHA-256 (LF)');
+  const receipt = JSON.parse(raw);
+  assert.equal(receipt.sourceRevision, archivedHp.sourceRevision);
+  assert.equal(receipt.sourceDirty, false);
+  assert.equal(receipt.reference.name, 'HP JPEG-LS reference software');
+  assert.equal(receipt.reference.version, '1.00');
+  assert.equal(receipt.exitCode, 0);
+  return {
+    identity: { ...receipt.reference, mode: 'archived_reconstruction_digest', liveReferenceExecuted: false,
+      receiptPath, ...archivedHp },
+    decode(bytes, item, evidence) {
+      assert.ok(item.sampled, 'Archived HP comparison is restricted to sampled cases');
+      evidence.run = { api: 'Archived HP reconstruction digest', exitCode: null };
+      assert.equal(sha256(bytes), item.sha256, 'Archived HP reconstruction requires the exact official bitstream');
+      const row = receipt.cases.find(({ id }) => id === item.id);
+      assert.equal(row.sha256, item.sha256);
+      const { reference } = row;
+      assert.equal(reference.status, 'passed');
+      assert.equal(reference.run.exitCode, 0);
+      assert.equal(reference.samples, item.samples);
+      assert.match(reference.planarU16leSha256, /^[0-9a-f]{64}$/);
+      return { planarU16leSha256: reference.planarU16leSha256, samples: reference.samples,
+        maxAbsoluteError: reference.maxAbsoluteError };
+    },
+    close() {},
+  };
 }
 
 function checkFrame(actual, item) {
@@ -453,7 +498,8 @@ async function run(args) {
   const fixtures = resolve(options.get('--fixtures'));
   const cores = new Map(await Promise.all(backends.map(async (backend) => [backend, await loadCore({ backend })])));
   const native = options.has('--native-exe') ? nativeCommand(options.get('--native-exe'), options.get('--native-wsl')) : null;
-  const reference = await createReference(options.get('--hp-reference'));
+  const receipt = options.get('--hp-receipt');
+  const reference = receipt ? await createArchivedHpReference(receipt) : await createReference(options.get('--hp-reference'));
   const rows = [];
   let failed = false;
   try {
@@ -474,8 +520,11 @@ async function run(args) {
         row.original = await classified({}, async (evidence) => { original = await readOriginal(fixtures, item, evidence); });
         row.reference = await classified({}, async (evidence) => {
           expected = await reference.decode(official, item, evidence);
-          evidence.planarU16leSha256 = sampleDigest(expected);
-          if (row.original.status === 'passed') Object.assign(evidence, compare(expected, original, item, item.near));
+          if (receipt) Object.assign(evidence, expected);
+          else {
+            evidence.planarU16leSha256 = sampleDigest(expected);
+            if (row.original.status === 'passed') Object.assign(evidence, compare(expected, original, item, item.near));
+          }
         });
       }
       for (const backend of [...backends, 'native']) {
@@ -501,7 +550,7 @@ async function run(args) {
           const result = await decodeTarget(core, native, official, item, evidence);
           evidence.structure = result.structure;
           evidence.planarU16leSha256 = sampleDigest(result.pixels);
-          evidence.referenceComparison = compare(result.pixels, item.near ? expected : original, item);
+          evidence.referenceComparison = compareReference(result.pixels, expected, item);
           Object.assign(evidence, compare(result.pixels, original, item, item.near));
         });
         const encode = await classified({}, async (evidence) => {
@@ -512,17 +561,20 @@ async function run(args) {
           checkPreset(bytes, item);
           evidence.reference = {};
           const actual = await reference.decode(bytes, item, evidence.reference);
-          evidence.reference.planarU16leSha256 = sampleDigest(actual);
-          evidence.reference.comparison = compare(actual, item.near ? expected : original, item);
+          if (receipt) Object.assign(evidence.reference, actual);
+          else {
+            evidence.reference.planarU16leSha256 = sampleDigest(actual);
+            evidence.reference.comparison = compare(actual, item.near ? expected : original, item);
+          }
           evidence.candidateDecode = {};
           const decoded = await decodeTarget(core, native, bytes, item, evidence.candidateDecode);
           evidence.candidateDecode.planarU16leSha256 = sampleDigest(decoded.pixels);
-          evidence.candidateDecode.comparison = compare(decoded.pixels, actual, item);
+          evidence.candidateDecode.comparison = compareReference(decoded.pixels, actual, item);
           evidence.structure = decoded.structure;
           if (!evidence.byteIdenticalToOfficial) {
             assert.deepEqual(decoded.structure, decode.structure, 'Official and candidate effective parameters and coded data');
           }
-          Object.assign(evidence, compare(actual, original, item, item.near));
+          Object.assign(evidence, compare(decoded.pixels, original, item, item.near));
         });
         row.backends[backend] = { encode, decode };
         failed ||= encode.status !== 'passed' || decode.status !== 'passed';

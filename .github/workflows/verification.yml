@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   verify:
     runs-on: ubuntu-24.04
@@ -17,9 +21,17 @@ jobs:
       MOONJLS_ARCHIVE_VERSION: '0.10.22%2B124d61d05'
       MOONJLS_LINUX_SHA256: 'aeb78ded1d5e25185ed788328cacef5e843a9ab923145523b7652e8d082f74fb'
       MOONJLS_CORE_SHA256: 'a22977f3d346e4a189fe521b2d265b2fbb6c00e3ff80342246fb6f8f26c9f156'
+      TESTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       NATIVE_BINARY: '_build/native/release/build/cmd/moonjls/moonjls.exe'
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TESTED_SHA }}
+      - name: Confirm source revision
+        run: |
+          test "$(git rev-parse HEAD)" = "$TESTED_SHA"
+          mkdir -p .evidence/ci
+          printf 'Tested source SHA `%s`\n' "$TESTED_SHA" >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/setup-node@v4
         with:
           node-version: '24.20.0'
@@ -53,17 +65,23 @@ jobs:
           printf '%s\n' "$HOME/.moon/bin" >> "$GITHUB_PATH"
       - name: Build and test codecs
         run: |
+          moon check --target all --deny-warn
           moon test core --target js --deny-warn
           moon test core --target wasm-gc --deny-warn
           CC=clang moon test core --target native --deny-warn
           CC=clang moon build cmd/moonjls --target native --release --deny-warn
           node sdk/build.mjs
           node web/build.mjs
+      - name: Prepare official Annex E fixtures and reference tools
+        run: |
+          python3 scripts/fetch_annex_e.py --fixtures .tools/annex-e | tee .evidence/ci/annex-e-fixtures.json
+          npm install --prefix .tools/oracle-npm --ignore-scripts --save-exact @team-charls/charls-wasm@0.10.0
       - name: Check Native streams, Worker, reports and declarations
         run: |
           python3 REVIEW_EVIDENCE/native_row_delivery_regression.py "$NATIVE_BINARY" --output .evidence/ci/native-row-delivery.json
           python3 REVIEW_EVIDENCE/native_multiscan_delivery_regression.py "$NATIVE_BINARY" --output .evidence/ci/native-multiscan-delivery.json
-          python3 REVIEW_EVIDENCE/native_tail_matrix.py "$NATIVE_BINARY"
+          python3 REVIEW_EVIDENCE/native_sampling_delivery_regression.py "$NATIVE_BINARY" | tee .evidence/ci/native-sampling-delivery.json
+          python3 REVIEW_EVIDENCE/native_tail_matrix.py "$NATIVE_BINARY" | tee .evidence/ci/native-tail-matrix.json
           printf '\x00\x00\xff\x00' > .evidence/ci/input.raw
           node sdk/cli.mjs encode --input .evidence/ci/input.raw --output .evidence/ci/coded.jls --width 2 --height 1 --bits 8 --report .evidence/ci/sdk-encode.json
           node sdk/cli.mjs decode --input .evidence/ci/coded.jls --output .evidence/ci/decoded.raw --report .evidence/ci/sdk-decode.json
@@ -74,11 +92,64 @@ jobs:
           node --test scripts/test_worker_codec.mjs scripts/test_verification_report.mjs web/pgm.test.mjs web/preview.test.mjs
           npx --yes --package typescript@7.0.2 tsc --noEmit --strict --module nodenext --target es2022 --lib es2022,dom sdk/*.d.mts
           node scripts/validate_annex_e.mjs --check-manifest
-          node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY"
-          node scripts/verify_m3a_golden.mjs --native-exe "$NATIVE_BINARY"
+          node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY" | tee .evidence/ci/m2-golden.json
+          node scripts/verify_m3a_golden.mjs --native-exe "$NATIVE_BINARY" --with-oracle | tee .evidence/ci/m3a-golden.json
+      - name: Run official Annex E encoder and decoder checks
+        run: |
+          node scripts/validate_annex_e.mjs --fixtures .tools/annex-e --native-exe "$NATIVE_BINARY" \
+            --cases 1,2,3,4,5,6,9,10,11,12 | tee .evidence/ci/annex-e-charls.json
+          node scripts/validate_annex_e.mjs --fixtures .tools/annex-e --native-exe "$NATIVE_BINARY" \
+            --cases 7,8 --hp-receipt reports/t87-m3b-20261126/annex-e-final-hp.json | tee .evidence/ci/annex-e-archived-hp.json
+          printf '\nAnnex E, JS/Wasm GC/Native in both directions\n\n' >> "$GITHUB_STEP_SUMMARY"
+          printf -- '- E.2-1–6, 9–12 used live CharLS Wasm 0.10.0.\n' >> "$GITHUB_STEP_SUMMARY"
+          printf -- '- E.2-7/8 used exact official codestream bytes and archived HP 1.00 reconstruction SHA-256. HP was not executed in CI.\n' >> "$GITHUB_STEP_SUMMARY"
+      - name: Run Chrome workbench smoke
+        run: |
+          npm ci --prefix web --ignore-scripts
+          MOONJLS_CHROME="$(command -v google-chrome)"
+          export MOONJLS_CHROME
+          "$MOONJLS_CHROME" --version
+          export MOONJLS_WEB_URL=http://127.0.0.1:8000
+          export MOONJLS_ANNEX_FIXTURES="$GITHUB_WORKSPACE/.tools/annex-e"
+          export MOONJLS_SMOKE_RECEIPT="$GITHUB_WORKSPACE/.evidence/ci/chrome-assets.json"
+          python3 -m http.server 8000 --bind 127.0.0.1 --directory web/dist > .evidence/ci/chrome-server.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          curl --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 1 --retry-max-time 15 \
+            "$MOONJLS_WEB_URL/web/build-info.json" > .evidence/ci/web-build-info.json
+          npm --prefix web run smoke | tee .evidence/ci/chrome-smoke.log
       - name: Run the existing three-backend NEAR matrix
         run: |
           python3 -m venv .tools/oracle-venv
           .tools/oracle-venv/bin/python -m pip install --only-binary=:all: -r scripts/oracle-requirements.txt
-          npm install --prefix .tools/oracle-npm --ignore-scripts --save-exact @team-charls/charls-wasm@0.10.0
-          .tools/oracle-venv/bin/python scripts/validate.py --near-matrix --native-exe "$NATIVE_BINARY"
+          .tools/oracle-venv/bin/python scripts/validate.py --near-matrix --native-exe "$NATIVE_BINARY" | tee .evidence/ci/near-matrix.log
+      - name: Upload verification records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-${{ env.TESTED_SHA }}
+          path: .evidence/ci/
+          include-hidden-files: true
+      - name: Upload verified workbench for GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy-pages:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    steps:
+      - name: Deploy verified static workbench
+        id: deployment
+        uses: actions/deploy-pages@v4
