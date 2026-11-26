@@ -128,6 +128,11 @@ for (const [backend, core] of cores) {
   const { mappingSelectors, ...unmappedFrame } = mapped.frame;
   assert.deepEqual(mappingSelectors, [7]);
   await assert.rejects(encodeImage(core, { ...unmappedFrame, scans: mapped.scans }, Uint16Array.from(lowIndices)), { code: 'UnsupportedFeature' });
+  const session = core.createDecoder({ inputChunkSize: 64 });
+  session.stage(cases[0][1].subarray(0, -2));
+  assert.equal(session.step().status, 'RowReady');
+  assert.equal(session.step().status, 'NeedInput');
+  assert.deepEqual(session.frame.mappingSelectors, [7]);
 }
 
 if (options['native-exe']) {

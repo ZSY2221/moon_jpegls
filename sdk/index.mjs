@@ -406,8 +406,8 @@ class Session {
     }
     const deliverMetadata = status === 'RowReady' || status === 'Done';
     const st = deliverMetadata ? readStructure(bindings, port, this.#frameInfo) : null;
-    const scanIndex = deliverMetadata && bindings.decoder_current_scan ? bindings.decoder_current_scan(port, 0) : -1;
-    const activeScan = st?.scans[scanIndex];
+    const scanIndex = bindings.decoder_current_scan ? bindings.decoder_current_scan(port, 0) : -1;
+    const activeScan = st?.scans[scanIndex] ?? this.#scans?.[scanIndex];
     const baseFrame = {
       width,
       height,
