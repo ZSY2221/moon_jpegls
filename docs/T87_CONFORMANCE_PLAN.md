@@ -56,10 +56,14 @@
 
 ---
 
-## 2. 当前 M3-A 已交付基线与证据边界
+## 2. 当前交付与历史证据边界
+
+当前支持 M2、M3-A、M3-B、无映射 Pt 和交换格式内嵌 Wt=1 映射解码。官方 Annex E 已达 12/12（三后端、双向、Pt=0）。本机 HP 1.00 实跑 12 条，CI 实跑候选三后端并即时调用适用的十条 CharLS 参考。E.2-7/8 核对官方字节与历史 HP 重建哈希。[官方结果](CONFORMANCE_RESULTS.md) · [Pt](POINT_TRANSFORM_RESULTS.md) · [映射增量](EMBEDDED_MAPPING_RESULTS.md) · [复审前交付](MOONCAKES_RELEASE.md)
+
+### 历史 M3-A 基线
 
 - **已完成阶段**：M0（基础引擎、三后端与 3 处正确性修复）、M1（满量程 8/12/16 位合法 `NEAR` 扩展）、M2（`P=2–16`、独立 `MAXVAL`、合法 `NEAR`、`LSE ID=1` 自定义预设）、**M3-A**（多分量非交错多扫描 `ILV=0, Ns=1, H=V=1, Pt=0`：支持 `2/3/4+` 分量、非连续 ID 与合法扫描重排、跨扫描 `LSE1` 零默认重载、Native planar 流式与多通道工作台/扫描结构检查器）。
-- **最新核心受测与归档修订**：[`36bb9e6a77bd38db6806a0cc5047885b694276b5`](https://github.com/ZSY2221/moon_jpegls/commit/36bb9e6a77bd38db6806a0cc5047885b694276b5)（完整复测收据归档于 `reports/t87-m3a-20261125/`；历史 M2 受测基线 `fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44` 与证据冻结提交 `a7d8c39` 完整保留）。
+- **M3-A 受测与归档修订**：[`36bb9e6a77bd38db6806a0cc5047885b694276b5`](https://github.com/ZSY2221/moon_jpegls/commit/36bb9e6a77bd38db6806a0cc5047885b694276b5)（完整复测收据归档于 `reports/t87-m3a-20261125/`；历史 M2 受测基线 `fc43bc2b4ed69cad9d967e63c2019ff1e8f3be44` 与证据冻结提交 `a7d8c39` 完整保留）。
 - **核心验证与历史回归边界（严禁混淆口径）**：
   1. 三后端核心 MoonBit 白盒测试各 **18/18** 通过（Native WSL `--deny-warn` 0 警告 / JS / Wasm GC）；Worker 协议 **20/20**、Node 测试 **21/21**、SDK 类型检查 `tsc --noEmit` 全部通过。
   2. M3-A 独立黄金回归（[`scripts/verify_m3a_golden.mjs`](../scripts/verify_m3a_golden.mjs)，`tests/conformance/m3a_golden/` 共 21 个冻结文件）：**7 正例 + 7 负例** 在三后端与 CharLS Wasm（`21 backendChecks + 2 oracleChecks`）全部通过，覆盖 2/3/4 分量、非连续 ID/重排、跨扫描 `LSE1` 零默认重解析、逐扫描 `NEAR` 变化及错序/重复/缺漏/未知/早 EOF 拒收。

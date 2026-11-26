@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Sample-verifiable high bit-depth grayscale JPEG-LS workbench running locally in your browser.">
+  <meta name="description" content="Sample-verifiable JPEG-LS workbench for high bit-depth grayscale and multicomponent images, running locally in your browser.">
   <title>MoonJLS · JPEG-LS Workbench</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./style.css">
@@ -521,6 +521,15 @@
         <details id="compatibility-view" class="panel disclosure">
           <summary data-label="compatibilityView">Compatibility</summary>
           <div class="disclosure-body">
+            <p class="microcopy">
+              <span data-label="buildLabel">Build</span> <code id="build-revision">—</code>
+              <span id="build-dirty" data-label="buildDirty" hidden>with local changes</span>
+              · <a id="build-source" href="https://github.com/ZSY2221/moon_jpegls" data-label="buildSource">Source</a>
+              · <a href="./build-info.json" data-label="buildMetadata">Build metadata</a>
+              · <a id="build-scope" href="https://github.com/ZSY2221/moon_jpegls/blob/main/docs/SCOPE.md" data-label="scopeLink">Support scope</a>
+            </p>
+            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset. 2–16-bit ILV=0/1/2, H/V sampling, unmapped Pt and embedded one-byte mapping decode.</p>
+            <p class="microcopy" data-label="mappingDomainNote">Mapped output shows table values. NEAR applies to the coding-domain indices.</p>
             <p id="compatibility-scope-note" class="microcopy" data-label="compatibilityBoundaryNote">In-page runs reflect current workbench execution; table rows below read archived independent reference verification (tests/conformance/manifest.json).</p>
             <p id="compatibility-standard" class="microcopy"></p>
             <a href="./conformance-manifest.json" data-label="compatibilityManifest">Machine-readable conformance manifest</a>
@@ -542,7 +551,6 @@
         <details id="scope-details" class="panel disclosure">
           <summary data-label="scopeAndNotes">Format scope &amp; measurement notes</summary>
           <div class="disclosure-body notes-body">
-            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset · single frame · ILV=0/1/2 · component sampling · partial Pt support · P=2–16 · legal MAXVAL, LSE presets and NEAR.</p>
             <p class="microcopy" data-label="timingHelp">Starts after the sink opens. Includes validation and output close. Excludes file and save-location selection and sink setup. First Canvas update is when the first reconstruction draw returns.</p>
             <p class="microcopy" data-label="ratioHelp">Raw storage uses 1 byte per 8-bit sample and 2 bytes per 12- or 16-bit sample.</p>
           </div>

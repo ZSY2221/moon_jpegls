@@ -250,7 +250,7 @@ async function main(args) {
           name: basename(options.output), format: encoding ? 'jls' : `raw-${options.sampleFormat}le`,
           bytes: output ? outputTracking.bytes : null, sha256: output && outputClosed ? outputTracking.digest() : null,
           retained: Boolean(output), complete: Boolean(result && outputClosed),
-          ...(!encoding && options.sampleFormat === 'u32' ? { layout: 'delivery-order', sampleBytes: 4, endianness: 'little' } : {}),
+          ...(!encoding ? { layout: 'delivery-order', sampleBytes: options.sampleFormat === 'u32' ? 4 : 2, endianness: 'little' } : {}),
         } : null,
         frame: result?.frame ? { ...result.frame, scans: result.scans } : observedFrame,
         preset: result?.preset ?? observedPreset,

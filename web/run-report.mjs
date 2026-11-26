@@ -19,7 +19,7 @@ export async function lunarIdentity(file) {
   return lunarMetadataFor({ sha256: await blobSha256(file), bytes: file.size, format: 'pgm' });
 }
 
-function deployedBuild() {
+export function deployedBuild() {
   buildInfo ??= fetch(new URL('./build-info.json', import.meta.url), { cache: 'no-store' })
     .then((response) => response.ok ? response.json() : null).catch(() => null);
   return buildInfo;
@@ -45,6 +45,7 @@ export async function workbenchReport(job) {
   const inputFormat = job.inputFormat ?? (job.decodeOnly ? 'jls' : 'pgm');
   const provenance = lunarMetadataFor({ sha256: inputSha, bytes: job.file.size, format: inputFormat });
   const outputRetained = job.status === 'passed' && job.sinkMode !== 'bounded';
+  const planarBytes = { 'planar-u16le': 2, 'planar-u32le': 4 }[job.outputFormat];
   const firstScan = job.structure?.scans?.[0] ?? job.frame;
   const physical = provenance && firstScan ? {
     unit: 'm',
@@ -62,9 +63,9 @@ export async function workbenchReport(job) {
     artifact: build?.artifacts?.[job.backend] ?? null,
     input: { name: job.file.name, format: inputFormat, bytes: job.file.size, sha256: inputSha, provenance },
     output: {
-      name: job.outputName, format: job.outputFormat ?? (job.decodeOnly ? 'pgm' : 'jls'), bytes: job.outputBytes ?? null,
+      name: job.fileOutputName ?? job.outputName, format: job.outputFormat ?? (job.decodeOnly ? 'pgm' : 'jls'), bytes: job.outputBytes ?? null,
       sha256: outputSha, retained: outputRetained, complete: outputRetained,
-      ...(job.outputFormat === 'planar-u32le' ? { layout: 'planar', sampleBytes: 4, endianness: 'little' } : {}),
+      ...(planarBytes ? { layout: 'planar', sampleBytes: planarBytes, endianness: 'little' } : {}),
     },
     frame: job.frame && { ...job.frame, scans: job.structure?.scans ?? job.frame.scans },
     preset: job.preset,

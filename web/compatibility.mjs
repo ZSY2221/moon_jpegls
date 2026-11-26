@@ -1,4 +1,18 @@
+import { deployedBuild } from './run-report.mjs';
+
 const sourceRepository = 'https://github.com/ZSY2221/moon_jpegls';
+
+export async function mountBuildIdentity() {
+  const build = await deployedBuild();
+  const revision = build?.source?.revision;
+  if (typeof revision !== 'string' || !/^[a-f0-9]{40}$/.test(revision)) return;
+  const label = document.getElementById('build-revision');
+  label.textContent = revision.slice(0, 12);
+  label.title = revision;
+  document.getElementById('build-dirty').hidden = !build.source.dirty;
+  document.getElementById('build-source').href = `${sourceRepository}/commit/${revision}`;
+  document.getElementById('build-scope').href = `${sourceRepository}/blob/${revision}/docs/SCOPE.md`;
+}
 
 function element(tag, text) {
   const node = document.createElement(tag);
