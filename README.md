@@ -33,6 +33,7 @@ For sampled images, encode from separate component PGMs with explicit H/V factor
 | M2 | Coded precision 2–16 bits, explicit MAXVAL, legal NEAR, LSE1 presets | [388-case M2 matrix](reports/t87-m2-20261125/synthetic-matrix.md) |
 | M3-A | Non-interleaved multi-component scans and cross-scan LSE1 defaults | [M3-A acceptance](reports/t87-m3a-20261125/README.md) |
 | M3-B | ILV=1 line interleave, ILV=2 sample interleave, H/V sampling and edge MCU handling | [Annex E 12/12 on JS, Wasm GC and Native](docs/CONFORMANCE_RESULTS.md) |
+| Point transform | Unmapped Pt=0–15, separate error domains, exact 32-bit output | [Independent Pt and sampling validation](docs/POINT_TRANSFORM_RESULTS.md) |
 
 HP 1.00 independently verifies all 12 official cases in both directions. CharLS Wasm 0.10.0 independently verifies ten and reports unsupported sampling for E.2-7/8. The pinned conformance report records inputs, decoded samples, candidate streams, artifact hashes, and the tested source revision. The NASA LOLA example verifies 1,036,800 reconstructed samples from a public elevation raster. [Evidence and reproduction](docs/CODEX_M3B_HANDOFF.md) · [LOLA fixture](tests/fixtures/LUNAR_DATA.md)
 
@@ -46,4 +47,4 @@ CC=clang moon test core --target native --deny-warn
 
 ## T.87 Part 1 roadmap
 
-The final target is the full ITU-T T.87 / ISO/IEC 14495-1 Part 1 encoding, decoding, and data-format scope. All official Annex E cases use Pt=0. The remaining milestones cover nonzero point transform, mapping tables, abbreviated and table-specification formats, restart intervals, DNL, extended dimensions, and complete §8 acceptance. Each milestone has an exit criterion and independent reference requirements. [Roadmap](docs/ROADMAP.md) · [Support scope](docs/SCOPE.md) · [Mooncakes package status](docs/MOONCAKES_RELEASE.md)
+The final target is the full ITU-T T.87 / ISO/IEC 14495-1 Part 1 encoding, decoding, and data-format scope. All official Annex E cases use Pt=0. The remaining milestones cover mapping tables, abbreviated and table-specification formats, restart intervals, DNL, extended dimensions, and complete §8 acceptance. Each milestone has an exit criterion and independent reference requirements. [Roadmap](docs/ROADMAP.md) · [Support scope](docs/SCOPE.md) · [Mooncakes package status](docs/MOONCAKES_RELEASE.md)

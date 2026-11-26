@@ -216,20 +216,22 @@
       "feature_id": "point_transform",
       "display_name": "Point transform Pt",
       "standard_clause": "§4.3.2; C.2.3",
-      "encode_status": "partially_supported",
-      "decode_status": "partially_supported",
-      "format_status": "partially_supported",
-      "reference_support": "FFmpeg 9.0.1 direct grayscale, CharLS 0.10.0 coded-domain and independent T.87 short vectors",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "Direct FFmpeg on applicable grayscale, CharLS coded-domain and an independent Python reference calibrated on E.2-7/8",
       "test_ids": [
         "scripts/verify_point_transform.mjs",
         "core/point_transform_wbtest.mbt",
-        "web/smoke.mjs"
+        "web/smoke.mjs",
+        "scripts/verify_sampled_point_transform.mjs",
+        "REVIEW_EVIDENCE/native_wide_output_regression.py"
       ],
       "evidence_path": "docs/POINT_TRANSFORM_RESULTS.md",
       "target_milestone": "Separate Pt milestone",
-      "source_revision": "d5a9ab436ab7362f7601a64469fdf940db46ec5b",
+      "source_revision": null,
       "evidence_ref": "codex/t87-pt-20261126",
-      "notes": "Unmapped Pt only. Exact Int32 core reconstruction. Existing narrow host sinks reject values outside their destination range."
+      "notes": "Verified unmapped Pt with interleave and H/V edge MCUs. Int32 core, Native raw32 and SDK/Worker Uint32 preserve exact reconstruction. Narrow formats reject out-of-range output."
     },
     {
       "feature_id": "mapping",

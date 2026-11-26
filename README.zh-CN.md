@@ -33,6 +33,7 @@ moon run --target native cmd/moonjls -- inspect sample.jls --json
 | M2 | 2–16 位编码精度、独立 MAXVAL、合法 NEAR、LSE1 预置 | [388 组 M2 矩阵](reports/t87-m2-20261125/synthetic-matrix.md) |
 | M3-A | 多分量非交错扫描、跨扫描 LSE1 默认值 | [M3-A 验收](reports/t87-m3a-20261125/README.md) |
 | M3-B | ILV=1 行交错、ILV=2 样本交错、H/V 采样与边缘 MCU | [JS、Wasm GC、Native 的官方 Annex E 12/12](docs/CONFORMANCE_RESULTS.md) |
+| 点变换 | 无映射 Pt=0–15、双误差域和精确 32 位输出 | [Pt 与采样独立验收](docs/POINT_TRANSFORM_RESULTS.md) |
 
 HP 1.00 独立双向验证了全部 12 条。CharLS Wasm 0.10.0 验证其支持的 10 条，E.2-7/8 的采样超出该参考版本的能力。报告记录源码、产物、输入、重建和候选码流的身份。NASA LOLA 是公开高程数据实验，核对同一码流的 1,036,800 个重建样本。[复跑与证据](docs/CODEX_M3B_HANDOFF.md) · [LOLA 数据出处](tests/fixtures/LUNAR_DATA.md)
 
@@ -46,4 +47,4 @@ CC=clang moon test core --target native --deny-warn
 
 ## T.87 Part 1 路线
 
-最终目标是完整的 ITU-T T.87 / ISO/IEC 14495-1 Part 1 编码、解码和数据格式能力。官方 Annex E 全部使用 Pt=0。后续按阶段实现非零点变换、映射表、简略和表规范格式、重启、DNL、扩展尺寸，并完成完整 §8 验收。[阶段路线](docs/ROADMAP.md) · [支持范围](docs/SCOPE.md) · [Mooncakes 包状态](docs/MOONCAKES_RELEASE.md)
+最终目标是完整的 ITU-T T.87 / ISO/IEC 14495-1 Part 1 编码、解码和数据格式能力。官方 Annex E 全部使用 Pt=0。后续按阶段实现映射表、简略和表规范格式、重启、DNL、扩展尺寸，并完成完整 §8 验收。[阶段路线](docs/ROADMAP.md) · [支持范围](docs/SCOPE.md) · [Mooncakes 包状态](docs/MOONCAKES_RELEASE.md)

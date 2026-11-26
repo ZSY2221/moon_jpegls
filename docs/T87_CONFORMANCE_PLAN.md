@@ -92,7 +92,7 @@
 | 多分量与非交错多扫描（`ILV=0`, `Ns=1`, `H=V=1`, `Pt=0`） | Annexes B、C、D | `passed` | `passed` | `passed` | `E.2-1`、`E.2-4`、`scripts/verify_m3a_golden.mjs`（7+7）、`multiscan_wbtest.mbt`、`native_multiscan_delivery_regression.py` | HP 1.00 & CharLS Wasm 0.10.0（E.2-1/4 及 3 通道黄金流） | [Annex E 结果](CONFORMANCE_RESULTS.md) · [M3-A 验收](../reports/t87-m3a-20261125/README.md) · [能力清单](../tests/conformance/manifest.json) | JS / Wasm GC / Native 全部通过（E.2-1/4 逐字节一致；首分量不等待后续 SOS/EOI） | **M3-A 已完成（`36bb9e6`）**；支持 1–255 分量、非连续 ID、重排扫描、严格负拓扑 |
 | 交错模式 `ILV=1`（行交错）与 `ILV=2`（样本交错），`H=V=1, Pt=0` | Annex B.1–B.3；C.2.3；C.2.4.1.1 | `passed` | `passed` | `passed` | `E.2-2/3/5/6` | HP 1.00 和 CharLS Wasm 0.10.0 | [Annex E 结果](CONFORMANCE_RESULTS.md) | JS / Wasm GC / Native 双向逐样本符合双参考，每条候选与官方流逐字节一致 | **M3-B 已验收** |
 | 采样因子（`H/V`）与边缘 MCU | §4.3.1、Annex B.2/B.4、C.2、Annex E | `passed` | `passed` | `passed` | E.2-7/8 与奇数尺寸、短行组、补行字面量 | HP 1.00 验收 E.2-7/8。CharLS Wasm 0.10.0 的采样模式为 `reference_unsupported` | [Annex E 结果](CONFORMANCE_RESULTS.md) | 三后端双向逐样本匹配适用参考。奇数尺寸和末组补行另有定向用例 | **M3-B 已验收** |
-| 点变换 `Pt`（正逆变换与双尺度误差） | §4.3.2；C.2.3；T.81 B.2.3 | `partially_supported` | `partially_supported` | `partially_supported` | `verify_point_transform.mjs`、核心短向量、Chrome | FFmpeg 直接验证适用单分量，CharLS 编码域与独立 Annex A/B 短向量 | [Pt 专项](POINT_TRANSFORM_RESULTS.md) | 见专项三后端结果 | 独立分支。窄输出超限显式拒绝，映射选择器必须为零。Annex E 全部使用 Pt=0 |
+| 无映射点变换 `Pt`（正逆变换与双尺度误差） | §4.3.2；C.2.3；T.81 B.2.3 | `passed` | `passed` | `passed` | `verify_point_transform.mjs`、`verify_sampled_point_transform.mjs`、Native 与浏览器宽输出 | FFmpeg 适用单分量，CharLS 编码域，官方采样向量校准的独立 Python 参考 | [Pt 专项](POINT_TRANSFORM_RESULTS.md) | 三后端通过，混合扫描 Native CLI 编码范围单列 | 窄输出超限显式拒绝。非零 Pt 的映射选择器为零，Annex E 全部使用 Pt=0 |
 | `LSE ID=2` 映射表与 `LSE ID=3` 映射表续表 | C.2.4.1.2–3 | `unsupported` | `unsupported` | `recognized_only` | 待建有效与截断/缺失续表用例 | 待确定适用参考工具与独立向量 | 无运行证据 | `not_run` | 解析器仅识别分段长度后拒绝；缺表结构、条目宽度与重定义管理；目标 **M4（2027-01-10）** |
 | 表规范数据与简略图像格式 | §7(b)(c)；C.3、C.4 | `unsupported` | `unsupported` | `planned` | 待建跨流外部表生命周期用例 | 待确定适用参考工具与独立向量 | 无运行证据 | `not_run` | 需实现无帧表加载、保持、校验与简略图像编码/解码；目标 **M4（2027-01-10）** |
 | 重启间隔 `DRI` 与 `RST0–RST7` 标记 | C.2.5；Annex D | `unsupported` | `unsupported` | `recognized_only` | 待建重启间隔与错序/损坏用例 | 需按间隔与交错模式核实参考库 | 无运行证据 | `not_run` | 解码仅接受 `DRI=0`；非零 `DRI`、编号循环及上下文复位待实现；目标 **M4（2027-01-10）** |
@@ -111,7 +111,7 @@
 
 当前 `Pt=0`、无映射表的 profile 可直接按原始无符号整数样本验证 `|reconstructed − original| ≤ NEAR`。
 
-Pt 专项分支分别核验变换编码域与原始样本尺度。对于无映射表路径，记步长 `s = 2^Pt`，样本 `x = s·q + r`（`0 ≤ r < s`）；若编码域满足 `|q̂ − q| ≤ NEAR`，则重建回原始尺度后保守误差界为 **`s · NEAR + s − 1`**（此为数学推导上界，存在映射表时不适用；`Pt > 0` 即使 `NEAR=0` 也因量化截断而不保持原始样本绝对无损）。
+Pt 专项分别核验变换编码域与原始样本尺度。对于无映射表路径，记步长 `s = 2^Pt`，样本 `x = s·q + r`（`0 ≤ r < s`）；若编码域满足 `|q̂ − q| ≤ NEAR`，则重建回原始尺度后保守误差界为 **`s · NEAR + s − 1`**（此为数学推导上界，存在映射表时不适用；`Pt > 0` 即使 `NEAR=0` 也因量化截断而不保持原始样本绝对无损）。
 
 ### 4.2 流式输出与内存核算
 

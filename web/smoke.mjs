@@ -738,6 +738,7 @@ async function verifyWidePointTransformWorkbench() {
   assert.equal(decoded.output.sampleBytes, 4);
   assert.equal(decoded.memory.host.hostConversionBufferBytes, 4);
   assert.equal(decoded.memory.host.previewBufferBytes, 4);
+  await capture('point-transform-u32');
   console.log(JSON.stringify({ test: 'Wide point transform comparison, inspector and planar download', sample: 65540, originalError: 5, bytes: 4 }));
 }
 

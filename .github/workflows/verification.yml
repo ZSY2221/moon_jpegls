@@ -98,6 +98,7 @@ jobs:
       - name: Verify the separate point transform vectors
         run: |
           node scripts/verify_point_transform.mjs --native-exe "$NATIVE_BINARY" | tee .evidence/ci/point-transform.json
+          node scripts/verify_sampled_point_transform.mjs --fixtures .tools/annex-e --native-exe "$NATIVE_BINARY" | tee .evidence/ci/sampled-point-transform.json
       - name: Run official Annex E encoder and decoder checks
         run: |
           node scripts/validate_annex_e.mjs --fixtures .tools/annex-e --native-exe "$NATIVE_BINARY" \
