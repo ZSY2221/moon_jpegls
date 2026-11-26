@@ -119,4 +119,11 @@ node scripts/validate_annex_e.mjs --fixtures .tools/annex-e-ci --native-exe $nat
 
 - 以已公开的 `main` `4129b5d06fed659bcb4226529943e4564fe6e044` 创建 `codex/t87-pt-20261126`，复用 `D:\Program Files\GPT_project\moon_jpegls-antigravity` 的洁净工作树。最终受测产品 `d5a9ab436ab7362f7601a64469fdf940db46ec5b`，tree `1aa460d177b86e3149ab050e04d6831935475e63`。后续提交更新证据和工作台能力清单。[独立分支](https://github.com/ZSY2221/moon_jpegls/tree/codex/t87-pt-20261126) · [branch Actions](https://github.com/ZSY2221/moon_jpegls/actions/workflows/verification.yml?query=branch%3Acodex%2Ft87-pt-20261126)
 - 已实现原始样本右移后编码、编码域共享状态、精确 Int32 逆变换、Native/SDK/Worker 流式转发和双误差域报告。12 条 Pt 向量三后端两方向通过。范围外的宽宿主输出明确拒绝，广泛 H/V 组合及宽输出仍标记 `partially_supported`。Annex E 12/12 是全 Pt=0 的旧能力回归。[Pt 专项记录](POINT_TRANSFORM_RESULTS.md) · [独立实跑](../reports/t87-pt-20261126/point-transform.json)
-- 首轮 Chrome 对 Pt 标签的失败已修复，保留失败 CI。恢复入口为 `node scripts/verify_point_transform.mjs --native-exe $native --native-wsl $d --ffmpeg ffmpeg`，完整参数和本机工具见 Pt 专项记录。宽输出与额外采样矩阵完成前，Pt 继续在该分支验收，公开 M3-B 候选保持在 `main`。
+- 首轮 Chrome 对 Pt 标签的失败已修复，保留失败 CI。恢复入口为 `node scripts/verify_point_transform.mjs --native-exe $native --native-wsl $d --ffmpeg ffmpeg`，完整参数和本机工具见 Pt 专项记录。
+
+### Pt 采样和宽输出续验（2026-11-26）
+
+- 同一工作树从洁净证据提交 `f749d4ea019c12d68b0a90cc86a09b3529bba914` 接续。宽输出实现为 `b8cc521b8d74280f9e6c9fb78da5b1b57dcc761b`。冻结受测产品 `7835c6147b869f3f4db565c1a2b726f48d088a6a`，tree `3fbc637e982252a972e34ad2ff5dfdabf323a0d1`。门禁修订 `cb21fbfaa3f3547d0ba2c0a515f2bf1c762dfdd0` 仅更改 M2 黄金运行器，使提前关闭 stdin 的真实非零退出继续进入原断言。
+- 独立 Python 参考与官方 E.2-7/8 码流及 HP 重建校准后，验证 16 条采样、交错和混合扫描向量。JS/Wasm GC 分别通过 48 次编码与 48 次解码，Native 通过 45 次编码与 48 次解码。Native CLI 混合 ILV 补充向量执行解码方向。三后端各再通过 24 次替代补行解码。[逐条参考与候选记录](../reports/t87-pt-20261126/sampled-point-transform.json)
+- Native 的 `raw32-le`/`raw32-be`、SDK/Worker 的 `sampleFormat: 'u32'` 和浏览器宽平面下载已实测。非零 Pt 采样的有效交付为 11 行、47 样本，消费 5 补行，重建整数为 65540。FFmpeg、HP 与 CharLS 的非零 Pt 参考范围见专项文档。[Pt 验收与复跑](POINT_TRANSFORM_RESULTS.md) · [Native 和浏览器证据](../reports/t87-pt-20261126/wide-release-regressions.json)
+- 全部 12 条官方 Pt=0 回归由本机 HP 实跑，复跑 12 条独立 Pt 向量、三后端核心、M2、Native 流式、Worker/SDK/TS 和 Chrome。证据提交更新 Web 的能力清单绑定，分支合并门禁和发布分别以实际 Actions SHA 核对。[PR #3](https://github.com/ZSY2221/moon_jpegls/pull/3) · [检查](https://github.com/ZSY2221/moon_jpegls/pull/3/checks) · [发布](https://github.com/ZSY2221/moon_jpegls/deployments)

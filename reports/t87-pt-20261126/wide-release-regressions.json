@@ -1,0 +1,889 @@
+{
+  "status": "passed",
+  "sourceRevision": "7835c6147b869f3f4db565c1a2b726f48d088a6a",
+  "sourceTree": "3fbc637e982252a972e34ad2ff5dfdabf323a0d1",
+  "m2GoldenRunnerRevision": "cb21fbfaa3f3547d0ba2c0a515f2bf1c762dfdd0",
+  "artifacts": {
+    "js": "775e7a8bcbdafe78f4a90152d632fb0cd87e12e43ea0af7f5917392a30033996",
+    "wasm-gc": "36a936d6f9de09dd3b561eac8690366b2827c66201be12caacd7d7a33f066d79",
+    "native": "588159b9421ec945c8cd82ad9dfe71214188115fe02e712043688225098c76b6"
+  },
+  "tools": {
+    "node": "24.20.0",
+    "moon": "0.1.20261119",
+    "wsl": "Ubuntu 22.04.5 LTS",
+    "gcc": "11.4.0",
+    "chrome": "158.0.8127.37",
+    "ffmpeg": "9.0.1",
+    "charlsWasm": "0.10.0",
+    "hp": "1.00"
+  },
+  "localExitCodes": {
+    "annex-pt0-hp": 0,
+    "chrome-smoke": 0,
+    "core-js": 0,
+    "core-native": 0,
+    "core-wasm": 0,
+    "m2-388": 0,
+    "m2-golden": 0,
+    "m3a-golden": 0,
+    "moon-check": 0,
+    "native-build": 0,
+    "native-multiscan": 0,
+    "native-row": 0,
+    "native-sampling": 0,
+    "native-tail": 0,
+    "native-wide": 0,
+    "node-tests": 0,
+    "pt-unsampled": 0,
+    "sampled-pt": 0,
+    "sdk-build": 0,
+    "typescript": 0,
+    "web-build": 0,
+    "worker": 0
+  },
+  "core": {
+    "js": {
+      "passed": 28,
+      "total": 28
+    },
+    "wasm-gc": {
+      "passed": 28,
+      "total": 28
+    },
+    "native": {
+      "passed": 28,
+      "total": 28
+    }
+  },
+  "workerProtocol": {
+    "passed": 21,
+    "total": 21
+  },
+  "node": {
+    "passed": 33,
+    "total": 33
+  },
+  "annexEPt0": {
+    "cases": 12,
+    "backendEncodes": 36,
+    "backendDecodes": 36,
+    "encodesIdenticalToOfficial": 36
+  },
+  "m2": {
+    "fullCases": 388,
+    "golden": {
+      "status": "passed",
+      "verifiedFixtureFiles": 54,
+      "cases": 12,
+      "variants": 18,
+      "invalidEncodes": 7,
+      "pgmChecks": 4,
+      "backends": [
+        "js",
+        "wasm-gc",
+        "native"
+      ]
+    }
+  },
+  "m3aGolden": {
+    "status": "passed",
+    "verifiedFrozenFiles": 21,
+    "positiveCases": 7,
+    "negativeCases": 7,
+    "backendChecks": 21,
+    "oracleChecks": 2,
+    "backends": [
+      "js",
+      "wasm-gc",
+      "native"
+    ]
+  },
+  "nativeWide": {
+    "status": "passed",
+    "knownOverflow": {
+      "samples": 16,
+      "value": 65536,
+      "runs": [
+        {
+          "format": "raw32-le",
+          "chunk": 1,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 2,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 3,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 4,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 7,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 4096,
+          "outputPeakBytes": 32
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 1,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 2,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 3,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 4,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 7,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 4096,
+          "outputPeakBytes": 32
+        }
+      ]
+    },
+    "mixedScans": {
+      "samples": [
+        2147450880,
+        7
+      ],
+      "runs": [
+        {
+          "format": "raw32-le",
+          "chunk": 1,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 2,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 3,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 4,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 7,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 4096,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 1,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 2,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 3,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 4,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 7,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 4096,
+          "outputPeakBytes": 4
+        }
+      ]
+    },
+    "sampled": {
+      "samples": 47,
+      "rows": 11,
+      "runs": [
+        {
+          "format": "raw32-le",
+          "chunk": 1,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 2,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 3,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 4,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 7,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-le",
+          "chunk": 4096,
+          "outputPeakBytes": 20
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 1,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 2,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 3,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 4,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 7,
+          "outputPeakBytes": 4
+        },
+        {
+          "format": "raw32-be",
+          "chunk": 4096,
+          "outputPeakBytes": 20
+        }
+      ],
+      "payloadBytesBeforeEoi": 188,
+      "largestInputWriteBeforeEoi": 1,
+      "lateTailExitCode": 1,
+      "stderr": "ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input: trailing bytes after EOI\n"
+    }
+  },
+  "nearMatrixCI": {
+    "run": "https://github.com/ZSY2221/moon_jpegls/actions/runs/45791800761",
+    "artifact": "https://github.com/ZSY2221/moon_jpegls/actions/runs/45791800761/artifacts/15102344727",
+    "archiveSha256": "dd36f2a4822a740991f374353a296e030c9191b9b2731f37eef6c5bec456ccc9",
+    "images": 640,
+    "nativeCLIImages": 640,
+    "sameStreamComparisons": 5120,
+    "oracle": "imagecodecs 2026.11.11 / CharLS 2.4.5"
+  },
+  "initialCIFailure": {
+    "run": "https://github.com/ZSY2221/moon_jpegls/actions/runs/45791678744",
+    "error": "spawnSync EPIPE in M2 golden expected-invalid stdin encode",
+    "fixedIn": "cb21fbfaa3f3547d0ba2c0a515f2bf1c762dfdd0"
+  },
+  "chrome": {
+    "location": "Local build served from /moon_jpegls/",
+    "build": {
+      "source": {
+        "revision": "7835c6147b869f3f4db565c1a2b726f48d088a6a",
+        "dirty": false
+      },
+      "artifacts": {
+        "js": {
+          "name": "core.mjs",
+          "sha256": "775e7a8bcbdafe78f4a90152d632fb0cd87e12e43ea0af7f5917392a30033996"
+        },
+        "wasm-gc": {
+          "name": "core.wasm",
+          "sha256": "36a936d6f9de09dd3b561eac8690366b2827c66201be12caacd7d7a33f066d79"
+        }
+      }
+    },
+    "assets": {
+      "browser": "158.0.8127.37",
+      "node": "v24.20.0",
+      "responses": {
+        "/web/style.css": {
+          "sha256": "764a973c1070a1390905ab1e7277d629f59deecd176b74bc9820c2c02e8845f9",
+          "bytes": 30029
+        },
+        "/web/app.mjs": {
+          "sha256": "7a5ffd6ec780af7e317d7927f9312c4638107744e6d8d1cdc7f70e291dc878fc",
+          "bytes": 56440
+        },
+        "/sdk/lunar.mjs": {
+          "sha256": "9b63d807462c0176cb9d0e38a369f688c4c7d192122c7963d20764b89b02b957",
+          "bytes": 1259
+        },
+        "/sdk/worker-client.mjs": {
+          "sha256": "ea2c02a798812c267c2845c9fcb5b803154bc613ea720e1a94bd05703faab6b5",
+          "bytes": 5091
+        },
+        "/sdk/verification-report.mjs": {
+          "sha256": "e93eadf1100953141b33bee543a7fc3fe2ed99e37dfa291d4f37ec789b835d5f",
+          "bytes": 6144
+        },
+        "/web/pgm.mjs": {
+          "sha256": "c626b11fa54711eab43e563223498faa78eab1bb4642ec3af10d8789c88189c0",
+          "bytes": 7213
+        },
+        "/web/scan-inspector.mjs": {
+          "sha256": "3a2ddf04d792a80fc7f241a0a0cc4a650558e3a8c68a6abe12b9312bc34c1be0",
+          "bytes": 5749
+        },
+        "/web/transport.mjs": {
+          "sha256": "61a7c555428636ea49da296ff0e647ae0e52ab94946dcec7512583744a441787",
+          "bytes": 3533
+        },
+        "/web/labels.mjs": {
+          "sha256": "c3feff7d0e14028164ac5fd8dbcb8ceebe8565d7390b14d57934b7021310de1b",
+          "bytes": 24139
+        },
+        "/web/compatibility.mjs": {
+          "sha256": "247d9dd9b8d48cc8a39b428ab7b223a083ada49fca88ca3f97c1722fcda7b284",
+          "bytes": 3559
+        },
+        "/web/run-report.mjs": {
+          "sha256": "80b3555af2acf7387877043871f30e346cc9eee3ce42c5dcd8a0e6802923e4d8",
+          "bytes": 4988
+        },
+        "/sdk/index.mjs": {
+          "sha256": "7e5a8235081d2d0b2880988ecc220f590e7772189c183a95a3a03cc1137e5a79",
+          "bytes": 37566
+        },
+        "/web/ppm.mjs": {
+          "sha256": "5ad9cefb957898d6e95bb13c270b1251f2f606c77a16c490c6fd9feddfffbb63",
+          "bytes": 11153
+        },
+        "/web/preview.mjs": {
+          "sha256": "f60b670bc603358f30d6893dec0c1bcc29b60695de072f4631daebeb4eebd278",
+          "bytes": 21632
+        },
+        "/web/conformance-manifest.json": {
+          "sha256": "4f12347e2d97f512f76955e674396ce3fbad19c77b201f4aa1f9e946981f881d",
+          "bytes": 35636
+        },
+        "/sdk/generated/core.wasm": {
+          "sha256": "36a936d6f9de09dd3b561eac8690366b2827c66201be12caacd7d7a33f066d79",
+          "bytes": 52368
+        },
+        "/sdk/worker.mjs": {
+          "sha256": "93f4b9032f4e16a384d848ea2ccaaf1790adda5447a251f32bd63f95ccb6e648",
+          "bytes": 7654
+        },
+        "/sdk/generated/core.mjs": {
+          "sha256": "775e7a8bcbdafe78f4a90152d632fb0cd87e12e43ea0af7f5917392a30033996",
+          "bytes": 281114
+        },
+        "/web/build-info.json": {
+          "sha256": "293acbb6f62871d07a6878655892b165c5a97c7271f2c7bf954ac30f0a21389e",
+          "bytes": 303
+        },
+        "/web/samples/lily-8.ppm": {
+          "sha256": "d0c1829a05f81a996edaf2d55f17599f0164fe9adb4c11c5c18ea58bf06f30a9",
+          "bytes": 47967
+        },
+        "/web/samples/lily-16.ppm": {
+          "sha256": "364565515c9623b242a02f92ce3dd6057fff898309c00acf6b9334cbca088239",
+          "bytes": 95921
+        },
+        "/web/samples/lily-sampled.jls": {
+          "sha256": "5d07ba5cb525ec4d89998275e562fb992102314ae4603eac477c0dc23e82224c",
+          "bytes": 18248
+        }
+      }
+    },
+    "smoke": [
+      {
+        "test": "browser sample round-trip",
+        "backend": "wasm-gc",
+        "encodedBytes": 105655,
+        "maxError": 3
+      },
+      {
+        "test": "browser decoded PGM download",
+        "backend": "js",
+        "pgmBytes": 208017
+      },
+      {
+        "test": "browser truncated stream and invalid PGM MAXVAL",
+        "cases": 2
+      },
+      {
+        "test": "browser bounded verification, locale ARIA/title, cancel-picker guard & drag-drop",
+        "inputChunkSize": 1024
+      },
+      {
+        "test": "browser sample lossless full-range endpoints",
+        "backend": "js",
+        "maxError": 0,
+        "displayEndpoints": [
+          0,
+          0,
+          0,
+          255,
+          255,
+          255,
+          255,
+          255
+        ]
+      },
+      {
+        "test": "browser UI pause, resume and cancel",
+        "inputChunkSize": 1
+      },
+      {
+        "test": "browser cancel/restart with pending host operation",
+        "blocked": "read",
+        "oldNear": 0,
+        "reads": {
+          "old": [
+            {
+              "start": 17,
+              "end": 25,
+              "bytes": 8
+            }
+          ],
+          "next": [
+            {
+              "start": 17,
+              "end": 21,
+              "bytes": 4
+            }
+          ]
+        },
+        "newPixel": 4000,
+        "reconstructed": [
+          3000,
+          3000,
+          4000,
+          4000
+        ],
+        "download": "cancel-read-new.jls"
+      },
+      {
+        "test": "browser cancel/restart with pending host operation",
+        "blocked": "read",
+        "oldNear": 255,
+        "reads": {
+          "old": [
+            {
+              "start": 17,
+              "end": 25,
+              "bytes": 8
+            }
+          ],
+          "next": [
+            {
+              "start": 17,
+              "end": 21,
+              "bytes": 4
+            }
+          ]
+        },
+        "newPixel": 4000,
+        "reconstructed": [
+          3000,
+          3000,
+          4000,
+          4000
+        ],
+        "download": "cancel-read-new.jls"
+      },
+      {
+        "test": "browser cancel/restart with pending host operation",
+        "blocked": "write",
+        "reads": {
+          "old": [],
+          "next": [
+            {
+              "start": 13,
+              "end": 17,
+              "bytes": 4
+            }
+          ]
+        },
+        "newPixel": 4000,
+        "reconstructed": [
+          3000,
+          3000,
+          4000,
+          4000
+        ],
+        "download": "cancel-write-new.jls"
+      },
+      {
+        "test": "browser cancel/restart with pending host operation",
+        "blocked": "close",
+        "reads": {
+          "old": [],
+          "next": [
+            {
+              "start": 13,
+              "end": 17,
+              "bytes": 4
+            }
+          ]
+        },
+        "newPixel": 4000,
+        "reconstructed": [
+          3000,
+          3000,
+          4000,
+          4000
+        ],
+        "download": "cancel-close-new.jls"
+      },
+      {
+        "test": "four preview rows provisional before withheld EOI",
+        "before": 4,
+        "afterRelease": "complete"
+      },
+      {
+        "test": "pending sink close gates success and page timer",
+        "fail": false,
+        "closeHeldMs": 225.80000007152557,
+        "elapsed": "515.4 ms",
+        "bytesWritten": 142176
+      },
+      {
+        "test": "pending sink close gates success and page timer",
+        "fail": true,
+        "closeHeldMs": 114.20000004768372,
+        "elapsed": "—",
+        "bytesWritten": 142176
+      },
+      {
+        "test": "narrow settings summary tracks form changes without altering completed results",
+        "viewport": [
+          390,
+          844
+        ],
+        "pgmUpdatedSummary": "NEAR 3 · JavaScript · Bounded verification",
+        "jlsUpdatedSummary": "JLS · JavaScript · Bounded verification"
+      },
+      {
+        "test": "worker ACK, manual resume and one-byte reads",
+        "before": 59,
+        "whileHeld": 59,
+        "whilePaused": 59,
+        "queue": 8,
+        "reads": 81,
+        "rows": [
+          0,
+          32767,
+          65535,
+          32768,
+          42,
+          7,
+          32,
+          0
+        ],
+        "expected": [
+          0,
+          32767,
+          65535,
+          32768,
+          42,
+          7,
+          32,
+          0
+        ],
+        "stats": {
+          "inputUnit": "bytes",
+          "outputUnit": "samples",
+          "inputConsumed": 80,
+          "outputProduced": 8,
+          "rows": 2,
+          "coreWorkspaceBytes": 8899,
+          "bridgeBufferPeakBytes": 2,
+          "inputQueueBytes": 0,
+          "outputQueueBytes": 0,
+          "inputPeakBytes": 1,
+          "outputPeakBytes": 8,
+          "firstRowInputConsumed": 59,
+          "firstRowMs": 6.600000023841858,
+          "elapsedMs": 102.30000007152557
+        }
+      },
+      {
+        "test": "browser SDK rejects invalid NEAR arguments",
+        "rejected": [
+          {
+            "backend": "js",
+            "cases": [
+              "InvalidArgument",
+              "InvalidArgument",
+              "InvalidArgument",
+              "InvalidArgument",
+              "InvalidArgument",
+              "InvalidArgument"
+            ]
+          },
+          {
+            "backend": "wasm-gc",
+            "cases": [
+              "InvalidArgument",
+              "InvalidArgument",
+              "InvalidArgument",
+              "InvalidArgument",
+              "InvalidArgument",
+              "InvalidArgument"
+            ]
+          }
+        ]
+      },
+      {
+        "test": "browser precision-specific NEAR limits and calibrated legend",
+        "results": [
+          {
+            "bits": 16,
+            "backend": "wasm-gc",
+            "near": 4,
+            "maxError": 4,
+            "pixel": {
+              "x": 1,
+              "y": 1,
+              "original": 128,
+              "reconstructed": 132,
+              "rgba": [
+                212,
+                165,
+                98,
+                255
+              ]
+            }
+          },
+          {
+            "bits": 16,
+            "backend": "wasm-gc",
+            "near": 255,
+            "maxError": 128,
+            "pixel": {
+              "x": 1,
+              "y": 1,
+              "original": 128,
+              "reconstructed": 0,
+              "rgba": [
+                52,
+                92,
+                105,
+                255
+              ]
+            }
+          },
+          {
+            "bits": 8,
+            "backend": "js",
+            "near": 127,
+            "maxError": 127,
+            "pixel": {
+              "x": 1,
+              "y": 1,
+              "original": 128,
+              "reconstructed": 255,
+              "rgba": [
+                212,
+                165,
+                98,
+                255
+              ]
+            }
+          },
+          {
+            "bits": 12,
+            "backend": "wasm-gc",
+            "near": 255,
+            "maxError": 128,
+            "pixel": {
+              "x": 1,
+              "y": 1,
+              "original": 128,
+              "reconstructed": 0,
+              "rgba": [
+                52,
+                92,
+                105,
+                255
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "test": "M2 preset, MAXVAL, magnifier, stream accounting and compatibility views",
+        "frame": {
+          "width": 2,
+          "height": 2,
+          "bits": 9,
+          "near": 0,
+          "maxval": 300
+        },
+        "preset": {
+          "maxval": 300,
+          "t1": 5,
+          "t2": 9,
+          "t3": 23,
+          "reset": 42
+        },
+        "features": 18,
+        "annexCases": 12,
+        "acknowledgedEvents": 7
+      },
+      {
+        "test": "Pt=4 with zero coded NEAR retains distinct original error bound",
+        "samples": 4,
+        "maxError": 15
+      },
+      {
+        "test": "Wide point transform comparison, inspector and planar download",
+        "sample": 65540,
+        "originalError": 5,
+        "bytes": 4
+      },
+      {
+        "test": "Real microscopy across all three ILV modes, CharLS verification, edge MCU, and narrow Chinese UI",
+        "checks": [
+          {
+            "bits": 8,
+            "ilv": 0,
+            "near": 0,
+            "backend": "wasm-gc",
+            "bytes": 34269,
+            "maxError": 0,
+            "samples": 47952
+          },
+          {
+            "bits": 8,
+            "ilv": 1,
+            "near": 3,
+            "backend": "js",
+            "bytes": 18446,
+            "maxError": 3,
+            "samples": 47952
+          },
+          {
+            "bits": 8,
+            "ilv": 2,
+            "near": 0,
+            "backend": "wasm-gc",
+            "bytes": 34018,
+            "maxError": 0,
+            "samples": 47952
+          },
+          {
+            "bits": 16,
+            "ilv": 0,
+            "near": 0,
+            "backend": "wasm-gc",
+            "bytes": 58986,
+            "maxError": 0,
+            "samples": 47952
+          },
+          {
+            "bits": 16,
+            "ilv": 1,
+            "near": 3,
+            "backend": "js",
+            "bytes": 41636,
+            "maxError": 3,
+            "samples": 47952
+          },
+          {
+            "bits": 16,
+            "ilv": 2,
+            "near": 0,
+            "backend": "wasm-gc",
+            "bytes": 58444,
+            "maxError": 0,
+            "samples": 47952
+          }
+        ],
+        "sampledRows": 195,
+        "sampledSamples": 24048
+      },
+      {
+        "test": "sampled Annex E browser decode and planar export",
+        "fixture": "T8SSE0",
+        "backend": "js",
+        "inputSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+        "outputSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec",
+        "rows": 448,
+        "samples": 98304,
+        "hostConversionBufferBytes": 512
+      },
+      {
+        "test": "Sampled Uint32 planar export matches HP-backed Uint16 samples",
+        "fixture": "T8SSE3",
+        "samples": 98304,
+        "bytes": 393216
+      },
+      {
+        "test": "sampled Annex E browser decode and planar export",
+        "fixture": "T8SSE3",
+        "backend": "wasm-gc",
+        "inputSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+        "outputSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af",
+        "rows": 448,
+        "samples": 98304,
+        "hostConversionBufferBytes": 512
+      },
+      {
+        "test": "NASA LOLA real browser downloads agree with CharLS",
+        "near": 3,
+        "maxError": 3,
+        "samples": 1036800,
+        "fixtureSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+        "jlsBytes": 999459,
+        "jlsSha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+        "pgmBytes": 2073618,
+        "pgmSha256": "0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002"
+      },
+      {
+        "status": "passed",
+        "browser": "158.0.8127.37",
+        "node": "v24.20.0"
+      }
+    ],
+    "screenshotSha256": "59249f81bebcdc20a3e359f416f65525ff69695c3023184ada062386cec6b738"
+  }
+}

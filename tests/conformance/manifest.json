@@ -229,7 +229,7 @@
       ],
       "evidence_path": "docs/POINT_TRANSFORM_RESULTS.md",
       "target_milestone": "Separate Pt milestone",
-      "source_revision": null,
+      "source_revision": "7835c6147b869f3f4db565c1a2b726f48d088a6a",
       "evidence_ref": "codex/t87-pt-20261126",
       "notes": "Verified unmapped Pt with interleave and H/V edge MCUs. Int32 core, Native raw32 and SDK/Worker Uint32 preserve exact reconstruction. Narrow formats reject out-of-range output."
     },
