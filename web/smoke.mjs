@@ -742,6 +742,35 @@ async function verifyWidePointTransformWorkbench() {
   console.log(JSON.stringify({ test: 'Wide point transform comparison, inspector and planar download', sample: 65540, originalError: 5, bytes: 4 }));
 }
 
+async function verifyEmbeddedMappingWorkbench() {
+  const fixture = Buffer.from('ffd8fff7000b020001000401011100fff80009020701c9d4dfeaffda0008010107000000a780ffd9', 'hex');
+  const download = async (id) => {
+    const pending = page.waitForEvent('download');
+    await click(id);
+    return readFile(await (await pending).path());
+  };
+  await page.goto(workbench.href);
+  await upload('embedded-mapping.jls', fixture);
+  await select('sink', 'buffered');
+  await chunkSize(1);
+  for (const backend of ['js', 'wasm-gc']) {
+    await select('backend', backend);
+    await click('run');
+    await phase('complete');
+    await page.locator('#reconstruction').press('Enter');
+    assert.match(await text('inspect-near'), /Coded NEAR 0.*Tmi 7/);
+    assert.match(await text('scan-table-body'), /Coded NEAR 0.*Tmi 7/);
+    assert.deepEqual(await download('download'), Buffer.concat([Buffer.from('P5\n4 1\n255\n'), Buffer.of(201, 234, 212, 223)]));
+    const report = JSON.parse(await download('export-report'));
+    assert.equal(report.frame.mapping, true);
+    assert.deepEqual(report.frame.scanParameters[0].mappingSelectors, [7]);
+    assert.equal(report.samples.errorBound, null);
+    assert.equal(report.stages.compare, 'not_run');
+    assert.equal(report.stream.strictEoi, true);
+  }
+  console.log(JSON.stringify({ test: 'Embedded map reaches both browser Workers, PGM and reports', reconstructed: [201, 234, 212, 223] }));
+}
+
 async function verifyMulticomponentWorkbench() {
   const downloadBytes = async (id, expectedName) => {
     const pending = page.waitForEvent('download');
@@ -1091,6 +1120,7 @@ try {
   await verifyM2Workbench();
   await verifyPointTransformWorkbench();
   await verifyWidePointTransformWorkbench();
+  await verifyEmbeddedMappingWorkbench();
   await verifyMulticomponentWorkbench();
   if (process.env.MOONJLS_ANNEX_FIXTURES) await verifySampledAnnexWorkbench(process.env.MOONJLS_ANNEX_FIXTURES);
   else console.log(JSON.stringify({ test: 'sampled Annex E browser decode', status: 'not_run', reason: 'MOONJLS_ANNEX_FIXTURES is unset' }));

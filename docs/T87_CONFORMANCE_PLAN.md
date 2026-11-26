@@ -32,8 +32,8 @@
 2. **B. 简略格式与表规范数据（Abbreviated Formats & Table-Specification Data）**：
    - `LSE ID=2` 映射表定义与重定义；
    - `LSE ID=3` 映射表续表拼接、缺失与生命周期管理；
-   - 仅含表规范数据的简略流（`§7(b)`、`C.3`）；
-   - 引用外部已装载映射表的简略图像格式（`§7(c)`、`C.4`）；
+   - 仅含表规范数据的简略流（`§7(b)`、`C.4`）；
+   - 引用外部已装载映射表的简略图像格式（`§7(c)`、`C.3`）；
    - 解码器外部表加载、保持与校验生命周期；
    - 对应的编码输出与解码还原能力（满足 `§6` 交换/简略双格式支持与 `§7(a)(b)(c)` 解码器全部三项义务）。
 3. **C. 最终符合性验收（Final Conformance）**：
@@ -93,7 +93,7 @@
 | 交错模式 `ILV=1`（行交错）与 `ILV=2`（样本交错），`H=V=1, Pt=0` | Annex B.1–B.3；C.2.3；C.2.4.1.1 | `passed` | `passed` | `passed` | `E.2-2/3/5/6` | HP 1.00 和 CharLS Wasm 0.10.0 | [Annex E 结果](CONFORMANCE_RESULTS.md) | JS / Wasm GC / Native 双向逐样本符合双参考，每条候选与官方流逐字节一致 | **M3-B 已验收** |
 | 采样因子（`H/V`）与边缘 MCU | §4.3.1、Annex B.2/B.4、C.2、Annex E | `passed` | `passed` | `passed` | E.2-7/8 与奇数尺寸、短行组、补行字面量 | HP 1.00 验收 E.2-7/8。CharLS Wasm 0.10.0 的采样模式为 `reference_unsupported` | [Annex E 结果](CONFORMANCE_RESULTS.md) | 三后端双向逐样本匹配适用参考。奇数尺寸和末组补行另有定向用例 | **M3-B 已验收** |
 | 无映射点变换 `Pt`（正逆变换与双尺度误差） | §4.3.2；C.2.3；T.81 B.2.3 | `passed` | `passed` | `passed` | `verify_point_transform.mjs`、`verify_sampled_point_transform.mjs`、Native 与浏览器宽输出 | FFmpeg 适用单分量，CharLS 编码域，官方采样向量校准的独立 Python 参考 | [Pt 专项](POINT_TRANSFORM_RESULTS.md) | 三后端通过，混合扫描 Native CLI 编码范围单列 | 窄输出超限显式拒绝。非零 Pt 的映射选择器为零，Annex E 全部使用 Pt=0 |
-| `LSE ID=2` 映射表与 `LSE ID=3` 映射表续表 | C.2.4.1.2–3 | `unsupported` | `unsupported` | `recognized_only` | 待建有效与截断/缺失续表用例 | 待确定适用参考工具与独立向量 | 无运行证据 | `not_run` | 解析器仅识别分段长度后拒绝；缺表结构、条目宽度与重定义管理；目标 **M4（2027-01-10）** |
+| `LSE ID=2` 映射表与 `LSE ID=3` 映射表续表 | §7；C.2.3；C.2.4.1.2–3 | `unsupported` | `partially_supported` | `partially_supported` | `verify_mapping_tables.mjs`、`mapping_wbtest.mbt`、Chrome | 固定 CharLS 3.0.0-dev 核对索引和表字节，重定义及标记错误使用独立向量 | [内嵌映射结果](EMBEDDED_MAPPING_RESULTS.md) | 三后端验收 `Wt=1` 的交换格式解码 | 编码、多字节交付契约以及外部表仍待完成 |
 | 表规范数据与简略图像格式 | §7(b)(c)；C.3、C.4 | `unsupported` | `unsupported` | `planned` | 待建跨流外部表生命周期用例 | 待确定适用参考工具与独立向量 | 无运行证据 | `not_run` | 需实现无帧表加载、保持、校验与简略图像编码/解码；目标 **M4（2027-01-10）** |
 | 重启间隔 `DRI` 与 `RST0–RST7` 标记 | C.2.5；Annex D | `unsupported` | `unsupported` | `recognized_only` | 待建重启间隔与错序/损坏用例 | 需按间隔与交错模式核实参考库 | 无运行证据 | `not_run` | 解码仅接受 `DRI=0`；非零 `DRI`、编号循环及上下文复位待实现；目标 **M4（2027-01-10）** |
 | 延后行数 `DNL` | C.2.2；C.2.6 | `unsupported` | `unsupported` | `recognized_only` | 待建 `height=0 + DNL` 用例 | 待确定适用参考工具 | 无运行证据 | `not_run` | 尚未支持未知高度帧与扫描后 `DNL` 定界；目标 **M4（2027-01-10）** |

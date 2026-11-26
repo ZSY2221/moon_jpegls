@@ -29,11 +29,14 @@ function scanErrorParameters(frame, scanFields) {
   return available.map((scan, index) => {
     const near = scan.near ?? frame.near;
     const pointTransform = scan.pointTransform ?? frame.pointTransform ?? 0;
+    const mappingSelectors = scan.mappingSelectors;
+    const mapped = mappingSelectors?.some((tid) => tid > 0);
     return {
       scanIndex: scan.scanIndex ?? index,
       near,
       pointTransform,
-      reconstructionErrorBound: reconstructionErrorBound(near, pointTransform),
+      reconstructionErrorBound: mapped ? null : reconstructionErrorBound(near, pointTransform),
+      ...(mapped ? { mappingSelectors } : {}),
     };
   });
 }
@@ -44,6 +47,7 @@ function describeFrame(frame, preset) {
   const components = frame.componentCount ?? (Array.isArray(frame.components) ? frame.components.length : 1);
   const scanFields = Array.isArray(frame.scans) ? frame.scans : null;
   const scanParameters = scanErrorParameters(frame, scanFields);
+  const mapping = scanParameters.some((scan) => scan.mappingSelectors);
   const { near, pointTransform } = scanParameters[0];
   const interleave = frame.interleave ?? scanFields?.[0]?.interleave ?? 0;
   const scans = frame.scanCount ?? scanFields?.length ?? (interleave === 0 ? components : 1);
@@ -65,9 +69,9 @@ function describeFrame(frame, preset) {
     scans,
     interleave,
     pointTransform,
-    ...(scanParameters.some((scan) => scan.pointTransform) ? { scanParameters } : {}),
+    ...(mapping || scanParameters.some((scan) => scan.pointTransform) ? { scanParameters } : {}),
     ...(componentGeometry ? { componentGeometry } : {}),
-    mapping: false,
+    mapping,
   };
 }
 
@@ -84,7 +88,7 @@ export function createVerificationReport(fields) {
       ?? (frame ? frame.width * frame.height * frame.components : null),
     verified: fields.samples?.verified ?? null,
     maxError: fields.samples?.maxError ?? null,
-    errorBound: transformed
+    errorBound: frame?.mapping ? null : transformed
       ? Math.max(...transformed.map((scan) => scan.reconstructionErrorBound))
       : frame?.near ?? null,
     unit: 'sample',
@@ -94,7 +98,7 @@ export function createVerificationReport(fields) {
     } } : {}),
   };
   if (stages.compare === 'passed' &&
-      (!frame || samples.verified !== samples.total || !Number.isSafeInteger(samples.maxError) ||
+      (!frame || frame.mapping || samples.verified !== samples.total || !Number.isSafeInteger(samples.maxError) ||
        samples.maxError < 0 || samples.maxError > samples.errorBound ||
        (transformed && (!Number.isSafeInteger(samples.coded.maxError) ||
          samples.coded.maxError < 0 || samples.coded.maxError > samples.coded.errorBound)))) {

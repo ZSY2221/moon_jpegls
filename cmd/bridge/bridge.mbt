@@ -764,6 +764,16 @@ pub fn decoder_scan_comp_field(
 }
 
 ///|
+#export_name("decoder_scan_mapping_selector")
+pub fn decoder_scan_mapping_selector(
+  port : DecodePort,
+  scan_index : Int32,
+  slot : Int32,
+) -> Int32 {
+  port.codec.scan_mapping_selector(scan_index, slot)
+}
+
+///|
 #export_name("decoder_scan_int")
 pub fn decoder_scan_int(
   port : DecodePort,

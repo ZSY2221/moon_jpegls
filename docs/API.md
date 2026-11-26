@@ -15,6 +15,8 @@ let (decoded_frame, reconstructed) = @jls.decode(compressed)
 
 For ILV=1 or ILV=2 with equal-sized components, use `Encoder::new_scans` or `encode_scans` with `MultiScanSpec`. ILV=1 takes each component's complete row in SOS order. ILV=2 takes one sample per SOS component at each pixel. `Decoder::step` delivers one planar row at a time with its component ID and row index.
 
+For embedded single-byte mapping tables, `Decoder::row()` and whole-image decoding return the mapped unsigned samples. `Decoder::scan_mapping_selector(scan_index, slot)` reads the SOS selector in scan component order. `Decoder::current_row_mapping_selector()` reads the selector of the last delivered row. APPn, COM and embedded mapping segments share `max_metadata_bytes`. The SDK exposes `scan.mappingSelectors` and `rowMeta.mappingSelector` when a table is used. Native JSON inspection reports `mappingSelectors`. Native and workbench Netpbm exports use MAXVAL 255 for mapped rows; NEAR continues to describe reconstructed indices in the coding domain. [Embedded mapping scope](EMBEDDED_MAPPING_RESULTS.md)
+
 ### Native CLI (`cmd/moonjls`)
 
 - Single-component: `encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT ...`, `encode-pgm NEAR INPUT OUTPUT [CHUNK] [preset flags]`

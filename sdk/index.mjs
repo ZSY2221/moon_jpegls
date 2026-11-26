@@ -145,12 +145,15 @@ function readScanRecord(bindings, port, scanIndex) {
   const componentIds = bindings.decoder_scan_comp_field
     ? Object.freeze(Array.from({ length: compCount }, (_, slot) => bindings.decoder_scan_comp_field(port, scanIndex, slot, 1)))
     : Object.freeze([g(2)]);
+  const mappingSelectors = bindings.decoder_scan_mapping_selector
+    && Array.from({ length: compCount }, (_, slot) => bindings.decoder_scan_mapping_selector(port, scanIndex, slot));
   return Object.freeze({
     scanIndex: g(0),
     componentIndex: g(1),
     componentId: g(2),
     componentIndices,
     componentIds,
+    ...(mappingSelectors?.some((tid) => tid > 0) ? { mappingSelectors: Object.freeze(mappingSelectors) } : {}),
     near: g(3),
     interleave: g(4),
     pointTransform: g(5),
@@ -395,32 +398,37 @@ class Session {
       this.#components = Object.freeze(comps);
       this.#frameInfo = Object.freeze({ width, height, bits, components: this.#components });
     }
+    const deliverMetadata = status === 'RowReady' || status === 'Done';
+    const st = deliverMetadata ? readStructure(bindings, port, this.#frameInfo) : null;
+    const scanIndex = deliverMetadata && bindings.decoder_current_scan ? bindings.decoder_current_scan(port, 0) : -1;
+    const activeScan = st?.scans[scanIndex];
     const baseFrame = {
       width,
       height,
       bits,
       near: activeNear,
       ...(activePt ? { pointTransform: activePt } : {}),
+      ...(activeScan?.mappingSelectors ? { mappingSelectors: activeScan.mappingSelectors } : {}),
       ...(this.#components.length > 1 ? { components: this.#components } : {}),
     };
     const resolved = resolvedFrame(baseFrame, bindings.decoder_preset, port);
     this.#frame = resolved.frame;
     this.#preset = resolved.preset;
 
-    if (status === 'RowReady' || status === 'Done') {
+    if (deliverMetadata) {
       const sampleBytes = this.#DecodedSamples.BYTES_PER_ELEMENT;
       const endianness = sampleBytes === 4 ? 'host-u32' : 'host-u16';
-      const st = readStructure(bindings, port, this.#frameInfo);
       if (st) {
         this.#structure = st;
         this.#scans = st.scans;
       }
       if (bindings.decoder_current_scan) {
-        const scanIndex = bindings.decoder_current_scan(port, 0);
         if (scanIndex >= 0) {
-          this.#currentScan = st?.scans[scanIndex] ?? null;
+          this.#currentScan = activeScan ?? null;
           if (status === 'RowReady') {
             const componentIndex = bindings.decoder_current_scan(port, 1);
+            const slot = this.#currentScan?.componentIndices?.indexOf(componentIndex);
+            const mappingSelector = this.#currentScan?.mappingSelectors?.[slot];
             const stride = bindings.decoder_current_row_width ? bindings.decoder_current_row_width(port) : width;
             const compHeight = bindings.decoder_component_field ? bindings.decoder_component_field(port, componentIndex, 4) : height;
             this.#rowMeta = Object.freeze({
@@ -432,6 +440,7 @@ class Session {
               near: activeNear,
               interleave: bindings.decoder_current_scan(port, 6),
               pointTransform: activePt,
+              ...(mappingSelector ? { mappingSelector } : {}),
               preset: this.#preset,
               layout: 'planar',
               width: stride,

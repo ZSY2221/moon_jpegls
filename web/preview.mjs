@@ -325,6 +325,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       componentNears: Array.from({ length: componentCount }, () => initialLut.near),
       componentCodedNears: Array(componentCount).fill(frame.near ?? 0),
       componentTransforms: Array(componentCount).fill(frame.pointTransform ?? 0),
+      componentMappings: Array(componentCount).fill(0),
       componentMaxvals: Array.from({ length: componentCount }, () => defaultMaxval),
       nextY: new Int32Array(componentCount),
       errorLuts,
@@ -341,11 +342,12 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     if (c < 0 || c >= componentCount) return;
     if (meta?.near !== undefined) {
       state.componentTransforms[c] = meta.pointTransform ?? 0;
+      state.componentMappings[c] = meta.mappingSelector ?? 0;
       state.componentCodedNears[c] = meta.near;
       state.componentNears[c] = reconstructionErrorBound(meta.near, meta.pointTransform);
     }
     if (state.displayMaxval === undefined && meta?.preset?.maxval !== undefined) {
-      state.componentMaxvals[c] = previewMaximum({
+      state.componentMaxvals[c] = meta.mappingSelector ? 255 : previewMaximum({
         bits: state.bits, maxval: meta.preset.maxval, pointTransform: meta.pointTransform, near: meta.near,
       }, state.wide, state.sourceMaxval);
     }
@@ -449,8 +451,10 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     }
   }
 
-  function pointTransformMetadata(index) {
+  function sampleTransformMetadata(index) {
     const pointTransform = state.componentTransforms[index];
+    const mappingSelector = state.componentMappings[index];
+    if (mappingSelector) return { mappingSelector, codedNear: state.componentCodedNears[index] };
     return pointTransform ? { pointTransform, codedNear: state.componentCodedNears[index] } : {};
   }
 
@@ -468,7 +472,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
         x: state.xMaps[c][x],
         y: Math.floor(y * state.sourceHeights[c] / state.height),
         ...(state.sampled || state.componentTransforms[c] ? { near: state.componentNears[c] } : {}),
-        ...pointTransformMetadata(c),
+        ...sampleTransformMetadata(c),
         original,
         reconstructed,
         error: original === undefined ? undefined : Math.abs(original - reconstructed),
@@ -486,7 +490,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
         reconstructed: rec,
         error: orig === undefined || rec === undefined ? undefined : Math.abs(orig - rec),
         near: state.componentNears[idx],
-        ...pointTransformMetadata(idx),
+        ...sampleTransformMetadata(idx),
       };
     });
     const activeComp = typeof state.channel === 'number' ? components[state.channel] : components[0];
@@ -498,7 +502,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       reconstructed: activeComp.reconstructed,
       error: activeComp.error,
       near: activeComp.near,
-      ...pointTransformMetadata(activeComp.index),
+      ...sampleTransformMetadata(activeComp.index),
       components,
     });
   }

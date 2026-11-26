@@ -23,6 +23,7 @@ export interface WorkerRowMeta<Format extends DecodeSampleFormat = 'u16'> {
   /** Coding interleave. Decoded rows use planar layout for all modes. */
   interleave?: number;
   pointTransform?: number;
+  mappingSelector?: number;
   layout?: 'planar';
   width?: number;
   stride?: number;

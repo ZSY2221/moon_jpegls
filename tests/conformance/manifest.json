@@ -238,13 +238,19 @@
       "display_name": "LSE mapping tables and continuations",
       "standard_clause": "C.2.4.1.2–3",
       "encode_status": "unsupported",
-      "decode_status": "unsupported",
-      "format_status": "recognized_only",
-      "reference_support": "Reference not selected",
-      "test_ids": [],
-      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "decode_status": "partially_supported",
+      "format_status": "partially_supported",
+      "reference_support": "Pinned CharLS 3.0.0-dev for indices and embedded table bytes; independent Annex C replacement and rejection vectors",
+      "test_ids": [
+        "scripts/verify_mapping_tables.mjs",
+        "core/mapping_wbtest.mbt",
+        "web/smoke.mjs"
+      ],
+      "evidence_path": "docs/EMBEDDED_MAPPING_RESULTS.md",
       "target_milestone": "M4",
-      "source_revision": null
+      "source_revision": null,
+      "evidence_ref": "codex/t87-embedded-mapping-20261126",
+      "notes": "Interchange decode with embedded, single-byte entries, including LSE3 and replacement across scans. Opaque wider entries, table encoding and external tables remain separate."
     },
     {
       "feature_id": "abbreviated",

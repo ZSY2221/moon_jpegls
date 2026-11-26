@@ -26,6 +26,8 @@ export interface ComponentSpec {
 export interface ScanSpec {
   readonly componentId?: number;
   readonly componentIds?: readonly number[];
+  /** SOS mapping selectors in component order. Zero denotes identity. */
+  readonly mappingSelectors?: readonly number[];
   /** 0: one component per scan, 1: line-interleaved, 2: sample-interleaved. */
   readonly interleave?: number;
   /** SOS Pt (0–15). Input samples remain in the original domain. */
@@ -95,6 +97,8 @@ export interface RowMeta<Format extends DecodeSampleFormat = 'u16'> {
   readonly near: number;
   readonly interleave?: number;
   readonly pointTransform?: number;
+  /** Nonzero SOS table ID when this row contains mapped samples. */
+  readonly mappingSelector?: number;
   readonly preset: Preset | null;
   readonly layout: 'planar';
   readonly width?: number;
@@ -112,6 +116,8 @@ export interface Frame {
   readonly interleave?: number;
   /** SOS Pt (0–15). Per-scan Pt takes precedence when supplied. */
   readonly pointTransform?: number;
+  /** Mapping selectors of the active decoded scan, present when used. */
+  readonly mappingSelectors?: readonly number[];
   /** Effective MAXVAL in the entropy-coded sample domain. */
   readonly maxval?: number;
   readonly preset?: Partial<Omit<Preset, 'maxval'>>;

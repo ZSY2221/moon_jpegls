@@ -16,6 +16,10 @@
 
 Unmapped Pt=0–15 is supported in the MoonBit core, Native, JS and Wasm GC. Native exposes `raw32-le` and `raw32-be` in decoder delivery order. SDK and Worker opt in to `Uint32Array`, and the workbench exports 32-bit little-endian planes in declared component order. Narrow outputs reject unrepresentable values. Nonzero Pt requires all scan mapping selectors to be zero. Independent evidence includes sampled edge MCUs. [Point-transform results and limits](POINT_TRANSFORM_RESULTS.md)
 
+## Embedded mapping tables
+
+Interchange decoding supports embedded `Wt=1` tables in LSE ID 2 and canonical ID 3 continuations, replacement between scans, and per-component SOS selectors at Pt=0. The output uses unsigned mapped bytes and NEAR remains in the index domain. Wider entries have no standard numeric interpretation. Their output contract, encoding, external tables and abbreviated streams remain M4 work. [Embedded mapping results and limits](EMBEDDED_MAPPING_RESULTS.md)
+
 ## Boundary Separation: Part 1 vs. Part 2 & Containers
 
 - **Included in MoonJLS Final Target**: ITU-T T.87 (06/1998) / ISO/IEC 14495-1 **JPEG-LS Part 1** (Interchange Format + Abbreviated / Table-Specification Formats + §8/Annex E conformance).
