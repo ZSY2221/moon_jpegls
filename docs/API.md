@@ -20,6 +20,7 @@ For ILV=1 or ILV=2 with equal-sized components, use `Encoder::new_scans` or `enc
 - Single-component: `encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT ...`, `encode-pgm NEAR INPUT OUTPUT [CHUNK] [preset flags]`
 - Multi-component non-interleaved (`ILV=0`): `encode-planar WIDTH HEIGHT BITS COMPONENTS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--comp-ids LIST] [--scan-order LIST] [--scan-near LIST] [--maxval N] [preset flags]` (streams with `host_conversion_buffer_bytes=0`), `encode-pgms NEAR OUTPUT [--chunk N] [preset flags] IN1 [IN2 ...]`, `encode-ppm NEAR INPUT OUTPUT` (P6 RGB with explicit host planar conversion), `decode INPUT OUTPUT [raw-le|raw-be|pgm|ppm] [CHUNK]`, `decode-pgms [--chunk N] INPUT OUT1 [OUT2 ...]`, `inspect|verify INPUT [CHUNK] [--json]` (emits full `components`, `scans`, `markers`, and `eoiOffset`).
 
+- Encoders accept `--pt N` for a common SOS point transform. `encode-planar` also accepts `--scan-pt LIST` in scan order, or one shared value for an interleaved scan. Netpbm input MAXVAL describes original sample storage. For nonzero Pt the coding MAXVAL defaults to the full SOF precision. Native decode accepts `raw32-le` and `raw32-be` for four-byte unsigned samples in codec row delivery order. Inspect with `moonjls inspect INPUT --json` to obtain the scan sequence and plane geometry. The existing one- or two-byte raw formats reject unrepresentable values. Netpbm output selects a header MAXVAL within the format limit.
 - Interleaved encoding accepts `--ilv 1` or `--ilv 2` on `encode-planar`, `encode-pgms`, and `encode-ppm`. PGM and PPM input use row buffers. `encode-planar` converts the whole planar input and reports that allocation.
 
 | Operation | Input and results |
@@ -41,7 +42,7 @@ For ILV=1 or ILV=2 with equal-sized components, use `Encoder::new_scans` or `enc
 
 ## JS and Wasm GC
 
-Run `node sdk/build.mjs` from the repository root. The ESM exports and adjacent `.d.mts` files are in `sdk/`. Loading is asynchronous. A `Core` creates synchronous, stateful sessions with `stage(chunk | null)` and `step()`. `null` is EOF. Each result reports counts and an owned output chunk, when present. Encode stages `Uint16Array` samples for all precisions and returns `Uint8Array` bytes. Decode stages `Uint8Array` bytes and returns `Uint16Array` rows. Samples retain their original integer scale.
+Run `node sdk/build.mjs` from the repository root. The ESM exports and adjacent `.d.mts` files are in `sdk/`. Loading is asynchronous. A `Core` creates synchronous, stateful sessions with `stage(chunk | null)` and `step()`. `null` is EOF. Each result reports counts and an owned output chunk, when present. Encode stages `Uint16Array` samples for all precisions and returns `Uint8Array` bytes. Decode stages `Uint8Array` bytes and returns `Uint16Array` rows by default. Use `sampleFormat: 'u32'` on a decoder session, `decodeStream`, `decodeImage` or `decodePlanarImage` to retain wide reconstruction in `Uint32Array`. Samples retain their original integer scale. The Node CLI accepts `decode --sample-format u32` and writes little-endian samples in delivery order.
 
 ```js
 import { loadCore, decodeStream } from './sdk/index.mjs';
@@ -66,7 +67,7 @@ console.log(result.frame, result.stats);
 | --- | --- |
 | `start` | Main thread sends mode, limits, backend, chunk ceilings and encoder frame. One job per Worker. |
 | `needInput(seq, maxElements)` → `input(seq, chunk)` | Worker asks for one block. Host supplies `Uint8Array`, `Uint16Array`, or `null` for EOF. A subview is copied before transfer to prevent retaining or detaching a larger buffer. Full, owned input buffers are transferred and detached from the sender. |
-| `bytes`, `row`, `rows`, `progress` → `ack(seq)` | Worker waits for the sink promise before proceeding. Byte and row buffers transfer ownership to the host. Rows are `Uint16Array`, accompanied by frame fields and zero-based row index. A `rows` event carries `startIndex`, `count` and a `samples` view of exactly `count * frame.width` elements. |
+| `bytes`, `row`, `rows`, `progress` → `ack(seq)` | Worker waits for the sink promise before proceeding. Byte and row buffers transfer ownership to the host. Rows are `Uint16Array` by default or `Uint32Array` with `sampleFormat: 'u32'`. Events include frame fields, the zero-based component row index, and the storage width. A `rows` event carries `startIndex`, `count` and a `samples` view with exactly `count * stride` elements. |
 | `pause`, `resume`, `cancel` | Pause stops new source reads and Worker requests at the next boundary. At most one already requested pull or event can be in flight. Cancel rejects the session. |
 | `done`, `error` | Terminal frame/metrics or error code and message. The client terminates its Worker. |
 

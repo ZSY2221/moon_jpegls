@@ -1,0 +1,5280 @@
+{
+  "status": "passed",
+  "exitCode": 0,
+  "sourceRevision": "7835c6147b869f3f4db565c1a2b726f48d088a6a",
+  "sourceDirty": false,
+  "node": "v24.20.0",
+  "python": "Python 3.12.10",
+  "command": [
+    "node",
+    "scripts/verify_sampled_point_transform.mjs",
+    "--fixtures",
+    ".tools/annex-e-ci",
+    "--native-exe",
+    ".tools/wsl-build-codex-pt-wide/native/release/build/cmd/moonjls/moonjls.exe",
+    "--native-wsl",
+    "OpenAtom-Validation-2204-20261120"
+  ],
+  "reference": "Independently implemented T.87 Annexes A/B/C/F in Python; E.2-7/8 calibrated against official bytes and frozen HP 1.00 sample hashes",
+  "referenceSha256": "48fcaf2a6205860e5c28cd48c7755a90f58c8d1423214008feec10a3d5b8091d",
+  "runnerSha256": "53bb5c39250bc8e197da8048cda89a0e8904f6e32404b0bdb1d0c109b479de08",
+  "artifacts": {
+    "js": "775e7a8bcbdafe78f4a90152d632fb0cd87e12e43ea0af7f5917392a30033996",
+    "wasm-gc": "36a936d6f9de09dd3b561eac8690366b2827c66201be12caacd7d7a33f066d79",
+    "native": "588159b9421ec945c8cd82ad9dfe71214188115fe02e712043688225098c76b6"
+  },
+  "anchors": [
+    {
+      "id": "E.2-7",
+      "file": "T8SSE0.JLS",
+      "bytes": 51781,
+      "encodedSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+      "reconstructionSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec",
+      "samples": 98304,
+      "pt": 0,
+      "hpReceiptSha256": "a0bbe83fdef589eadc2e1f735c0944b3b17348d516ec15e53f796a84b9a2bb88"
+    },
+    {
+      "id": "E.2-8",
+      "file": "T8SSE3.JLS",
+      "bytes": 32231,
+      "encodedSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+      "reconstructionSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af",
+      "samples": 98304,
+      "pt": 0,
+      "hpReceiptSha256": "a0bbe83fdef589eadc2e1f735c0944b3b17348d516ec15e53f796a84b9a2bb88"
+    }
+  ],
+  "summary": {
+    "cases": 16,
+    "js": {
+      "encode": 48,
+      "decode": 48,
+      "alternatePadding": 24
+    },
+    "wasm-gc": {
+      "encode": 48,
+      "decode": 48,
+      "alternatePadding": 24
+    },
+    "native": {
+      "encode": 45,
+      "decode": 48,
+      "alternatePadding": 24
+    }
+  },
+  "cases": [
+    {
+      "id": "p8-ilv0-near0",
+      "frame": {
+        "bits": 8,
+        "width": 5,
+        "height": 5,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 2,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 1,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 2,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 2
+        },
+        {
+          "ids": [
+            2
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 2
+        },
+        {
+          "ids": [
+            3
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 2
+        }
+      ],
+      "seed": 44240,
+      "dimensions": [
+        [
+          5,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "validRows": 11,
+      "validSamples": 47,
+      "paddingByScan": [
+        0,
+        0,
+        0
+      ],
+      "error": [
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 3,
+          "originalBound": 3
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 3,
+          "originalBound": 3
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 3,
+          "originalBound": 3
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "d717d3a15f4b0cf2b605d754014cc7ba0257048a81980612e2530ad38bb6a2d7",
+      "referenceSha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+      "reconstructedSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 7,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 7,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "20e811915c3e583db6e810a638bd925f413fbddc9168834b66b9d9a14062fc9e"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "20e811915c3e583db6e810a638bd925f413fbddc9168834b66b9d9a14062fc9e"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "20e811915c3e583db6e810a638bd925f413fbddc9168834b66b9d9a14062fc9e"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "0",
+                "--chunk",
+                "1",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "0",
+                "--chunk",
+                "7",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "0",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 110,
+              "sha256": "24355b773a9198be487c915ac1c86544017aebafcc3f516e157d84cb49ebb9ff",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "d36b6cb0dea68e7e78391c9e3e313e487ed166cfee0c700c18ccb535f9b0a411"
+            }
+          ],
+          "alternatePadding": []
+        }
+      }
+    },
+    {
+      "id": "p8-ilv0-near3",
+      "frame": {
+        "bits": 8,
+        "width": 5,
+        "height": 5,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 2,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 1,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 2,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 2
+        },
+        {
+          "ids": [
+            2
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 2
+        },
+        {
+          "ids": [
+            3
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 2
+        }
+      ],
+      "seed": 44243,
+      "dimensions": [
+        [
+          5,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "validRows": 11,
+      "validSamples": 47,
+      "paddingByScan": [
+        0,
+        0,
+        0
+      ],
+      "error": [
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 12,
+          "originalBound": 15
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "b8965158a4a87417613864f16e41c0b5b773ef8bbbba63c71182e719e8f9a0eb",
+      "referenceSha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+      "reconstructedSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 7,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 7,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "c03840c429d5f380f774ca0ce62510e7d7abe5bafb08b7a6f7f6c0a68b6f3538"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "c03840c429d5f380f774ca0ce62510e7d7abe5bafb08b7a6f7f6c0a68b6f3538"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "c03840c429d5f380f774ca0ce62510e7d7abe5bafb08b7a6f7f6c0a68b6f3538"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "0",
+                "--chunk",
+                "1",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "0",
+                "--chunk",
+                "7",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "0",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 79,
+              "sha256": "5e494d4b9ca06bc99f9a583368ba339b38ac605864e5f9db7d3428af3a550339",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "6a88abedb10abb6233656e0976a56443f41dc6107ce6ecfae351607901f560eb"
+            }
+          ],
+          "alternatePadding": []
+        }
+      }
+    },
+    {
+      "id": "p8-ilv1-near0",
+      "frame": {
+        "bits": 8,
+        "width": 5,
+        "height": 5,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 2,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 1,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 2,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "ilv": 1,
+          "near": 0,
+          "pt": 2
+        }
+      ],
+      "seed": 44244,
+      "dimensions": [
+        [
+          5,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "validRows": 11,
+      "validSamples": 47,
+      "paddingByScan": [
+        5
+      ],
+      "error": [
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 3,
+          "originalBound": 3
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 3,
+          "originalBound": 3
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 3,
+          "originalBound": 3
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "b45c635942103ef7070d586e119ccf295f8f72dee7310678bf070acad9ad1f5f",
+      "referenceSha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+      "reconstructedSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 7,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 11,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            }
+          ]
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 7,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 11,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            }
+          ]
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "5c662a6fe319d1d53b8ba2de3df80d9e5a45fe6c2b2e29c887fd7fc40b0a0f7f"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "5c662a6fe319d1d53b8ba2de3df80d9e5a45fe6c2b2e29c887fd7fc40b0a0f7f"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "5c662a6fe319d1d53b8ba2de3df80d9e5a45fe6c2b2e29c887fd7fc40b0a0f7f"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "1",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "7",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 94,
+              "sha256": "e856fcbb280155c2e3197db4903e1ba50e4a06dc7bae0af95c7d4375b4ba6898",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "5c662a6fe319d1d53b8ba2de3df80d9e5a45fe6c2b2e29c887fd7fc40b0a0f7f"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "5c662a6fe319d1d53b8ba2de3df80d9e5a45fe6c2b2e29c887fd7fc40b0a0f7f"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "5c662a6fe319d1d53b8ba2de3df80d9e5a45fe6c2b2e29c887fd7fc40b0a0f7f"
+            }
+          ]
+        }
+      },
+      "alternatePadding": {
+        "streamSha256": "fe332c12c93621b0e9092e9b14e6348d1283e33d249651d8b2b4360d35081391",
+        "reconstructedSha256": "c8b91bcfbd489d97062fe54cb4e16520cd3e486bae872ecadae23a5619fa8a5f"
+      }
+    },
+    {
+      "id": "p8-ilv1-near3",
+      "frame": {
+        "bits": 8,
+        "width": 5,
+        "height": 5,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 2,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 1,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 2,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "ilv": 1,
+          "near": 3,
+          "pt": 2
+        }
+      ],
+      "seed": 44247,
+      "dimensions": [
+        [
+          5,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "validRows": 11,
+      "validSamples": 47,
+      "paddingByScan": [
+        5
+      ],
+      "error": [
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 12,
+          "originalBound": 15
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "aafb21b9e49c923161f4e843c3e688c844fea711995c3ad28fdd0fc48ced2030",
+      "referenceSha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+      "reconstructedSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 7,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 11,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            }
+          ]
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 7,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 11,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            }
+          ]
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4c2a66cf32d2042e886305be6fca61572d1979c86968023e634ef7d25a9041ec"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4c2a66cf32d2042e886305be6fca61572d1979c86968023e634ef7d25a9041ec"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4c2a66cf32d2042e886305be6fca61572d1979c86968023e634ef7d25a9041ec"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "1",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "7",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 65,
+              "sha256": "051b605c48282152c138b6c31d340c535f1b5951e711fd8c10a35c42fefc1787",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4c2a66cf32d2042e886305be6fca61572d1979c86968023e634ef7d25a9041ec"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4c2a66cf32d2042e886305be6fca61572d1979c86968023e634ef7d25a9041ec"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4c2a66cf32d2042e886305be6fca61572d1979c86968023e634ef7d25a9041ec"
+            }
+          ]
+        }
+      },
+      "alternatePadding": {
+        "streamSha256": "3ac9acffed5a31ad474cbf1324a8a75b775cff7c40ec2c961e0ddb4c0021dce7",
+        "reconstructedSha256": "0a421fc61282dc8379e8d4916672721bd1f9250918b5d071a7cbe3eaf12ebbe7"
+      },
+      "invalid": [
+        {
+          "label": "last coded byte removed",
+          "fileSha256": "55c78b9bc2d88bae538e2cba767e3c2357e86df24ebd85da74a262cccc8c62ea",
+          "statuses": {
+            "js": "rejected",
+            "wasm-gc": "rejected",
+            "native": {
+              "exitCode": 1
+            }
+          }
+        },
+        {
+          "label": "trailing byte after EOI",
+          "fileSha256": "187302a23b05d1da20750177e2bc5e2a278816315a9be271e3e77e2135d7a624",
+          "statuses": {
+            "js": "rejected",
+            "wasm-gc": "rejected",
+            "native": {
+              "exitCode": 1
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "p12-ilv0-near0",
+      "frame": {
+        "bits": 12,
+        "width": 11,
+        "height": 9,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 4,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 2,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 2
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 4
+        },
+        {
+          "ids": [
+            2
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 4
+        },
+        {
+          "ids": [
+            3
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 4
+        }
+      ],
+      "seed": 44256,
+      "dimensions": [
+        [
+          11,
+          9
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "validRows": 21,
+      "validSamples": 156,
+      "paddingByScan": [
+        0,
+        0,
+        0
+      ],
+      "error": [
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 15,
+          "originalBound": 15
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "0dfbf23e90e19a9aa4661d4520de890ddf887e832a257be051c2222b6396fc5f",
+      "referenceSha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+      "reconstructedSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 7,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 7,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "0",
+                "--chunk",
+                "1",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "0",
+                "--chunk",
+                "7",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "0",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 219,
+              "sha256": "b0b73184cf067c8f66c714d284d029fe210fd7ea5f0fc79cea5cd94279376f93",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "a1ed231b89b1ffa7462f6c9ebcc97fb16e9ae555102c63d13710d66f64b395da"
+            }
+          ],
+          "alternatePadding": []
+        }
+      }
+    },
+    {
+      "id": "p12-ilv0-near3",
+      "frame": {
+        "bits": 12,
+        "width": 11,
+        "height": 9,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 4,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 2,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 2
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 4
+        },
+        {
+          "ids": [
+            2
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 4
+        },
+        {
+          "ids": [
+            3
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 4
+        }
+      ],
+      "seed": 44259,
+      "dimensions": [
+        [
+          11,
+          9
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "validRows": 21,
+      "validSamples": 156,
+      "paddingByScan": [
+        0,
+        0,
+        0
+      ],
+      "error": [
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 62,
+          "originalBound": 63
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 54,
+          "originalBound": 63
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 41,
+          "originalBound": 63
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "9d5bcb8c38799b6e50848ced10f041f5b490181c99b17a4a6a2a719a4f2dc37d",
+      "referenceSha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+      "reconstructedSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 7,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 7,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "0",
+                "--chunk",
+                "1",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "0",
+                "--chunk",
+                "7",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "0",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 166,
+              "sha256": "158558f0001f04ccb0a75104a3192712805e810408b6095c35dfef210fdf499a",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "1426c861d99aefa563b49202fb375098b98b75d04407fbbfbd04fe5a1b8aca1f"
+            }
+          ],
+          "alternatePadding": []
+        }
+      }
+    },
+    {
+      "id": "p12-ilv1-near0",
+      "frame": {
+        "bits": 12,
+        "width": 11,
+        "height": 9,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 4,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 2,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 2
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "ilv": 1,
+          "near": 0,
+          "pt": 4
+        }
+      ],
+      "seed": 44260,
+      "dimensions": [
+        [
+          11,
+          9
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "validRows": 21,
+      "validSamples": 156,
+      "paddingByScan": [
+        6
+      ],
+      "error": [
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 14,
+          "originalBound": 15
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "6e5f5b08a6e253820fa947d72d6b9eb71ac3e41ec94d473acb91a9d6747edb69",
+      "referenceSha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+      "reconstructedSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 7,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 21,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            }
+          ]
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 7,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 21,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            }
+          ]
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "79607f354c9f14d81039c51bb0df026e57323c2e8af54d23fda665c5511c8b4a"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "79607f354c9f14d81039c51bb0df026e57323c2e8af54d23fda665c5511c8b4a"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "79607f354c9f14d81039c51bb0df026e57323c2e8af54d23fda665c5511c8b4a"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "1",
+                "--chunk",
+                "1",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "1",
+                "--chunk",
+                "7",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "1",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 232,
+              "sha256": "81ef22381a74e80153615a04892c0062f9650cfe0bd33c0920a209ca710e3fef",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "79607f354c9f14d81039c51bb0df026e57323c2e8af54d23fda665c5511c8b4a"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "79607f354c9f14d81039c51bb0df026e57323c2e8af54d23fda665c5511c8b4a"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "79607f354c9f14d81039c51bb0df026e57323c2e8af54d23fda665c5511c8b4a"
+            }
+          ]
+        }
+      },
+      "alternatePadding": {
+        "streamSha256": "46715c2a3756e46fba3cda3881e6cb3eeaf83064be33319bbe5a6f58a84cbbb3",
+        "reconstructedSha256": "748c81315239600565197979133f8cfd0b2e9251ee76debf9dbab2039cdaf720"
+      }
+    },
+    {
+      "id": "p12-ilv1-near3",
+      "frame": {
+        "bits": 12,
+        "width": 11,
+        "height": 9,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 4,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 2,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 2
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "ilv": 1,
+          "near": 3,
+          "pt": 4
+        }
+      ],
+      "seed": 44263,
+      "dimensions": [
+        [
+          11,
+          9
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "validRows": 21,
+      "validSamples": 156,
+      "paddingByScan": [
+        6
+      ],
+      "error": [
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 62,
+          "originalBound": 63
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 63,
+          "originalBound": 63
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 60,
+          "originalBound": 63
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "e64bccc3d585d164c00c1f0d9a7c13e634ee07540b63a687f829bac4decc3d74",
+      "referenceSha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+      "reconstructedSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 7,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 21,
+              "reconstructionSha256": "16d6a5671fb2f17c502e9adbd8a7b77b3192087313104542287b8aa08217a447"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "16d6a5671fb2f17c502e9adbd8a7b77b3192087313104542287b8aa08217a447"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "16d6a5671fb2f17c502e9adbd8a7b77b3192087313104542287b8aa08217a447"
+            }
+          ]
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 7,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 21,
+              "reconstructionSha256": "16d6a5671fb2f17c502e9adbd8a7b77b3192087313104542287b8aa08217a447"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "16d6a5671fb2f17c502e9adbd8a7b77b3192087313104542287b8aa08217a447"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "16d6a5671fb2f17c502e9adbd8a7b77b3192087313104542287b8aa08217a447"
+            }
+          ]
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "53f805aec281cdd54b81b5795d602a541e222b766f071cc0285772d54fdfd17c"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "53f805aec281cdd54b81b5795d602a541e222b766f071cc0285772d54fdfd17c"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "53f805aec281cdd54b81b5795d602a541e222b766f071cc0285772d54fdfd17c"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "1",
+                "--chunk",
+                "1",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "1",
+                "--chunk",
+                "7",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "4",
+                "--ilv",
+                "1",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "4x4,2x3,1x2",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 173,
+              "sha256": "2ef20c24ad7edf950fde40aecdb4b52d72b9ad383e3ecb2a64ec8334e4986b9d",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "7dd6ebed51a92fd8ee6983c570734b15f1cee3dc21e46f528755439b66118525"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "38f90dd4378b957492d651e204f9c06289bff8883ed8d1c70df851768dbe533d"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "38f90dd4378b957492d651e204f9c06289bff8883ed8d1c70df851768dbe533d"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "38f90dd4378b957492d651e204f9c06289bff8883ed8d1c70df851768dbe533d"
+            }
+          ]
+        }
+      },
+      "alternatePadding": {
+        "streamSha256": "0a092b80611bd23e604e85be91d23a27a39f74b60367d3865d25306ca092719e",
+        "reconstructedSha256": "16d6a5671fb2f17c502e9adbd8a7b77b3192087313104542287b8aa08217a447"
+      }
+    },
+    {
+      "id": "p16-ilv0-near0",
+      "frame": {
+        "bits": 16,
+        "width": 13,
+        "height": 11,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 3,
+            "vSampling": 3
+          },
+          {
+            "id": 2,
+            "hSampling": 2,
+            "vSampling": 2
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 5
+        },
+        {
+          "ids": [
+            2
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 5
+        },
+        {
+          "ids": [
+            3
+          ],
+          "ilv": 0,
+          "near": 0,
+          "pt": 5
+        }
+      ],
+      "seed": 44272,
+      "dimensions": [
+        [
+          13,
+          11
+        ],
+        [
+          9,
+          8
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "validRows": 23,
+      "validSamples": 235,
+      "paddingByScan": [
+        0,
+        0,
+        0
+      ],
+      "error": [
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 31,
+          "originalBound": 31
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 31,
+          "originalBound": 31
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 29,
+          "originalBound": 31
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "a65494de17e10882ee085b2a7039ca1f65b204a0142ef69d79fcd0cb514f6582",
+      "referenceSha256": "4af835a3ecc3235cbe0b9ffa819bf84911074c078635c0b88402009a945ce46d",
+      "reconstructedSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 7,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 7,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "0",
+                "--chunk",
+                "1",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "0",
+                "--chunk",
+                "7",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "0",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 400,
+              "sha256": "29f14c58b93cf95978088dc3bf398f7974186e6cd5add4b7a8f0b85e89d16692",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "18f519f54db708029812792c85dc967c5f03950fdca999e8caec4d6a6fa48857"
+            }
+          ],
+          "alternatePadding": []
+        }
+      }
+    },
+    {
+      "id": "p16-ilv0-near3",
+      "frame": {
+        "bits": 16,
+        "width": 13,
+        "height": 11,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 3,
+            "vSampling": 3
+          },
+          {
+            "id": 2,
+            "hSampling": 2,
+            "vSampling": 2
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 5
+        },
+        {
+          "ids": [
+            2
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 5
+        },
+        {
+          "ids": [
+            3
+          ],
+          "ilv": 0,
+          "near": 3,
+          "pt": 5
+        }
+      ],
+      "seed": 44275,
+      "dimensions": [
+        [
+          13,
+          11
+        ],
+        [
+          9,
+          8
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "validRows": 23,
+      "validSamples": 235,
+      "paddingByScan": [
+        0,
+        0,
+        0
+      ],
+      "error": [
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 127,
+          "originalBound": 127
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 127,
+          "originalBound": 127
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 96,
+          "originalBound": 127
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "3a7e6626301565f71f7a0b2e85289a35faf5446612a5e0f80c1a2be71d1d967c",
+      "referenceSha256": "b445f77f4d11fc2c910243464968dc61958076034b4d491804500e3bf04eb7f9",
+      "reconstructedSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 7,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 7,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "0",
+                "--chunk",
+                "1",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "0",
+                "--chunk",
+                "7",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "0",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 324,
+              "sha256": "921257cfd6209782c5e69a0de65a9321a351c1606f4a3723d28c41efbf754dcf",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "86a0e40c3e1a81bf3b5e5f61a5becb26fed8ab30e14ff7c3f468fb6b50afc28b"
+            }
+          ],
+          "alternatePadding": []
+        }
+      }
+    },
+    {
+      "id": "p16-ilv1-near0",
+      "frame": {
+        "bits": 16,
+        "width": 13,
+        "height": 11,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 3,
+            "vSampling": 3
+          },
+          {
+            "id": 2,
+            "hSampling": 2,
+            "vSampling": 2
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "ilv": 1,
+          "near": 0,
+          "pt": 5
+        }
+      ],
+      "seed": 44276,
+      "dimensions": [
+        [
+          13,
+          11
+        ],
+        [
+          9,
+          8
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "validRows": 23,
+      "validSamples": 235,
+      "paddingByScan": [
+        1
+      ],
+      "error": [
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 31,
+          "originalBound": 31
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 31,
+          "originalBound": 31
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 31,
+          "originalBound": 31
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "7b89bf417c2907a81babb85419b62c31fcdec8e131d05ebaa7e5380e9b090a43",
+      "referenceSha256": "8e45f6b644ab7de7278a505840a4f2f6d0635fd98005cc2e8b41efc6109f4119",
+      "reconstructedSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 7,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 23,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            }
+          ]
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 7,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 23,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            }
+          ]
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "bc3d0146bdd37b946a6b62611df44d8ce72b2a362d99a73a784ab88a16300472"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "bc3d0146bdd37b946a6b62611df44d8ce72b2a362d99a73a784ab88a16300472"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "bc3d0146bdd37b946a6b62611df44d8ce72b2a362d99a73a784ab88a16300472"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "1",
+                "--chunk",
+                "1",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "1",
+                "--chunk",
+                "7",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "1",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 395,
+              "sha256": "27b66de15664776ac687dc961bad742a0168754a400265d11d3d72f838dc9b26",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "bc3d0146bdd37b946a6b62611df44d8ce72b2a362d99a73a784ab88a16300472"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "bc3d0146bdd37b946a6b62611df44d8ce72b2a362d99a73a784ab88a16300472"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "bc3d0146bdd37b946a6b62611df44d8ce72b2a362d99a73a784ab88a16300472"
+            }
+          ]
+        }
+      },
+      "alternatePadding": {
+        "streamSha256": "4ccee70e373fde8b99356d13e477ba0fc2a653119fa4c39269a8e9799f3ae267",
+        "reconstructedSha256": "c48f3c5f57c7bd1b919bed61c545f0b2f76ac17ba6361573461f807edd554508"
+      }
+    },
+    {
+      "id": "p16-ilv1-near3",
+      "frame": {
+        "bits": 16,
+        "width": 13,
+        "height": 11,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 3,
+            "vSampling": 3
+          },
+          {
+            "id": 2,
+            "hSampling": 2,
+            "vSampling": 2
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "ilv": 1,
+          "near": 3,
+          "pt": 5
+        }
+      ],
+      "seed": 44279,
+      "dimensions": [
+        [
+          13,
+          11
+        ],
+        [
+          9,
+          8
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "validRows": 23,
+      "validSamples": 235,
+      "paddingByScan": [
+        1
+      ],
+      "error": [
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 126,
+          "originalBound": 127
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 127,
+          "originalBound": 127
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 123,
+          "originalBound": 127
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "e0ff28e6d9ce71ed26e6b3f552da204b403a04336378eb2051c2181dc1c32b7d",
+      "referenceSha256": "45c33fd8d6e47d3695b957a4fb2187e1d2e6d15d1ec138d6dbf5c59bcacf0b94",
+      "reconstructedSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 7,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 23,
+              "reconstructionSha256": "aceaf47c7db8737601854737428d260b4eab40a477a6db1e76ad16dc355f40e6"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "aceaf47c7db8737601854737428d260b4eab40a477a6db1e76ad16dc355f40e6"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "aceaf47c7db8737601854737428d260b4eab40a477a6db1e76ad16dc355f40e6"
+            }
+          ]
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 7,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 23,
+              "reconstructionSha256": "aceaf47c7db8737601854737428d260b4eab40a477a6db1e76ad16dc355f40e6"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "aceaf47c7db8737601854737428d260b4eab40a477a6db1e76ad16dc355f40e6"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "aceaf47c7db8737601854737428d260b4eab40a477a6db1e76ad16dc355f40e6"
+            }
+          ]
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "2dc06de9005a2c110e11ebc39f839efd7ee780821ba98e3eb3967329a4b27da1"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "2dc06de9005a2c110e11ebc39f839efd7ee780821ba98e3eb3967329a4b27da1"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "2dc06de9005a2c110e11ebc39f839efd7ee780821ba98e3eb3967329a4b27da1"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "1",
+                "--chunk",
+                "1",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "1",
+                "--chunk",
+                "7",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "5",
+                "--ilv",
+                "1",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "3x3,2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 321,
+              "sha256": "c1a4aee52f534d8deceb513210a77b5c9a4b734c9ea35eca14c48b52f0cfedb4",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "f75b554d240f6e48811f5a0bb87649b002aa9b033280f689f439fa55b4a4ea22"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "397bc4268ba2971a90a7a3245e6db2e84116501c2a43b584d85de351ef247dc5"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "397bc4268ba2971a90a7a3245e6db2e84116501c2a43b584d85de351ef247dc5"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "397bc4268ba2971a90a7a3245e6db2e84116501c2a43b584d85de351ef247dc5"
+            }
+          ]
+        }
+      },
+      "alternatePadding": {
+        "streamSha256": "3c489a6a55d0c06a4fb352c6a86e877f0d289c2181bd5ebd26e1404f9ed1374a",
+        "reconstructedSha256": "aceaf47c7db8737601854737428d260b4eab40a477a6db1e76ad16dc355f40e6"
+      }
+    },
+    {
+      "id": "p12-explicit-lse1",
+      "frame": {
+        "bits": 12,
+        "width": 7,
+        "height": 5,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 2,
+            "vSampling": 2
+          },
+          {
+            "id": 2,
+            "hSampling": 1,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2
+          ],
+          "ilv": 1,
+          "pt": 2,
+          "near": 3,
+          "lse": [
+            0,
+            10,
+            18,
+            40,
+            32
+          ]
+        }
+      ],
+      "seed": 73,
+      "dimensions": [
+        [
+          7,
+          5
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "validRows": 8,
+      "validSamples": 47,
+      "paddingByScan": [
+        1
+      ],
+      "error": [
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 12,
+          "originalBound": 15
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "c5b5f4231699e60c79c868d066872e5457d5356739ba5e2f5a895130b24ead77",
+      "referenceSha256": "93af97747cab330da0ea573ff961e6beb86aa1048d5f1d47deff24176dd76042",
+      "reconstructedSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 7,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 8,
+              "reconstructionSha256": "dbc65eba8289b4b840506f15f68ac2c68b6958d35fbe1f54f1d4ea8a055d613a"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "dbc65eba8289b4b840506f15f68ac2c68b6958d35fbe1f54f1d4ea8a055d613a"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "dbc65eba8289b4b840506f15f68ac2c68b6958d35fbe1f54f1d4ea8a055d613a"
+            }
+          ]
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 7,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 8,
+              "reconstructionSha256": "dbc65eba8289b4b840506f15f68ac2c68b6958d35fbe1f54f1d4ea8a055d613a"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "dbc65eba8289b4b840506f15f68ac2c68b6958d35fbe1f54f1d4ea8a055d613a"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "dbc65eba8289b4b840506f15f68ac2c68b6958d35fbe1f54f1d4ea8a055d613a"
+            }
+          ]
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "6d645406237c82c19ab907ffebac35dae76225a4328fd028c9a314dc3b2f7c6e"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "6d645406237c82c19ab907ffebac35dae76225a4328fd028c9a314dc3b2f7c6e"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "6d645406237c82c19ab907ffebac35dae76225a4328fd028c9a314dc3b2f7c6e"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "1",
+                "--sampling",
+                "2x2,1x1",
+                "--t1",
+                "10",
+                "--t2",
+                "18",
+                "--t3",
+                "40",
+                "--reset",
+                "32",
+                "<plane0.pgm>",
+                "<plane1.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "7",
+                "--sampling",
+                "2x2,1x1",
+                "--t1",
+                "10",
+                "--t2",
+                "18",
+                "--t3",
+                "40",
+                "--reset",
+                "32",
+                "<plane0.pgm>",
+                "<plane1.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "3",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "2x2,1x1",
+                "--t1",
+                "10",
+                "--t2",
+                "18",
+                "--t3",
+                "40",
+                "--reset",
+                "32",
+                "<plane0.pgm>",
+                "<plane1.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 101,
+              "sha256": "fa463cfad25261a2ea51511f0b40e45fc88ad2cd53ef376ec4d78ef4c4360b00",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "aa17373498e301bcd936a67428f9622fb4fb9b9823d8841cdb797b5be50a7809"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "ebb5bfe8417f615330d3a142cc4d2a357095bb6301ffc25643abc53a932978a0"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "ebb5bfe8417f615330d3a142cc4d2a357095bb6301ffc25643abc53a932978a0"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "ebb5bfe8417f615330d3a142cc4d2a357095bb6301ffc25643abc53a932978a0"
+            }
+          ]
+        }
+      },
+      "alternatePadding": {
+        "streamSha256": "082f54abc3aa6d8e4600531a75ff5b570c062b43cd28b4ccb97fb50f8bea8d85",
+        "reconstructedSha256": "dbc65eba8289b4b840506f15f68ac2c68b6958d35fbe1f54f1d4ea8a055d613a"
+      }
+    },
+    {
+      "id": "p8-ilv2-equal-one-pixel-planes",
+      "frame": {
+        "bits": 8,
+        "width": 1,
+        "height": 1,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 2,
+            "vSampling": 2
+          },
+          {
+            "id": 2,
+            "hSampling": 1,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2
+          ],
+          "ilv": 2,
+          "pt": 2,
+          "near": 0
+        }
+      ],
+      "seed": 255,
+      "dimensions": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "validRows": 2,
+      "validSamples": 2,
+      "paddingByScan": [
+        0
+      ],
+      "error": [
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 2,
+          "originalBound": 3
+        },
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 1,
+          "originalBound": 3
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "7dc4096fa4ca962ffe7ba24f3cb48480065a7714e6a4a27588185d3d86a8dde8",
+      "referenceSha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+      "reconstructedSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 7,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 7,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "2",
+                "--chunk",
+                "1",
+                "--sampling",
+                "2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "2",
+                "--chunk",
+                "7",
+                "--sampling",
+                "2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "0",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "2",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "2x2,1x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 33,
+              "sha256": "9af6945e8d7ac86a6f59b233d77adbfce6cd280e2755682262486423436c09fd",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+            }
+          ],
+          "alternatePadding": []
+        }
+      }
+    },
+    {
+      "id": "p12-sampled-hybrid",
+      "frame": {
+        "bits": 12,
+        "width": 9,
+        "height": 7,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 2,
+            "vSampling": 2
+          },
+          {
+            "id": 2,
+            "hSampling": 1,
+            "vSampling": 1
+          },
+          {
+            "id": 3,
+            "hSampling": 1,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            2,
+            3
+          ],
+          "ilv": 2,
+          "pt": 4,
+          "near": 3
+        },
+        {
+          "ids": [
+            1
+          ],
+          "ilv": 0,
+          "pt": 2,
+          "near": 0
+        }
+      ],
+      "seed": 19,
+      "dimensions": [
+        [
+          9,
+          7
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "validRows": 15,
+      "validSamples": 103,
+      "paddingByScan": [
+        0,
+        0
+      ],
+      "error": [
+        {
+          "coded": 0,
+          "near": 0,
+          "original": 3,
+          "originalBound": 3
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 57,
+          "originalBound": 63
+        },
+        {
+          "coded": 3,
+          "near": 3,
+          "original": 47,
+          "originalBound": 63
+        }
+      ],
+      "sampleBytes": 2,
+      "originalSamplesSha256": "6789b5499d6392bc18433f28c9df81f5e96b39723131b8b2139f647ad766bebd",
+      "referenceSha256": "ed9ea0a27a325c33107962c2ead8d039be634067848428a943253959e0d22d88",
+      "reconstructedSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 176,
+              "sha256": "ed9ea0a27a325c33107962c2ead8d039be634067848428a943253959e0d22d88",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            },
+            {
+              "chunk": 7,
+              "bytes": 176,
+              "sha256": "ed9ea0a27a325c33107962c2ead8d039be634067848428a943253959e0d22d88",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 176,
+              "sha256": "ed9ea0a27a325c33107962c2ead8d039be634067848428a943253959e0d22d88",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 176,
+              "sha256": "ed9ea0a27a325c33107962c2ead8d039be634067848428a943253959e0d22d88",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            },
+            {
+              "chunk": 7,
+              "bytes": 176,
+              "sha256": "ed9ea0a27a325c33107962c2ead8d039be634067848428a943253959e0d22d88",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 176,
+              "sha256": "ed9ea0a27a325c33107962c2ead8d039be634067848428a943253959e0d22d88",
+              "exactReferenceBytes": true,
+              "independentReconstructionSha256": "8aba692118d88cf9a4b03e780fde50489e80a1af78aca1683e75004a7fba8f1a"
+            }
+          ],
+          "alternatePadding": []
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4ade3c670302026eb43c2645f174253f1107ddacbd20def048195f38f20b71aa"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4ade3c670302026eb43c2645f174253f1107ddacbd20def048195f38f20b71aa"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "4ade3c670302026eb43c2645f174253f1107ddacbd20def048195f38f20b71aa"
+            }
+          ],
+          "encode": [],
+          "alternatePadding": [],
+          "encodeStatus": "not_applicable",
+          "encodeScope": "Native CLI does not expose mixed ILV or per-scan Pt for sampled PGM inputs"
+        }
+      }
+    },
+    {
+      "id": "p16-ilv1-wide-reconstruction",
+      "frame": {
+        "bits": 16,
+        "width": 5,
+        "height": 5,
+        "components": [
+          {
+            "id": 1,
+            "hSampling": 2,
+            "vSampling": 4
+          },
+          {
+            "id": 2,
+            "hSampling": 1,
+            "vSampling": 3
+          },
+          {
+            "id": 3,
+            "hSampling": 2,
+            "vSampling": 1
+          }
+        ]
+      },
+      "scans": [
+        {
+          "ids": [
+            1,
+            2,
+            3
+          ],
+          "ilv": 1,
+          "pt": 2,
+          "near": 2
+        }
+      ],
+      "seed": 49,
+      "dimensions": [
+        [
+          5,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "validRows": 11,
+      "validSamples": 47,
+      "paddingByScan": [
+        5
+      ],
+      "error": [
+        {
+          "coded": 2,
+          "near": 2,
+          "original": 11,
+          "originalBound": 11
+        },
+        {
+          "coded": 2,
+          "near": 2,
+          "original": 9,
+          "originalBound": 11
+        },
+        {
+          "coded": 2,
+          "near": 2,
+          "original": 11,
+          "originalBound": 11
+        }
+      ],
+      "sampleBytes": 4,
+      "originalSamplesSha256": "3374fe7d213f4f32c3dd83bf0e45fb5b090358bc7c0f63e3797c3dbfe35c18b1",
+      "referenceSha256": "a0b0eda36e6e2b1b695d5ff00a22975b262dc7611a0f9f22b825a34ed9621d2d",
+      "reconstructedSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb",
+      "backends": {
+        "js": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 7,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 11,
+              "reconstructionSha256": "62f0f5bb8d30868f3e703ee44cb80d5ed7f5dabb172dd0a9dda9aeac79227ae6"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "62f0f5bb8d30868f3e703ee44cb80d5ed7f5dabb172dd0a9dda9aeac79227ae6"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "62f0f5bb8d30868f3e703ee44cb80d5ed7f5dabb172dd0a9dda9aeac79227ae6"
+            }
+          ]
+        },
+        "wasm-gc": {
+          "decode": [
+            {
+              "chunk": 1,
+              "reconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 7,
+              "reconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 4096,
+              "reconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 7,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "beforeEoi": 11,
+              "reconstructionSha256": "62f0f5bb8d30868f3e703ee44cb80d5ed7f5dabb172dd0a9dda9aeac79227ae6"
+            },
+            {
+              "chunk": 7,
+              "beforeEoi": null,
+              "reconstructionSha256": "62f0f5bb8d30868f3e703ee44cb80d5ed7f5dabb172dd0a9dda9aeac79227ae6"
+            },
+            {
+              "chunk": 4096,
+              "beforeEoi": null,
+              "reconstructionSha256": "62f0f5bb8d30868f3e703ee44cb80d5ed7f5dabb172dd0a9dda9aeac79227ae6"
+            }
+          ]
+        },
+        "native": {
+          "decode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw32-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "e4074e4227de7b84c1066a7657f2937a51c667b1a8c78fb666e54a99417ed760"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw32-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "e4074e4227de7b84c1066a7657f2937a51c667b1a8c78fb666e54a99417ed760"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw32-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "e4074e4227de7b84c1066a7657f2937a51c667b1a8c78fb666e54a99417ed760"
+            }
+          ],
+          "encode": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "2",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "1",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "2",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "7",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "encode-pgms",
+                "2",
+                "-",
+                "--pt",
+                "2",
+                "--ilv",
+                "1",
+                "--chunk",
+                "4096",
+                "--sampling",
+                "2x4,1x3,2x1",
+                "<plane0.pgm>",
+                "<plane1.pgm>",
+                "<plane2.pgm>"
+              ],
+              "exitCode": 0,
+              "bytes": 147,
+              "sha256": "5d643432ba4640b7750724ea1c274ad5c6cc6aba9871a44c2e7595c3c0ed66a2",
+              "exactReferenceBytes": false,
+              "independentReconstructionSha256": "88cf99c149cc30237dd6a118fdb275e2466167bc644156e0eb306f2b6c92eddb"
+            }
+          ],
+          "alternatePadding": [
+            {
+              "chunk": 1,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw32-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "16731802a9d36c4a0d77e20725677de5c065c7b4190ea424c800928d6095bb3c"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw32-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "16731802a9d36c4a0d77e20725677de5c065c7b4190ea424c800928d6095bb3c"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "moonjls",
+                "decode",
+                "-",
+                "-",
+                "raw32-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowSamplesSha256": "16731802a9d36c4a0d77e20725677de5c065c7b4190ea424c800928d6095bb3c"
+            }
+          ]
+        }
+      },
+      "alternatePadding": {
+        "streamSha256": "658fc889cf1c19633e265a69734560fcb8fd3287a67dc4ba30c9d8e0a48d467c",
+        "reconstructedSha256": "62f0f5bb8d30868f3e703ee44cb80d5ed7f5dabb172dd0a9dda9aeac79227ae6"
+      },
+      "wideWitness": {
+        "componentId": 1,
+        "x": 0,
+        "y": 0,
+        "reconstructed": 65540
+      },
+      "narrowRejected": {
+        "js": true,
+        "wasm-gc": true,
+        "native": {
+          "exitCode": 1
+        }
+      }
+    }
+  ]
+}

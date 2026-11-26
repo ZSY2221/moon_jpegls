@@ -1,7 +1,7 @@
 import { CodecError, componentDimensions } from '../sdk/index.mjs';
 import { startWorker } from '../sdk/worker-client.mjs';
 import { lunarElevationMeters, lunarErrorMeters } from '../sdk/lunar.mjs';
-import { createRunId, serializeVerificationReport } from '../sdk/verification-report.mjs';
+import { createRunId, reconstructionErrorBound, serializeVerificationReport } from '../sdk/verification-report.mjs';
 import { finishWorkbenchReport, lunarIdentity, workbenchReport } from './run-report.mjs';
 import { strings } from './labels.mjs';
 import { openPgm, pgmHeader, pgmRow, sampleByteWidth, sampleMaximum, samplePgm } from './pgm.mjs';
@@ -29,8 +29,8 @@ const setHidden = (id, hidden) => {
 };
 
 const presetFields = ['t1', 't2', 't3', 'reset'];
-const encodeControls = new Set(['near', ...presetFields.map((field) => `preset-${field}`)]);
-const controls = ['example', 'sample-rgb8', 'sample-multi16', 'sample-sampling', 'file', 'interleave', 'backend', 'chunk', 'sink', ...encodeControls];
+const encodeControls = new Set(['near', 'point-transform', ...presetFields.map((field) => `preset-${field}`)]);
+const controls = ['example', 'sample-rgb8', 'sample-multi16', 'sample-sampling', 'file', 'interleave', 'decode-sample-format', 'backend', 'chunk', 'sink', ...encodeControls];
 const measures = ['frame', 'raw-size', 'encoded', 'ratio', 'error', 'latency', 'first-canvas', 'workspace', 'queues', 'host-conv-buffer', 'preview-buffer'];
 const isJls = (file) => /\.jls$/i.test(file?.name ?? '');
 const isPpm = (file) => /\.ppm$/i.test(file?.name ?? '');
@@ -64,6 +64,16 @@ function translate(key, ...args) {
 const formatInt = (value) => value === undefined || value === null ? '—' : value.toLocaleString(locale);
 const bytes = (value) => value === undefined ? '—' : `${value.toLocaleString(locale)} B`;
 const nearLimit = (maxval = 65535) => Math.min(255, Math.floor(maxval / 2));
+const configuredPt = () => Number(get('point-transform')?.value ?? 0);
+const planarSampleBytes = (format) => format === 'planar-u32le' ? 4 : format === 'planar-u16le' ? 2 : 0;
+const pnmCodedMaxval = (header, pointTransform) => header && (pointTransform ? 2 ** header.bits - 1 : header.maxval);
+const firstScan = (job) => job?.structure?.scans?.[0] ?? (job?.frame && {
+  ...job.frame, pointTransform: job.frame.pointTransform ?? job.pointTransform,
+});
+const scanReconstructionBound = (scan) => scan && reconstructionErrorBound(scan.near, scan.pointTransform);
+const scaleForScan = (near, pointTransform) => pointTransform
+  ? translate('transformedBound', near, reconstructionErrorBound(near, pointTransform))
+  : near === 0 ? translate('errorBoundExact') : translate('errorBoundNear', near);
 
 function setNearOptions(limit) {
   const select = get('near');
@@ -262,8 +272,12 @@ function renderPixel() {
       formatInt(lunarElevationMeters(selectedPixel.reconstructed)),
       formatInt(lunarErrorMeters(selectedPixel.error))));
   }
-  const near = selectedPixel?.near ?? frame?.near ?? presented?.near;
-  const nearText = near === undefined || near === null ? '—' : String(near);
+  const scan = firstScan(presented);
+  const near = selectedPixel?.near ?? scan?.near ?? presented?.near;
+  const pt = selectedPixel?.pointTransform ?? scan?.pointTransform ?? 0;
+  const nearText = selectedPixel && pt
+    ? translate('transformedBound', selectedPixel.codedNear, near)
+    : near === undefined || near === null ? '—' : String(near);
   setText('inspect-near', selectedPixel || frame ? nearText : '—');
   const compWrap = get('inspect-components');
   if (!selectedPixel) {
@@ -299,9 +313,10 @@ function renderPixel() {
         const card = document.createElement('span');
         card.className = 'inspect-comp-card';
         card.dataset.compIndex = String(c.index);
+        const limit = c.pointTransform ? translate('transformedBound', c.codedNear, c.near) : `NEAR ${c.near ?? 0}`;
         card.textContent = c.original === undefined
-          ? `${c.label}: ${formatInt(c.reconstructed)} (NEAR ${c.near ?? 0})`
-          : `${c.label}: ${formatInt(c.original)} -> ${formatInt(c.reconstructed)} (|e|=${formatInt(c.error)}, NEAR ${c.near ?? 0})`;
+          ? `${c.label}: ${formatInt(c.reconstructed)} (${limit})`
+          : `${c.label}: ${formatInt(c.original)} -> ${formatInt(c.reconstructed)} (|e|=${formatInt(c.error)}, ${limit})`;
         return card;
       }));
     } else {
@@ -316,10 +331,13 @@ let legendKey = '';
 function renderErrorLegend() {
   const frame = presented?.frame;
   const decodeOnly = effectiveDecodeOnly();
-  const nextLegendKey = !frame || decodeOnly ? '' : `${locale}:${frame.near}`;
-  setText('error-legend-value', frame && !decodeOnly ? translate('legendMax', frame.near) : '—');
+  const scan = firstScan(presented);
+  const pt = scan?.pointTransform ?? 0;
+  const bound = scanReconstructionBound(scan);
+  const nextLegendKey = !frame || decodeOnly ? '' : `${locale}:${pt}:${bound}`;
+  setText('error-legend-value', frame && !decodeOnly ? translate(pt ? 'originalLegendLimit' : 'legendMax', bound) : '—');
   const maxErr = presented?.result?.maxError;
-  const boundText = frame && !decodeOnly ? translate('errorBoundSummary', maxErr ?? null, frame.near) : '—';
+  const boundText = frame && !decodeOnly ? translate('errorBoundSummary', maxErr ?? null, bound) : '—';
   setText('error-legend-max', boundText);
   setText('difference-bound', frame && !decodeOnly ? boundText : '');
 
@@ -331,7 +349,7 @@ function renderErrorLegend() {
     container.textContent = '';
     return;
   }
-  const stops = errorLegendStops(frame.near);
+  const stops = errorLegendStops(bound);
   const items = stops.map((stop) => {
     const chip = document.createElement('span');
     chip.className = 'legend-chip';
@@ -341,7 +359,7 @@ function renderErrorLegend() {
     const label = document.createElement('span');
     label.className = 'legend-chip-label';
     if (stop.value === 0) label.textContent = translate('legendStopExact');
-    else if (stop.value === frame.near) label.textContent = translate('legendStopLimit', stop.value);
+    else if (stop.value === bound) label.textContent = translate(pt ? 'originalLegendStop' : 'legendStopLimit', stop.value);
     else label.textContent = translate('legendStopWithin', stop.value);
     chip.append(swatch, label);
     return chip;
@@ -354,7 +372,9 @@ function renderIdentity() {
   const decodeOnly = effectiveDecodeOnly();
   const backend = presented?.backend ?? get('backend').value;
   const backendLabel = backend === 'js' ? 'JavaScript' : 'Wasm GC';
-  const near = frame?.near ?? (decodeOnly ? null : presented?.near ?? Number(get('near').value));
+  const scan = firstScan(presented);
+  const near = scan?.near ?? (decodeOnly ? null : presented?.near ?? Number(get('near').value));
+  const pt = scan?.pointTransform ?? (decodeOnly ? 0 : presented?.pointTransform ?? configuredPt());
   const name = source?.name ?? translate('noFile');
 
   setText('selected', name);
@@ -368,11 +388,14 @@ function renderIdentity() {
     backendLabel,
     frame ? (compCount > 1 ? `${compCount}ch ${frame.bits}-bit` : `${frame.bits}-bit`) : translate('precisionPending'),
     near === null ? translate('nearFromHeader') : `NEAR ${near}`,
+    ...(pt ? [translate('scanPt', pt)] : []),
   ].join(' · '));
 
   const formDecodeOnly = isJls(source);
   const formPpm = isPpm(source) || sourcePgm?.header?.magic === 'P6';
   setHidden('interleave-setting', !formPpm);
+  setHidden('point-transform-setting', formDecodeOnly);
+  setHidden('decode-sample-format-setting', !formDecodeOnly);
   const formBackend = get('backend')?.value ?? 'wasm-gc';
   const formBackendLabel = formBackend === 'js' ? 'JavaScript' : 'Wasm GC';
   const formNear = Number(get('near')?.value ?? 0);
@@ -381,12 +404,14 @@ function renderIdentity() {
   const sinkText = translate(sinkValue === 'file' ? 'streamed' : sinkValue);
   setText('settings-summary-meta', [
     formDecodeOnly ? 'JLS' : `NEAR ${formNear}`,
+    ...(formDecodeOnly && get('decode-sample-format').value === 'u32' ? [translate('wideSamples')] : []),
+    ...(!formDecodeOnly && configuredPt() ? [translate('scanPt', configuredPt())] : []),
     ...(formPpm ? [`ILV ${get('interleave')?.value ?? 0}`] : []),
     formBackendLabel,
     sinkText,
   ].join(' · '));
 
-  const sourceMaxval = sourcePgm?.header?.maxval;
+  const sourceMaxval = pnmCodedMaxval(sourcePgm?.header, configuredPt());
   setHidden('near-note', !formDecodeOnly && sourceMaxval === undefined);
   if (formDecodeOnly) setText('near-note', translate('nearFromHeader'));
   else if (sourceMaxval !== undefined) setText('near-note', translate('nearRange', nearLimit(sourceMaxval)));
@@ -397,7 +422,7 @@ function renderIdentity() {
     setText('error', translate('notCompared'));
     setText('error-bound', '');
   } else if (!presented?.result) {
-    setText('error-bound', near === null ? '' : (near === 0 ? translate('errorBoundExact') : translate('errorBoundNear', near)));
+    setText('error-bound', near === null ? '' : scaleForScan(near, pt));
   }
   renderErrorScope();
 
@@ -420,6 +445,8 @@ function renderIdentity() {
 
   if (presented) {
     setText('result-backend', backendLabel);
+    const sampleBytes = planarSampleBytes(presented.outputFormat);
+    setText('raw-sample-size', sampleBytes ? translate('planarSampleSize', sampleBytes) : translate('ratioBasis'));
     setText('result-mode', translate(decodeOnly ? 'modeDecodeOnly' : 'modeRoundTrip'));
   } else {
     setText('result-backend', '');
@@ -434,15 +461,17 @@ function renderIdentity() {
 }
 
 function renderPrecision(job) {
-  const selectedIdx = job?.selectedScanIndex ?? -1;
-  const selectedScan = selectedIdx >= 0 ? job?.structure?.scans?.[selectedIdx] : null;
+  const selectedScan = job?.structure?.scans?.[job.selectedScanIndex] ?? firstScan(job);
   const frame = job?.frame;
   const preset = selectedScan?.preset ?? job?.preset;
-  const effectiveNear = selectedScan?.near ?? frame?.near;
-  const effectiveMaxval = preset?.maxval ?? (frame ? sampleMaximum(frame) : undefined);
+  const effectiveNear = selectedScan?.near;
+  const effectiveMaxval = preset?.maxval ?? frame?.maxval ?? (frame ? 2 ** frame.bits - 1 : undefined);
+  const effectivePt = selectedScan?.pointTransform ?? 0;
   setText('precision-bits', formatInt(frame?.bits));
   setText('precision-maxval', formatInt(effectiveMaxval));
   setText('precision-near', formatInt(effectiveNear));
+  setHidden('precision-pt-field', !effectivePt);
+  setText('precision-pt', formatInt(effectivePt));
   for (const field of presetFields) setText(`precision-${field}`, formatInt(preset?.[field]));
 }
 
@@ -486,6 +515,7 @@ function lock(running) {
     const ppm = isPpm(source) || sourcePgm?.header?.magic === 'P6';
     if (control) control.disabled = running ||
       (id === 'interleave' && (!ppm || Boolean(sourcePgm?.pending))) ||
+      (id === 'decode-sample-format' && !isJls(source)) ||
       (encodeControls.has(id) && (isJls(source) || Boolean(sourcePgm?.pending)));
   }
   const filePick = get('file')?.parentElement;
@@ -531,18 +561,23 @@ function renderProgress(job) {
 function renderResult(job) {
   if (!job?.result) return;
   const { frame, jlsBytes, maxError } = job.result;
-  const raw = job.componentGeometry.total * sampleByteWidth(sampleMaximum(frame));
+  const planarBytes = planarSampleBytes(job.outputFormat);
+  const bytesPerSample = planarBytes || sampleByteWidth(job.pgmHeader?.maxval ?? job.pnmOutputMaxval ?? sampleMaximum(frame));
+  const raw = job.componentGeometry.total * bytesPerSample;
   setText('raw-size', bytes(raw));
+  setText('raw-sample-size', planarBytes ? translate('planarSampleSize', planarBytes) : translate('ratioBasis'));
   setText('encoded', bytes(jlsBytes));
   setText('ratio', `${(raw / jlsBytes).toFixed(2)}×`);
   setText('error', maxError ?? translate('notCompared'));
-  setText('error-bound', job.decodeOnly ? '' : (frame.near === 0 ? translate('errorBoundExact') : translate('errorBoundNear', frame.near)));
+  const scan = firstScan(job);
+  setText('error-bound', job.decodeOnly ? '' : scaleForScan(scan.near, scan.pointTransform));
   setText('error-scope', translate(job.decodeOnly ? 'streamOnlyCheck' : 'fullSampleCheck'));
   setText('latency', `${job.elapsed.toFixed(1)} ms`);
   if (job.firstCanvas !== undefined) setText('first-canvas', `${(job.firstCanvas - job.started).toFixed(1)} ms`);
   setText('host-conv-buffer', bytes(job.hostConversionBufferBytes ?? 0));
   setText('preview-buffer', bytes(job.previewBufferBytes ?? preview.bufferBytes()));
   renderErrorLegend();
+  renderPrecision(job);
   renderMulticomponent(job);
   renderInspector(job);
 }
@@ -552,7 +587,7 @@ function renderPhysicalBudget(job) {
   setHidden('physical-budget', !physical);
   if (physical) {
     setText('physical-budget-value', translate('physicalBudget',
-      formatInt(lunarErrorMeters(job.frame.near)),
+      formatInt(lunarErrorMeters(scanReconstructionBound(firstScan(job)))),
       formatInt(job.observedError === undefined ? null : lunarErrorMeters(job.observedError))));
   }
 }
@@ -562,6 +597,7 @@ function clearOutput() {
   selectedPixel = undefined;
   setAttr('workspace-view', 'data-has-image', 'false');
   for (const id of measures) setText(id, '—');
+  setText('raw-sample-size', translate('ratioBasis'));
   setHidden('download', true);
   setHidden('export-report', true);
   setHidden('physical-budget', true);
@@ -600,7 +636,7 @@ function setSource(file) {
     ).then(() => {
       pgm.pending = undefined;
       if (sourcePgm !== pgm) return;
-      setNearOptions(nearLimit(pgm.header?.maxval));
+      setNearOptions(nearLimit(pnmCodedMaxval(pgm.header, configuredPt())));
       lock(false);
       renderIdentity();
     });
@@ -641,8 +677,8 @@ function setFrame(job, frame) {
 
 function recordStats(job, stats, frame, structure) {
   requireActive(job);
-  setFrame(job, frame);
   if (structure) job.structure = structure;
+  setFrame(job, frame);
   job.stats = stats;
   const totalRows = job.totalRows ?? 0;
   if (totalRows > 0 && stats.rows === totalRows && !job.rowsArrived) {
@@ -736,7 +772,8 @@ async function decodeFile(job, file, settings, sink) {
   let configured = false;
   let planes = null;
   let componentCount = 1;
-  let planar = false;
+  const wide = job.sampleFormat === 'u32';
+  const sampleBytes = wide ? 4 : 2;
   const baseName = file.name.replace(/\.[^.]+$/, '');
   const handleRow = async (frame, index, row, meta) => {
     if (!configured) {
@@ -748,8 +785,12 @@ async function decodeFile(job, file, settings, sink) {
         componentLabels: channelLabelsFor(job),
         initialChannel: job.activeChannel,
         allowComposite: job.canComposite,
+        sampleFormat: job.sampleFormat,
       });
-      if (componentCount === 1) {
+      if (wide) {
+        job.outputName = `${baseName}.planar-u32le.raw`;
+        job.outputFormat = 'planar-u32le';
+      } else if (componentCount === 1) {
         job.outputName = `${baseName}.pgm`;
         job.outputFormat = 'pgm';
         job.hostConversionBufferBytes = 0;
@@ -761,29 +802,35 @@ async function decodeFile(job, file, settings, sink) {
         planes = [new Uint16Array(px), new Uint16Array(px), new Uint16Array(px)];
         job.hostConversionBufferBytes = planes.reduce((acc, p) => acc + p.byteLength, 0);
       } else {
-        planar = true;
         job.outputName = `${baseName}.planar-u16le.raw`;
         job.outputFormat = 'planar-u16le';
         job.hostConversionBufferBytes = 0;
       }
     }
+    job.pnmOutputMaxval = Math.max(job.pnmOutputMaxval ?? 0, sampleMaximum({
+      ...frame, pointTransform: meta.pointTransform, maxval: meta.preset?.maxval ?? frame.maxval,
+    }));
     draw(job, index, row, null, meta);
     const compIdx = meta.componentIndex;
     if (planes) {
       planes[compIdx].set(row, index * frame.width);
-    } else if (planar) {
+    } else if (wide || job.outputFormat === 'planar-u16le') {
       const { widths, offsets } = job.componentGeometry;
-      const samples = new Uint8Array(row.length * 2);
+      const samples = new Uint8Array(row.length * sampleBytes);
       const view = new DataView(samples.buffer);
-      for (let x = 0; x < row.length; x++) view.setUint16(x * 2, row[x], true);
+      if (wide) {
+        for (let x = 0; x < row.length; x++) view.setUint32(x * 4, row[x], true);
+      } else {
+        for (let x = 0; x < row.length; x++) view.setUint16(x * 2, row[x], true);
+      }
       job.hostConversionBufferBytes = Math.max(job.hostConversionBufferBytes, samples.byteLength);
-      await writeOutput(job, sink, samples, (offsets[compIdx] + index * widths[compIdx]) * 2);
+      await writeOutput(job, sink, samples, (offsets[compIdx] + index * widths[compIdx]) * sampleBytes);
     } else {
       await writeOutput(job, sink, pgmRow(row, frame));
     }
   };
   const result = await launch(job, {
-    ...settings, mode: 'decode', read: readBlob(file),
+    ...settings, mode: 'decode', sampleFormat: job.sampleFormat, read: readBlob(file),
     maxBatchBytes: settings.inputChunkSize >= 256 ? 16384 : 0,
     async onEvent(event) {
       recordStats(job, event.stats, event.frame, event.structure);
@@ -792,6 +839,7 @@ async function decodeFile(job, file, settings, sink) {
         componentIndex: event.componentIndex ?? 0,
         componentId: event.componentId ?? 1,
         near: event.near ?? event.frame?.near,
+        pointTransform: event.pointTransform ?? 0,
         preset: event.preset,
       };
       if (event.type === 'row') {
@@ -806,7 +854,7 @@ async function decodeFile(job, file, settings, sink) {
   });
   requireActive(job);
   if (planes) {
-    const ppmOut = encodePpmFromPlanes(result.frame, planes);
+    const ppmOut = encodePpmFromPlanes({ ...result.frame, maxval: job.pnmOutputMaxval, pointTransform: 0 }, planes);
     job.hostConversionBufferBytes = planes.reduce((acc, p) => acc + p.byteLength, 0) + ppmOut.hostConversionBufferBytes;
     await writeOutput(job, sink, ppmOut.bytes);
   }
@@ -836,18 +884,25 @@ async function roundTrip(job, file, near, settings, sink) {
         initialChannel: job.activeChannel,
         allowComposite: job.canComposite,
         displayMaxval: file.moonjlsMeta?.displayMaxval,
+        sourceMaxval: sampleMaximum(input.frame),
+        sampleFormat: job.sampleFormat,
       });
     }
     const compIdx = meta?.componentIndex ?? 0;
     const allowedNear = meta?.near ?? near;
+    const pointTransform = meta?.pointTransform ?? job.pointTransform;
+    const reconstructionBound = reconstructionErrorBound(allowedNear, pointTransform);
     const original = await input.row(index, compIdx);
     requireActive(job);
     job.stages.compare = 'incomplete';
     const stats = job.componentStats[compIdx];
     let rowMax = 0;
+    let codedRowMax = 0;
     for (let i = 0; i < row.length; i++) {
       const diff = Math.abs(original[i] - row[i]);
       rowMax = Math.max(rowMax, diff);
+      const codedError = Math.abs((original[i] >>> pointTransform) - (row[i] >>> pointTransform));
+      codedRowMax = Math.max(codedRowMax, codedError);
       stats.absoluteError += diff;
     }
     stats.maxError = Math.max(stats.maxError ?? 0, rowMax);
@@ -855,14 +910,15 @@ async function roundTrip(job, file, near, settings, sink) {
     maxError = Math.max(maxError, rowMax);
     job.verifiedSamples = (job.verifiedSamples ?? 0) + row.length;
     job.observedError = maxError;
-    if (rowMax > allowedNear) {
+    job.observedCodedError = Math.max(job.observedCodedError ?? 0, codedRowMax);
+    if (codedRowMax > allowedNear || rowMax > reconstructionBound) {
       job.stages.compare = 'failed';
-      throw new Error(`Round-trip error ${rowMax} exceeds NEAR ${allowedNear} at row ${index}`);
+      throw new Error(`Row ${index}: coded error ${codedRowMax} (NEAR ${allowedNear}), original error ${rowMax} (bound ${reconstructionBound})`);
     }
     draw(job, index, row, original, meta);
   };
   const decoded = launch(job, {
-    ...settings, mode: 'decode', read: pipe.read,
+    ...settings, mode: 'decode', sampleFormat: job.sampleFormat, read: pipe.read,
     maxBatchBytes: settings.inputChunkSize >= 256 ? 16384 : 0,
     async onEvent(event) {
       recordStats(job, event.stats, event.frame, event.structure);
@@ -871,6 +927,7 @@ async function roundTrip(job, file, near, settings, sink) {
         componentIndex: event.componentIndex ?? 0,
         componentId: event.componentId ?? 1,
         near: event.near ?? event.frame?.near ?? near,
+        pointTransform: event.pointTransform ?? 0,
         preset: event.preset,
       };
       if (event.type === 'row') {
@@ -883,8 +940,13 @@ async function roundTrip(job, file, near, settings, sink) {
       }
     },
   });
+  const encodeFrame = { ...input.frame, preset: job.requestedPreset };
+  if (job.pointTransform) {
+    encodeFrame.pointTransform = job.pointTransform;
+    delete encodeFrame.maxval; // Netpbm MAXVAL describes original samples, not the transformed coding range.
+  }
   const encoded = launch(job, {
-    ...settings, mode: 'encode', frame: { ...input.frame, preset: job.requestedPreset }, read: input.read,
+    ...settings, mode: 'encode', frame: encodeFrame, read: input.read,
     async onEvent(event) {
       requireActive(job);
       job.encodeWorkspace = event.stats.coreWorkspaceBytes;
@@ -940,15 +1002,23 @@ async function run() {
   const sinkMode = get('sink').value;
   const file = source;
   const decodeOnly = isJls(file);
-  const defaultOutExt = decodeOnly ? (sinkMode === 'file' ? '.decoded' : '.pgm') : '.jls';
+  const pointTransform = decodeOnly ? 0 : configuredPt();
+  if (!Number.isInteger(pointTransform) || pointTransform < 0 || pointTransform > 15) {
+    transition('failed', 'invalidPointTransform');
+    return;
+  }
+  const sampleFormat = (decodeOnly ? get('decode-sample-format').value === 'u32' : pointTransform > 0) ? 'u32' : 'u16';
+  const outputFormat = decodeOnly ? (sampleFormat === 'u32' ? 'planar-u32le' : 'pgm') : 'jls';
+  const defaultOutExt = outputFormat === 'planar-u32le' ? '.planar-u32le.raw'
+    : decodeOnly ? (sinkMode === 'file' ? '.decoded' : '.pgm') : '.jls';
   const outputName = file.name.replace(/\.[^.]+$/, '') + defaultOutExt;
   const settings = { backend: get('backend').value, inputChunkSize: chunk, outputChunkSize: Math.min(chunk, 32 * 1024) };
   const requestedPreset = Object.fromEntries(presetFields.map((field) => [field, Number(get(`preset-${field}`)?.value ?? 0)]));
   const job = {
     id: ++sequence, runId: createRunId(), backend: settings.backend, near, decodeOnly, pgmHeader: pgm?.header,
-    interleave: Number(get('interleave')?.value ?? 0),
+    interleave: Number(get('interleave')?.value ?? 0), pointTransform,
     inputFormat: decodeOnly ? 'jls' : (pgm?.header?.magic === 'P6' || isPpm(file) ? 'ppm' : 'pgm'),
-    outputFormat: decodeOnly ? 'pgm' : 'jls',
+    outputFormat, sampleFormat,
     file, outputName, sinkMode, settings, pgm, rowsDelivered: 0,
     hostConversionBufferBytes: 0, previewBufferBytes: 0, selectedScanIndex: -1,
     completedScans: new Set(), errorLocation: null, errorMessage: null,
@@ -970,7 +1040,9 @@ async function run() {
   let sink;
   try {
     if (pgm?.error) throw pgm.error;
-    sink = await openSink(sinkMode, outputName, decodeOnly ? 'image/x-portable-graymap' : 'image/jls');
+    const type = outputFormat === 'planar-u32le' ? 'application/octet-stream'
+      : decodeOnly ? 'image/x-portable-graymap' : 'image/jls';
+    sink = await openSink(sinkMode, outputName, type);
     requireActive(job);
     job.started = performance.now();
     job.outputBytes = 0;
@@ -1023,7 +1095,9 @@ async function run() {
       else {
         const isWasmFailure = job.backend === 'wasm-gc'
           && (error.name === 'CompileError' || /\bwasm\b|webassembly/i.test(error.message ?? ''));
-        const detail = isWasmFailure ? `${error.message} · ${translate('wasmFallbackHint')}` : error.message;
+        const widthLimited = job.decodeOnly && error.code === 'UnsupportedFeature' && /Uint16 output range/i.test(error.message);
+        const hint = isWasmFailure ? translate('wasmFallbackHint') : widthLimited ? translate('wideRetry') : null;
+        const detail = hint ? `${error.message} · ${hint}` : error.message;
         transition('failed', 'failure', typeof error.code === 'string' ? error.code : error.name ?? 'Error', detail);
       }
       renderProgress(job);
@@ -1142,7 +1216,11 @@ get('export-report')?.addEventListener?.('click', async () => {
   }
 });
 
-for (const id of ['near', 'interleave', 'backend', 'sink']) {
+get('point-transform')?.addEventListener('change', () => {
+  if (!isJls(source)) setNearOptions(nearLimit(pnmCodedMaxval(sourcePgm?.header, configuredPt())));
+  renderIdentity();
+});
+for (const id of ['near', 'interleave', 'decode-sample-format', 'backend', 'sink']) {
   get(id)?.addEventListener?.('change', renderIdentity);
 }
 for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {

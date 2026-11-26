@@ -15,8 +15,8 @@ export async function createOracle() {
   const encoder = await createJpegLSEncoder();
   const decoder = await createJpegLSDecoder();
   return {
-    encode(samples, { width, height, bits, near }, options = 0) {
-      assert.equal(samples.length, width * height, 'sample count');
+    encode(samples, { width, height, bits, near, components = 1, interleave = 0 }, options = 0) {
+      assert.equal(samples.length, width * height * components, 'sample count');
       const byteWidth = bits <= 8 ? 1 : 2;
       const input = new Uint8Array(samples.length * byteWidth);
       if (byteWidth === 1) {
@@ -25,7 +25,7 @@ export async function createOracle() {
         const view = new DataView(input.buffer);
         for (let i = 0; i < samples.length; i++) view.setUint16(i * 2, samples[i], true);
       }
-      return encoder.encode(input, width, height, bits, 1, 0, options, near).slice();
+      return encoder.encode(input, width, height, bits, components, interleave, options, near).slice();
     },
     decode(input) {
       const result = decoder.decode(input);

@@ -3,8 +3,12 @@
 // Runs the unmodified production Worker/client and real generated JS/Wasm GC
 // codecs using a Node worker_threads web-Worker adapter. This is not Chrome.
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
+import { mkdtemp, readFile, rmdir, unlink, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { promisify } from 'node:util';
 import { isMainThread, parentPort, workerData, Worker as NodeWorker } from 'node:worker_threads';
 import test from 'node:test';
 
@@ -21,7 +25,7 @@ if (!isMainThread) {
   for (const data of inbox) self.onmessage({ data });
 } else {
   const root = process.env.MOONJLS_WORKER_SOURCE_ROOT || fileURLToPath(new URL('../', import.meta.url));
-  const { loadCore, encodeImage, encodePlanarImage, decodePlanarImage, inspectStream } = await import(pathToFileURL(path.join(root, 'sdk/index.mjs')).href);
+  const { loadCore, encodeImage, encodePlanarImage, decodePlanarImage, decodeStream, inspectStream } = await import(pathToFileURL(path.join(root, 'sdk/index.mjs')).href);
   class WebWorkerAdapter {
     constructor(url) {
       this.thread = new NodeWorker(new URL(import.meta.url), { workerData: { workerUrl: url.href } });
@@ -48,7 +52,131 @@ if (!isMainThread) {
     };
   }
 
+  // Independent CharLS coded-domain stream with SOS Al=1. q̂=32768
+  // occurs at sample seven, where the inverse transform is exactly 65536.
+  const wideLiteral = Uint8Array.from(Buffer.from(
+    'ffd8fff7000b100002000801011100ffda0008010100030001f40000a380001498008191e009219008ffd9', 'hex',
+  ));
+  const wideReconstruction = Uint32Array.of(
+    0, 0, 0, 0, 0, 32760, 65534, 65536,
+    0, 65520, 2, 2, 2, 2, 65534, 65534,
+  );
+
+  test('SDK CLI wide decode writes little-endian pixels and names the output representation', async () => {
+    const execute = promisify(execFile);
+    const folder = await mkdtemp(path.join(tmpdir(), 'moonjls-wide-cli-'));
+    const input = path.join(folder, 'input.jls');
+    const output = path.join(folder, 'output.bin');
+    const report = path.join(folder, 'report.json');
+    const cli = path.join(root, 'sdk/cli.mjs');
+    try {
+      await writeFile(input, wideLiteral);
+      await execute(process.execPath, [
+        cli, 'decode', '--input', input, '--output', output, '--report', report, '--sample-format', 'u32', '--chunk', '1',
+      ]);
+      const bytes = await readFile(output);
+      assert.equal(bytes.byteLength, wideReconstruction.byteLength);
+      assert.deepEqual(Uint32Array.from(wideReconstruction, (_, index) => bytes.readUInt32LE(index * 4)), wideReconstruction);
+      const evidence = JSON.parse(await readFile(report, 'utf8'));
+      assert.equal(evidence.status, 'passed');
+      assert.equal(evidence.output.format, 'raw-u32le');
+      assert.equal(evidence.output.bytes, 64);
+      assert.equal(evidence.stream.rowsDelivered, 2);
+      const { stdout } = await execute(process.execPath, [cli, 'inspect', '--input', input, '--chunk', '7']);
+      assert.equal(JSON.parse(stdout).scans[0].pointTransform, 1);
+    } finally {
+      await Promise.all([input, output, report].map(file => unlink(file).catch(error => {
+        if (error.code !== 'ENOENT') throw error;
+      })));
+      await rmdir(folder);
+    }
+  });
+
   for (const backend of ['js', 'wasm-gc']) {
+    test(`real ${backend} wide SDK rows and planes preserve exact inverse Pt at arbitrary splits`, { timeout: 10000 }, async () => {
+      const core = await loadCore({ backend });
+      assert.throws(() => core.createDecoder({ sampleFormat: 'u24' }), { code: 'InvalidArgument' });
+      await assert.rejects(decodePlanarImage(core, wideLiteral), { code: 'UnsupportedFeature' });
+      for (const inputChunkSize of [1, 7, 4096]) {
+        const options = { sampleFormat: 'u32', inputChunkSize };
+        const decoded = await decodePlanarImage(core, wideLiteral, options);
+        assert.deepEqual(decoded.samples, wideReconstruction);
+        assert.deepEqual(decoded.planes, [wideReconstruction]);
+        assert.equal(decoded.stats.outputProduced, 16);
+        assert.equal(decoded.stats.outputPeakBytes, 32);
+
+        const rows = [];
+        const result = await decodeStream(core, {
+          ...options, read: readBytes(wideLiteral),
+          onRow(row, index, _frame, stats, _preset, meta) {
+            assert.ok(row instanceof Uint32Array);
+            assert.equal(meta.sampleBytes, 4);
+            assert.equal(meta.endianness, 'host-u32');
+            assert.equal(meta.stride, 8);
+            assert.equal(index, rows.length / row.length);
+            assert.equal(stats.outputQueueBytes, row.byteLength);
+            rows.push(...row);
+          },
+        });
+        assert.deepEqual(rows, [...wideReconstruction]);
+        assert.equal(result.stats.outputQueueBytes, 0);
+      }
+      const inspected = await inspectStream(core, wideLiteral, { inputChunkSize: 1 });
+      assert.equal(inspected.scans[0].pointTransform, 1);
+      assert.equal(inspected.scans[0].completed, true);
+    });
+
+    test(`real ${backend} wide Worker batches respect byte budgets and wait for ACK`, { timeout: 10000 }, async () => {
+      const wideFrame = { ...frame, near: 2, pointTransform: 2 };
+      const source = new Uint16Array(frame.width * frame.height).fill(65535);
+      const { bytes } = await encodeImage(await loadCore({ backend }), wideFrame, source);
+      // First transformed source sample is 16383. Annex A quantizes its run
+      // interruption at step 5 to q̂=16385, then a constant run preserves it.
+      const expected = new Uint32Array(source.length).fill(65540);
+      const decoded = new Uint32Array(expected.length);
+      let ready;
+      const hasBatch = new Promise(resolve => { ready = resolve; });
+      let release;
+      const held = new Promise(resolve => { release = resolve; });
+      const read = readBytes(bytes);
+      let reads = 0;
+      let events = 0;
+      let batch;
+      const job = startWorker({
+        mode: 'decode', backend, sampleFormat: 'u32', inputChunkSize: 7, maxBatchBytes: 96,
+        read(size) { reads++; return read(size); },
+        async onEvent(event) {
+          events++;
+          if (event.type !== 'row' && event.type !== 'rows') return;
+          const payload = event.row ?? event.samples;
+          assert.ok(payload instanceof Uint32Array);
+          assert.equal(event.sampleBytes, 4);
+          assert.equal(event.endianness, 'host-u32');
+          assert.equal(event.stride, frame.width);
+          assert.equal(event.stats.outputQueueBytes, payload.buffer.byteLength);
+          assert.ok(payload.buffer.byteLength <= 96);
+          decoded.set(payload, (event.index ?? event.startIndex) * frame.width);
+          if (event.type === 'rows') {
+            assert.ok(event.count <= 3, 'A 96-byte batch holds at most three 32-byte rows');
+            if (!batch) { batch = event; ready(); await held; }
+          }
+        },
+      });
+      try {
+        await Promise.race([hasBatch, job.result.then(() => assert.fail('Expected a held wide batch'))]);
+        const beforeAck = { reads, events };
+        await new Promise(resolve => setTimeout(resolve, 20));
+        assert.deepEqual({ reads, events }, beforeAck, 'The worker must wait for the wide batch ACK');
+      } finally {
+        release();
+      }
+      const result = await job.result;
+      assert.deepEqual(decoded, expected);
+      assert.equal(result.stats.outputProduced, expected.length);
+      assert.equal(result.stats.outputPeakBytes, 128, '96-byte batch and 32-byte source row overlap');
+      assert.equal(result.stats.outputQueueBytes, 0);
+    });
+
     test(`real ${backend} codec + real Worker/client: pixels, buffer high water, terminal queue`, { timeout: 10000 }, async () => {
       let offset = 0;
       const events = [];

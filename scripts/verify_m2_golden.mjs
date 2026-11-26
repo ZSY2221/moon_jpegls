@@ -30,9 +30,12 @@ function parseArgs(args) {
   return options;
 }
 
-function runChild(command, args, options = {}) {
-  const result = spawnSync(command, args, { timeout: 30_000, ...options });
-  if (result.error) throw result.error;
+function runChild(command, args, { input, allowEarlyInputClose = false } = {}) {
+  const result = spawnSync(command, args, { timeout: 30_000, input });
+  // A rejected input can close stdin before Node finishes feeding it.
+  // Preserve its exit status and diagnostics for the caller's rejection assertions.
+  const rejectedBeforeReading = allowEarlyInputClose && result.error?.code === 'EPIPE' && result.status > 0;
+  if (result.error && !rejectedBeforeReading) throw result.error;
   return {
     status: result.status,
     stdout: result.stdout ?? Buffer.alloc(0),
@@ -45,7 +48,7 @@ function createNativeRunner(file, distro) {
   if (!distro) {
     return {
       binary,
-      run: (args, input) => runChild(binary, args, { input }),
+      run: (args, input, allowEarlyInputClose) => runChild(binary, args, { input, allowEarlyInputClose }),
     };
   }
   const baseArgs = ['--distribution', distro, '--exec'];
@@ -54,7 +57,8 @@ function createNativeRunner(file, distro) {
   const wslBinary = converted.stdout.toString('utf8').trim();
   return {
     binary,
-    run: (args, input) => runChild('wsl.exe', [...baseArgs, wslBinary, ...args], { input }),
+    run: (args, input, allowEarlyInputClose) =>
+      runChild('wsl.exe', [...baseArgs, wslBinary, ...args], { input, allowEarlyInputClose }),
   };
 }
 
@@ -303,7 +307,7 @@ async function main() {
     if (native) {
       const label = `native/${variant.id}`;
       if (variant.expectedCode) {
-        const res = native.run(['verify', '-', '1', '--json'], stream);
+        const res = native.run(['verify', '-', '1', '--json'], stream, true);
         assert.notEqual(res.status, 0, `${label}: expected failure`);
         assert.equal(res.stdout.length, 0, `${label}: rejected variant emitted stdout`);
         const expectedToken = variant.expectedCode === 'TrailingData' ? 'CommandError.Input' : variant.expectedCode;
@@ -333,6 +337,7 @@ async function main() {
       const res = native.run(
         ['encode', String(bad.frame.width), String(bad.frame.height), String(bad.frame.bits), String(bad.frame.near), '-', '-', 'raw-le', '1', ...flags],
         rawIn,
+        true,
       );
       assert.notEqual(res.status, 0, `native/${bad.id}: expected failure`);
       assert.ok(new RegExp(`\\b${bad.expectedCode}\\b`).test(res.stderr),

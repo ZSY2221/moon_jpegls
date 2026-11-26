@@ -1,5 +1,5 @@
 import { lunarErrorMeters, lunarFixture, lunarMetadataFor } from '../sdk/lunar.mjs';
-import { codecMeasurements, createVerificationReport } from '../sdk/verification-report.mjs';
+import { codecMeasurements, createVerificationReport, reconstructionErrorBound } from '../sdk/verification-report.mjs';
 
 const hashLimit = 4 * 1024 * 1024;
 let buildInfo;
@@ -45,10 +45,11 @@ export async function workbenchReport(job) {
   const inputFormat = job.inputFormat ?? (job.decodeOnly ? 'jls' : 'pgm');
   const provenance = lunarMetadataFor({ sha256: inputSha, bytes: job.file.size, format: inputFormat });
   const outputRetained = job.status === 'passed' && job.sinkMode !== 'bounded';
-  const physical = provenance && job.frame ? {
+  const firstScan = job.structure?.scans?.[0] ?? job.frame;
+  const physical = provenance && firstScan ? {
     unit: 'm',
     quantity: 'codec_added_elevation_error',
-    errorBound: lunarErrorMeters(job.frame.near),
+    errorBound: lunarErrorMeters(reconstructionErrorBound(firstScan.near, firstScan.pointTransform)),
     maxError: job.observedError === undefined ? null : lunarErrorMeters(job.observedError),
   } : null;
   const report = createVerificationReport({
@@ -63,11 +64,12 @@ export async function workbenchReport(job) {
     output: {
       name: job.outputName, format: job.outputFormat ?? (job.decodeOnly ? 'pgm' : 'jls'), bytes: job.outputBytes ?? null,
       sha256: outputSha, retained: outputRetained, complete: outputRetained,
+      ...(job.outputFormat === 'planar-u32le' ? { layout: 'planar', sampleBytes: 4, endianness: 'little' } : {}),
     },
     frame: job.frame && { ...job.frame, scans: job.structure?.scans ?? job.frame.scans },
     preset: job.preset,
     stages: job.stages,
-    samples: { verified: job.verifiedSamples, maxError: job.observedError },
+    samples: { verified: job.verifiedSamples, maxError: job.observedError, codedMaxError: job.observedCodedError },
     physical,
     timing: {
       elapsedMs: job.elapsed,

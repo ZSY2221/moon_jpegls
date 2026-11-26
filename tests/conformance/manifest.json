@@ -216,14 +216,22 @@
       "feature_id": "point_transform",
       "display_name": "Point transform Pt",
       "standard_clause": "§4.3.2; C.2.3",
-      "encode_status": "unsupported",
-      "decode_status": "unsupported",
-      "format_status": "recognized_only",
-      "reference_support": "Reference not selected",
-      "test_ids": [],
-      "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "Direct FFmpeg on applicable grayscale, CharLS coded-domain and an independent Python reference calibrated on E.2-7/8",
+      "test_ids": [
+        "scripts/verify_point_transform.mjs",
+        "core/point_transform_wbtest.mbt",
+        "web/smoke.mjs",
+        "scripts/verify_sampled_point_transform.mjs",
+        "REVIEW_EVIDENCE/native_wide_output_regression.py"
+      ],
+      "evidence_path": "docs/POINT_TRANSFORM_RESULTS.md",
       "target_milestone": "Separate Pt milestone",
-      "source_revision": null
+      "source_revision": "7835c6147b869f3f4db565c1a2b726f48d088a6a",
+      "evidence_ref": "codex/t87-pt-20261126",
+      "notes": "Verified unmapped Pt with interleave and H/V edge MCUs. Int32 core, Native raw32 and SDK/Worker Uint32 preserve exact reconstruction. Narrow formats reject out-of-range output."
     },
     {
       "feature_id": "mapping",

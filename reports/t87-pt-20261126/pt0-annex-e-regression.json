@@ -1,0 +1,384 @@
+{
+  "standard": "ITU-T T.87 (06/1998), Annex E Table E.2",
+  "sourceRevision": "d5a9ab436ab7362f7601a64469fdf940db46ec5b",
+  "sourceDirty": false,
+  "node": "v24.20.0",
+  "command": [
+    "node",
+    "scripts/validate_annex_e.mjs",
+    "--fixtures",
+    ".tools/annex-e-ci",
+    "--native-exe",
+    ".tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+    "--native-wsl",
+    "OpenAtom-Validation-2204-20261120",
+    "--hp-reference",
+    ".tools/annex-e-hp"
+  ],
+  "exitCode": 0,
+  "fixtureArchive": {
+    "name": "jlsimgV100.zip",
+    "sha256": "b2c250453f631248bc3744bc50c935adcc94f55784f19b2fa1fa28ee8b803b70",
+    "url": "https://www.itu.int/rec/T-REC-T.87-199806-I/en"
+  },
+  "runnerSha256": "80864d189bf83fbf03aee89a6f3ceced979f13775368903b1a4380f883a26ace",
+  "reference": {
+    "name": "HP JPEG-LS reference software",
+    "version": "1.00",
+    "officialSoftware": true,
+    "executableSha256": {
+      "locod.exe": "36516cba57c7706a76d9ae3f21c4e35f2b3bd1a7a0ef7ca0f0124f18b78015c0",
+      "nlocod.exe": "7cbc4c9506c9031a53b863793ad27c6bcb90f83c7fa257c53a90e83c5a6d5e86",
+      "loco16d.exe": "f080d7cd7722ffbbd4e8887a229cb023e2c7ca471a69f6730d2ac41a09a6e7f5",
+      "nloco16d.exe": "84682e13e6a12cd60e758cfd8d4c1c4c82d49bd415b76ae0c58a745bc71e4b00"
+    }
+  },
+  "artifactSha256": {
+    "js": "775e7a8bcbdafe78f4a90152d632fb0cd87e12e43ea0af7f5917392a30033996",
+    "wasm-gc": "36a936d6f9de09dd3b561eac8690366b2827c66201be12caacd7d7a33f066d79",
+    "native": "86fc49a84ba094a841ffc4994dd2308f503dee0afcfa41f4b089d24714d83dcd"
+  },
+  "pointTransform": 0,
+  "fullLocalReceipt": {
+    "path": ".evidence/codex-pt/pt0-annex-hp.json",
+    "sha256": "a35c7790a171937d00a4df7cbddd7ed4a97cf03f58b17e8e89bc1fedfeecf152"
+  },
+  "cases": [
+    {
+      "id": "E.2-1",
+      "file": "T8C0E0.JLS",
+      "officialSha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        }
+      }
+    },
+    {
+      "id": "E.2-2",
+      "file": "T8C1E0.JLS",
+      "officialSha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        }
+      }
+    },
+    {
+      "id": "E.2-3",
+      "file": "T8C2E0.JLS",
+      "officialSha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+          "reconstructionSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16"
+        }
+      }
+    },
+    {
+      "id": "E.2-4",
+      "file": "T8C0E3.JLS",
+      "officialSha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+          "reconstructionSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+          "reconstructionSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+          "reconstructionSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7"
+        }
+      }
+    },
+    {
+      "id": "E.2-5",
+      "file": "T8C1E3.JLS",
+      "officialSha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+          "reconstructionSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+          "reconstructionSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+          "reconstructionSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d"
+        }
+      }
+    },
+    {
+      "id": "E.2-6",
+      "file": "T8C2E3.JLS",
+      "officialSha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+          "reconstructionSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+          "reconstructionSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 196608,
+          "candidateSha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+          "reconstructionSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01"
+        }
+      }
+    },
+    {
+      "id": "E.2-7",
+      "file": "T8SSE0.JLS",
+      "officialSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 98304,
+          "candidateSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+          "reconstructionSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 98304,
+          "candidateSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+          "reconstructionSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 98304,
+          "candidateSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+          "reconstructionSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec"
+        }
+      }
+    },
+    {
+      "id": "E.2-8",
+      "file": "T8SSE3.JLS",
+      "officialSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 98304,
+          "candidateSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+          "reconstructionSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 98304,
+          "candidateSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+          "reconstructionSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 98304,
+          "candidateSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+          "reconstructionSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af"
+        }
+      }
+    },
+    {
+      "id": "E.2-9",
+      "file": "T8NDE0.JLS",
+      "officialSha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 16384,
+          "candidateSha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+          "reconstructionSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 16384,
+          "candidateSha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+          "reconstructionSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 16384,
+          "candidateSha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+          "reconstructionSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6"
+        }
+      }
+    },
+    {
+      "id": "E.2-10",
+      "file": "T8NDE3.JLS",
+      "officialSha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 16384,
+          "candidateSha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+          "reconstructionSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 16384,
+          "candidateSha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+          "reconstructionSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 16384,
+          "candidateSha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+          "reconstructionSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793"
+        }
+      }
+    },
+    {
+      "id": "E.2-11",
+      "file": "T16E0.JLS",
+      "officialSha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 65536,
+          "candidateSha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+          "reconstructionSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 65536,
+          "candidateSha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+          "reconstructionSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 65536,
+          "candidateSha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+          "reconstructionSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d"
+        }
+      }
+    },
+    {
+      "id": "E.2-12",
+      "file": "T16E3.JLS",
+      "officialSha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+      "backends": {
+        "js": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 65536,
+          "candidateSha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+          "reconstructionSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb"
+        },
+        "wasm-gc": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 65536,
+          "candidateSha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+          "reconstructionSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb"
+        },
+        "native": {
+          "encode": "passed",
+          "decode": "passed",
+          "samples": 65536,
+          "candidateSha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+          "reconstructionSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb"
+        }
+      }
+    }
+  ]
+}

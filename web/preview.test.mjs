@@ -129,6 +129,31 @@ test('standalone decode exposes the reconstructed integers with no original or e
   assert.equal(reconstructed.key('Enter'), false);
 });
 
+test('wide decoded planes retain the full inverse point transform and account for four bytes per sample', () => {
+  const { reconstructed, pixels, preview } = surfaces(160, 160);
+  const near = 0;
+  const pointTransform = 15;
+  const value = 65535 * 2 ** pointTransform;
+  preview.configure({ width: 1, height: 1, bits: 16, near, pointTransform }, false, { sampleFormat: 'u32' });
+  preview.drawRow(0, Uint32Array.of(value), null);
+  assert.equal(reconstructed.key('Enter'), true);
+  assert.equal(pixels.at(-1).reconstructed, value);
+  assert.equal(preview.bufferBytes(), 4);
+  assert.deepEqual([...reconstructed.draws[0].data], [255, 255, 255, 255]);
+});
+
+test('a wide round trip scales its preview to the achievable reconstruction range', () => {
+  const { original, reconstructed, preview } = surfaces(160, 160);
+  preview.configure({ width: 1, height: 1, bits: 16, near: 2, pointTransform: 2 }, true,
+    { sampleFormat: 'u32', sourceMaxval: 65535 });
+  preview.drawRow(0, Uint32Array.of(65540), Uint16Array.of(65535), {
+    near: 2, pointTransform: 2, preset: { maxval: 65535 },
+  });
+  assert.deepEqual([...original.draws[0].data], [255, 255, 255, 255]);
+  assert.deepEqual([...reconstructed.draws[0].data], [255, 255, 255, 255]);
+  assert.equal(preview.bufferBytes(), 6);
+});
+
 test('errorPalette and errorColor provide calibrated monotonic discrete stops and mark overflow beyond NEAR', () => {
   const p0 = errorPalette(0);
   assert.equal(p0.length, 1);

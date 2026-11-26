@@ -19,6 +19,7 @@ pub struct Decoder {
   priv mut frame : Frame?
   priv mut frame_info : FrameInfo?
   priv mut scan : Scan?
+  priv mut restored_rows : Array[FixedArray[Int32]]
   priv scans : Array[ScanInfo]
   priv mut current_scan : Int32
   priv mut bytes_read : Int64
@@ -50,6 +51,7 @@ pub fn Decoder::new(limits : Limits) -> Decoder {
     frame: None,
     frame_info: None,
     scan: None,
+    restored_rows: [],
     scans: [],
     current_scan: -1,
     bytes_read: 0L,
@@ -167,26 +169,58 @@ pub fn Decoder::preset(self : Decoder) -> Preset? {
 }
 
 ///|
-/// A read-only borrow by contract. Do not modify it. Copy samples needed beyond `step`.
+/// Borrows the last reconstructed row after inverse point transform. Copy it before another `step`.
 pub fn Decoder::row(self : Decoder) -> FixedArray[Int32] {
   match self.scan {
     Some(scan) if scan.last_row_idx >= 0 =>
-      if scan.comp_prev.length() == 0 {
-        scan.previous
+      if scan.point_transform == 0 {
+        scan.decoded_row()
       } else {
-        scan.comp_prev[scan.last_row_comp]
+        self.restored_rows[scan.last_row_comp]
       }
     _ => []
   }
 }
 
 ///|
+fn Decoder::start_scan(
+  self : Decoder,
+  frame : Frame,
+  params : Parameters,
+  scan_info : ScanInfo,
+) -> Unit {
+  let info = match self.frame_info {
+    Some(existing) => existing
+    None => {
+      let created = self.header.frame_info()
+      self.frame_info = Some(created)
+      created
+    }
+  }
+  self.frame = Some(frame)
+  self.scans.push(scan_info)
+  self.current_scan = self.scans.length() - 1
+  let scan = Scan::new_interleaved(info, scan_info, params)
+  let restored : Array[FixedArray[Int32]] = []
+  if scan.point_transform != 0 {
+    for width in scan.comp_widths {
+      restored.push(FixedArray::make(width, 0))
+    }
+  }
+  self.restored_rows = restored
+  self.scan = Some(scan)
+}
+
+///|
 pub fn Decoder::workspace_bytes(self : Decoder) -> Int32 {
-  let header_bytes = self.header.segment.length() +
+  let mut overhead = self.header.segment.length() +
     4 * self.header.preset.length()
+  for row in self.restored_rows {
+    overhead += 4 * row.length()
+  }
   match self.scan {
-    None => header_bytes
-    Some(scan) => header_bytes + scan.workspace_bytes()
+    None => overhead
+    Some(scan) => overhead + scan.workspace_bytes()
   }
 }
 
@@ -512,6 +546,15 @@ pub fn Decoder::step(
             }
             self.phase = if scan.is_finished() { Padding } else { Sample }
             if is_real {
+              let pt = scan.point_transform
+              if pt != 0 {
+                let coded = scan.decoded_row()
+                let restored = self.restored_rows[scan.last_row_comp]
+                // Keep the inverse transform outside the prediction rows.
+                for x in 0..<coded.length() {
+                  restored[x] = coded[x] << pt
+                }
+              }
               break RowReady
             }
             continue
@@ -1032,18 +1075,7 @@ pub fn Decoder::step(
         None =>
           if self.header.accept(byte, self.bytes_read)
             is Some((frame, params, scan_info)) {
-            let info = match self.frame_info {
-              Some(existing) => existing
-              None => {
-                let created = self.header.frame_info()
-                self.frame_info = Some(created)
-                created
-              }
-            }
-            self.frame = Some(frame)
-            self.scans.push(scan_info)
-            self.current_scan = self.scans.length() - 1
-            self.scan = Some(Scan::new_interleaved(info, scan_info, params))
+            self.start_scan(frame, params, scan_info)
           }
         Some(_) =>
           match self.phase {
@@ -1054,16 +1086,7 @@ pub fn Decoder::step(
               } else if end_state < 0 {
                 if self.header.accept(byte, self.bytes_read)
                   is Some((frame, params, scan_info)) {
-                  let info = match self.frame_info {
-                    Some(existing) => existing
-                    None => self.header.frame_info()
-                  }
-                  self.frame = Some(frame)
-                  self.scans.push(scan_info)
-                  self.current_scan = self.scans.length() - 1
-                  self.scan = Some(
-                    Scan::new_interleaved(info, scan_info, params),
-                  )
+                  self.start_scan(frame, params, scan_info)
                 }
               }
             }

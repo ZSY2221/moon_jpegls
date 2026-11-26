@@ -250,9 +250,11 @@ fn HeaderParser::scan_segment(
   guard ilv >= 0 &&
     ilv <= 2 &&
     ((count == 1 && ilv == 0) || (count > 1 && ilv > 0)) &&
-    transform >> 4 == 0 &&
-    (transform == 0 || !any_mapping) else {
+    transform >> 4 == 0 else {
     raise InvalidData("SOS scan parameters")
+  }
+  guard transform == 0 || !any_mapping else {
+    raise InvalidData("point transform requires zero mapping selectors")
   }
   if ilv == 2 {
     let frame = self.frame_info()
@@ -301,9 +303,7 @@ fn HeaderParser::scan_segment(
     InvalidArgument(message) => raise InvalidData(message)
     error => raise error
   }
-  guard !any_mapping && transform == 0 else {
-    raise UnsupportedFeature("mapping selector or point transform")
-  }
+  guard !any_mapping else { raise UnsupportedFeature("mapping selector") }
   let scan_index = self.scan_count
   for ci in selected {
     self.seen_components[ci] = true

@@ -82,6 +82,7 @@ jobs:
           python3 REVIEW_EVIDENCE/native_multiscan_delivery_regression.py "$NATIVE_BINARY" --output .evidence/ci/native-multiscan-delivery.json
           python3 REVIEW_EVIDENCE/native_sampling_delivery_regression.py "$NATIVE_BINARY" | tee .evidence/ci/native-sampling-delivery.json
           python3 REVIEW_EVIDENCE/native_tail_matrix.py "$NATIVE_BINARY" | tee .evidence/ci/native-tail-matrix.json
+          python3 REVIEW_EVIDENCE/native_wide_output_regression.py "$NATIVE_BINARY" | tee .evidence/ci/native-wide-output.json
           printf '\x00\x00\xff\x00' > .evidence/ci/input.raw
           node sdk/cli.mjs encode --input .evidence/ci/input.raw --output .evidence/ci/coded.jls --width 2 --height 1 --bits 8 --report .evidence/ci/sdk-encode.json
           node sdk/cli.mjs decode --input .evidence/ci/coded.jls --output .evidence/ci/decoded.raw --report .evidence/ci/sdk-decode.json
@@ -94,6 +95,10 @@ jobs:
           node scripts/validate_annex_e.mjs --check-manifest
           node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY" | tee .evidence/ci/m2-golden.json
           node scripts/verify_m3a_golden.mjs --native-exe "$NATIVE_BINARY" --with-oracle | tee .evidence/ci/m3a-golden.json
+      - name: Verify the separate point transform vectors
+        run: |
+          node scripts/verify_point_transform.mjs --native-exe "$NATIVE_BINARY" | tee .evidence/ci/point-transform.json
+          node scripts/verify_sampled_point_transform.mjs --fixtures .tools/annex-e --native-exe "$NATIVE_BINARY" | tee .evidence/ci/sampled-point-transform.json
       - name: Run official Annex E encoder and decoder checks
         run: |
           node scripts/validate_annex_e.mjs --fixtures .tools/annex-e --native-exe "$NATIVE_BINARY" \

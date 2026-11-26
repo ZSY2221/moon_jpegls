@@ -3,7 +3,12 @@ import type { Frame, Preset, Stats } from './index.mjs';
 type Status = 'passed' | 'failed' | 'cancelled';
 type Stage = Status | 'not_run' | 'incomplete';
 type Input = { name: string; format: string; bytes: number | null; sha256: string | null; provenance?: unknown };
-type Output = Input & { retained: boolean; complete: boolean };
+type Output = Input & {
+  retained: boolean; complete: boolean;
+  layout?: 'planar' | 'delivery-order';
+  sampleBytes?: 4;
+  endianness?: 'little';
+};
 type CodecMeasurements = {
   scope: string;
   corePayloadBytes: number | null;
@@ -30,9 +35,16 @@ export interface VerificationReport {
       id: number; hSampling: number; vSampling: number; width: number; height: number; sampleOffset: number;
     }[];
     preset: Preset | null;
+    scanParameters?: { scanIndex: number; near: number; pointTransform: number; reconstructionErrorBound: number }[];
   }) | null;
   stages: Record<'encode' | 'decode' | 'compare', Stage>;
-  samples: { total: number | null; verified: number | null; maxError: number | null; errorBound: number | null; unit: 'sample' };
+  samples: {
+    total: number | null; verified: number | null;
+    /** Maximum observed error and bound in original integer units. */
+    maxError: number | null; errorBound: number | null; unit: 'sample';
+    /** Entropy-coded sample domain, present for a transformed frame. */
+    coded?: { maxError: number | null; errorBound: number };
+  };
   reference: { status: Stage; name: string | null; version: string | null };
   timing: {
     elapsedMs: number | null; encodeMs: number | null; decodeMs: number | null;
@@ -57,7 +69,7 @@ type ReportFields = Omit<Partial<VerificationReport>, 'schemaVersion' | 'frame' 
   frame?: Frame | null;
   preset?: Preset | null;
   stages?: Partial<VerificationReport['stages']>;
-  samples?: Partial<Pick<VerificationReport['samples'], 'verified' | 'maxError'>>;
+  samples?: Partial<Pick<VerificationReport['samples'], 'verified' | 'maxError'>> & { codedMaxError?: number };
   timing?: Partial<VerificationReport['timing']>;
   memory?: Partial<VerificationReport['memory']>;
   stream?: Partial<VerificationReport['stream']>;
@@ -65,5 +77,6 @@ type ReportFields = Omit<Partial<VerificationReport>, 'schemaVersion' | 'frame' 
 
 export function createRunId(): string;
 export function codecMeasurements(stats: Partial<Stats> | null | undefined, scope: string): CodecMeasurements | null;
+export function reconstructionErrorBound(near: number, pointTransform?: number): number;
 export function createVerificationReport(fields: ReportFields): VerificationReport;
 export function serializeVerificationReport(report: VerificationReport): string;

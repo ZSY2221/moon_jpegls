@@ -622,6 +622,18 @@ test "sampled ILV=1 coded padding participates in entropy and never leaves the d
   assert_eq(encode_scans_chunks(frame, [spec], zeros, 1, 1), expected)
   // A second literal has a coded nonzero pad [1, 0, 0], confirmed by HP 1.00.
   let nonzero_pad = header + b"\xeb\xbc\xff\xd9"
+  let pt_header = header[:header.length() - 1].to_owned() + b"\x02"
+  let pt_spec = { ..spec, point_transform: 2 }
+  assert_eq(encode_scans_chunks(frame, [pt_spec], [0, 3, 1, 2, 1, 3], 1, 1), pt_header + b"\xff\x00\xff\xd9")
+  // B.4 padding crosses the entropy path but does not reach the rescaled row buffer.
+  let pt_nonzero_pad = pt_header + b"\xeb\xbc\xff\xd9"
+  for span in [1, 7, 4096] {
+    let (parsed, scans, samples, delivery) = decode_chunked(pt_nonzero_pad, span)
+    assert_eq(parsed, frame)
+    assert_eq(scans[0].point_transform, 2)
+    assert_eq(samples, zeros)
+    assert_eq(delivery, [(0, 0), (1, 0)])
+  }
   for coded in [expected, nonzero_pad] {
     for span in [1, 7, 4096] {
       let (parsed, scans, samples, delivery) = decode_chunked(coded, span)

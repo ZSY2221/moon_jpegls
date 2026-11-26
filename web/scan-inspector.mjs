@@ -1,3 +1,4 @@
+import { reconstructionErrorBound } from '../sdk/verification-report.mjs';
 import { componentDimensions } from '../sdk/index.mjs';
 
 const MARKER_NAMES = new Map([
@@ -118,7 +119,9 @@ export function renderScanInspector({
     tr.append(
       el('td', 'mono', scan.scanIndex),
       delivery,
-      el('td', 'mono', `${scan.near} · ${translate('scanPt', scan.pointTransform)}`),
+      el('td', 'mono', scan.pointTransform
+        ? `${translate('scanPt', scan.pointTransform)} · ${translate('transformedBound', scan.near, reconstructionErrorBound(scan.near, scan.pointTransform))}`
+        : `${scan.near} · ${translate('scanPt', scan.pointTransform)}`),
       el('td', 'mono', presetText),
       el('td', 'mono', rangeText),
       el('td', scan.completed ? 'scan-status is-done' : 'scan-status is-active', stText),

@@ -295,6 +295,24 @@ pub fn encoder_preset(port : EncodePort, near : Int32, field : Int32) -> Int32 {
 }
 
 ///|
+#export_name("encoder_scan_preset")
+pub fn encoder_scan_preset(
+  port : EncodePort,
+  scan_index : Int32,
+  near : Int32,
+  field : Int32,
+) -> Int32 {
+  match port.codec {
+    Some(codec) =>
+      match codec.preset_at(scan_index) {
+        Some(preset) => get_preset_field(preset, near, field)
+        None => 0
+      }
+    None => 0
+  }
+}
+
+///|
 #export_name("encoder_scan_index")
 pub fn encoder_scan_index(port : EncodePort) -> Int32 {
   match port.codec {

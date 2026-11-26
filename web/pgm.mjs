@@ -4,7 +4,11 @@ const maxHeader = 64 * 1024;
 const maxReferenceBytes = 64 * 1024;
 const whitespace = (byte) => byte === 32 || (byte >= 9 && byte <= 13);
 const invalid = (message) => new CodecError('InvalidData', message);
-export const sampleMaximum = (frame) => frame.maxval ?? (2 ** frame.bits - 1);
+export function reconstructionMaximum(frame) {
+  const codedMaxval = frame.maxval ?? (2 ** frame.bits - 1);
+  return codedMaxval * 2 ** (frame.pointTransform ?? 0);
+}
+export const sampleMaximum = (frame) => Math.min(65535, reconstructionMaximum(frame));
 export const sampleByteWidth = (maxval) => maxval < 256 ? 1 : 2;
 
 export async function readPgmHeader(file) {

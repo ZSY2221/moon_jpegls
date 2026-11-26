@@ -7,6 +7,7 @@ let run_exponents : FixedArray[Int32] = [
 ///|
 priv struct Scan {
   params : Parameters
+  point_transform : Int32
   ctx_a : FixedArray[UInt32]
   ctx_b : FixedArray[Int32]
   ctx_c : FixedArray[Int32]
@@ -46,6 +47,7 @@ fn Scan::new(width : Int32, params : Parameters) -> Scan {
   let a = max(2, (params.range + 32) / 64)
   {
     params,
+    point_transform: 0,
     ctx_a: FixedArray::make(365, a.reinterpret_as_uint()),
     ctx_b: FixedArray::make(365, 0),
     ctx_c: FixedArray::make(365, 0),
@@ -109,6 +111,7 @@ fn Scan::new_interleaved(
     let base = Scan::new(comp_widths[0], params)
     return {
       ..base,
+      point_transform: scan_info.point_transform,
       comp_indices,
       comp_ids,
       comp_widths,
@@ -127,6 +130,7 @@ fn Scan::new_interleaved(
   }
   {
     params,
+    point_transform: scan_info.point_transform,
     ctx_a: FixedArray::make(365, a.reinterpret_as_uint()),
     ctx_b: FixedArray::make(365, 0),
     ctx_c: FixedArray::make(365, 0),
@@ -159,6 +163,15 @@ fn Scan::new_interleaved(
     last_row_idx: -1,
     active_width: comp_widths[0],
     total_rows: 0,
+  }
+}
+
+///|
+fn Scan::decoded_row(self : Scan) -> FixedArray[Int32] {
+  if self.comp_prev.length() == 0 {
+    self.previous
+  } else {
+    self.comp_prev[self.last_row_comp]
   }
 }
 
