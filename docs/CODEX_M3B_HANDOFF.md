@@ -114,3 +114,9 @@ node scripts/validate_annex_e.mjs --fixtures .tools/annex-e-ci --native-exe $nat
 ~~~
 
 浏览器证据的 `MOONJLS_ANNEX_FIXTURES` 指向 `.tools/annex-e-ci`，`MOONJLS_LOLA` 指向核验过的 PGM，按上节运行 `node web/smoke.mjs`。设置 `MOONJLS_SMOKE_RECEIPT` 和 `MOONJLS_PRESENTATION_SCREENSHOTS` 输出资产哈希和截图。不含公开发布资料的原始运行收据与 ZIP 保存于本地 `.evidence/codex-m3b-public-delivery/`。
+
+## 独立 Pt 专项（2026-11-26）
+
+- 以已公开的 `main` `4129b5d06fed659bcb4226529943e4564fe6e044` 创建 `codex/t87-pt-20261126`，复用 `D:\Program Files\GPT_project\moon_jpegls-antigravity` 的洁净工作树。最终受测产品 `d5a9ab436ab7362f7601a64469fdf940db46ec5b`，tree `1aa460d177b86e3149ab050e04d6831935475e63`。后续提交更新证据和工作台能力清单。[独立分支](https://github.com/ZSY2221/moon_jpegls/tree/codex/t87-pt-20261126) · [branch Actions](https://github.com/ZSY2221/moon_jpegls/actions/workflows/verification.yml?query=branch%3Acodex%2Ft87-pt-20261126)
+- 已实现原始样本右移后编码、编码域共享状态、精确 Int32 逆变换、Native/SDK/Worker 流式转发和双误差域报告。12 条 Pt 向量三后端两方向通过。范围外的宽宿主输出明确拒绝，广泛 H/V 组合及宽输出仍标记 `partially_supported`。Annex E 12/12 是全 Pt=0 的旧能力回归。[Pt 专项记录](POINT_TRANSFORM_RESULTS.md) · [独立实跑](../reports/t87-pt-20261126/point-transform.json)
+- 首轮 Chrome 对 Pt 标签的失败已修复，保留失败 CI。恢复入口为 `node scripts/verify_point_transform.mjs --native-exe $native --native-wsl $d --ffmpeg ffmpeg`，完整参数和本机工具见 Pt 专项记录。宽输出与额外采样矩阵完成前，Pt 继续在该分支验收，公开 M3-B 候选保持在 `main`。

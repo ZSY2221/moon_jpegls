@@ -227,7 +227,7 @@
       ],
       "evidence_path": "docs/POINT_TRANSFORM_RESULTS.md",
       "target_milestone": "Separate Pt milestone",
-      "source_revision": null,
+      "source_revision": "d5a9ab436ab7362f7601a64469fdf940db46ec5b",
       "evidence_ref": "codex/t87-pt-20261126",
       "notes": "Unmapped Pt only. Exact Int32 core reconstruction. Existing narrow host sinks reject values outside their destination range."
     },

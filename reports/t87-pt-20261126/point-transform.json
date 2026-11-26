@@ -1,0 +1,4031 @@
+{
+  "status": "passed",
+  "exitCode": 0,
+  "sourceRevision": "d5a9ab436ab7362f7601a64469fdf940db46ec5b",
+  "sourceDirty": false,
+  "node": "v24.20.0",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "<workspace>\\scripts\\verify_point_transform.mjs",
+    "--native-exe",
+    ".tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+    "--native-wsl",
+    "OpenAtom-Validation-2204-20261120",
+    "--ffmpeg",
+    "ffmpeg"
+  ],
+  "runnerSha256": "38fb39a5aaf5a0882fba297dbc5ca8028dbd403ae3335dd0a853283364888e65",
+  "artifacts": {
+    "js": "775e7a8bcbdafe78f4a90152d632fb0cd87e12e43ea0af7f5917392a30033996",
+    "wasm-gc": "36a936d6f9de09dd3b561eac8690366b2827c66201be12caacd7d7a33f066d79",
+    "native": "86fc49a84ba094a841ffc4994dd2308f503dee0afcfa41f4b089d24714d83dcd"
+  },
+  "oracle": {
+    "charls": "@team-charls/charls-wasm 0.10.0",
+    "directCharls": {
+      "status": "reference_unsupported",
+      "code": 7
+    },
+    "ffmpeg": "ffmpeg version 9.0.1-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers"
+  },
+  "cases": [
+    {
+      "id": "default-p8-near0",
+      "bits": 8,
+      "interleave": 0,
+      "pointTransforms": [
+        2
+      ],
+      "nearByPlane": [
+        0
+      ],
+      "samples": 51,
+      "originalSha256": "77675e724879616f55afb522a43f53965e52037eae3e0998d3b22c9a8a6616d1",
+      "referenceBytes": 95,
+      "referenceSha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+      "reconstructionSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4",
+      "errorByPlane": [
+        {
+          "pt": 2,
+          "near": 0,
+          "coded": 0,
+          "original": 3,
+          "originalBound": 3
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 7,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 7,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 95,
+              "sha256": "78d7c7304c8278deb9cab8a1c0ae8e0c86a63b338c08610e3f759d026173b735",
+              "samplesSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "1c073303d4ee4f093f217d411276d87147de025ccf1982d345e289bf188a24a4"
+      }
+    },
+    {
+      "id": "default-p8-near3",
+      "bits": 8,
+      "interleave": 0,
+      "pointTransforms": [
+        2
+      ],
+      "nearByPlane": [
+        3
+      ],
+      "samples": 51,
+      "originalSha256": "ad4fffa9236b62c3c90e7e0416298861c8a078b399e0ea4e2aa99f02a1622e78",
+      "referenceBytes": 59,
+      "referenceSha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+      "reconstructionSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260",
+      "errorByPlane": [
+        {
+          "pt": 2,
+          "near": 3,
+          "coded": 3,
+          "original": 15,
+          "originalBound": 15
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 7,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 7,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 59,
+              "sha256": "2b1f20e15ad3b72a4a8a68d66c3a2e19ed0af07bb9a70fd85ae76e14b4af454b",
+              "samplesSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "17b025ccc399d926eaaed5048fd569de66dd2dfe20c2304f9609f7306531d260"
+      }
+    },
+    {
+      "id": "default-p12-near0",
+      "bits": 12,
+      "interleave": 0,
+      "pointTransforms": [
+        4
+      ],
+      "nearByPlane": [
+        0
+      ],
+      "samples": 51,
+      "originalSha256": "0f2f3bcf4fdb85cd571c82da367b92d9124fdab824e061c4edb986bc03a0eea9",
+      "referenceBytes": 86,
+      "referenceSha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+      "reconstructionSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb",
+      "errorByPlane": [
+        {
+          "pt": 4,
+          "near": 0,
+          "coded": 0,
+          "original": 15,
+          "originalBound": 15
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 7,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 7,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "12",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "4"
+              ],
+              "exitCode": 0,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "12",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "4"
+              ],
+              "exitCode": 0,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "12",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "4"
+              ],
+              "exitCode": 0,
+              "bytes": 86,
+              "sha256": "b8151e2f87985b4876421499483da124b3fb840e6bc0b3cd0fa3477653013c73",
+              "samplesSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray16le",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "b5669ddc2ca779f415f9151edbe84abf653ff75d911f35f567d518f6b1e881bb"
+      }
+    },
+    {
+      "id": "default-p12-near3",
+      "bits": 12,
+      "interleave": 0,
+      "pointTransforms": [
+        4
+      ],
+      "nearByPlane": [
+        3
+      ],
+      "samples": 51,
+      "originalSha256": "f6fda8f24bb7cf3a3dd3a3368a0b728cc4ac333ed518953f4299b11396293e19",
+      "referenceBytes": 66,
+      "referenceSha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+      "reconstructionSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492",
+      "errorByPlane": [
+        {
+          "pt": 4,
+          "near": 3,
+          "coded": 3,
+          "original": 63,
+          "originalBound": 63
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 7,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 7,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "12",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "4"
+              ],
+              "exitCode": 0,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "12",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "4"
+              ],
+              "exitCode": 0,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "12",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "4"
+              ],
+              "exitCode": 0,
+              "bytes": 66,
+              "sha256": "0692740aeddb42ae0daa1f12e0c495e17371a70b5f2d407eb12e3e89adf046b7",
+              "samplesSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray16le",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "4a5ea64e60fcfa3f559b8b93dea308fb90ac61c2926e8b00fda91822454a2492"
+      }
+    },
+    {
+      "id": "default-p16-near0",
+      "bits": 16,
+      "interleave": 0,
+      "pointTransforms": [
+        5
+      ],
+      "nearByPlane": [
+        0
+      ],
+      "samples": 51,
+      "originalSha256": "6e33d0c2a251ae70d8ce8e3f409b441602ee7914c6791bed6fec69846b516910",
+      "referenceBytes": 113,
+      "referenceSha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+      "reconstructionSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab",
+      "errorByPlane": [
+        {
+          "pt": 5,
+          "near": 0,
+          "coded": 0,
+          "original": 31,
+          "originalBound": 31
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 7,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 7,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "16",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "5"
+              ],
+              "exitCode": 0,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "16",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "5"
+              ],
+              "exitCode": 0,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "16",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "5"
+              ],
+              "exitCode": 0,
+              "bytes": 113,
+              "sha256": "4e2599493108c37acaff04bc1e418cfaaae6d3727dae12e8ca6202201bce821b",
+              "samplesSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray16le",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "eb01763dc1f04d98210db57b4ef85f288b27869c9c6ed6697067fa2aa9a968ab"
+      }
+    },
+    {
+      "id": "default-p16-near3",
+      "bits": 16,
+      "interleave": 0,
+      "pointTransforms": [
+        5
+      ],
+      "nearByPlane": [
+        3
+      ],
+      "samples": 51,
+      "originalSha256": "6beeefc3a5ea32a6ddb9b8541b00a93b1a59d94bdcf35d459e0b61dc598606aa",
+      "referenceBytes": 94,
+      "referenceSha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+      "reconstructionSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d",
+      "errorByPlane": [
+        {
+          "pt": 5,
+          "near": 3,
+          "coded": 3,
+          "original": 121,
+          "originalBound": 127
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 7,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 7,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "16",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "5"
+              ],
+              "exitCode": 0,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "16",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "5"
+              ],
+              "exitCode": 0,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray16le",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "16",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "5"
+              ],
+              "exitCode": 0,
+              "bytes": 94,
+              "sha256": "d1571ee434d52bfd2b3017db6169b455c5ec5b166e2c9b12f3d3cd51557c09bf",
+              "samplesSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray16le",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "b8504cb0c65ef89600240d1097a124a64d300e4c6c84d5714e0ef16b05bd739d"
+      }
+    },
+    {
+      "id": "pt-equals-precision",
+      "bits": 8,
+      "interleave": 0,
+      "pointTransforms": [
+        8
+      ],
+      "nearByPlane": [
+        0
+      ],
+      "samples": 51,
+      "originalSha256": "aba50ba7ccd49341dc54279d5b71cdb8b68e4c67692752983099462dffe99fc9",
+      "referenceBytes": 30,
+      "referenceSha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+      "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774",
+      "errorByPlane": [
+        {
+          "pt": 8,
+          "near": 0,
+          "coded": 0,
+          "original": 255,
+          "originalBound": 255
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "8"
+              ],
+              "exitCode": 0,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "8"
+              ],
+              "exitCode": 0,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "8"
+              ],
+              "exitCode": 0,
+              "bytes": 30,
+              "sha256": "e937031fb26b90915d420c0bc58606ec0f987d2672511dd001942dbb549826e0",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+      }
+    },
+    {
+      "id": "pt-field-maximum",
+      "bits": 8,
+      "interleave": 0,
+      "pointTransforms": [
+        15
+      ],
+      "nearByPlane": [
+        0
+      ],
+      "samples": 51,
+      "originalSha256": "aba50ba7ccd49341dc54279d5b71cdb8b68e4c67692752983099462dffe99fc9",
+      "referenceBytes": 30,
+      "referenceSha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+      "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774",
+      "errorByPlane": [
+        {
+          "pt": 15,
+          "near": 0,
+          "coded": 0,
+          "original": 255,
+          "originalBound": 32767
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "15"
+              ],
+              "exitCode": 0,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "15"
+              ],
+              "exitCode": 0,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "17",
+                "3",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "15"
+              ],
+              "exitCode": 0,
+              "bytes": 30,
+              "sha256": "4a35280ebd37e83b3435e7c38001f711f58f259496e73b0509a6ac7cde41b831",
+              "samplesSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "c419a92c7dce5225606f604f79d0d07009ebd882b5d5d41d234b71617b691774"
+      }
+    },
+    {
+      "id": "line-interleave",
+      "bits": 8,
+      "interleave": 1,
+      "pointTransforms": [
+        2
+      ],
+      "nearByPlane": [
+        3,
+        3,
+        3
+      ],
+      "samples": 153,
+      "originalSha256": "929fa659d01da0bf574f80e5d0c69d1c5649292a60ebd4032bc4797cf64efe6b",
+      "referenceBytes": 122,
+      "referenceSha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+      "reconstructionSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6",
+      "errorByPlane": [
+        {
+          "pt": 2,
+          "near": 3,
+          "coded": 3,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "pt": 2,
+          "near": 3,
+          "coded": 3,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "pt": 2,
+          "near": 3,
+          "coded": 3,
+          "original": 15,
+          "originalBound": 15
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 7,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 7,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "58aa4824a410b479aea3f431217a0658ffb8a7c25703f1ffb707aecb9fe5e387"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "58aa4824a410b479aea3f431217a0658ffb8a7c25703f1ffb707aecb9fe5e387"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "58aa4824a410b479aea3f431217a0658ffb8a7c25703f1ffb707aecb9fe5e387"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "8",
+                "3",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "2",
+                "--ilv",
+                "1"
+              ],
+              "exitCode": 0,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "8",
+                "3",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "2",
+                "--ilv",
+                "1"
+              ],
+              "exitCode": 0,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "8",
+                "3",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "2",
+                "--ilv",
+                "1"
+              ],
+              "exitCode": 0,
+              "bytes": 122,
+              "sha256": "713297c664e595a5674903a55765602f44123172073d90eb32b223e20c82fb18",
+              "samplesSha256": "acbdfdc4683f7591ec6251ae10f7c2181f5723727805fbe2e78865b75a0ba5d6"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "sample-interleave",
+      "bits": 16,
+      "interleave": 2,
+      "pointTransforms": [
+        5
+      ],
+      "nearByPlane": [
+        0,
+        0,
+        0
+      ],
+      "samples": 153,
+      "originalSha256": "67e3934732b15c2f5d221c0fcde6cccde944eeafc6816e5331a4c201f648cc4d",
+      "referenceBytes": 256,
+      "referenceSha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+      "reconstructionSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc",
+      "errorByPlane": [
+        {
+          "pt": 5,
+          "near": 0,
+          "coded": 0,
+          "original": 31,
+          "originalBound": 31
+        },
+        {
+          "pt": 5,
+          "near": 0,
+          "coded": 0,
+          "original": 31,
+          "originalBound": 31
+        },
+        {
+          "pt": 5,
+          "near": 0,
+          "coded": 0,
+          "original": 31,
+          "originalBound": 31
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 7,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 7,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "6409b9af1c52d74558159b21bbf95f56682351acc29dc42d16556b49eaf37d00"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "6409b9af1c52d74558159b21bbf95f56682351acc29dc42d16556b49eaf37d00"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "6409b9af1c52d74558159b21bbf95f56682351acc29dc42d16556b49eaf37d00"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "16",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "5",
+                "--ilv",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "16",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "5",
+                "--ilv",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "16",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "5",
+                "--ilv",
+                "2"
+              ],
+              "exitCode": 0,
+              "bytes": 256,
+              "sha256": "0f69c8f4b2c0f62c04a04df87dff32a5f58a1f900bfe88e52b1a9e2a59b7bb18",
+              "samplesSha256": "ae0dc4ba46ebc7f6735417b190de4426e490bfdcbdb5bf91b2c8a1b5be5923cc"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "three-distinct-scans",
+      "bits": 8,
+      "interleave": 0,
+      "pointTransforms": [
+        2,
+        0,
+        3
+      ],
+      "nearByPlane": [
+        3,
+        0,
+        0
+      ],
+      "samples": 153,
+      "originalSha256": "c316d0b6c44be1e5d3b4b77b42691b1e0feb3c7ff1b2e9fa48ee5e6b184c64b0",
+      "referenceBytes": 214,
+      "referenceSha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+      "reconstructionSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb",
+      "errorByPlane": [
+        {
+          "pt": 2,
+          "near": 3,
+          "coded": 3,
+          "original": 15,
+          "originalBound": 15
+        },
+        {
+          "pt": 0,
+          "near": 0,
+          "coded": 0,
+          "original": 0,
+          "originalBound": 0
+        },
+        {
+          "pt": 3,
+          "near": 0,
+          "coded": 0,
+          "original": 7,
+          "originalBound": 7
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 7,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 7,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 4096,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "8",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--scan-pt",
+                "2,0,3",
+                "--scan-near",
+                "3,0,0"
+              ],
+              "exitCode": 0,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "8",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--scan-pt",
+                "2,0,3",
+                "--scan-near",
+                "3,0,0"
+              ],
+              "exitCode": 0,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "17",
+                "3",
+                "8",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--scan-pt",
+                "2,0,3",
+                "--scan-near",
+                "3,0,0"
+              ],
+              "exitCode": 0,
+              "bytes": 214,
+              "sha256": "526d02e189d75e25bf54c3b1bc9decff547026a98a23d48c9fce58e722872ad9",
+              "samplesSha256": "6bbf9c13b75a6aeb6f28524e969395616840d791534f6f717d860173537d4aeb"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "hand-derived-explicit-maxval",
+      "bits": 8,
+      "interleave": 0,
+      "pointTransforms": [
+        2
+      ],
+      "nearByPlane": [
+        3
+      ],
+      "samples": 1,
+      "originalSha256": "9f3a060c00e96dbd2bf5cb77506048f22667fb11cd4d5e3c20993685fc805646",
+      "referenceBytes": 43,
+      "referenceSha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+      "reconstructionSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001",
+      "errorByPlane": [
+        {
+          "pt": 2,
+          "near": 3,
+          "coded": 3,
+          "original": 15,
+          "originalBound": 15
+        }
+      ],
+      "backends": [
+        {
+          "backend": "js",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 7,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            }
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "decodes": [
+            {
+              "chunk": 1,
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 7,
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 4096,
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 7,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+              }
+            },
+            {
+              "chunk": 4096,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            }
+          ]
+        },
+        {
+          "backend": "native",
+          "decodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "1"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "7"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "rowDeliverySamplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            }
+          ],
+          "encodes": [
+            {
+              "chunk": 1,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "1",
+                "1",
+                "8",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "1",
+                "--pt",
+                "2",
+                "--maxval",
+                "31"
+              ],
+              "exitCode": 0,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            },
+            {
+              "chunk": 7,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "1",
+                "1",
+                "8",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "7",
+                "--pt",
+                "2",
+                "--maxval",
+                "31"
+              ],
+              "exitCode": 0,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001",
+              "directReference": {
+                "command": [
+                  "ffmpeg",
+                  "-v",
+                  "error",
+                  "-xerror",
+                  "-c:v",
+                  "jpegls",
+                  "-f",
+                  "image2pipe",
+                  "-i",
+                  "-",
+                  "-pix_fmt",
+                  "gray",
+                  "-f",
+                  "rawvideo",
+                  "-"
+                ],
+                "exitCode": 0,
+                "reconstructionSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+              }
+            },
+            {
+              "chunk": 4096,
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "1",
+                "1",
+                "8",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--pt",
+                "2",
+                "--maxval",
+                "31"
+              ],
+              "exitCode": 0,
+              "bytes": 43,
+              "sha256": "38e50667afecd93696c88a4913b752df56ba6792cc2a588d6cf35baeda5d28fc",
+              "samplesSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+            }
+          ],
+          "inspect": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+              "inspect",
+              "-",
+              "1",
+              "--json"
+            ],
+            "exitCode": 0
+          }
+        }
+      ],
+      "ffmpeg": {
+        "command": [
+          "ffmpeg",
+          "-v",
+          "error",
+          "-xerror",
+          "-c:v",
+          "jpegls",
+          "-f",
+          "image2pipe",
+          "-i",
+          "-",
+          "-pix_fmt",
+          "gray",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "exitCode": 0,
+        "reconstructionSha256": "882a20e6379eb83aecb916f4b9ea79c1e6c08a0d80f6ad1dc9a9421758246001"
+      }
+    }
+  ],
+  "negativeChecks": [
+    {
+      "id": "mapping-with-transform",
+      "sha256": "5d66564d0dc6df3b4d9c31ec1c56d28f83dba06512b497c6565bf9bf3e7333c8",
+      "sdkCode": "InvalidData",
+      "native": {
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "1"
+        ],
+        "exitCode": 1,
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000ZSY2221/moon_jpegls/core.CodecError.InvalidData: point transform requires zero mapping selectors"
+      }
+    },
+    {
+      "id": "nonzero-Ah",
+      "sha256": "826e683b54bb5f084fc0b429d15204862191136c15f3fc4a5b2b5ceab0822d8c",
+      "sdkCode": "InvalidData",
+      "native": {
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "1"
+        ],
+        "exitCode": 1,
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000ZSY2221/moon_jpegls/core.CodecError.InvalidData: SOS scan parameters"
+      }
+    },
+    {
+      "id": "near-above-coded-max",
+      "sha256": "2bfad9b612baf0acf18caee1f0dc8c328155ec01cfd5a175aac33c759fff7ff0",
+      "sdkCode": "InvalidData",
+      "native": {
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "1"
+        ],
+        "exitCode": 1,
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000ZSY2221/moon_jpegls/core.CodecError.InvalidData: NEAR is outside the range for MAXVAL"
+      }
+    },
+    {
+      "id": "truncated-EOI",
+      "sha256": "9aba179f19409d474e65fc9444996c80ab74e30f6005ac73f956ce79fba4043c",
+      "sdkCode": "Truncated",
+      "native": {
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "1"
+        ],
+        "exitCode": 1,
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000ZSY2221/moon_jpegls/core.CodecError.Truncated"
+      }
+    },
+    {
+      "id": "trailing-byte",
+      "sha256": "d8bde243ce3d40b29d5e0fd2485f4781094da00b3736e1a3255d0a1bd0aa36cd",
+      "sdkCode": "TrailingData",
+      "native": {
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "1"
+        ],
+        "exitCode": 1,
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input: trailing bytes after EOI"
+      }
+    },
+    {
+      "id": "host-range-p8",
+      "expected": 260,
+      "qhat": 65,
+      "sha256": "cbbbb3bfb70a6055027a28c6dab41b1a2aacab7ac65bb6980f68bb5b2cfd6902",
+      "native": {
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "1"
+        ],
+        "exitCode": 1,
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000ZSY2221/moon_jpegls/core.CodecError.UnsupportedFeature: point transform reconstruction exceeds output sample range"
+      }
+    },
+    {
+      "id": "host-range-p12",
+      "expected": 4100,
+      "qhat": 1025,
+      "sha256": "f3bcebf70ca8ddc275c6e4f818781b6dbeb368eb0d9a1135a7c9eb670aeeace1",
+      "native": {
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "1"
+        ],
+        "exitCode": 0,
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000decoded width=1 height=1 bits=12 maxval=4095 near=2 t1=24 t2=77 t3=290 reset=64 components=1 scans=1 rows=1 input_bytes=31 output_bytes=2 first_row_at=29 core_payload_bytes=8991 host_conversion_buffer_bytes=0 input_high_water=1 output_high_water=2"
+      }
+    },
+    {
+      "id": "host-range-p16",
+      "expected": 65540,
+      "qhat": 16385,
+      "sha256": "57186e5591fccdf7a163a6274551154c5c9b3227b65bfad52a67dc8854ded670",
+      "native": {
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "<workspace>/.tools/wsl-build-codex-pt/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "1"
+        ],
+        "exitCode": 1,
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000ZSY2221/moon_jpegls/core.CodecError.UnsupportedFeature: point transform reconstruction exceeds output sample range"
+      }
+    }
+  ],
+  "scanReporting": {
+    "js": "passed",
+    "wasm-gc": "passed"
+  },
+  "summary": {
+    "encode": 108,
+    "decode": 108,
+    "directCandidateReference": 27,
+    "directFixtureReference": 9
+  }
+}
