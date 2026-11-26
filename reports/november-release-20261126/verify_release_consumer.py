@@ -12,12 +12,12 @@ import subprocess
 from tempfile import TemporaryDirectory
 from threading import Thread
 from urllib.parse import quote, unquote
-from urllib.request import Request, urlopen
 from zipfile import ZipFile
 
 
 MODULE = "ZSY2221/moon_jpegls"
 REGISTRY = "https://mooncakes.io"
+DOWNLOAD = "https://download.mooncakes.io"
 API_PATH = f"/api/v0/registry/modules/{MODULE}"
 UNSHIPPED = (".evidence/", ".tools/", "reports/", "submission/", "REVIEW_EVIDENCE/",
              "sdk/generated/", "web/dist/", "_build/", ".mooncakes/")
@@ -28,8 +28,18 @@ def digest(data):
 
 
 def request(url):
-    with urlopen(Request(url, headers={"User-Agent": "MoonJLS-release-verify"}), timeout=45) as response:
-        return response.status, response.read()
+    curl = shutil.which("curl.exe") or shutil.which("curl")
+    if curl is None:
+        raise RuntimeError("curl is required for the anonymous registry and archive check")
+    result = subprocess.run(
+        [curl, "--location", "--silent", "--show-error", "--fail", "--retry", "2",
+         "--max-time", "30", "--write-out", "\n%{http_code}", url],
+        capture_output=True, timeout=100,
+    )
+    if result.returncode:
+        raise RuntimeError(f"Anonymous HTTPS request failed: {result.stderr.decode(errors='replace')}")
+    data, status = result.stdout.rsplit(b"\n", 1)
+    return int(status), data
 
 
 @contextmanager
@@ -133,7 +143,7 @@ def run(args, temporary, report):
         status, raw = request(metadata_url)
         info = json.loads(raw)
         assert info["module"] == MODULE and info["version"] == args.version and info["visibility"] == "PUBLIC"
-        download_url = f"{REGISTRY}/user/{MODULE}/{quote(args.version)}.zip"
+        download_url = f"{DOWNLOAD}/user/{MODULE}/{quote(args.version)}.zip"
         download_status, downloaded = request(download_url)
         official = archive_contents(downloaded, args.version)
         assert info["checksum"] == official["sha256"] == validated["sha256"]

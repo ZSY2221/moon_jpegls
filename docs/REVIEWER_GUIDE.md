@@ -33,4 +33,4 @@ JS、Wasm GC、Native 在固定候选上对 Annex E 12 条均通过独立 HP 1.0
 - 三后端执行 MoonBit 核心、黄金流、Native 流式尾部、SDK/Worker、TypeScript 和浏览器检查。官方向量来源、哈希、验收命令与 CI 的实际参考范围由[符合性结果](CONFORMANCE_RESULTS.md)说明。
 - NASA LOLA 用于公开数据实验。固定码流的 1,036,800 个样本已由三后端和 CharLS 重建核对。[LOLA 数据](../tests/fixtures/LUNAR_DATA.md)
 - 12 条 Annex E 均使用 Pt=0。非零 Pt 和内嵌映射各有独立证据。后续分项包括映射编码、多字节表项、外部表与简略格式、重启、DNL 和扩展尺寸，并按 §8 完成完整 Part 1 核验。路线日期为项目内部目标。[范围](SCOPE.md) · [路线](ROADMAP.md)
-- [M3-B PR #2](https://github.com/ZSY2221/moon_jpegls/pull/2) · [Pt PR #3](https://github.com/ZSY2221/moon_jpegls/pull/3) · [映射 PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4) · [最新交付与 Mooncakes](MOONCAKES_RELEASE.md)
+- [M3-B PR #2](https://github.com/ZSY2221/moon_jpegls/pull/2) · [Pt PR #3](https://github.com/ZSY2221/moon_jpegls/pull/3) · [映射 PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4) · [复审前交付 PR #5](https://github.com/ZSY2221/moon_jpegls/pull/5) · [Mooncakes 0.1.0 在线消费](MOONCAKES_RELEASE.md)

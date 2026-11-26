@@ -1,0 +1,383 @@
+{
+  "verdict": "passed",
+  "publication": {
+    "module": "ZSY2221/moon_jpegls",
+    "version": "0.1.0",
+    "packageSourceSha": "e32c9161b4679656aa1aba7f01374150a1a9951a",
+    "archiveSha256": "09122f4a16ec828ff7b7e88a855bacdef5614ee313d33573dc94b2ee2180fffb",
+    "prepublicationHttp": 404,
+    "publishExit": 0,
+    "executedAtUtc": "2026-11-26T12:54:31.9000864Z"
+  },
+  "archive": {
+    "bytes": 615635,
+    "sha256": "09122f4a16ec828ff7b7e88a855bacdef5614ee313d33573dc94b2ee2180fffb",
+    "entries": 219,
+    "manifest": "name = \"ZSY2221/moon_jpegls\"\nversion = \"0.1.0\"\nlicense = \"BSD-3-Clause\"\nreadme = \"README.md\"\nrepository = \"https://github.com/ZSY2221/moon_jpegls\"\npreferred_target = \"wasm-gc\"\nsupported_targets = \"+native+wasm-gc+js\"\nkeywords = [\"jpeg-ls\", \"streaming\", \"image\", \"lossless\", \"multicomponent\"]\ndescription = \"Pure MoonBit streaming JPEG-LS codec with multicomponent interleave, sampling, point transforms and embedded one-byte mapping decode\"\n",
+    "fileSha256": {
+      "LICENSE": "f2795ebf2c29aa0fdf90c747b9a32f7542c0af75f857c193afe826bf607d079f",
+      "THIRD_PARTY_NOTICES": "91efd4885204f54620c7e9d6d32aa232a24886ba3681ef573f5e29e65aa6300b",
+      "core/bits.mbt": "16981b7dfbfc9958fe09df948bd2a6b382c933fe90bb0e313c680e4856342ebf",
+      "core/decoder.mbt": "9fbc58025ea144212611d841f4bf3c62244f0b63a1b0dfd9d03ce280fcf59166",
+      "core/encoder.mbt": "67d38979c071031ee3481646c076e907e07f1d86702dc5220f44fa55f5219880",
+      "core/image.mbt": "8a5ffd3c2362b014fc331aa7cccbdc86ae511f58c44aa8779b474ebcc532c5b8",
+      "core/interleave_wbtest.mbt": "96ec229b951dcc681a286f68e183570aaea13ff53f720b30f46c19d73d32523c",
+      "core/mapping_wbtest.mbt": "93cb2d2208242a0eddc8bd6c8d117ed31b45079e3575679210641cbdd2f5b0f7",
+      "core/markers.mbt": "f1cedc3302384052f9b60035b7171d98915a0ebf3a369cb1ec4c686fece615ae",
+      "core/model.mbt": "1e3674e7dd9a2780d00f4b9b177eb41cd971c8817b43d82660515adc1654c1f6",
+      "core/moon.pkg": "238a4021de06b0055fd9908aa81b24770b692b0a685c07e4b82fee4afed66634",
+      "core/multiscan_wbtest.mbt": "f2dbd7c3722cdc88720a79e242a41a43aa71f492a2f468f216ab4a5b165a804d",
+      "core/parameters.mbt": "699ba6399a1f380c3edb050a679efc71e7bba69483cee071d0823bff753988de",
+      "core/point_transform_wbtest.mbt": "2598f77f68e6889ceda4499653112a7a4152bfe4fec09e82f4aa41b6c957f152",
+      "core/preset_wbtest.mbt": "eb125b56480a4104acc83fe58a3db8b9fd8f7858e0e0c7a9c1038ca3c5cd5826",
+      "core/stream_wbtest.mbt": "52e9b34d50485903121dcc4ef6b7885d0038386ec08d168e0d65a5e25e711b74",
+      "core/workspace_wbtest.mbt": "ecba57bbed9b9494027fa7b9243eae543dee8eeff411fad97f69d2cdbceab844",
+      "moon.mod": "d5321784cdfbc2c7b02537d7ba5e6186ed0f60978ec8177a474a269692ab1c08"
+    }
+  },
+  "offlineCandidate": {
+    "mode": "offline",
+    "registryMode": "offline-candidate-loopback",
+    "commands": [
+      {
+        "step": "loopback-moon-add",
+        "command": [
+          "<user>\\.moon\\bin\\moon.exe",
+          "add",
+          "ZSY2221/moon_jpegls@0.1.0"
+        ],
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": "Downloading ZSY2221/moon_jpegls@0.1.0\n"
+      },
+      {
+        "step": "graph",
+        "command": [
+          "<user>\\.moon\\bin\\moon.exe",
+          "tree",
+          "--json"
+        ],
+        "exitCode": 0,
+        "stdout": "{\"version\":1,\"status\":\"success\",\"error\":null,\"root\":1,\"modules\":[{\"name\":\"ZSY2221/moon_jpegls\",\"version\":\"0.1.0\",\"source\":{\"kind\":\"registry\"},\"workspace_member\":false},{\"name\":\"independent/moonjls_release_probe\",\"version\":\"0.1.0\",\"source\":{\"kind\":\"local\",\"path\":\"<user>\\\\AppData\\\\Local\\\\Temp\\\\clean-moonjls-external-frq26b9f\\\\app\"},\"workspace_member\":false}],\"edges\":[{\"from\":1,\"to\":0,\"name\":\"ZSY2221/moon_jpegls\",\"kind\":\"regular\"}],\"logs\":[]}\n",
+        "stderr": ""
+      },
+      {
+        "step": "js",
+        "command": [
+          "<user>\\.moon\\bin\\moon.exe",
+          "run",
+          "--release",
+          "--frozen",
+          "--target",
+          "js",
+          "."
+        ],
+        "exitCode": 0,
+        "stdout": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n",
+        "stderr": ""
+      },
+      {
+        "step": "wasm-gc",
+        "command": [
+          "<user>\\.moon\\bin\\moon.exe",
+          "run",
+          "--release",
+          "--frozen",
+          "--target",
+          "wasm-gc",
+          "."
+        ],
+        "exitCode": 0,
+        "stdout": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n",
+        "stderr": ""
+      },
+      {
+        "step": "wsl-path-app",
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "wslpath",
+          "-a",
+          "<isolated>\\app"
+        ],
+        "exitCode": 0,
+        "stdout": "<isolated>/app\n",
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\nN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\n\u0000\n\u0000"
+      },
+      {
+        "step": "wsl-path-home",
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "wslpath",
+          "-a",
+          "<isolated>\\windows-moon-home"
+        ],
+        "exitCode": 0,
+        "stdout": "<isolated>/windows-moon-home\n",
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\nN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\n\u0000\n\u0000"
+      },
+      {
+        "step": "native",
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--cd",
+          "<isolated>/app",
+          "--exec",
+          "env",
+          "-u",
+          "MOON_WORK",
+          "-u",
+          "MOONCAKES_REGISTRY",
+          "-u",
+          "MOON_REGISTRY_CACHE",
+          "MOON_HOME=<isolated>/windows-moon-home",
+          "MOON_TOOLCHAIN_ROOT=/root/.moon",
+          "MOON_REGISTRY_API=1",
+          "MOON_DEP_CACHE=off",
+          "/root/.moon/bin/moon",
+          "run",
+          "--release",
+          "--frozen",
+          "--target",
+          "native",
+          "."
+        ],
+        "exitCode": 0,
+        "stdout": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n",
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\nN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\n\u0000\n\u0000"
+      }
+    ],
+    "loopbackRequests": [
+      {
+        "path": "/api/v0/registry/modules/ZSY2221/moon_jpegls?version=0.1.0",
+        "httpStatus": 200,
+        "sha256": "c177a294aa909bd58dfa35c7d94fa854a21dd5a69a4fbf54ea77366ba1e19716"
+      },
+      {
+        "path": "/user/ZSY2221/moon_jpegls/0.1.0.zip",
+        "httpStatus": 200,
+        "sha256": "09122f4a16ec828ff7b7e88a855bacdef5614ee313d33573dc94b2ee2180fffb"
+      }
+    ],
+    "consumerSourceSha256": "b3e49c02795ad9d47f5809bad8cc988bede63904e3694d249fef32e9240ff062",
+    "isolation": {
+      "freshDirectory": true,
+      "cacheDisabled": true,
+      "onlyPublishedCoordinate": true,
+      "sameFreshInstallForAllThreeTargets": true,
+      "workspaceOverrides": false
+    },
+    "installedSourceMatchesPackage": true,
+    "verdict": "passed"
+  },
+  "publicInstall": {
+    "mode": "public",
+    "registryMode": "public",
+    "commands": [
+      {
+        "step": "public-moon-add",
+        "command": [
+          "<user>\\.moon\\bin\\moon.exe",
+          "add",
+          "ZSY2221/moon_jpegls@0.1.0"
+        ],
+        "exitCode": 0,
+        "stdout": "",
+        "stderr": "Downloading ZSY2221/moon_jpegls@0.1.0\n"
+      },
+      {
+        "step": "graph",
+        "command": [
+          "<user>\\.moon\\bin\\moon.exe",
+          "tree",
+          "--json"
+        ],
+        "exitCode": 0,
+        "stdout": "{\"version\":1,\"status\":\"success\",\"error\":null,\"root\":1,\"modules\":[{\"name\":\"ZSY2221/moon_jpegls\",\"version\":\"0.1.0\",\"source\":{\"kind\":\"registry\"},\"workspace_member\":false},{\"name\":\"independent/moonjls_release_probe\",\"version\":\"0.1.0\",\"source\":{\"kind\":\"local\",\"path\":\"<user>\\\\AppData\\\\Local\\\\Temp\\\\clean-moonjls-external-9szy755w\\\\app\"},\"workspace_member\":false}],\"edges\":[{\"from\":1,\"to\":0,\"name\":\"ZSY2221/moon_jpegls\",\"kind\":\"regular\"}],\"logs\":[]}\n",
+        "stderr": ""
+      },
+      {
+        "step": "js",
+        "command": [
+          "<user>\\.moon\\bin\\moon.exe",
+          "run",
+          "--release",
+          "--frozen",
+          "--target",
+          "js",
+          "."
+        ],
+        "exitCode": 0,
+        "stdout": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n",
+        "stderr": ""
+      },
+      {
+        "step": "wasm-gc",
+        "command": [
+          "<user>\\.moon\\bin\\moon.exe",
+          "run",
+          "--release",
+          "--frozen",
+          "--target",
+          "wasm-gc",
+          "."
+        ],
+        "exitCode": 0,
+        "stdout": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n",
+        "stderr": ""
+      },
+      {
+        "step": "wsl-path-app",
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "wslpath",
+          "-a",
+          "<isolated>\\app"
+        ],
+        "exitCode": 0,
+        "stdout": "<isolated>/app\n",
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\nN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\n\u0000\n\u0000"
+      },
+      {
+        "step": "wsl-path-home",
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--exec",
+          "wslpath",
+          "-a",
+          "<isolated>\\windows-moon-home"
+        ],
+        "exitCode": 0,
+        "stdout": "<isolated>/windows-moon-home\n",
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\nN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\n\u0000\n\u0000"
+      },
+      {
+        "step": "native",
+        "command": [
+          "wsl.exe",
+          "--distribution",
+          "OpenAtom-Validation-2204-20261120",
+          "--cd",
+          "<isolated>/app",
+          "--exec",
+          "env",
+          "-u",
+          "MOON_WORK",
+          "-u",
+          "MOONCAKES_REGISTRY",
+          "-u",
+          "MOON_REGISTRY_CACHE",
+          "MOON_HOME=<isolated>/windows-moon-home",
+          "MOON_TOOLCHAIN_ROOT=/root/.moon",
+          "MOON_REGISTRY_API=1",
+          "MOON_DEP_CACHE=off",
+          "/root/.moon/bin/moon",
+          "run",
+          "--release",
+          "--frozen",
+          "--target",
+          "native",
+          "."
+        ],
+        "exitCode": 0,
+        "stdout": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n",
+        "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\nN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\n\u0000\n\u0000"
+      }
+    ],
+    "isolation": {
+      "freshDirectory": true,
+      "cacheDisabled": true,
+      "onlyPublishedCoordinate": true,
+      "sameFreshInstallForAllThreeTargets": true,
+      "workspaceOverrides": false
+    },
+    "registry": {
+      "metadataUrl": "https://mooncakes.io/api/v0/registry/modules/ZSY2221/moon_jpegls?version=0.1.0",
+      "metadataStatus": 200,
+      "metadata": {
+        "module": "ZSY2221/moon_jpegls",
+        "visibility": "PUBLIC",
+        "version": "0.1.0",
+        "deps": {},
+        "checksum": "09122f4a16ec828ff7b7e88a855bacdef5614ee313d33573dc94b2ee2180fffb",
+        "yanked": false,
+        "yanked_reason": null
+      },
+      "downloadUrl": "https://download.mooncakes.io/user/ZSY2221/moon_jpegls/0.1.0.zip",
+      "downloadStatus": 200,
+      "archiveSha256": "09122f4a16ec828ff7b7e88a855bacdef5614ee313d33573dc94b2ee2180fffb"
+    },
+    "consumerManifest": "name = \"independent/moonjls_release_probe\"\nversion = \"0.1.0\"\n\nimport {\n  \"ZSY2221/moon_jpegls@0.1.0\",\n}\n",
+    "consumerDependencyGraph": {
+      "version": 1,
+      "status": "success",
+      "error": null,
+      "root": 1,
+      "modules": [
+        {
+          "name": "ZSY2221/moon_jpegls",
+          "version": "0.1.0",
+          "source": {
+            "kind": "registry"
+          },
+          "workspace_member": false
+        },
+        {
+          "name": "independent/moonjls_release_probe",
+          "version": "0.1.0",
+          "source": {
+            "kind": "local",
+            "path": "<user>\\AppData\\Local\\Temp\\clean-moonjls-external-9szy755w\\app"
+          },
+          "workspace_member": false
+        }
+      ],
+      "edges": [
+        {
+          "from": 1,
+          "to": 0,
+          "name": "ZSY2221/moon_jpegls",
+          "kind": "regular"
+        }
+      ],
+      "logs": []
+    },
+    "consumerSourceSha256": "b3e49c02795ad9d47f5809bad8cc988bede63904e3694d249fef32e9240ff062",
+    "installedSourceMatchesPackage": true,
+    "backends": {
+      "js": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n",
+      "wasm-gc": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n",
+      "native": "gray bits=16 near=0 samples=6 rows_before_eoi=2 max_error=0 strict_tail=passed\ngray bits=16 near=3 samples=6 rows_before_eoi=2 max_error=1 strict_tail=passed\nilv2 planes=2 samples=8\nsampled first=5x3 second=3x2 rows=5 samples=21\nwide point_transform=2 sample=65540\nmapping selector=7 samples=201,234,212,223\nmapping_lse3 entries=65536 samples=7 last=146\n"
+    },
+    "verdict": "passed"
+  },
+  "earlierPublicProbeFailures": [
+    {
+      "attempt": 1,
+      "stage": "anonymous archive precheck before moon add",
+      "error": "Remote end closed connection without response"
+    },
+    {
+      "attempt": 2,
+      "stage": "anonymous archive precheck before moon add",
+      "error": "File is not a zip file"
+    },
+    {
+      "attempt": 3,
+      "stage": "anonymous archive precheck before moon add",
+      "error": "Remote end closed connection without response"
+    }
+  ]
+}

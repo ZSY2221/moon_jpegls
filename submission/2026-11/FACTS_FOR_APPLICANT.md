@@ -37,7 +37,7 @@ Pt 验收分别使用可直接解码的 FFmpeg 组合、CharLS 编码域适配�
 
 ## 发布与协作事实
 
-- 对照 GitHub 候选、main 检查、Pages 构建和 Mooncakes 的包来源与实际在线结果。包消费与仓库的 SDK/Worker 各有独立验证入口。[main](https://github.com/ZSY2221/moon_jpegls/tree/main) · [PR #2](https://github.com/ZSY2221/moon_jpegls/pull/2) · [PR #3](https://github.com/ZSY2221/moon_jpegls/pull/3) · [PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4) · [复审前发布记录](../../docs/MOONCAKES_RELEASE.md)
+- 本轮受测产品及包源码 `e32c9161b4679656aa1aba7f01374150a1a9951a`。Mooncakes 正式版本为 `ZSY2221/moon_jpegls@0.1.0`，公开查询与 ZIP 校验通过，全新在线安装后 Native、JS、Wasm GC 各通过七项公开 API 检查。GitHub 与工作台部署由 PR 的真实合并提交、main CI 和构建标识核对。[PR #2](https://github.com/ZSY2221/moon_jpegls/pull/2) · [PR #3](https://github.com/ZSY2221/moon_jpegls/pull/3) · [PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4) · [本轮 PR #5](https://github.com/ZSY2221/moon_jpegls/pull/5) · [复审前发布记录](../../docs/MOONCAKES_RELEASE.md)
 - Antigravity 实现 M3-A 和首版 ILV=1。Codex 接手后保全并复验 ILV=1，完成 ILV=2、H/V、边缘 MCU、无映射 Pt、宽输出、内嵌映射解码、独立复跑和复审前发布工作。负责人负责选题、标准路线、仓库治理及申报决策；人工复核进度由负责人按实际情况确认。[协作记录](07_AI_DEVELOPMENT_DISCLOSURE.md)
 
 ## 原表单提交前核对

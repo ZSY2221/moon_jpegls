@@ -5,6 +5,7 @@
 - [当前支持范围](docs/SCOPE.md)和[兼容路线](docs/ROADMAP.md)记录最终 Part 1 目标、现有能力和阶段退出条件。
 - [逐条官方结果](docs/CONFORMANCE_RESULTS.md)和[机器可读清单](tests/conformance/manifest.json)区分实际执行与参考能力限制。
 - [M3-B PR #2](https://github.com/ZSY2221/moon_jpegls/pull/2) · [Pt PR #3](https://github.com/ZSY2221/moon_jpegls/pull/3) · [映射解码 PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4) · [复审前交付版本](docs/MOONCAKES_RELEASE.md)
+- `ZSY2221/moon_jpegls@0.1.0` 已公开发布并完成全新在线消费。受测源码、包 SHA-256、交付提交和评审入口见[本轮 PR #5](https://github.com/ZSY2221/moon_jpegls/pull/5)和[发布记录](docs/MOONCAKES_RELEASE.md)。
 
 ## 历史验证
 

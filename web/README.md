@@ -14,7 +14,9 @@ The Precision view exposes resolved P, MAXVAL, NEAR, T1, T2, T3 and RESET. PGM d
 
 The image display retains a maximum of 480 × 320 sampled positions. Click an image pixel or focus the preview and use the arrow keys to see its source coordinate and integer values. The magnifier shows the 7 × 7 neighborhood on this sampled grid, and the heat colors map the absolute sample errors relative to NEAR.
 
-The Streaming view shows the configured chunk limits, actual staging and sink bytes, first-row time, acknowledged event count, longest measured host callback through ACK, and logical queue peaks. The Compatibility view reads the [conformance manifest](../tests/conformance/manifest.json) copied into the static build, including clauses, implementation states, test cases and reference evidence.
+The Streaming view shows actual staging and sink bytes, first-row time, acknowledgements and logical queue peaks. Compatibility displays the build revision, fixed source links, and the support scope. The verification report uses the same build metadata. The conformance table reads archived independent evidence. In-page comparison measures the current run.
+
+Multi-component raw downloads use SOF plane order. Their reports record sample width, little-endian order and offsets in samples. For embedded one-byte mapping, the preview and downloads show mapped output values. NEAR applies to the coding-domain indices.
 
 Rows are provisional until the final checks and output close finish. The in-page processing timer starts after opening the sink and includes validation and output close. The first Canvas timestamp records the return of the first reconstruction drawing call. File and save-location selection and sink setup are outside the processing timer.
 
