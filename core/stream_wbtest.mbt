@@ -267,10 +267,8 @@ test "legal fill and unsupported features remain distinct from malformed markers
       coded[i]
     }
   })
-  assert_true(
-    (Ok(decode(transformed)) catch { e => Err(e) })
-    is Err(UnsupportedFeature(_)),
-  )
+  let mapped = Bytes::makei(coded.length(), i => if i == 21 { b'\x01' } else { coded[i] })
+  assert_true((Ok(decode(mapped)) catch { e => Err(e) }) is Err(UnsupportedFeature(_)))
   let transform_and_mapping = Bytes::makei(coded.length(), i => {
     if i == 21 {
       1

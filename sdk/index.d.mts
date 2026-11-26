@@ -22,7 +22,9 @@ export interface ScanSpec {
   readonly componentIds?: readonly number[];
   /** 0: one component per scan, 1: line-interleaved, 2: sample-interleaved. */
   readonly interleave?: number;
+  /** SOS Pt (0–15). Input samples remain in the original domain. */
   readonly pointTransform?: number;
+  /** NEAR in the entropy-coded sample domain. */
   readonly near?: number;
   readonly maxval?: number;
   readonly preset?: Partial<Omit<Preset, 'maxval'>>;
@@ -83,6 +85,7 @@ export interface RowMeta {
   readonly componentId: number;
   readonly rowIndex: number | null;
   readonly height?: number;
+  /** NEAR in the entropy-coded sample domain. */
   readonly near: number;
   readonly interleave?: number;
   readonly pointTransform?: number;
@@ -98,9 +101,12 @@ export interface Frame {
   readonly width: number;
   readonly height: number;
   readonly bits: number;
+  /** NEAR in the entropy-coded sample domain. */
   readonly near: number;
   readonly interleave?: number;
+  /** SOS Pt (0–15). Per-scan Pt takes precedence when supplied. */
   readonly pointTransform?: number;
+  /** Effective MAXVAL in the entropy-coded sample domain. */
   readonly maxval?: number;
   readonly preset?: Partial<Omit<Preset, 'maxval'>>;
   readonly components?: readonly (ComponentSpec | number)[];

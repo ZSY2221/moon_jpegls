@@ -1,10 +1,10 @@
 ///|
 let help : String =
-  #|moonjls encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--maxval N] [preset flags]
-  #|moonjls encode-planar WIDTH HEIGHT BITS COMPONENTS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--ilv 0|1|2] [--comp-ids LIST] [--scan-order LIST] [--scan-near LIST] [--maxval N] [preset flags]
-  #|moonjls encode-pgm NEAR INPUT OUTPUT [CHUNK] [preset flags]
-  #|moonjls encode-pgms NEAR OUTPUT [--ilv 0|1|2] [--sampling HxV,...] [--chunk N] [preset flags] IN1 [IN2 ...]
-  #|moonjls encode-ppm NEAR INPUT OUTPUT [CHUNK] [--ilv 0|1|2] [preset flags]
+  #|moonjls encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--pt N] [--maxval N] [preset flags]
+  #|moonjls encode-planar WIDTH HEIGHT BITS COMPONENTS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--ilv 0|1|2] [--comp-ids LIST] [--scan-order LIST] [--scan-near LIST] [--scan-pt LIST] [--pt N] [--maxval N] [preset flags]
+  #|moonjls encode-pgm NEAR INPUT OUTPUT [CHUNK] [--pt N] [preset flags]
+  #|moonjls encode-pgms NEAR OUTPUT [--ilv 0|1|2] [--sampling HxV,...] [--chunk N] [--pt N] [preset flags] IN1 [IN2 ...]
+  #|moonjls encode-ppm NEAR INPUT OUTPUT [CHUNK] [--ilv 0|1|2] [--pt N] [preset flags]
   #|moonjls decode INPUT OUTPUT [raw-le|raw-be|pgm|ppm] [CHUNK]
   #|moonjls decode-pgms [--chunk N] INPUT OUT1 [OUT2 ...]
   #|moonjls inspect INPUT [CHUNK] [--json]
@@ -132,8 +132,12 @@ async fn encode_with_encoder(
   bits : Int32,
   big : Bool,
   chunk : Int32,
+  near~ : Int32 = 0,
+  pt~ : Int32 = 0,
+  source_maxval~ : Int32 = 65535,
 ) -> Unit {
   let info = encoder.frame_info()
+  let first_preset = encoder.preset()
   let storage = if bits <= 8 { 1 } else { 2 }
   let samples = FixedArray::make(
     if chunk >= storage {
@@ -151,7 +155,7 @@ async fn encode_with_encoder(
   let mut high_water = 0
   while true {
     if position == length && !eof {
-      length = source.samples(samples, storage == 2, big)
+      length = source.pnm_samples(samples, storage == 2, big, source_maxval)
       position = 0
       eof = length < samples.length()
     }
@@ -175,10 +179,10 @@ async fn encode_with_encoder(
     width: info.width,
     height: info.height,
     bits: info.bits,
-    near: 0,
+    near,
   }
   log_line(
-    "encoded \{describe(frame, encoder.preset())} components=\{info.components.length()} scans=\{encoder.scan_count()} input_bytes=\{source.byte_count} output_bytes=\{bytes} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=0 input_high_water=\{source.high_water} output_high_water=\{high_water}",
+    "encoded \{describe(frame, first_preset)} components=\{info.components.length()} scans=\{encoder.scan_count()} input_bytes=\{source.byte_count} output_bytes=\{bytes} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=0 input_high_water=\{source.high_water} output_high_water=\{high_water} pt=\{pt}",
   )
 }
 
@@ -190,9 +194,11 @@ async fn encode_stream(
   big : Bool,
   chunk : Int32,
   preset : @jls.Preset,
+  pt : Int32,
+  source_maxval~ : Int32 = 65535,
 ) -> Unit {
-  let encoder = @jls.Encoder::new(frame, @jls.Limits::default(), preset~)
-  encode_with_encoder(encoder, source, sink, frame.bits, big, chunk)
+  let encoder = @jls.Encoder::new(frame, @jls.Limits::default(), preset~, point_transform=pt)
+  encode_with_encoder(encoder, source, sink, frame.bits, big, chunk, near=frame.near, pt~, source_maxval~)
 }
 
 ///|
@@ -204,9 +210,10 @@ async fn encode_ppm_stream(
   near : Int32,
   chunk : Int32,
   ilv : Int32,
+  pt : Int32,
   preset : @jls.Preset,
 ) -> Unit {
-  let scan_preset = if maxval == frame.maxval() {
+  let scan_preset = if pt != 0 || maxval == frame.maxval() {
     preset
   } else {
     { ..preset, maxval, }
@@ -218,7 +225,7 @@ async fn encode_ppm_stream(
         component_ids: [comp.id],
         interleave: 0,
         near,
-        point_transform: 0,
+        point_transform: pt,
         preset: scan_preset,
       })
     }
@@ -229,7 +236,7 @@ async fn encode_ppm_stream(
         component_ids: [1, 2, 3],
         interleave: ilv,
         near,
-        point_transform: 0,
+        point_transform: pt,
         preset: scan_preset,
       },
     ]
@@ -253,7 +260,7 @@ async fn encode_ppm_stream(
     }
     conv_bytes = row_buf.length().to_int64() * (if ilv == 1 { 8L } else { 4L })
     for y in 0..<frame.height {
-      let got = source.samples(row_buf, wide, true)
+      let got = source.pnm_samples(row_buf, wide, true, maxval)
       guard got == row_buf.length() else { raise Input("truncated PPM raster") }
       if ilv == 1 {
         let g_off = frame.width
@@ -307,7 +314,7 @@ async fn encode_ppm_stream(
     let plane_len = frame.width * frame.height
     let planar = FixedArray::make(total.to_int(), 0)
     for y in 0..<frame.height {
-      let got = source.samples(row_buf, wide, true)
+      let got = source.pnm_samples(row_buf, wide, true, maxval)
       guard got == row_buf.length() else { raise Input("truncated PPM raster") }
       let row_off = y * frame.width
       for x in 0..<frame.width {
@@ -350,7 +357,7 @@ async fn encode_ppm_stream(
     }
   }
   log_line(
-    "encoded-ppm width=\{frame.width} height=\{frame.height} bits=\{frame.bits} maxval=\{maxval} near=\{near} ilv=\{ilv} components=3 scans=\{encoder.scan_count()} input_bytes=\{source.byte_count} output_bytes=\{bytes} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} input_high_water=\{source.high_water} output_high_water=\{high_water}",
+    "encoded-ppm width=\{frame.width} height=\{frame.height} bits=\{frame.bits} maxval=\{encoder.preset().maxval} near=\{near} pt=\{pt} ilv=\{ilv} components=3 scans=\{encoder.scan_count()} input_bytes=\{source.byte_count} output_bytes=\{bytes} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} input_high_water=\{source.high_water} output_high_water=\{high_water}",
   )
 }
 
@@ -426,6 +433,22 @@ async fn buffer_row(
     out_len = 0
   }
   (row_len * stride, out_len, high_water)
+}
+
+///|
+fn reconstruction_maxval(coded_maxval : Int32, pt : Int32) -> Int32 {
+  (coded_maxval << pt).min(65535)
+}
+
+///|
+fn validate_reconstruction(row : FixedArray[Int32], maxval : Int32, pt : Int32) -> Unit raise {
+  if pt != 0 {
+    for sample in row {
+      guard sample <= maxval else {
+        raise @jls.UnsupportedFeature("point transform reconstruction exceeds output sample range")
+      }
+    }
+  }
 }
 
 ///|
@@ -575,6 +598,17 @@ async fn decode_stream(
           first_row_at = consumed
         }
         if sink is Some(sink) {
+          let pt = decoder.current_scan().map(scan => scan.point_transform).unwrap_or(0)
+          let output_maxval = reconstruction_maxval(preset.maxval, pt)
+          let row = decoder.row()
+          let destination_maxval = if format is Pgm || format is Ppm {
+            output_maxval
+          } else if frame.bits > 8 {
+            65535
+          } else {
+            255
+          }
+          validate_reconstruction(row, destination_maxval, pt)
           let comp_count = frame_info.components.length()
           if rows == 0 {
             if format is Pgm {
@@ -582,7 +616,7 @@ async fn decode_stream(
                 raise Input("PGM P5 output requires a single component; use decode-pgms or ppm")
               }
               let header = @utf8.encode(
-                "P5\n\{frame.width} \{frame.height}\n\{preset.maxval}\n"[:],
+                "P5\n\{frame.width} \{frame.height}\n\{output_maxval}\n"[:],
               )
               sink.write(header[:])
               bytes += header.length().to_int64()
@@ -607,10 +641,9 @@ async fn decode_stream(
             }
           }
           if format is Ppm {
-            if preset.maxval > ppm_maxval {
-              ppm_maxval = preset.maxval
+            if output_maxval > ppm_maxval {
+              ppm_maxval = output_maxval
             }
-            let row = decoder.row()
             let row_idx = decoder.current_row()
             let ci = decoder.current_component_index()
             let base = ci * ppm_width * ppm_height +
@@ -621,10 +654,10 @@ async fn decode_stream(
           } else {
             let (count, next_len, peak) = buffer_row(
               sink,
-              decoder.row(),
+              row,
               output,
               out_len,
-              if format is Pgm { preset.maxval > 255 } else { frame.bits > 8 },
+              if format is Pgm { output_maxval > 255 } else { frame.bits > 8 },
               format,
             )
             out_len = next_len
@@ -721,7 +754,7 @@ fn parse_encode_options(
   start : Int32,
   pgm : Bool,
   allow_ilv~ : Bool = false,
-) -> (Format, Int32, Int32, @jls.Preset) raise {
+) -> (Format, Int32, Int32, Int32, @jls.Preset) raise {
   let mut index = start
   let mut format = RawLittle
   if !pgm && index < args.length() && !args[index].has_prefix("--") {
@@ -735,6 +768,7 @@ fn parse_encode_options(
     index += 1
   }
   let mut ilv = 0
+  let mut pt = 0
   let mut preset = @jls.Preset::defaults()
   let mut seen = 0
   while index < args.length() {
@@ -746,6 +780,14 @@ fn parse_encode_options(
       guard value >= 0 && value <= 2 else { raise Usage("--ilv must be 0, 1 or 2") }
       seen = seen | 32
       ilv = value
+      index += 2
+      continue
+    }
+    if flag == "--pt" {
+      guard (seen & 64) == 0 else { raise Usage("duplicate --pt flag") }
+      guard value >= 0 && value <= 15 else { raise Usage("--pt must be in 0..15") }
+      seen = seen | 64
+      pt = value
       index += 2
       continue
     }
@@ -765,7 +807,7 @@ fn parse_encode_options(
     preset = next
     index += 2
   }
-  (format, chunk, ilv, preset)
+  (format, chunk, ilv, pt, preset)
 }
 
 ///|
@@ -778,7 +820,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
         bits: @string.parse_int(bits[:]),
         near: @string.parse_int(near[:]),
       }
-      let (format, chunk, _, preset) = parse_encode_options(args, 7, false)
+      let (format, chunk, _, pt, preset) = parse_encode_options(args, 7, false)
       guard !(format is Ppm) else { raise Usage("use encode-ppm for P6 input") }
       with_reader(input, reader => {
         with_writer(output, writer => {
@@ -789,6 +831,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             format is RawBig,
             chunk,
             preset,
+            pt,
           )
         })
       })
@@ -818,6 +861,8 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
       let mut comp_ids : Array[Int32]? = None
       let mut scan_order : Array[Int32]? = None
       let mut scan_near : Array[Int32]? = None
+      let mut scan_pt : Array[Int32]? = None
+      let mut default_pt = 0
       let mut seen = 0
       while index < args.length() {
         guard index + 1 < args.length() else { raise Usage("missing flag value") }
@@ -827,6 +872,16 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           "--comp-ids" => comp_ids = Some(parse_int_list(raw_val))
           "--scan-order" => scan_order = Some(parse_int_list(raw_val))
           "--scan-near" => scan_near = Some(parse_int_list(raw_val))
+          "--scan-pt" => {
+            guard scan_pt is None else { raise Usage("duplicate --scan-pt flag") }
+            scan_pt = Some(parse_int_list(raw_val))
+          }
+          "--pt" => {
+            guard (seen & 64) == 0 else { raise Usage("duplicate --pt flag") }
+            seen = seen | 64
+            default_pt = @string.parse_int(raw_val[:])
+            guard default_pt >= 0 && default_pt <= 15 else { raise Usage("--pt must be in 0..15") }
+          }
           "--ilv" => {
             ilv = @string.parse_int(raw_val[:])
             guard ilv >= 0 && ilv <= 2 else { raise Usage("--ilv must be 0, 1 or 2") }
@@ -883,17 +938,41 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           }
         }
       }
+      let transforms = match scan_pt {
+        Some(list) => list
+        None => Array::make(comp_count, default_pt)
+      }
+      if ilv == 0 {
+        guard transforms.length() == comp_count else {
+          raise @jls.InvalidArgument("scan Pt count mismatch")
+        }
+      } else {
+        guard transforms.length() == 1 || transforms.length() == comp_count else {
+          raise @jls.InvalidArgument("interleaved scan requires one shared Pt")
+        }
+        for value in transforms {
+          guard value == transforms[0] else {
+            raise @jls.InvalidArgument("interleaved scan requires one shared Pt")
+          }
+        }
+      }
       let components : Array[@jls.ComponentSpec] = []
       for id in ids {
         components.push({ id, h_sampling: 1, v_sampling: 1 })
       }
       let frame_info : @jls.FrameInfo = { width, height, bits, components }
       if ilv == 0 {
-        let scans : Array[@jls.ScanSpec] = []
+        let scans : Array[@jls.MultiScanSpec] = []
         for i in 0..<comp_count {
-          scans.push({ component_id: order[i], near: nears[i], preset })
+          scans.push({
+            component_ids: [order[i]],
+            interleave: 0,
+            near: nears[i],
+            point_transform: transforms[i],
+            preset,
+          })
         }
-        let encoder = @jls.Encoder::new_multicomponent(
+        let encoder = @jls.Encoder::new_scans(
           frame_info,
           scans,
           @jls.Limits::default(),
@@ -907,6 +986,8 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
               bits,
               format is RawBig,
               chunk,
+              near=nears[0],
+              pt=transforms[0],
             )
           })
         })
@@ -916,7 +997,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             component_ids: order,
             interleave: ilv,
             near: nears[0],
-            point_transform: 0,
+            point_transform: transforms[0],
             preset,
           },
         ]
@@ -994,7 +1075,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             }
             let conv_bytes = total * 8L
             log_line(
-              "encoded width=\{width} height=\{height} bits=\{bits} maxval=\{encoder.preset().maxval} near=\{nears[0]} ilv=\{ilv} components=\{comp_count} scans=1 input_bytes=\{src.byte_count} output_bytes=\{out_bytes} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} input_high_water=\{src.high_water} output_high_water=\{high_water}",
+              "encoded width=\{width} height=\{height} bits=\{bits} maxval=\{encoder.preset().maxval} near=\{nears[0]} pt=\{transforms[0]} ilv=\{ilv} components=\{comp_count} scans=1 input_bytes=\{src.byte_count} output_bytes=\{out_bytes} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} input_high_water=\{src.high_water} output_high_water=\{high_water}",
             )
           })
         })
@@ -1002,19 +1083,19 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
     }
     ["encode-pgm", near, input, output, ..] => {
       let near = @string.parse_int(near[:])
-      let (_, chunk, _, preset) = parse_encode_options(args, 4, true)
+      let (_, chunk, _, pt, preset) = parse_encode_options(args, 4, true)
       with_reader(input, reader => {
         let source = Source::new(reader, chunk)
         let (frame, maxval) = read_pgm(source, near)
-        let preset = if maxval == frame.maxval() { preset } else { { ..preset, maxval, } }
+        let preset = if pt != 0 || maxval == frame.maxval() { preset } else { { ..preset, maxval, } }
         with_writer(output, writer => {
-          encode_stream(source, writer, frame, true, chunk, preset)
+          encode_stream(source, writer, frame, true, chunk, preset, pt, source_maxval=maxval)
         })
       })
     }
     ["encode-ppm", near_s, input, output, ..] => {
       let near = @string.parse_int(near_s[:])
-      let (_, chunk, ilv, preset) = parse_encode_options(
+      let (_, chunk, ilv, pt, preset) = parse_encode_options(
         args,
         4,
         true,
@@ -1032,6 +1113,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             near,
             chunk,
             ilv,
+            pt,
             preset,
           )
         })
@@ -1042,6 +1124,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
       let mut index = 3
       let mut chunk = 65536
       let mut ilv = 0
+      let mut pt = 0
       let mut preset = @jls.Preset::defaults()
       let mut sampling : Array[(Int32, Int32)]? = None
       let mut seen = 0
@@ -1067,6 +1150,12 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             "--ilv" => {
               guard value >= 0 && value <= 2 else { raise Usage("--ilv must be 0, 1 or 2") }
               ilv = value
+            }
+            "--pt" => {
+              guard (seen & 64) == 0 else { raise Usage("duplicate --pt flag") }
+              guard value >= 0 && value <= 15 else { raise Usage("--pt must be in 0..15") }
+              seen = seen | 64
+              pt = value
             }
             "--t1" => {
               guard (seen & 2) == 0 else { raise Usage("duplicate preset flag") }
@@ -1144,17 +1233,23 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
         }
       }
       if ilv == 0 {
-        let scans : Array[@jls.ScanSpec] = []
+        let scans : Array[@jls.MultiScanSpec] = []
         for i in 0..<sources.length() {
           let (_, _, mv) = sources[i]
-          let scan_preset = if mv == frame_info.maxval() {
+          let scan_preset = if pt != 0 || mv == frame_info.maxval() {
             preset
           } else {
             { ..preset, maxval: mv }
           }
-          scans.push({ component_id: i + 1, near, preset: scan_preset })
+          scans.push({
+            component_ids: [i + 1],
+            interleave: 0,
+            near,
+            point_transform: pt,
+            preset: scan_preset,
+          })
         }
-        let encoder = @jls.Encoder::new_multicomponent(
+        let encoder = @jls.Encoder::new_scans(
           frame_info,
           scans,
           @jls.Limits::default(),
@@ -1174,7 +1269,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             let src = Source::new(file, chunk)
             let _ = read_pgm(src, near)
             for _ in 0..<geometry.height {
-              guard src.samples(row, wide, true) == row.length() else {
+              guard src.pnm_samples(row, wide, true, mv) == row.length() else {
                 raise Input("truncated component PGM")
               }
               let (written, peak) = encode_input(
@@ -1193,7 +1288,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           total_out += written
           out_peak = out_peak.max(peak)
           log_line(
-            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} ilv=0 components=\{sources.length()} scans=\{sources.length()} input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=0 host_row_buffer_bytes=\{width.to_int64() * 4L} input_high_water=\{in_peak} output_high_water=\{out_peak}",
+            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} pt=\{pt} ilv=0 components=\{sources.length()} scans=\{sources.length()} input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=0 host_row_buffer_bytes=\{width.to_int64() * 4L} input_high_water=\{in_peak} output_high_water=\{out_peak}",
           )
         })
       } else {
@@ -1205,7 +1300,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             }
           }
         }
-        let scan_preset = if first_mv == frame_info.maxval() {
+        let scan_preset = if pt != 0 || first_mv == frame_info.maxval() {
           preset
         } else {
           { ..preset, maxval: first_mv }
@@ -1218,7 +1313,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
               component_ids: ids,
               interleave: ilv,
               near,
-              point_transform: 0,
+              point_transform: pt,
               preset: scan_preset,
             },
           ],
@@ -1265,7 +1360,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
                 let first = mcu * v
                 let last = (first + v).min(sources[ci].1.height)
                 for _ in first..<last {
-                  guard srcs[ci].samples(row, wides[ci], true) == row.length() else {
+                  guard srcs[ci].pnm_samples(row, wides[ci], true, sources[ci].2) == row.length() else {
                     raise Input("truncated component PGM")
                   }
                   let (written, peak) = encode_input(
@@ -1281,7 +1376,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             for _ in 0..<geometry.height {
               for ci in 0..<sources.length() {
                 let row = row_bufs[ci]
-                guard srcs[ci].samples(row, wides[ci], true) == row.length() else {
+                guard srcs[ci].pnm_samples(row, wides[ci], true, sources[ci].2) == row.length() else {
                   raise Input("truncated component PGM")
                 }
               }
@@ -1317,7 +1412,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
             row_bytes += row.length().to_int64() * 4L
           }
           log_line(
-            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} ilv=\{ilv} components=\{sources.length()} scans=1 input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} host_row_buffer_bytes=\{row_bytes} input_high_water=\{in_peak} output_high_water=\{out_peak}",
+            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} pt=\{pt} ilv=\{ilv} components=\{sources.length()} scans=1 input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} host_row_buffer_bytes=\{row_bytes} input_high_water=\{in_peak} output_high_water=\{out_peak}",
           )
         })
       }
@@ -1412,6 +1507,10 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
               if rows == 0 {
                 first_row_at = total_in
               }
+              let pt = decoder.current_scan().map(scan => scan.point_transform).unwrap_or(0)
+              let output_maxval = reconstruction_maxval(preset.maxval, pt)
+              let row = decoder.row()
+              validate_reconstruction(row, output_maxval, pt)
               let ci = decoder.current_component_index()
               let cw = info.component_width(ci)
               let ch = info.component_height(ci)
@@ -1430,17 +1529,17 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
               if !wrote_hdr[ci] {
                 wrote_hdr[ci] = true
                 let hdr = @utf8.encode(
-                  "P5\n\{cw} \{ch}\n\{preset.maxval}\n"[:],
+                  "P5\n\{cw} \{ch}\n\{output_maxval}\n"[:],
                 )
                 w.write(hdr[:])
                 total_out += hdr.length().to_int64()
               }
               let (cnt, _, peak) = buffer_row(
                 w,
-                decoder.row(),
+                row,
                 out_buf,
                 0,
-                preset.maxval > 255,
+                output_maxval > 255,
                 Pgm,
               )
               total_out += cnt.to_int64()

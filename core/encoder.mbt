@@ -64,8 +64,8 @@ pub fn Encoder::new_scans(
     guard ns >= 1 && ns <= 4 else {
       raise InvalidArgument("scan component count must be in 1..4")
     }
-    guard spec.point_transform == 0 else {
-      raise UnsupportedFeature("point transform is not supported yet")
+    guard spec.point_transform >= 0 && spec.point_transform <= 15 else {
+      raise InvalidArgument("point transform must be in 0..15")
     }
     guard (ns == 1 && spec.interleave == 0) ||
       (ns > 1 && (spec.interleave == 1 || spec.interleave == 2)) else {
@@ -110,6 +110,7 @@ pub fn Encoder::new_scans(
       bits: frame_info.bits,
       near: spec.near,
     }
+    // Table C.2 uses the SOF55 precision P, including when the scan has Pt.
     let effective = resolve_preset(scan_frame, spec.preset)
     let needs_lse = spec.preset != Preset::defaults() ||
       (i == 0 && frame_info.bits > 12) ||
@@ -192,15 +193,24 @@ pub fn Encoder::new(
   frame : Frame,
   limits : Limits,
   preset~ : Preset = Preset::defaults(),
+  point_transform~ : Int32 = 0,
 ) -> Encoder raise CodecError {
-  Encoder::new_multicomponent(
+  Encoder::new_scans(
     {
       width: frame.width,
       height: frame.height,
       bits: frame.bits,
-      components: [{ id: 1, h_sampling: 1, v_sampling: 1 }],
+      components: [{ id: 1, h_sampling: 1, v_sampling: 1, }],
     },
-    [{ component_id: 1, near: frame.near, preset }],
+    [
+      {
+        component_ids: [1],
+        interleave: 0,
+        near: frame.near,
+        point_transform,
+        preset,
+      },
+    ],
     limits,
   )
 }
@@ -267,6 +277,16 @@ pub fn Encoder::row_index(self : Encoder) -> Int32 {
 ///|
 pub fn Encoder::preset(self : Encoder) -> Preset {
   self.scan.params.preset()
+}
+
+///|
+/// Resolved coding parameters for the specified scan, before or during encoding.
+pub fn Encoder::preset_at(self : Encoder, scan_index : Int32) -> Preset? {
+  if scan_index >= 0 && scan_index < self.scans.length() {
+    Some(self.scans[scan_index].scan_info.preset)
+  } else {
+    None
+  }
 }
 
 ///|
@@ -535,7 +555,8 @@ pub fn Encoder::step(
         }
         break NeedInput
       }
-      if self.scan.ilv != 2 && produced <= out_safe {
+      let pt = self.scan.point_transform
+      if pt == 0 && self.scan.ilv != 2 && produced <= out_safe {
         let scan = self.scan
         let p = scan.params
         let prev = scan.previous
@@ -1065,7 +1086,13 @@ pub fn Encoder::step(
         }
         continue
       }
-      let sample = input[offset + consumed]
+      let original = input[offset + consumed]
+      if pt != 0 {
+        guard original >= 0 && original <= self.frame_info.maxval() else {
+          raise InvalidArgument("sample is outside the frame precision")
+        }
+      }
+      let sample = original >> pt
       guard sample >= 0 && sample <= self.scan.params.maxval else {
         raise InvalidArgument("sample is outside MAXVAL")
       }

@@ -81,7 +81,7 @@ export function componentDimensions(frame) {
 }
 
 function normalizeMultiEncode(frame) {
-  const rawComps = frame.components;
+  const rawComps = frame.components ?? [1];
   const components = rawComps.map((entry, idx) => {
     const obj = typeof entry === 'number' ? { id: entry } : entry;
     if (!obj || typeof obj !== 'object') {
@@ -262,8 +262,8 @@ class Session {
     if (this.#encoding) {
       const frameValues = ['width', 'height', 'bits'].map((key) => integer(frame[key], key, 0));
       const near = integer(frame.near ?? 0, 'near', 0, 255);
-      if (frame.components !== undefined) {
-        if (!Array.isArray(frame.components) || frame.components.length === 0) {
+      if (frame.components !== undefined || frame.scans !== undefined || (frame.pointTransform ?? 0) !== 0) {
+        if (frame.components !== undefined && (!Array.isArray(frame.components) || frame.components.length === 0)) {
           throw new CodecError('InvalidArgument', 'frame.components must be a non-empty array');
         }
         const multi = normalizeMultiEncode(frame);
@@ -292,9 +292,12 @@ class Session {
         if (code < 0) throw new CodecError(errors[-code], bindings.encoder_message(this.#port));
         this.#components = multi.components;
         this.#frameInfo = Object.freeze({ width: frameValues[0], height: frameValues[1], bits: frameValues[2], components: multi.components });
+        const reportScanPresets = bindings.encoder_scan_preset && multi.scans.some((scan) => scan.pointTransform);
         this.#scans = Object.freeze(multi.scans.map((s, scanIndex) => {
           const componentIndices = Object.freeze(s.componentIds.map((cid) => multi.components.findIndex((c) => c.id === cid)));
           const componentIds = Object.freeze([...s.componentIds]);
+          const preset = reportScanPresets && resolvedFrame({ bits: frameValues[2], near: s.near },
+            (port, near, field) => bindings.encoder_scan_preset(port, scanIndex, near, field), this.#port).preset;
           return Object.freeze({
             scanIndex,
             componentIndex: componentIndices[0],
@@ -304,9 +307,15 @@ class Session {
             near: s.near,
             interleave: s.interleave,
             pointTransform: s.pointTransform,
+            ...(preset ? { preset } : {}),
           });
         }));
-        const resolved = resolvedFrame({ width: frameValues[0], height: frameValues[1], bits: frameValues[2], near }, bindings.encoder_preset, this.#port);
+        const first = this.#scans[0];
+        const resolved = resolvedFrame({
+          width: frameValues[0], height: frameValues[1], bits: frameValues[2], near: first.near,
+          ...(first.pointTransform ? { pointTransform: first.pointTransform } : {}),
+          ...(first.interleave ? { interleave: first.interleave } : {}),
+        }, bindings.encoder_preset, this.#port);
         this.#frame = multi.components.length > 1
           ? Object.freeze({ ...resolved.frame, components: multi.components, scans: this.#scans })
           : resolved.frame;
@@ -365,6 +374,7 @@ class Session {
     const bits = bindings.decoder_frame(port, 2);
     const near = bindings.decoder_current_scan ? bindings.decoder_current_scan(port, 3) : bindings.decoder_frame(port, 3);
     const activeNear = near >= 0 ? near : bindings.decoder_frame(port, 3);
+    const activePt = bindings.decoder_current_scan ? Math.max(0, bindings.decoder_current_scan(port, 7)) : 0;
     if (this.#components === null) {
       const compCount = bindings.decoder_component_count ? bindings.decoder_component_count(port) : 1;
       const comps = bindings.decoder_component_field
@@ -382,6 +392,7 @@ class Session {
       height,
       bits,
       near: activeNear,
+      ...(activePt ? { pointTransform: activePt } : {}),
       ...(this.#components.length > 1 ? { components: this.#components } : {}),
     };
     const resolved = resolvedFrame(baseFrame, bindings.decoder_preset, port);
@@ -410,7 +421,7 @@ class Session {
               height: compHeight > 0 ? compHeight : height,
               near: activeNear,
               interleave: bindings.decoder_current_scan(port, 6),
-              pointTransform: bindings.decoder_current_scan(port, 7),
+              pointTransform: activePt,
               preset: this.#preset,
               layout: 'planar',
               width: stride,
@@ -552,7 +563,8 @@ class Session {
       const width = this.#rowMeta?.stride ?? (bindings.decoder_current_row_width ? bindings.decoder_current_row_width(port) : this.#frame.width);
       chunk = new Uint16Array(width);
       let i = 0;
-      if (bindings.decoder_pack3) {
+      const transformed = this.#rowMeta?.pointTransform > 0;
+      if (!transformed && bindings.decoder_pack3) {
         const pack3 = bindings.decoder_pack3;
         for (; i + 2 < width; i += 3) {
           const d = pack3(port, i);
@@ -561,7 +573,7 @@ class Session {
           chunk[i + 1] = lo >>> 16;
           chunk[i + 2] = ((d - (lo >>> 0)) * INV_2_32) | 0;
         }
-      } else if (bindings.decoder_pair) {
+      } else if (!transformed && bindings.decoder_pair) {
         const pair = bindings.decoder_pair;
         for (; i + 1 < width; i += 2) {
           const p = pair(port, i);
@@ -570,7 +582,18 @@ class Session {
         }
       }
       const getSample = bindings.decoder_sample;
-      for (; i < width; i++) chunk[i] = getSample(port, i);
+      if (transformed) {
+        for (; i < width; i++) {
+          const sample = getSample(port, i);
+          if (sample > 65535) {
+            this.#status = 'Error';
+            throw new CodecError('UnsupportedFeature', 'Point transform reconstruction exceeds Uint16 output range', { consumed, produced: 0 });
+          }
+          chunk[i] = sample;
+        }
+      } else {
+        for (; i < width; i++) chunk[i] = getSample(port, i);
+      }
     }
     return { status: this.#status, consumed, produced: chunk?.length ?? 0, chunk, rowMeta: this.#rowMeta ?? undefined };
   }

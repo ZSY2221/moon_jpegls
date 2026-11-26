@@ -4,6 +4,7 @@
 /// - ILV=1: each component's group of V_i real rows in scan order per MCU.
 ///   Each row has that component's width; the encoder supplies any final padding rows.
 /// - ILV=2: each pixel's samples in scan component order, then the next pixel.
+/// Supply original samples at frame precision. Nonzero Pt is applied before coding.
 pub fn encode_scans(
   frame : FrameInfo,
   scans : Array[MultiScanSpec],
@@ -167,15 +168,24 @@ pub fn encode(
   pixels : FixedArray[Int32],
   limits~ : Limits = Limits::default(),
   preset~ : Preset = Preset::defaults(),
+  point_transform~ : Int32 = 0,
 ) -> Bytes raise CodecError {
-  encode_multicomponent(
+  encode_scans(
     {
       width: frame.width,
       height: frame.height,
       bits: frame.bits,
-      components: [{ id: 1, h_sampling: 1, v_sampling: 1 }],
+      components: [{ id: 1, h_sampling: 1, v_sampling: 1, }],
     },
-    [{ component_id: 1, near: frame.near, preset }],
+    [
+      {
+        component_ids: [1],
+        interleave: 0,
+        near: frame.near,
+        point_transform,
+        preset,
+      },
+    ],
     pixels,
     limits~,
   )

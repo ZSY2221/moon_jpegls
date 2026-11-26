@@ -48,6 +48,10 @@ Sampled images with unequal component sizes export as planar U16LE. Planes follo
 
 Set `MOONJLS_ANNEX_FIXTURES` to the extracted official Annex E image directory when running `npm run smoke` to check both sampled fixtures against pinned HP 1.00 reconstruction hashes.
 
+### Point transform
+
+Use the Pt field with a PGM or PPM source. The workbench compares right-shifted sample integers against coded NEAR, and compares the original input and reconstructed integers against the original-scale bound. The Scan Structure Inspector and JSON report show both scales. A JLS upload takes Pt from each scan header. Browser rows are Uint16 and a reconstruction above 65,535 is reported as unsupported.
+
 ### Workbench microscopy examples
 
 The workbench includes three planes from a 144 × 111 crop of the Lily of the Valley confocal fluorescence microscopy dataset. The 16-bit P6 fixture keeps the original uint16 counts, which occupy 0–4095 in the source. The 8-bit fixture scales counts from 0–4095 to 0–255 before coding. The channels use neutral labels. The 16-bit preview display range is 0–4095 and the inspector reports the original integer count.

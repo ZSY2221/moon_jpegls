@@ -19,7 +19,7 @@ const archivedHp = {
 
 function checkManifest() {
   const digest = /^[0-9a-f]{64}$/;
-  const states = new Set(['passed', 'unsupported', 'recognized_only', 'not_run', 'planned', 'blocked', 'failed', 'reference_unsupported']);
+  const states = new Set(['passed', 'partially_supported', 'unsupported', 'recognized_only', 'not_run', 'planned', 'blocked', 'failed', 'reference_unsupported']);
   assert.equal(manifest.schemaVersion, 1);
   assert.match(manifest.fixtureArchive.sha256, digest);
   assert.match(manifest.officialReference.sha256, digest);

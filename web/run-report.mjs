@@ -1,5 +1,5 @@
 import { lunarErrorMeters, lunarFixture, lunarMetadataFor } from '../sdk/lunar.mjs';
-import { codecMeasurements, createVerificationReport } from '../sdk/verification-report.mjs';
+import { codecMeasurements, createVerificationReport, reconstructionErrorBound } from '../sdk/verification-report.mjs';
 
 const hashLimit = 4 * 1024 * 1024;
 let buildInfo;
@@ -48,7 +48,7 @@ export async function workbenchReport(job) {
   const physical = provenance && job.frame ? {
     unit: 'm',
     quantity: 'codec_added_elevation_error',
-    errorBound: lunarErrorMeters(job.frame.near),
+    errorBound: lunarErrorMeters(reconstructionErrorBound(job.frame.near, job.frame.pointTransform)),
     maxError: job.observedError === undefined ? null : lunarErrorMeters(job.observedError),
   } : null;
   const report = createVerificationReport({
@@ -67,7 +67,7 @@ export async function workbenchReport(job) {
     frame: job.frame && { ...job.frame, scans: job.structure?.scans ?? job.frame.scans },
     preset: job.preset,
     stages: job.stages,
-    samples: { verified: job.verifiedSamples, maxError: job.observedError },
+    samples: { verified: job.verifiedSamples, maxError: job.observedError, codedMaxError: job.observedCodedError },
     physical,
     timing: {
       elapsedMs: job.elapsed,

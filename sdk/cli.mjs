@@ -13,7 +13,8 @@ const help = `Usage: node sdk/cli.mjs encode|decode|inspect --input FILE [--outp
   --components N          Components on encode (default: 1)
   --ilv 0|1|2             Encode order: planes, MCU groups of component lines, or samples (default: 0)
   --sampling HxV,...      Per-component sampling factors on encode (default: 1x1)
-  --near N                Default: 0
+  --near N                NEAR in the coded domain (default: 0)
+  --pt N                  Per-scan point transform (default: 0)
   --maxval N              Effective MAXVAL, default: full coded range
   --t1 --t2 --t3 --reset  Optional LSE thresholds and reset interval
   --report FILE           Write a verification JSON report to a new file
@@ -24,7 +25,7 @@ function parse(args) {
   if (!['encode', 'decode', 'inspect'].includes(mode)) throw new Error(help);
   const allowed = new Set(['--input', '--output', '--backend', '--chunk', '--output-chunk', '--report']);
   if (mode === 'encode') {
-    for (const key of ['--width', '--height', '--bits', '--components', '--ilv', '--sampling', '--near', '--maxval', '--t1', '--t2', '--t3', '--reset']) allowed.add(key);
+    for (const key of ['--width', '--height', '--bits', '--components', '--ilv', '--sampling', '--near', '--pt', '--maxval', '--t1', '--t2', '--t3', '--reset']) allowed.add(key);
   }
   const values = new Map();
   for (let i = 0; i < flags.length; i += 2) {
@@ -55,6 +56,7 @@ function parse(args) {
   const frame = {
     width: number('--width'), height: number('--height'), bits: number('--bits'), near: number('--near') ?? 0,
     interleave, maxval: number('--maxval'),
+    ...(values.has('--pt') ? { pointTransform: number('--pt') } : {}),
     preset: { t1: number('--t1'), t2: number('--t2'), t3: number('--t3'), reset: number('--reset') },
     ...(compCount !== undefined ? { components: Array.from({ length: compCount }, (_, i) => {
       const pair = sampling?.[i] ?? '1x1';

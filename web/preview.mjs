@@ -1,4 +1,6 @@
 import { componentDimensions } from '../sdk/index.mjs';
+import { reconstructionErrorBound } from '../sdk/verification-report.mjs';
+import { sampleMaximum } from './pgm.mjs';
 
 const ids = ['original', 'reconstruction', 'difference'];
 
@@ -16,7 +18,7 @@ function rgbToHex([r, g, b]) {
 }
 
 function normalizeNear(near) {
-  return Math.max(0, Math.min(255, Math.trunc(Number(near) || 0)));
+  return Math.max(0, Math.min(8388607, Math.trunc(Number(near) || 0)));
 }
 
 function colorWithinBound(value, near) {
@@ -36,7 +38,9 @@ function paletteStop(value, near) {
 
 export function errorPalette(near) {
   const safeNear = normalizeNear(near);
-  return Array.from({ length: safeNear + 1 }, (_, value) => paletteStop(value, safeNear));
+  const steps = Math.min(255, safeNear);
+  return Array.from({ length: steps + 1 }, (_, step) =>
+    paletteStop(steps === safeNear ? step : Math.round(step * safeNear / steps), safeNear));
 }
 
 export function errorLegendStops(near) {
@@ -61,7 +65,7 @@ function buildErrorLut(near) {
     lut[s * 3 + 1] = entries[s][1];
     lut[s * 3 + 2] = entries[s][2];
   }
-  return { near: safeNear, lut, overflowOffset: (entries.length - 1) * 3 };
+  return { near: safeNear, lut, scale: safeNear <= 255 ? 1 : 255 / safeNear, overflowOffset: (entries.length - 1) * 3 };
 }
 
 function color(data, index, r, g, b) {
@@ -147,7 +151,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       const m2 = componentMaxvals[2];
       hasOrigRow = original !== null && (has0 || has1 || has2);
       const maxNear = Math.max(componentNears[0], componentNears[1], componentNears[2]);
-      const { lut, overflowOffset } = getLut(maxNear);
+      const { lut, scale, overflowOffset } = getLut(maxNear);
       for (let x = 0; x < width; x++) {
         const pos = base + x;
         const i = x * 4;
@@ -169,7 +173,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
               if (d > peakDiff) peakDiff = d;
             }
           }
-          const offset = exceeded || peakDiff > maxNear ? overflowOffset : peakDiff * 3;
+          const offset = exceeded || peakDiff > maxNear ? overflowOffset : Math.round(peakDiff * scale) * 3;
           color(errData, i, lut[offset], lut[offset + 1], lut[offset + 2]);
         }
       }
@@ -178,7 +182,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       if (py >= nextY[c]) return undefined;
       const brightest = componentMaxvals[c];
       const nearLimit = componentNears[c];
-      const { lut, overflowOffset } = getLut(nearLimit);
+      const { lut, scale, overflowOffset } = getLut(nearLimit);
       const recPlane = reconstruction[c];
       const origPlane = original?.[c] ?? null;
       hasOrigRow = origPlane !== null;
@@ -193,7 +197,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
           const originalGray = Math.round(before * 255 / brightest);
           color(origData, i, originalGray, originalGray, originalGray);
           const difference = before >= after ? before - after : after - before;
-          const offset = difference <= nearLimit ? difference * 3 : overflowOffset;
+          const offset = difference <= nearLimit ? Math.round(difference * scale) * 3 : overflowOffset;
           color(errData, i, lut[offset], lut[offset + 1], lut[offset + 2]);
         }
       }
@@ -286,11 +290,11 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     overlaysVisible = false;
     const contexts = canvases.map((canvas) => canvas.getContext('2d'));
     const displayMaxval = options.displayMaxval;
-    const defaultMaxval = displayMaxval ?? frame.maxval ?? (2 ** frame.bits - 1);
+    const defaultMaxval = displayMaxval ?? sampleMaximum(frame);
     const componentLabels = options.componentLabels
       ?? Array.from({ length: componentCount }, (_, c) => `C${c}`);
     const errorLuts = new Map();
-    const initialLut = buildErrorLut(frame.near);
+    const initialLut = buildErrorLut(reconstructionErrorBound(frame.near, frame.pointTransform));
     errorLuts.set(initialLut.near, initialLut);
     state = {
       width,
@@ -300,11 +304,14 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       sampled,
       composite,
       displayMaxval,
+      bits: frame.bits,
       contexts,
       componentCount,
       channel,
       componentLabels: [...componentLabels],
-      componentNears: Array.from({ length: componentCount }, () => frame.near ?? 0),
+      componentNears: Array.from({ length: componentCount }, () => initialLut.near),
+      componentCodedNears: Array(componentCount).fill(frame.near ?? 0),
+      componentTransforms: Array(componentCount).fill(frame.pointTransform ?? 0),
       componentMaxvals: Array.from({ length: componentCount }, () => defaultMaxval),
       nextY: new Int32Array(componentCount),
       errorLuts,
@@ -319,8 +326,14 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     const { width, height, xMaps, sourceHeights, nextY, componentCount } = state;
     const c = meta?.componentIndex ?? 0;
     if (c < 0 || c >= componentCount) return;
-    if (meta?.near !== undefined) state.componentNears[c] = meta.near;
-    if (state.displayMaxval === undefined && meta?.preset?.maxval !== undefined) state.componentMaxvals[c] = meta.preset.maxval;
+    if (meta?.near !== undefined) {
+      state.componentTransforms[c] = meta.pointTransform ?? 0;
+      state.componentCodedNears[c] = meta.near;
+      state.componentNears[c] = reconstructionErrorBound(meta.near, meta.pointTransform);
+    }
+    if (state.displayMaxval === undefined && meta?.preset?.maxval !== undefined) {
+      state.componentMaxvals[c] = sampleMaximum({ bits: state.bits, maxval: meta.preset.maxval, pointTransform: meta.pointTransform });
+    }
     const xMap = xMaps[c];
     const recPlane = state.reconstruction[c];
     const origPlane = state.original?.[c] ?? null;
@@ -421,6 +434,11 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     }
   }
 
+  function pointTransformMetadata(index) {
+    const pointTransform = state.componentTransforms[index];
+    return pointTransform ? { pointTransform, codedNear: state.componentCodedNears[index] } : {};
+  }
+
   function inspect(x, y) {
     if (y >= arrivedLimit()) return;
     state.selected = [x, y];
@@ -434,7 +452,8 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       reportPixel({
         x: state.xMaps[c][x],
         y: Math.floor(y * state.sourceHeights[c] / state.height),
-        ...(state.sampled ? { near: state.componentNears[c] } : {}),
+        ...(state.sampled || state.componentTransforms[c] ? { near: state.componentNears[c] } : {}),
+        ...pointTransformMetadata(c),
         original,
         reconstructed,
         error: original === undefined ? undefined : Math.abs(original - reconstructed),
@@ -452,6 +471,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
         reconstructed: rec,
         error: orig === undefined || rec === undefined ? undefined : Math.abs(orig - rec),
         near: state.componentNears[idx],
+        ...pointTransformMetadata(idx),
       };
     });
     const activeComp = typeof state.channel === 'number' ? components[state.channel] : components[0];
@@ -463,6 +483,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       reconstructed: activeComp.reconstructed,
       error: activeComp.error,
       near: activeComp.near,
+      ...pointTransformMetadata(activeComp.index),
       components,
     });
   }

@@ -99,6 +99,12 @@
             <span id="near-note" class="microcopy near-note" hidden></span>
           </label>
 
+          <label class="setting" id="point-transform-setting">
+            <span class="field-label" data-label="pointTransform">Point transform (Pt)</span>
+            <input id="point-transform" type="number" min="0" max="15" step="1" value="0" aria-describedby="point-transform-note">
+            <span id="point-transform-note" class="microcopy near-note" data-label="pointTransformNote">NEAR applies to the coded samples.</span>
+          </label>
+
           <label class="setting" id="interleave-setting" hidden>
             <span class="field-label" data-label="interleave">Interleave</span>
             <select id="interleave">
@@ -210,6 +216,7 @@
           <div><dt>P</dt><dd id="precision-bits"></dd></div>
           <div><dt>MAXVAL</dt><dd id="precision-maxval"></dd></div>
           <div><dt>NEAR</dt><dd id="precision-near"></dd></div>
+          <div id="precision-pt-field" hidden><dt>Pt</dt><dd id="precision-pt"></dd></div>
           <div><dt>T1</dt><dd id="precision-t1"></dd></div>
           <div><dt>T2</dt><dd id="precision-t2"></dd></div>
           <div><dt>T3</dt><dd id="precision-t3"></dd></div>
@@ -527,7 +534,7 @@
         <details id="scope-details" class="panel disclosure">
           <summary data-label="scopeAndNotes">Format scope &amp; measurement notes</summary>
           <div class="disclosure-body notes-body">
-            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset · single frame · ILV=0/1/2 · component sampling · Pt=0 · P=2–16 · legal MAXVAL, LSE presets and NEAR.</p>
+            <p class="microcopy" data-label="scopeText">T.87 Part 1 subset · single frame · ILV=0/1/2 · component sampling · partial Pt support · P=2–16 · legal MAXVAL, LSE presets and NEAR.</p>
             <p class="microcopy" data-label="timingHelp">Starts after the sink opens. Includes validation and output close. Excludes file and save-location selection and sink setup. First Canvas update is when the first reconstruction draw returns.</p>
             <p class="microcopy" data-label="ratioHelp">Raw storage uses 1 byte per 8-bit sample and 2 bytes per 12- or 16-bit sample.</p>
           </div>
