@@ -4,6 +4,8 @@
 
 ## 初审反馈与当前增量
 
+MoonJLS 面向科研栅格和高位深整数图像的 JPEG-LS 无损或有界近无损交换。Native 管道和浏览器 Worker 可在流终结前逐行交付暂定重建，格式与尾随校验完成后确认结果。[MoonBit 实现地图](../../docs/MOONBIT_IMPLEMENTATION_MAP.md) · [工作台](https://zsy2221.github.io/moon_jpegls/web/)
+
 - 初审认可项目用途及 MoonBit 核心贡献，并指出既有材料只确立了受限 JPEG-LS 子集，缺少完整 T.87 终点和阶段兼容路径。项目将完整 ITU-T T.87 / ISO/IEC 14495-1 Part 1 的编码、解码和数据格式作为终点，逐阶段给出范围、用例、独立参考和退出条件。路线图日期为内部工作目标。[标准计划](../../docs/T87_CONFORMANCE_PLAN.md) · [阶段路线](../../docs/ROADMAP.md)
 - M2 已验证 2–16 位精度、独立 MAXVAL、合法 NEAR 及 LSE1。M3-A 已验证多分量非交错多扫描和跨扫描预置。M3-B 新增 ILV=1 行交错、ILV=2 样本交错、H/V 采样及边缘 MCU。原始有效分量样本在补行被消耗后依真实尺寸交付。算法和状态机是 MoonBit，Native、JS、Wasm GC 共用核心。[实现地图](../../docs/MOONBIT_IMPLEMENTATION_MAP.md) · [支持范围](../../docs/SCOPE.md)
 - 非零 Pt 已验证无映射流的正逆变换和原始域误差界。Native、SDK、Worker 和工作台能精确交付超过 65,535 的重建整数，独立宽样本实测为 65,540。[Pt 结果、参考与复跑](../../docs/POINT_TRANSFORM_RESULTS.md)

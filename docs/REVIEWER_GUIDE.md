@@ -26,7 +26,7 @@ python -m http.server 8000 --bind 127.0.0.1 --directory web/dist
 | 无映射 Pt 与精确 32 位输出 | [独立参考、65,540 样本与复跑](POINT_TRANSFORM_RESULTS.md) |
 | 内嵌 Wt=1 映射表解码 | [LSE2/LSE3、重定义和逐分量选择](EMBEDDED_MAPPING_RESULTS.md) |
 
-JS、Wasm GC、Native 在固定候选上对 Annex E 12 条均通过独立 HP 1.00 编码和解码验收，候选码流与官方逐字节一致。CharLS Wasm 0.10.0 复验支持的 10 条。E.2-7/8 使用 HP，CharLS 的采样能力单列。工作台的原图比较由本次运行实际执行，兼容视图展示固定候选的独立参考档案。[报告和重跑入口](CODEX_M3B_HANDOFF.md)
+JS、Wasm GC、Native 实跑 Annex E 12 条的两个方向，所有候选编码与官方码流逐字节一致，解码与本机 HP 1.00 重建逐样本一致。CI 的十条用例即时调用 CharLS Wasm。E.2-7/8 核对官方字节和归档 HP 重建哈希。工作台的原图比较由本次运行执行，兼容视图展示独立参考档案。[报告和重跑入口](CODEX_M3B_HANDOFF.md)
 
 ## 可继续核对
 

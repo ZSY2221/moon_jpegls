@@ -35,4 +35,4 @@ python reports/november-release-20261126/verify_release_consumer.py --mode publi
 | 全新匿名在线安装 | 在独立 Moon 环境分别请求当前包与固定 0.1.0，均退出 255，注册表返回模块找不到或无权访问。线上消费测试仍待公开包安装 |
 | 当时的正式线上发布 | `not_run` |
 
-候选 ZIP SHA-256 为 `bdb5022e5cb2b16c4edb7b801c6799582f4ccc6e0b0d80b9b2d76ef5bc08b97f`。消费脚本从仓库根目录接收已固定的 `--commit` 值，构建并记录完整命令、安装来源和样本。[当前打包与消费记录](../reports/t87-m3b-20261126/public-delivery/package-consumer.json) · [复跑器](../reports/review-consumer-20261125/run.py) · [Mooncakes 查询](https://mooncakes.io/api/v0/registry/modules/ZSY2221/moon_jpegls?version=0.1.0) · [Moon CLI 文档](https://docs.moonbitlang.com/en/stable/toolchain/moon/commands.html)
+历史候选 ZIP SHA-256 为 `bdb5022e5cb2b16c4edb7b801c6799582f4ccc6e0b0d80b9b2d76ef5bc08b97f`。消费脚本从仓库根目录接收已固定的 `--commit` 值，构建并记录完整命令、安装来源和样本。[历史打包与消费记录](../reports/t87-m3b-20261126/public-delivery/package-consumer.json) · [历史复跑器](../reports/review-consumer-20261125/run.py)
