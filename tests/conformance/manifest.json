@@ -248,7 +248,7 @@
       ],
       "evidence_path": "docs/EMBEDDED_MAPPING_RESULTS.md",
       "target_milestone": "M4",
-      "source_revision": null,
+      "source_revision": "3ffdf629b9ebe3ef48d5f31d66632e28111c99b3",
       "evidence_ref": "codex/t87-embedded-mapping-20261126",
       "notes": "Interchange decode with embedded, single-byte entries, including LSE3 and replacement across scans. Opaque wider entries, table encoding and external tables remain separate."
     },

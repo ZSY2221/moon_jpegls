@@ -35,3 +35,11 @@ node scripts/verify_mapping_tables.mjs --native-exe $native --native-wsl $d
 ~~~
 
 验证器用固定索引流和显式表字节构造输入，输出逐条 SHA-256、重建和错误分类。正例按 1/7/4096 B 输入，包含 SOS 分量选择、跨扫描复用和重定义、预帧表、实际 P16 续表及标记填充。反例包含缺表、非法 Pt、截断、链间插入标记、错误 TID/Wt、错误项数与严格尾随。SDK 检查表段共 65,550 B 时预算的精确边界。真实 Chrome 用两个 Worker 后端下载映射 PGM 和报告。
+
+## 固定候选结果
+
+产品提交 `3ffdf629b9ebe3ef48d5f31d66632e28111c99b3` 的 Native、JS、Wasm GC 各通过 8 条正例，每例以 1、7、4096 B 解码。13 条反例核对格式错、参考功能范围、截断及严格尾随，两种 SDK 后端另核验预算边界和暂停 EOI 时的选择器元数据。Native PGM 实际载荷为 `201,234,212,223`，头部 MAXVAL 255。[逐条哈希与命令](../reports/t87-m4-mapping-20261126/embedded-mapping.json)
+
+在 E.2-8 的 NEAR=3 索引流上另构造只映射第二分量的变体。原始索引重建哈希逐样本对应 HP 1.00，变体在三个后端均得到独立预期的 98,304 样本和 448 行。5×5 奇数采样向量的 41 样本及 11 行一致，消费 1 个补充行。两个变体使用经 E.2-7/8 校准的 Python 索引参考和逐索引查表。
+
+本机复跑官方 Annex E 12 条，三个后端的 36 份编码与官方逐字节一致，36 次解码均与本机 HP 参考重建一致。核心三后端各 29/29，Worker 21/21，Node 33/33，388 组 M2、Native 流式和 TypeScript 通过。Chrome 首次测试因新用例把数字传给 Playwright 表单填写函数而退出。测试脚本修订 `6f8a2ee72baaee866f6692cc498e0ab36808e811` 后完整复跑通过，验证两个 Worker 后端的 PGM 与报告，并复核 NASA LOLA 的 1,036,800 个样本。[本机门禁记录](../reports/t87-m4-mapping-20261126/embedded-mapping.json) · [PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4)
