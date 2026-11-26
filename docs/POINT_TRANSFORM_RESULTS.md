@@ -19,7 +19,7 @@ MoonBit `Decoder::row` 和整图 API 返回精确的 `Int32` 重建值。解码�
 
 - Native `moonjls decode INPUT OUTPUT raw32-le 4096` 按有效行的交付顺序输出每样本 4 B。另提供 `raw32-be`。
 - JS/Wasm GC SDK 流式和整图解码接受 `sampleFormat: 'u32'`，输出 `Uint32Array`。Worker 用同样选项提供 4 B 样本，并按实际转移缓冲区和 ACK 生命周期统计。SDK CLI 的 `decode --sample-format u32` 输出小端数据，报告记录宽度、端序和布局。
-- 工作台的 32 位平面下载按 SOF 分量顺序输出小端整数。报告包含各分量的字节偏移和真实几何。预览点读保留整数，显示映射单独计算。Chrome 实测并下载 **65540**（字节 `04 00 01 00`）。[浏览器截图](../reports/t87-pt-20261126/point-transform-u32.png)
+- 工作台的 32 位平面下载按 SOF 分量顺序输出小端整数。报告包含各分量的真实几何及以样本为单位的 `sampleOffset`，乘以 `sampleBytes` 可得字节偏移。预览点读保留整数，显示映射单独计算。Chrome 实测并下载 **65540**（字节 `04 00 01 00`）。[浏览器截图](../reports/t87-pt-20261126/point-transform-u32.png)
 - 固定窄 raw 和默认 SDK 窄输出继续按原有宽度工作，超限时返回 `UnsupportedFeature`。PGM/PPM 的 MAXVAL 上限为 65535。[Netpbm PGM 格式](https://netpbm.sourceforge.net/doc/pgm.html)
 
 ## 宽输出与采样候选验收
