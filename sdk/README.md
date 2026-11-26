@@ -17,7 +17,7 @@ console.log(Array.from(samples));
 
 Sessions, stream results and Worker events expose the resolved `preset` with `maxval`, `t1`, `t2`, `t3` and `reset`. The legacy four-field `Frame` shape remains available for default-parameter runs. An effective MAXVAL different from full range appears in `frame.maxval`, and non-default thresholds appear in `frame.preset`.
 
-`encodeImage` and `decodeImage` collect an entire result. For a bounded pipeline, use `encodeStream` and `decodeStream` with a `read(maxElements)` source and an awaited sink. Encode input uses `Uint16Array`, decode input and encode output use `Uint8Array`, and decoded rows use `Uint16Array`. An empty array is a chunk. Return `null` to end the source. A decode checks for trailing data by default, including a one-byte source pull after EOI if necessary. Set `trailing: 'allow'` to stop at EOI and report the actual consumed offset. File adapters that need the unread suffix must retain or seek the underlying source.
+`encodeImage` and `decodeImage` collect an entire result. For a bounded pipeline, use `encodeStream` and `decodeStream` with a `read(maxElements)` source and an awaited sink. Encode input uses `Uint16Array`, decode input and encode output use `Uint8Array`, and decoded rows use `Uint16Array` by default. An empty array is a chunk. Return `null` to end the source. A decode checks for trailing data by default, including a one-byte source pull after EOI if necessary. Set `trailing: 'allow'` to stop at EOI and report the actual consumed offset. File adapters that need the unread suffix must retain or seek the underlying source.
 
 The Node CLI exercises the same streaming driver with bounded file reads and writes. Raw samples use unsigned 16-bit little-endian storage even if the effective bit depth is 8 or 12. Use new output paths. An interrupted or failed run may leave an output prefix.
 
@@ -30,7 +30,7 @@ For browser isolation, import `startWorker` from `sdk/worker-client.mjs`. Pass t
 
 Use the optional `onAck(event, hostElapsedMs)` callback to observe actual acknowledgement sends. Its measured host interval includes the awaited event callback. Transport delivery and total Worker wait are separate.
 
-Decode accepts `maxBatchBytes`, an integer in `0..1048576`; the default `0` disables batching. The first row is delivered immediately. A `rows` event contains `samples: Uint16Array`, `startIndex`, `count`, `frame` and `stats`; its sample view contains exactly `count * frame.width` elements. The host must await consumption of the entire event before its ACK. The budget limits each batch buffer, not total Worker memory: copying also holds one source row, and a row wider than the budget remains one atomic `row` event. The final batch is capped by the remaining image rows. A time-limited batch can transfer a short view backed by a larger buffer.
+Decode accepts `maxBatchBytes`, an integer in `0..1048576`; the default `0` disables batching. The first row is delivered immediately. A `rows` event contains `samples`, `startIndex`, `count`, `frame` and `stats`. Its sample view contains exactly `count * stride` elements. The host must await consumption of the entire event before its ACK. The budget limits each batch buffer, not total Worker memory: copying also holds one source row, and a row wider than the budget remains one atomic `row` event. The final batch is capped by the remaining image rows. A time-limited batch can transfer a short view backed by a larger buffer.
 
 For sampled ILV=1, supply real component rows in MCU order to the streaming encoder. Within each group, use SOS order and supply up to V rows per component. The core supplies any final padded rows. The decoder emits only valid component rows in planar layout with their actual width, height, and stride. Use encodePlanarImage with per-component planes to pack this order, and decodePlanarImage to recover planes in frame order.
 
@@ -40,4 +40,8 @@ Errors are `CodecError` objects with `code` and `message`. The core binding repo
 
 ### Point transform
 
-Pass `pointTransform` on a frame or override it per scan. The Node CLI accepts `--pt N`. The input and reconstructed rows retain their original integer units, and the preset MAXVAL and NEAR describe the coded sample domain. The decoder rejects nonzero-Pt rows whose exact reconstructed samples exceed Uint16 capacity before copying them. The verification schema includes a separate coded error entry for transformed scans.
+Pass `pointTransform` on a frame or override it per scan. The Node CLI accepts `--pt N`. The input and reconstructed rows retain their original integer units, and the preset MAXVAL and NEAR describe the coded sample domain. The verification schema includes a separate coded error entry for transformed scans.
+
+Use `sampleFormat: 'u32'` with `createDecoder`, `decodeStream`, `decodeImage`, `decodePlanarImage` or a decode Worker to receive exact wide samples. Rows, batches and collected planes use `Uint32Array`. Row metadata reports `sampleBytes: 4` and `endianness: 'host-u32'`. Output payload measurements use the actual array byte size, including while an ACK is pending. The default `sampleFormat: 'u16'` rejects reconstructed values above 65,535. The encoder still accepts original unsigned 16-bit samples.
+
+The Node CLI writes unsigned 32-bit little-endian samples in row delivery order with `decode --sample-format u32`. The verification report names the output format `raw-u32le`. `inspectStream` and CLI `inspect` without an output file can inspect wide streams directly.

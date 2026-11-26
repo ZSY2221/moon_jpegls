@@ -17,8 +17,10 @@ const help = `Usage: node sdk/cli.mjs encode|decode|inspect --input FILE [--outp
   --pt N                  Per-scan point transform (default: 0)
   --maxval N              Effective MAXVAL, default: full coded range
   --t1 --t2 --t3 --reset  Optional LSE thresholds and reset interval
+  --sample-format u16|u32  Decode output precision (default: u16)
   --report FILE           Write a verification JSON report to a new file
-Raw samples are unsigned 16-bit little-endian. Decode writes component rows in delivery order.`;
+Raw samples use little-endian byte order. Encode accepts unsigned 16-bit input.
+Decode writes component rows in delivery order.`;
 
 function parse(args) {
   const [mode, ...flags] = args;
@@ -26,6 +28,8 @@ function parse(args) {
   const allowed = new Set(['--input', '--output', '--backend', '--chunk', '--output-chunk', '--report']);
   if (mode === 'encode') {
     for (const key of ['--width', '--height', '--bits', '--components', '--ilv', '--sampling', '--near', '--pt', '--maxval', '--t1', '--t2', '--t3', '--reset']) allowed.add(key);
+  } else if (mode === 'decode') {
+    allowed.add('--sample-format');
   }
   const values = new Map();
   for (let i = 0; i < flags.length; i += 2) {
@@ -40,6 +44,10 @@ function parse(args) {
     throw new Error('Distinct input and output files are required');
   }
   if (report === '') throw new Error('Report file path is required');
+  const sampleFormat = values.get('--sample-format') ?? (mode === 'inspect' && !output ? 'u32' : 'u16');
+  if (sampleFormat !== 'u16' && sampleFormat !== 'u32') {
+    throw new Error('--sample-format must be u16 or u32');
+  }
   const number = (key) => values.has(key) ? Number(values.get(key)) : undefined;
   const compCount = number('--components');
   const interleave = number('--ilv') ?? 0;
@@ -64,7 +72,7 @@ function parse(args) {
     }) } : {}),
   };
   return {
-    mode, input, output, report, backend: values.get('--backend'),
+    mode, input, output, report, sampleFormat, backend: values.get('--backend'),
     inputChunkSize: number('--chunk'), outputChunkSize: number('--output-chunk'),
     frame,
   };
@@ -150,8 +158,12 @@ function readRaw(bytes) {
 }
 
 function rawBytes(samples) {
-  const bytes = Buffer.allocUnsafe(samples.length * 2);
-  for (let index = 0; index < samples.length; index++) bytes.writeUInt16LE(samples[index], index * 2);
+  const bytes = Buffer.allocUnsafe(samples.byteLength);
+  if (samples.BYTES_PER_ELEMENT === 4) {
+    for (let index = 0; index < samples.length; index++) bytes.writeUInt32LE(samples[index], index * 4);
+  } else {
+    for (let index = 0; index < samples.length; index++) bytes.writeUInt16LE(samples[index], index * 2);
+  }
   return bytes;
 }
 
@@ -235,9 +247,10 @@ async function main(args) {
           sha256: inputTracking.eof ? inputTracking.digest() : null,
         },
         output: options.output ? {
-          name: basename(options.output), format: encoding ? 'jls' : 'raw-u16le',
+          name: basename(options.output), format: encoding ? 'jls' : `raw-${options.sampleFormat}le`,
           bytes: output ? outputTracking.bytes : null, sha256: output && outputClosed ? outputTracking.digest() : null,
           retained: Boolean(output), complete: Boolean(result && outputClosed),
+          ...(!encoding && options.sampleFormat === 'u32' ? { layout: 'delivery-order', sampleBytes: 4, endianness: 'little' } : {}),
         } : null,
         frame: result?.frame ? { ...result.frame, scans: result.scans } : observedFrame,
         preset: result?.preset ?? observedPreset,

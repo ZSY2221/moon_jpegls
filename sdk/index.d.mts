@@ -1,4 +1,10 @@
 export type Backend = 'js' | 'wasm-gc';
+export type DecodeSampleFormat = 'u16' | 'u32';
+export type DecodedSamples<Format extends DecodeSampleFormat = 'u16'> =
+  Format extends 'u32' ? Uint32Array : Uint16Array;
+export type DecodeSampleOptions<Format extends DecodeSampleFormat = 'u16'> =
+  Format extends 'u32' ? { sampleFormat: 'u32' } : { sampleFormat?: 'u16' };
+type RowFormat<Output> = Output extends Uint32Array ? 'u32' : 'u16';
 export type Status = 'NeedInput' | 'NeedOutput' | 'RowReady' | 'Done';
 export type ErrorCode = 'InvalidData' | 'UnsupportedFeature' | 'ResourceLimit' | 'Truncated'
   | 'InvalidArgument' | 'Cancelled' | 'TrailingData' | 'RuntimeError';
@@ -79,7 +85,7 @@ export interface ErrorLocation {
   readonly offset: number;
 }
 
-export interface RowMeta {
+export interface RowMeta<Format extends DecodeSampleFormat = 'u16'> {
   readonly scanIndex: number;
   readonly componentIndex: number;
   readonly componentId: number;
@@ -93,8 +99,8 @@ export interface RowMeta {
   readonly layout: 'planar';
   readonly width?: number;
   readonly stride: number;
-  readonly sampleBytes: 2;
-  readonly endianness: 'host-u16';
+  readonly sampleBytes: Format extends 'u32' ? 4 : 2;
+  readonly endianness: Format extends 'u32' ? 'host-u32' : 'host-u16';
 }
 
 export interface Frame {
@@ -126,12 +132,15 @@ export interface SessionOptions {
   limits?: Limits;
 }
 
+export type DecoderSessionOptions<Format extends DecodeSampleFormat = 'u16'> =
+  SessionOptions & DecodeSampleOptions<Format>;
+
 export interface Step<Output> {
   status: Status;
   consumed: number;
   produced: number;
   chunk?: Output;
-  rowMeta?: RowMeta;
+  rowMeta?: RowMeta<RowFormat<Output>>;
 }
 
 export class CodecError extends Error {
@@ -153,7 +162,7 @@ export interface Session<Input, Output> {
   readonly scans: readonly ScanInfo[] | null;
   readonly currentScan: ScanInfo | null;
   readonly structure: StreamStructure | null;
-  readonly rowMeta: RowMeta | null;
+  readonly rowMeta: RowMeta<RowFormat<Output>> | null;
   readonly preset: Preset | null;
   readonly remaining: number;
   readonly coreWorkspaceBytes: number;
@@ -167,7 +176,8 @@ export interface Core {
   readonly backend: Backend;
   readonly loadMs: number;
   createEncoder(frame: Frame, options?: SessionOptions): Session<Uint16Array, Uint8Array>;
-  createDecoder(options?: SessionOptions): Session<Uint8Array, Uint16Array>;
+  createDecoder(options: DecoderSessionOptions<'u32'>): Session<Uint8Array, Uint32Array>;
+  createDecoder(options?: DecoderSessionOptions): Session<Uint8Array, Uint16Array>;
 }
 
 export interface Stats {
@@ -208,11 +218,12 @@ export interface EncodeOptions extends StreamOptions<Uint16Array> {
   onBytes(bytes: Uint8Array, stats: Stats, preset: Preset | null): Awaitable<void>;
 }
 
-export interface DecodeOptions extends StreamOptions<Uint8Array> {
+export type DecodeOptions<Format extends DecodeSampleFormat = 'u16'> =
+  StreamOptions<Uint8Array> & DecodeSampleOptions<Format> & {
   trailing?: 'allow' | 'reject';
-  onRow?(row: Uint16Array, index: number, frame: Frame, stats: Stats, preset: Preset | null, rowMeta?: RowMeta): Awaitable<void>;
+  onRow?(row: DecodedSamples<Format>, index: number, frame: Frame, stats: Stats, preset: Preset | null, rowMeta?: RowMeta<Format>): Awaitable<void>;
   onScanComplete?(scan: ScanInfo, stats: Stats, structure: StreamStructure | null): Awaitable<void>;
-}
+};
 
 export function loadCore(options?: {
   backend?: Backend;
@@ -230,6 +241,7 @@ export interface StreamResult {
   stats: Stats;
 }
 export function encodeStream(core: Core, options: EncodeOptions): Promise<StreamResult>;
+export function decodeStream(core: Core, options: DecodeOptions<'u32'>): Promise<StreamResult>;
 export function decodeStream(core: Core, options: DecodeOptions): Promise<StreamResult>;
 export function encodeImage(core: Core, frame: Frame, samples: Uint16Array,
   options?: Omit<EncodeOptions, 'frame' | 'onBytes' | 'read'>): Promise<StreamResult & { bytes: Uint8Array }>;
@@ -248,8 +260,12 @@ export function componentDimensions(frame: Pick<Frame, 'width' | 'height' | 'com
 export function encodePlanarImage(core: Core, frame: Frame, input: Uint16Array | readonly Uint16Array[],
   options?: Omit<EncodeOptions, 'frame' | 'onBytes' | 'read'>): Promise<StreamResult & { bytes: Uint8Array; hostConversionBufferBytes: number }>;
 export function decodeImage(core: Core, bytes: Uint8Array,
+  options: Omit<DecodeOptions<'u32'>, 'onRow' | 'read'>): Promise<StreamResult & { samples: Uint32Array }>;
+export function decodeImage(core: Core, bytes: Uint8Array,
   options?: Omit<DecodeOptions, 'onRow' | 'read'>): Promise<StreamResult & { samples: Uint16Array }>;
+export function decodePlanarImage(core: Core, bytes: Uint8Array,
+  options: Omit<DecodeOptions<'u32'>, 'onRow' | 'read'>): Promise<StreamResult & { samples: Uint32Array; planes: Uint32Array[] }>;
 export function decodePlanarImage(core: Core, bytes: Uint8Array,
   options?: Omit<DecodeOptions, 'onRow' | 'read'>): Promise<StreamResult & { samples: Uint16Array; planes: Uint16Array[] }>;
 export function inspectStream(core: Core, bytes: Uint8Array,
-  options?: Omit<DecodeOptions, 'onRow' | 'read'>): Promise<StreamResult>;
+  options?: Omit<DecodeOptions, 'onRow' | 'read' | 'sampleFormat'>): Promise<StreamResult>;

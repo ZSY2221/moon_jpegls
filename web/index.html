@@ -122,6 +122,14 @@
             </select>
           </label>
 
+          <label class="setting" id="decode-sample-format-setting" hidden>
+            <span class="field-label" data-label="decodeSampleFormat">Reconstructed samples</span>
+            <select id="decode-sample-format">
+              <option value="u16" data-label="standardSamples">PGM, PPM, or 16-bit planes</option>
+              <option value="u32" data-label="wideSamples">32-bit little-endian planes</option>
+            </select>
+          </label>
+
           <label class="setting sink">
             <span class="field-label" data-label="sink">Output</span>
             <select id="sink">
@@ -364,7 +372,7 @@
             <span class="kpi-label" data-label="ratio">Raw / JLS</span>
             <strong id="ratio" class="kpi-value">—</strong>
             <div class="kpi-sub">
-              <span data-label="ratioBasis">1 B/8-bit · 2 B/12–16-bit</span>
+              <span id="raw-sample-size" data-label="ratioBasis">1 B/8-bit · 2 B/12–16-bit</span>
             </div>
           </article>
 

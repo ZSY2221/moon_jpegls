@@ -230,6 +230,12 @@ export async function loadCore({ backend = 'wasm-gc', url, module: compiledModul
   };
 }
 
+function decodedSampleArray(format = 'u16') {
+  if (format === 'u16') return Uint16Array;
+  if (format === 'u32') return Uint32Array;
+  throw new CodecError('InvalidArgument', 'sampleFormat must be u16 or u32');
+}
+
 class Session {
   #bindings;
   #backend;
@@ -243,6 +249,7 @@ class Session {
   #rowMeta = null;
   #preset = null;
   #encoding;
+  #DecodedSamples;
   #capacity;
   #outputCapacity;
   #offset = 0;
@@ -342,6 +349,7 @@ class Session {
         this.#scans = Object.freeze([Object.freeze({ scanIndex: 0, componentIndex: 0, componentId: 1, near, interleave: 0, pointTransform: 0 })]);
       }
     } else {
+      this.#DecodedSamples = decodedSampleArray(options.sampleFormat);
       this.#port = bindings.decoder_new(inputChunkSize, ...budget);
     }
   }
@@ -400,6 +408,8 @@ class Session {
     this.#preset = resolved.preset;
 
     if (status === 'RowReady' || status === 'Done') {
+      const sampleBytes = this.#DecodedSamples.BYTES_PER_ELEMENT;
+      const endianness = sampleBytes === 4 ? 'host-u32' : 'host-u16';
       const st = readStructure(bindings, port, this.#frameInfo);
       if (st) {
         this.#structure = st;
@@ -426,8 +436,8 @@ class Session {
               layout: 'planar',
               width: stride,
               stride,
-              sampleBytes: 2,
-              endianness: 'host-u16',
+              sampleBytes,
+              endianness,
             });
           }
         }
@@ -435,7 +445,7 @@ class Session {
         this.#rowMeta = Object.freeze({
           scanIndex: 0, componentIndex: 0, componentId: 1, rowIndex: null, height,
           near: activeNear, interleave: 0, pointTransform: 0,
-          preset: this.#preset, layout: 'planar', width, stride: width, sampleBytes: 2, endianness: 'host-u16',
+          preset: this.#preset, layout: 'planar', width, stride: width, sampleBytes, endianness,
         });
       }
     }
@@ -561,10 +571,11 @@ class Session {
       for (; i < produced; i++) chunk[i] = getByte(port, i);
     } else if (!this.#encoding && this.#status === 'RowReady') {
       const width = this.#rowMeta?.stride ?? (bindings.decoder_current_row_width ? bindings.decoder_current_row_width(port) : this.#frame.width);
-      chunk = new Uint16Array(width);
+      chunk = new this.#DecodedSamples(width);
       let i = 0;
+      const narrow = this.#DecodedSamples === Uint16Array;
       const transformed = this.#rowMeta?.pointTransform > 0;
-      if (!transformed && bindings.decoder_pack3) {
+      if (narrow && !transformed && bindings.decoder_pack3) {
         const pack3 = bindings.decoder_pack3;
         for (; i + 2 < width; i += 3) {
           const d = pack3(port, i);
@@ -573,7 +584,7 @@ class Session {
           chunk[i + 1] = lo >>> 16;
           chunk[i + 2] = ((d - (lo >>> 0)) * INV_2_32) | 0;
         }
-      } else if (!transformed && bindings.decoder_pair) {
+      } else if (narrow && !transformed && bindings.decoder_pair) {
         const pair = bindings.decoder_pair;
         for (; i + 1 < width; i += 2) {
           const p = pair(port, i);
@@ -582,7 +593,7 @@ class Session {
         }
       }
       const getSample = bindings.decoder_sample;
-      if (transformed) {
+      if (narrow && transformed) {
         for (; i < width; i++) {
           const sample = getSample(port, i);
           if (sample > 65535) {
@@ -815,13 +826,14 @@ export async function encodePlanarImage(core, frame, input, options = {}) {
 
 export async function decodeImage(core, bytes, options = {}) {
   if (!(bytes instanceof Uint8Array)) throw new CodecError('InvalidArgument', 'Expected Uint8Array input');
+  const DecodedSamples = decodedSampleArray(options.sampleFormat);
   let samples;
   let dims;
   const result = await decodeStream(core, {
     ...options, read: readArray(bytes), onRow: (row, index, frame, _stats, _preset, meta) => {
       if (!dims) {
         dims = componentDimensions(frame);
-        samples = new Uint16Array(dims.total);
+        samples = new DecodedSamples(dims.total);
       }
       const compIdx = meta?.componentIndex ?? 0;
       const rowIdx = meta?.rowIndex ?? index;
@@ -841,5 +853,6 @@ export async function decodePlanarImage(core, bytes, options = {}) {
 
 export async function inspectStream(core, bytes, options = {}) {
   if (!(bytes instanceof Uint8Array)) throw new CodecError('InvalidArgument', 'Expected Uint8Array input');
-  return decodeStream(core, { ...options, read: readArray(bytes) });
+  const sampleFormat = options.onRow ? 'u16' : 'u32';
+  return decodeStream(core, { sampleFormat, ...options, read: readArray(bytes) });
 }

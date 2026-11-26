@@ -229,6 +229,8 @@ async fn Source::pnm_samples(
 enum Format {
   RawLittle
   RawBig
+  Raw32Little
+  Raw32Big
   Pgm
   Ppm
 }
@@ -241,5 +243,14 @@ fn parse_format(arg : String) -> Format raise CommandError {
     "pgm" => Pgm
     "ppm" => Ppm
     _ => raise Usage("expected raw-le, raw-be, pgm or ppm")
+  }
+}
+
+///|
+fn parse_decode_format(arg : String) -> Format raise CommandError {
+  match arg {
+    "raw32-le" => Raw32Little
+    "raw32-be" => Raw32Big
+    _ => parse_format(arg)
   }
 }

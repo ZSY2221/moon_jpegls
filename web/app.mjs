@@ -30,7 +30,7 @@ const setHidden = (id, hidden) => {
 
 const presetFields = ['t1', 't2', 't3', 'reset'];
 const encodeControls = new Set(['near', 'point-transform', ...presetFields.map((field) => `preset-${field}`)]);
-const controls = ['example', 'sample-rgb8', 'sample-multi16', 'sample-sampling', 'file', 'interleave', 'backend', 'chunk', 'sink', ...encodeControls];
+const controls = ['example', 'sample-rgb8', 'sample-multi16', 'sample-sampling', 'file', 'interleave', 'decode-sample-format', 'backend', 'chunk', 'sink', ...encodeControls];
 const measures = ['frame', 'raw-size', 'encoded', 'ratio', 'error', 'latency', 'first-canvas', 'workspace', 'queues', 'host-conv-buffer', 'preview-buffer'];
 const isJls = (file) => /\.jls$/i.test(file?.name ?? '');
 const isPpm = (file) => /\.ppm$/i.test(file?.name ?? '');
@@ -65,6 +65,7 @@ const formatInt = (value) => value === undefined || value === null ? '—' : val
 const bytes = (value) => value === undefined ? '—' : `${value.toLocaleString(locale)} B`;
 const nearLimit = (maxval = 65535) => Math.min(255, Math.floor(maxval / 2));
 const configuredPt = () => Number(get('point-transform')?.value ?? 0);
+const planarSampleBytes = (format) => format === 'planar-u32le' ? 4 : format === 'planar-u16le' ? 2 : 0;
 const pnmCodedMaxval = (header, pointTransform) => header && (pointTransform ? 2 ** header.bits - 1 : header.maxval);
 const firstScan = (job) => job?.structure?.scans?.[0] ?? (job?.frame && {
   ...job.frame, pointTransform: job.frame.pointTransform ?? job.pointTransform,
@@ -394,6 +395,7 @@ function renderIdentity() {
   const formPpm = isPpm(source) || sourcePgm?.header?.magic === 'P6';
   setHidden('interleave-setting', !formPpm);
   setHidden('point-transform-setting', formDecodeOnly);
+  setHidden('decode-sample-format-setting', !formDecodeOnly);
   const formBackend = get('backend')?.value ?? 'wasm-gc';
   const formBackendLabel = formBackend === 'js' ? 'JavaScript' : 'Wasm GC';
   const formNear = Number(get('near')?.value ?? 0);
@@ -402,6 +404,7 @@ function renderIdentity() {
   const sinkText = translate(sinkValue === 'file' ? 'streamed' : sinkValue);
   setText('settings-summary-meta', [
     formDecodeOnly ? 'JLS' : `NEAR ${formNear}`,
+    ...(formDecodeOnly && get('decode-sample-format').value === 'u32' ? [translate('wideSamples')] : []),
     ...(!formDecodeOnly && configuredPt() ? [translate('scanPt', configuredPt())] : []),
     ...(formPpm ? [`ILV ${get('interleave')?.value ?? 0}`] : []),
     formBackendLabel,
@@ -442,6 +445,8 @@ function renderIdentity() {
 
   if (presented) {
     setText('result-backend', backendLabel);
+    const sampleBytes = planarSampleBytes(presented.outputFormat);
+    setText('raw-sample-size', sampleBytes ? translate('planarSampleSize', sampleBytes) : translate('ratioBasis'));
     setText('result-mode', translate(decodeOnly ? 'modeDecodeOnly' : 'modeRoundTrip'));
   } else {
     setText('result-backend', '');
@@ -510,6 +515,7 @@ function lock(running) {
     const ppm = isPpm(source) || sourcePgm?.header?.magic === 'P6';
     if (control) control.disabled = running ||
       (id === 'interleave' && (!ppm || Boolean(sourcePgm?.pending))) ||
+      (id === 'decode-sample-format' && !isJls(source)) ||
       (encodeControls.has(id) && (isJls(source) || Boolean(sourcePgm?.pending)));
   }
   const filePick = get('file')?.parentElement;
@@ -555,10 +561,11 @@ function renderProgress(job) {
 function renderResult(job) {
   if (!job?.result) return;
   const { frame, jlsBytes, maxError } = job.result;
-  const bytesPerSample = job.outputFormat === 'planar-u16le' ? 2
-    : sampleByteWidth(job.pgmHeader?.maxval ?? job.pnmOutputMaxval ?? sampleMaximum(frame));
+  const planarBytes = planarSampleBytes(job.outputFormat);
+  const bytesPerSample = planarBytes || sampleByteWidth(job.pgmHeader?.maxval ?? job.pnmOutputMaxval ?? sampleMaximum(frame));
   const raw = job.componentGeometry.total * bytesPerSample;
   setText('raw-size', bytes(raw));
+  setText('raw-sample-size', planarBytes ? translate('planarSampleSize', planarBytes) : translate('ratioBasis'));
   setText('encoded', bytes(jlsBytes));
   setText('ratio', `${(raw / jlsBytes).toFixed(2)}×`);
   setText('error', maxError ?? translate('notCompared'));
@@ -590,6 +597,7 @@ function clearOutput() {
   selectedPixel = undefined;
   setAttr('workspace-view', 'data-has-image', 'false');
   for (const id of measures) setText(id, '—');
+  setText('raw-sample-size', translate('ratioBasis'));
   setHidden('download', true);
   setHidden('export-report', true);
   setHidden('physical-budget', true);
@@ -764,7 +772,8 @@ async function decodeFile(job, file, settings, sink) {
   let configured = false;
   let planes = null;
   let componentCount = 1;
-  let planar = false;
+  const wide = job.sampleFormat === 'u32';
+  const sampleBytes = wide ? 4 : 2;
   const baseName = file.name.replace(/\.[^.]+$/, '');
   const handleRow = async (frame, index, row, meta) => {
     if (!configured) {
@@ -776,8 +785,12 @@ async function decodeFile(job, file, settings, sink) {
         componentLabels: channelLabelsFor(job),
         initialChannel: job.activeChannel,
         allowComposite: job.canComposite,
+        sampleFormat: job.sampleFormat,
       });
-      if (componentCount === 1) {
+      if (wide) {
+        job.outputName = `${baseName}.planar-u32le.raw`;
+        job.outputFormat = 'planar-u32le';
+      } else if (componentCount === 1) {
         job.outputName = `${baseName}.pgm`;
         job.outputFormat = 'pgm';
         job.hostConversionBufferBytes = 0;
@@ -789,7 +802,6 @@ async function decodeFile(job, file, settings, sink) {
         planes = [new Uint16Array(px), new Uint16Array(px), new Uint16Array(px)];
         job.hostConversionBufferBytes = planes.reduce((acc, p) => acc + p.byteLength, 0);
       } else {
-        planar = true;
         job.outputName = `${baseName}.planar-u16le.raw`;
         job.outputFormat = 'planar-u16le';
         job.hostConversionBufferBytes = 0;
@@ -802,19 +814,23 @@ async function decodeFile(job, file, settings, sink) {
     const compIdx = meta.componentIndex;
     if (planes) {
       planes[compIdx].set(row, index * frame.width);
-    } else if (planar) {
+    } else if (wide || job.outputFormat === 'planar-u16le') {
       const { widths, offsets } = job.componentGeometry;
-      const samples = new Uint8Array(row.length * 2);
+      const samples = new Uint8Array(row.length * sampleBytes);
       const view = new DataView(samples.buffer);
-      for (let x = 0; x < row.length; x++) view.setUint16(x * 2, row[x], true);
+      if (wide) {
+        for (let x = 0; x < row.length; x++) view.setUint32(x * 4, row[x], true);
+      } else {
+        for (let x = 0; x < row.length; x++) view.setUint16(x * 2, row[x], true);
+      }
       job.hostConversionBufferBytes = Math.max(job.hostConversionBufferBytes, samples.byteLength);
-      await writeOutput(job, sink, samples, (offsets[compIdx] + index * widths[compIdx]) * 2);
+      await writeOutput(job, sink, samples, (offsets[compIdx] + index * widths[compIdx]) * sampleBytes);
     } else {
       await writeOutput(job, sink, pgmRow(row, frame));
     }
   };
   const result = await launch(job, {
-    ...settings, mode: 'decode', read: readBlob(file),
+    ...settings, mode: 'decode', sampleFormat: job.sampleFormat, read: readBlob(file),
     maxBatchBytes: settings.inputChunkSize >= 256 ? 16384 : 0,
     async onEvent(event) {
       recordStats(job, event.stats, event.frame, event.structure);
@@ -868,6 +884,8 @@ async function roundTrip(job, file, near, settings, sink) {
         initialChannel: job.activeChannel,
         allowComposite: job.canComposite,
         displayMaxval: file.moonjlsMeta?.displayMaxval,
+        sourceMaxval: sampleMaximum(input.frame),
+        sampleFormat: job.sampleFormat,
       });
     }
     const compIdx = meta?.componentIndex ?? 0;
@@ -883,7 +901,7 @@ async function roundTrip(job, file, near, settings, sink) {
     for (let i = 0; i < row.length; i++) {
       const diff = Math.abs(original[i] - row[i]);
       rowMax = Math.max(rowMax, diff);
-      const codedError = Math.abs((original[i] >> pointTransform) - (row[i] >> pointTransform));
+      const codedError = Math.abs((original[i] >>> pointTransform) - (row[i] >>> pointTransform));
       codedRowMax = Math.max(codedRowMax, codedError);
       stats.absoluteError += diff;
     }
@@ -900,7 +918,7 @@ async function roundTrip(job, file, near, settings, sink) {
     draw(job, index, row, original, meta);
   };
   const decoded = launch(job, {
-    ...settings, mode: 'decode', read: pipe.read,
+    ...settings, mode: 'decode', sampleFormat: job.sampleFormat, read: pipe.read,
     maxBatchBytes: settings.inputChunkSize >= 256 ? 16384 : 0,
     async onEvent(event) {
       recordStats(job, event.stats, event.frame, event.structure);
@@ -989,7 +1007,10 @@ async function run() {
     transition('failed', 'invalidPointTransform');
     return;
   }
-  const defaultOutExt = decodeOnly ? (sinkMode === 'file' ? '.decoded' : '.pgm') : '.jls';
+  const sampleFormat = (decodeOnly ? get('decode-sample-format').value === 'u32' : pointTransform > 0) ? 'u32' : 'u16';
+  const outputFormat = decodeOnly ? (sampleFormat === 'u32' ? 'planar-u32le' : 'pgm') : 'jls';
+  const defaultOutExt = outputFormat === 'planar-u32le' ? '.planar-u32le.raw'
+    : decodeOnly ? (sinkMode === 'file' ? '.decoded' : '.pgm') : '.jls';
   const outputName = file.name.replace(/\.[^.]+$/, '') + defaultOutExt;
   const settings = { backend: get('backend').value, inputChunkSize: chunk, outputChunkSize: Math.min(chunk, 32 * 1024) };
   const requestedPreset = Object.fromEntries(presetFields.map((field) => [field, Number(get(`preset-${field}`)?.value ?? 0)]));
@@ -997,7 +1018,7 @@ async function run() {
     id: ++sequence, runId: createRunId(), backend: settings.backend, near, decodeOnly, pgmHeader: pgm?.header,
     interleave: Number(get('interleave')?.value ?? 0), pointTransform,
     inputFormat: decodeOnly ? 'jls' : (pgm?.header?.magic === 'P6' || isPpm(file) ? 'ppm' : 'pgm'),
-    outputFormat: decodeOnly ? 'pgm' : 'jls',
+    outputFormat, sampleFormat,
     file, outputName, sinkMode, settings, pgm, rowsDelivered: 0,
     hostConversionBufferBytes: 0, previewBufferBytes: 0, selectedScanIndex: -1,
     completedScans: new Set(), errorLocation: null, errorMessage: null,
@@ -1019,7 +1040,9 @@ async function run() {
   let sink;
   try {
     if (pgm?.error) throw pgm.error;
-    sink = await openSink(sinkMode, outputName, decodeOnly ? 'image/x-portable-graymap' : 'image/jls');
+    const type = outputFormat === 'planar-u32le' ? 'application/octet-stream'
+      : decodeOnly ? 'image/x-portable-graymap' : 'image/jls';
+    sink = await openSink(sinkMode, outputName, type);
     requireActive(job);
     job.started = performance.now();
     job.outputBytes = 0;
@@ -1072,7 +1095,9 @@ async function run() {
       else {
         const isWasmFailure = job.backend === 'wasm-gc'
           && (error.name === 'CompileError' || /\bwasm\b|webassembly/i.test(error.message ?? ''));
-        const detail = isWasmFailure ? `${error.message} · ${translate('wasmFallbackHint')}` : error.message;
+        const widthLimited = job.decodeOnly && error.code === 'UnsupportedFeature' && /Uint16 output range/i.test(error.message);
+        const hint = isWasmFailure ? translate('wasmFallbackHint') : widthLimited ? translate('wideRetry') : null;
+        const detail = hint ? `${error.message} · ${hint}` : error.message;
         transition('failed', 'failure', typeof error.code === 'string' ? error.code : error.name ?? 'Error', detail);
       }
       renderProgress(job);
@@ -1195,7 +1220,7 @@ get('point-transform')?.addEventListener('change', () => {
   if (!isJls(source)) setNearOptions(nearLimit(pnmCodedMaxval(sourcePgm?.header, configuredPt())));
   renderIdentity();
 });
-for (const id of ['near', 'interleave', 'backend', 'sink']) {
+for (const id of ['near', 'interleave', 'decode-sample-format', 'backend', 'sink']) {
   get(id)?.addEventListener?.('change', renderIdentity);
 }
 for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {

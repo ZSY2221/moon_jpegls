@@ -1,6 +1,6 @@
 import { componentDimensions } from '../sdk/index.mjs';
 import { reconstructionErrorBound } from '../sdk/verification-report.mjs';
-import { sampleMaximum } from './pgm.mjs';
+import { reconstructionMaximum, sampleMaximum } from './pgm.mjs';
 
 const ids = ['original', 'reconstruction', 'difference'];
 
@@ -106,6 +106,15 @@ function imagePoint(canvas, event, width, height) {
 function hideOverlay(canvas) {
   const layer = canvas?.parentElement?.querySelector?.('.reticle-layer');
   if (layer) layer.hidden = true;
+}
+
+function previewMaximum(frame, wide, sourceMaxval) {
+  if (!wide) return sampleMaximum(frame);
+  const decodedMaxval = reconstructionMaximum(frame);
+  if (sourceMaxval === undefined) return decodedMaxval;
+  const step = 2 ** (frame.pointTransform ?? 0);
+  const largestReconstruction = (Math.floor(sourceMaxval / step) + (frame.near ?? 0)) * step;
+  return Math.max(sourceMaxval, Math.min(decodedMaxval, largestReconstruction));
 }
 
 export function createPreview(canvases, reportPixel, magnifiers = []) {
@@ -290,7 +299,9 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     overlaysVisible = false;
     const contexts = canvases.map((canvas) => canvas.getContext('2d'));
     const displayMaxval = options.displayMaxval;
-    const defaultMaxval = displayMaxval ?? sampleMaximum(frame);
+    const wide = options.sampleFormat === 'u32';
+    const Reconstruction = wide ? Uint32Array : Uint16Array;
+    const defaultMaxval = displayMaxval ?? previewMaximum(frame, wide, options.sourceMaxval);
     const componentLabels = options.componentLabels
       ?? Array.from({ length: componentCount }, (_, c) => `C${c}`);
     const errorLuts = new Map();
@@ -304,6 +315,8 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       sampled,
       composite,
       displayMaxval,
+      wide,
+      sourceMaxval: options.sourceMaxval,
       bits: frame.bits,
       contexts,
       componentCount,
@@ -318,7 +331,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       drewFirst: false,
       scanlines: contexts.map((context) => context.createImageData(width, 1)),
       original: hasReference ? Array.from({ length: componentCount }, () => new Uint16Array(width * height)) : null,
-      reconstruction: Array.from({ length: componentCount }, () => new Uint16Array(width * height)),
+      reconstruction: Array.from({ length: componentCount }, () => new Reconstruction(width * height)),
     };
   }
 
@@ -332,7 +345,9 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       state.componentNears[c] = reconstructionErrorBound(meta.near, meta.pointTransform);
     }
     if (state.displayMaxval === undefined && meta?.preset?.maxval !== undefined) {
-      state.componentMaxvals[c] = sampleMaximum({ bits: state.bits, maxval: meta.preset.maxval, pointTransform: meta.pointTransform });
+      state.componentMaxvals[c] = previewMaximum({
+        bits: state.bits, maxval: meta.preset.maxval, pointTransform: meta.pointTransform, near: meta.near,
+      }, state.wide, state.sourceMaxval);
     }
     const xMap = xMaps[c];
     const recPlane = state.reconstruction[c];
@@ -490,8 +505,9 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
 
   const bufferBytes = () => {
     if (!state) return 0;
-    const perPlane = state.width * state.height * 2;
-    return state.componentCount * perPlane * (state.original ? 2 : 1);
+    const reconstruction = state.reconstruction[0].byteLength;
+    const original = state.original?.[0].byteLength ?? 0;
+    return state.componentCount * (reconstruction + original);
   };
 
   const directions = new Map([

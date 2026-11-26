@@ -5,13 +5,14 @@ let help : String =
   #|moonjls encode-pgm NEAR INPUT OUTPUT [CHUNK] [--pt N] [preset flags]
   #|moonjls encode-pgms NEAR OUTPUT [--ilv 0|1|2] [--sampling HxV,...] [--chunk N] [--pt N] [preset flags] IN1 [IN2 ...]
   #|moonjls encode-ppm NEAR INPUT OUTPUT [CHUNK] [--ilv 0|1|2] [--pt N] [preset flags]
-  #|moonjls decode INPUT OUTPUT [raw-le|raw-be|pgm|ppm] [CHUNK]
+  #|moonjls decode INPUT OUTPUT [raw-le|raw-be|raw32-le|raw32-be|pgm|ppm] [CHUNK]
   #|moonjls decode-pgms [--chunk N] INPUT OUT1 [OUT2 ...]
   #|moonjls inspect INPUT [CHUNK] [--json]
   #|moonjls verify INPUT [CHUNK] [--json]
   #|
   #|Use - for stdin or stdout. Files are created without overwriting.
   #|Raw samples use one byte for P<=8, two bytes for P>8 (default raw-le).
+  #|raw32-le and raw32-be decode each exact sample into four bytes in delivered row order.
   #|PGM/PPM use header MAXVAL. P6 ILV=0 converts the full image. ILV=1 and ILV=2 stream rows.
   #|PGM sampling factors follow input component order. Frame size is the largest input width and height.
   #|CHUNK sets the byte buffer size (1–1048576, default 65536).
@@ -367,14 +368,13 @@ async fn buffer_row(
   row : FixedArray[Int32],
   buffer : FixedArray[Byte],
   filled : Int32,
-  wide : Bool,
+  stride : Int32,
   format : Format,
 ) -> (Int32, Int32, Int32) {
   let big = match format {
-    RawLittle => false
-    RawBig | Pgm | Ppm => true
+    RawLittle | Raw32Little => false
+    RawBig | Raw32Big | Pgm | Ppm => true
   }
-  let stride = if wide { 2 } else { 1 }
   let cap = buffer.length()
   let mut out_len = filled
   let mut position = 0
@@ -384,9 +384,19 @@ async fn buffer_row(
     let available = row_len - position
     let per_space = (cap - out_len) / stride
     let count = if available < per_space { available } else { per_space }
-    if wide {
+    let end = position + count
+    if stride == 4 {
+      while position < end {
+        let sample = row[position]
+        for offset in 0..<4 {
+          let shift = (if big { 3 - offset } else { offset }) * 8
+          buffer[out_len + offset] = ((sample >> shift) & 255).to_byte()
+        }
+        out_len += 4
+        position += 1
+      }
+    } else if stride == 2 {
       if big {
-        let end = position + count
         while position < end {
           let sample = row[position]
           buffer[out_len] = (sample >> 8).to_byte()
@@ -395,7 +405,6 @@ async fn buffer_row(
           position += 1
         }
       } else {
-        let end = position + count
         while position < end {
           let sample = row[position]
           buffer[out_len] = (sample & 255).to_byte()
@@ -405,7 +414,6 @@ async fn buffer_row(
         }
       }
     } else {
-      let end = position + count
       while position < end {
         buffer[out_len] = row[position].to_byte()
         out_len += 1
@@ -553,7 +561,8 @@ async fn decode_stream(
   json~ : Bool = false,
 ) -> Unit {
   let decoder = @jls.Decoder::new(@jls.Limits::default())
-  let output = FixedArray::make(if chunk < 2 { 2 } else { chunk }, b'\x00')
+  let raw32 = format is Raw32Little || format is Raw32Big
+  let output = FixedArray::make(chunk.max(if raw32 { 4 } else { 2 }), b'\x00')
   let mut out_len = 0
   let mut rows = 0
   let mut bytes = 0L
@@ -601,14 +610,19 @@ async fn decode_stream(
           let pt = decoder.current_scan().map(scan => scan.point_transform).unwrap_or(0)
           let output_maxval = reconstruction_maxval(preset.maxval, pt)
           let row = decoder.row()
-          let destination_maxval = if format is Pgm || format is Ppm {
-            output_maxval
-          } else if frame.bits > 8 {
-            65535
+          let sample_bytes = if raw32 {
+            4
           } else {
-            255
+            let destination_maxval = if format is Pgm || format is Ppm {
+              output_maxval
+            } else if frame.bits > 8 {
+              65535
+            } else {
+              255
+            }
+            validate_reconstruction(row, destination_maxval, pt)
+            if destination_maxval > 255 { 2 } else { 1 }
           }
-          validate_reconstruction(row, destination_maxval, pt)
           let comp_count = frame_info.components.length()
           if rows == 0 {
             if format is Pgm {
@@ -657,7 +671,7 @@ async fn decode_stream(
               row,
               output,
               out_len,
-              if format is Pgm { output_maxval > 255 } else { frame.bits > 8 },
+              sample_bytes,
               format,
             )
             out_len = next_len
@@ -681,7 +695,7 @@ async fn decode_stream(
             )
             sink.write(header[:])
             bytes += header.length().to_int64()
-            let wide = maxv > 255
+            let stride = if maxv > 255 { 2 } else { 1 }
             let plane_len = ppm_width * ppm_height
             let inter_row = FixedArray::make(ppm_width * 3, 0)
             conv_bytes += inter_row.length().to_int64() * 4L
@@ -694,7 +708,7 @@ async fn decode_stream(
                 inter_row[idx + 2] = ppm_planes[2 * plane_len + row_off + x]
               }
               let (count, next_len, peak) = buffer_row(
-                sink, inter_row, output, out_len, wide, Ppm,
+                sink, inter_row, output, out_len, stride, Ppm,
               )
               out_len = next_len
               bytes += count.to_int64()
@@ -730,8 +744,9 @@ async fn decode_stream(
     )
     @stdio.stdout.text.write(report[:])
   } else {
+    let sample_storage = if raw32 { " output_sample_bytes=4" } else { "" }
     log_line(
-      "\{operation} \{describe(frame, preset)} components=\{frame_info.components.length()} scans=\{st.scans.length()} rows=\{rows} input_bytes=\{consumed} output_bytes=\{bytes} first_row_at=\{first_row_at} core_payload_bytes=\{workspace} host_conversion_buffer_bytes=\{conv_bytes} input_high_water=\{source.high_water} output_high_water=\{high_water}",
+      "\{operation} \{describe(frame, preset)} components=\{frame_info.components.length()} scans=\{st.scans.length()} rows=\{rows} input_bytes=\{consumed} output_bytes=\{bytes} first_row_at=\{first_row_at} core_payload_bytes=\{workspace} host_conversion_buffer_bytes=\{conv_bytes} input_high_water=\{source.high_water} output_high_water=\{high_water}\{sample_storage}",
     )
   }
 }
@@ -1419,7 +1434,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
     }
     ["decode", input, output, ..] if args.length() <= 5 => {
       let format = if args.length() > 3 {
-        parse_format(args[3])
+        parse_decode_format(args[3])
       } else {
         RawLittle
       }
@@ -1539,7 +1554,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
                 row,
                 out_buf,
                 0,
-                output_maxval > 255,
+                if output_maxval > 255 { 2 } else { 1 },
                 Pgm,
               )
               total_out += cnt.to_int64()

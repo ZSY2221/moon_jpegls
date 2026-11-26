@@ -39,7 +39,10 @@ async function request(type, data, transfer = []) {
 }
 
 async function run(message) {
-  const { mode, backend, frame, inputChunkSize, outputChunkSize, limits, trailing, maxBatchBytes = 0, wasmModule, wasmBytes } = message;
+  const {
+    mode, backend, frame, inputChunkSize, outputChunkSize, limits, trailing, sampleFormat,
+    maxBatchBytes = 0, wasmModule, wasmBytes,
+  } = message;
   if (mode !== 'encode' && mode !== 'decode') throw new CodecError('InvalidArgument', 'Unknown job mode');
   if (!Number.isInteger(maxBatchBytes) || maxBatchBytes < 0 || maxBatchBytes > maximumBatchBytes) {
     throw new CodecError('InvalidArgument', `maxBatchBytes must be an integer in 0..${maximumBatchBytes}`);
@@ -85,7 +88,7 @@ async function run(message) {
     }, payload, stats);
   };
   const settings = {
-    frame, inputChunkSize, outputChunkSize, limits, trailing, signal: abort.signal,
+    frame, inputChunkSize, outputChunkSize, limits, trailing, sampleFormat, signal: abort.signal,
     read: (maxElements) => request('needInput', { maxElements }),
     onProgress: (stats, info, preset, structure) => {
       if (deliveredRow) {
@@ -113,6 +116,7 @@ async function run(message) {
         await flushBatch();
       }
       const stride = rowMeta?.stride ?? info.width;
+      const sampleBytes = row.BYTES_PER_ELEMENT;
       const metaFields = {
         scanIndex: rowMeta?.scanIndex ?? 0,
         componentIndex: rowMeta?.componentIndex ?? 0,
@@ -124,10 +128,10 @@ async function run(message) {
         layout: rowMeta?.layout ?? 'planar',
         width: rowMeta?.width ?? stride,
         stride,
-        sampleBytes: rowMeta?.sampleBytes ?? 2,
-        endianness: rowMeta?.endianness ?? 'host-u16',
+        sampleBytes,
+        endianness: sampleBytes === 4 ? 'host-u32' : 'host-u16',
       };
-      const maxRows = Math.floor(maxBatchBytes / (stride * 2));
+      const maxRows = Math.floor(maxBatchBytes / (stride * sampleBytes));
       if (index === 0 || maxRows <= 1) {
         lastBatchFlush = stats.elapsedMs;
         return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
@@ -142,7 +146,7 @@ async function run(message) {
           compHeight,
           startIndex: index,
           count: 0,
-          samples: new Uint16Array(capacityRows * stride),
+          samples: new row.constructor(capacityRows * stride),
           frame: info,
           preset,
           stats,

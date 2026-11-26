@@ -622,6 +622,27 @@ async function verifySampledAnnexWorkbench(directory) {
     assert.equal(report.output.sha256, expectedSha256);
     assert.equal(report.memory.host.hostConversionBufferBytes, 512);
     await capture(`sampled-${fixture}`);
+    if (fixture === 'T8SSE3') {
+      await select('decode-sample-format', 'u32');
+      await click('run');
+      await phase('complete');
+      const pendingWide = page.waitForEvent('download');
+      await click('download');
+      const wide = await pendingWide;
+      assert.equal(wide.suggestedFilename(), `${fixture}.planar-u32le.raw`);
+      const wideBytes = await readFile(await wide.path());
+      assert.equal(wideBytes.length, 98304 * 4);
+      for (let sample = 0; sample < 98304; sample++) {
+        assert.equal(wideBytes.readUInt32LE(sample * 4), bytes.readUInt16LE(sample * 2));
+      }
+      const pendingWideReport = page.waitForEvent('download');
+      await click('export-report');
+      const wideReport = JSON.parse(await readFile(await (await pendingWideReport).path(), 'utf8'));
+      assert.deepEqual(wideReport.frame.componentGeometry.map(({ sampleOffset }) => sampleOffset), [0, 65536, 81920]);
+      assert.equal(wideReport.output.sampleBytes, 4);
+      assert.equal(wideReport.stream.rowsDelivered, 448);
+      console.log(JSON.stringify({ test: 'Sampled Uint32 planar export matches HP-backed Uint16 samples', fixture, samples: 98304, bytes: wideBytes.length }));
+    }
     console.log(JSON.stringify({ test: 'sampled Annex E browser decode and planar export', fixture, backend,
       inputSha256, outputSha256: expectedSha256, rows: 448, samples: 98304, hostConversionBufferBytes: 512 }));
   }
@@ -667,6 +688,57 @@ async function verifyPointTransformWorkbench() {
   assert.equal(decodeReport.stages.compare, 'not_run');
   assert.deepEqual(decodeReport.samples.coded, { maxError: null, errorBound: 0 });
   console.log(JSON.stringify({ test: 'Pt=4 with zero coded NEAR retains distinct original error bound', samples: 4, maxError: 15 }));
+}
+
+async function verifyWidePointTransformWorkbench() {
+  // Independent CharLS coded-domain entropy for q=16383, with SOS Al set to 2.
+  // It reconstructs qhat=16385, whose exact original-scale value is 65540.
+  const coded = Buffer.from('ffd8fff7000b100001000101011100fff8000d01ffff0018004d01220040ffda00080101000200020000003320ffd9', 'hex');
+  const download = async (id) => {
+    const pending = page.waitForEvent('download');
+    await click(id);
+    return pending;
+  };
+  const report = async () => JSON.parse(await readFile(await (await download('export-report')).path(), 'utf8'));
+  await page.goto(workbench.href);
+  await upload('wide-input.pgm', Buffer.concat([Buffer.from('P5\n1 1\n65535\n'), Buffer.of(255, 255)]));
+  await select('backend', 'wasm-gc');
+  await select('sink', 'buffered');
+  await select('near', '2');
+  await page.locator('#point-transform').fill('2');
+  await click('run');
+  await phase('complete');
+  assert.equal(await text('error'), '5');
+  assert.equal((await report()).samples.coded.maxError, 2);
+  await page.locator('#reconstruction').press('Enter');
+  assert.equal(await text('inspect-reconstructed'), '65,540');
+
+  await upload('wide-reference.jls', coded);
+  await select('backend', 'js');
+  await click('run');
+  await phase('failed');
+  assert.match(await text('status'), /UnsupportedFeature.*32-bit little-endian planes/);
+  assert.equal(await page.locator('#download').isVisible(), false);
+  await select('decode-sample-format', 'u32');
+  await click('run');
+  await phase('complete');
+  await page.locator('#reconstruction').press('Enter');
+  assert.equal(await text('inspect-reconstructed'), '65,540');
+  assert.equal(await text('raw-size'), '4 B');
+  const raw = await download('download');
+  assert.equal(raw.suggestedFilename(), 'wide-reference.planar-u32le.raw');
+  assert.deepEqual(await readFile(await raw.path()), Buffer.from([4, 0, 1, 0]));
+  const decoded = await report();
+  assert.equal(decoded.stages.compare, 'not_run');
+  assert.equal(decoded.stream.strictEoi, true);
+  assert.equal(decoded.stream.rowsDelivered, 1);
+  assert.equal(decoded.output.format, 'planar-u32le');
+  assert.equal(decoded.output.layout, 'planar');
+  assert.equal(decoded.output.endianness, 'little');
+  assert.equal(decoded.output.sampleBytes, 4);
+  assert.equal(decoded.memory.host.hostConversionBufferBytes, 4);
+  assert.equal(decoded.memory.host.previewBufferBytes, 4);
+  console.log(JSON.stringify({ test: 'Wide point transform comparison, inspector and planar download', sample: 65540, originalError: 5, bytes: 4 }));
 }
 
 async function verifyMulticomponentWorkbench() {
@@ -1017,6 +1089,7 @@ try {
   await expandedNear();
   await verifyM2Workbench();
   await verifyPointTransformWorkbench();
+  await verifyWidePointTransformWorkbench();
   await verifyMulticomponentWorkbench();
   if (process.env.MOONJLS_ANNEX_FIXTURES) await verifySampledAnnexWorkbench(process.env.MOONJLS_ANNEX_FIXTURES);
   else console.log(JSON.stringify({ test: 'sampled Annex E browser decode', status: 'not_run', reason: 'MOONJLS_ANNEX_FIXTURES is unset' }));

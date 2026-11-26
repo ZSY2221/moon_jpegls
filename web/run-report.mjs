@@ -64,6 +64,7 @@ export async function workbenchReport(job) {
     output: {
       name: job.outputName, format: job.outputFormat ?? (job.decodeOnly ? 'pgm' : 'jls'), bytes: job.outputBytes ?? null,
       sha256: outputSha, retained: outputRetained, complete: outputRetained,
+      ...(job.outputFormat === 'planar-u32le' ? { layout: 'planar', sampleBytes: 4, endianness: 'little' } : {}),
     },
     frame: job.frame && { ...job.frame, scans: job.structure?.scans ?? job.frame.scans },
     preset: job.preset,

@@ -50,7 +50,7 @@ Set `MOONJLS_ANNEX_FIXTURES` to the extracted official Annex E image directory w
 
 ### Point transform
 
-Use the Pt field with a PGM or PPM source. The workbench compares right-shifted sample integers against coded NEAR, and compares the original input and reconstructed integers against the original-scale bound. The Scan Structure Inspector and JSON report show both scales. A JLS upload takes Pt from each scan header. Browser rows are Uint16 and a reconstruction above 65,535 is reported as unsupported.
+Use the Pt field with a PGM or PPM source. The workbench compares right-shifted sample integers against coded NEAR, and compares the original input and reconstructed integers against the original-scale bound. The Scan Structure Inspector and JSON report show both scales. A JLS upload takes Pt from each scan header. A transformed round trip compares exact wide reconstruction against the original. For a JLS upload, select **32-bit little-endian planes** under **Reconstructed samples** to view and export samples above 65,535. The raw output uses the declared component order, real plane dimensions and four bytes per sample. The verification report identifies the storage format and supplies multi-component offsets in samples. PGM and PPM have a maximum storable sample of 65,535. [Netpbm PGM specification](https://netpbm.sourceforge.net/doc/pgm.html)
 
 ### Workbench microscopy examples
 

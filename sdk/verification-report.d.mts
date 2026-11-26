@@ -3,7 +3,12 @@ import type { Frame, Preset, Stats } from './index.mjs';
 type Status = 'passed' | 'failed' | 'cancelled';
 type Stage = Status | 'not_run' | 'incomplete';
 type Input = { name: string; format: string; bytes: number | null; sha256: string | null; provenance?: unknown };
-type Output = Input & { retained: boolean; complete: boolean };
+type Output = Input & {
+  retained: boolean; complete: boolean;
+  layout?: 'planar' | 'delivery-order';
+  sampleBytes?: 4;
+  endianness?: 'little';
+};
 type CodecMeasurements = {
   scope: string;
   corePayloadBytes: number | null;
