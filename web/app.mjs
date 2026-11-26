@@ -66,6 +66,9 @@ const bytes = (value) => value === undefined ? '—' : `${value.toLocaleString(l
 const nearLimit = (maxval = 65535) => Math.min(255, Math.floor(maxval / 2));
 const configuredPt = () => Number(get('point-transform')?.value ?? 0);
 const pnmCodedMaxval = (header, pointTransform) => header && (pointTransform ? 2 ** header.bits - 1 : header.maxval);
+const firstScan = (job) => job?.structure?.scans?.[0] ?? (job?.frame && {
+  ...job.frame, pointTransform: job.frame.pointTransform ?? job.pointTransform,
+});
 const scanReconstructionBound = (scan) => scan && reconstructionErrorBound(scan.near, scan.pointTransform);
 const scaleForScan = (near, pointTransform) => pointTransform
   ? translate('transformedBound', near, reconstructionErrorBound(near, pointTransform))
@@ -268,8 +271,9 @@ function renderPixel() {
       formatInt(lunarElevationMeters(selectedPixel.reconstructed)),
       formatInt(lunarErrorMeters(selectedPixel.error))));
   }
-  const near = selectedPixel?.near ?? frame?.near ?? presented?.near;
-  const pt = selectedPixel?.pointTransform ?? frame?.pointTransform ?? 0;
+  const scan = firstScan(presented);
+  const near = selectedPixel?.near ?? scan?.near ?? presented?.near;
+  const pt = selectedPixel?.pointTransform ?? scan?.pointTransform ?? 0;
   const nearText = selectedPixel && pt
     ? translate('transformedBound', selectedPixel.codedNear, near)
     : near === undefined || near === null ? '—' : String(near);
@@ -326,8 +330,9 @@ let legendKey = '';
 function renderErrorLegend() {
   const frame = presented?.frame;
   const decodeOnly = effectiveDecodeOnly();
-  const pt = frame?.pointTransform ?? 0;
-  const bound = scanReconstructionBound(frame);
+  const scan = firstScan(presented);
+  const pt = scan?.pointTransform ?? 0;
+  const bound = scanReconstructionBound(scan);
   const nextLegendKey = !frame || decodeOnly ? '' : `${locale}:${pt}:${bound}`;
   setText('error-legend-value', frame && !decodeOnly ? translate(pt ? 'originalLegendLimit' : 'legendMax', bound) : '—');
   const maxErr = presented?.result?.maxError;
@@ -366,8 +371,9 @@ function renderIdentity() {
   const decodeOnly = effectiveDecodeOnly();
   const backend = presented?.backend ?? get('backend').value;
   const backendLabel = backend === 'js' ? 'JavaScript' : 'Wasm GC';
-  const near = frame?.near ?? (decodeOnly ? null : presented?.near ?? Number(get('near').value));
-  const pt = frame?.pointTransform ?? (decodeOnly ? 0 : presented?.pointTransform ?? configuredPt());
+  const scan = firstScan(presented);
+  const near = scan?.near ?? (decodeOnly ? null : presented?.near ?? Number(get('near').value));
+  const pt = scan?.pointTransform ?? (decodeOnly ? 0 : presented?.pointTransform ?? configuredPt());
   const name = source?.name ?? translate('noFile');
 
   setText('selected', name);
@@ -450,13 +456,12 @@ function renderIdentity() {
 }
 
 function renderPrecision(job) {
-  const selectedIdx = job?.selectedScanIndex ?? -1;
-  const selectedScan = selectedIdx >= 0 ? job?.structure?.scans?.[selectedIdx] : null;
+  const selectedScan = job?.structure?.scans?.[job.selectedScanIndex] ?? firstScan(job);
   const frame = job?.frame;
   const preset = selectedScan?.preset ?? job?.preset;
-  const effectiveNear = selectedScan?.near ?? frame?.near;
+  const effectiveNear = selectedScan?.near;
   const effectiveMaxval = preset?.maxval ?? frame?.maxval ?? (frame ? 2 ** frame.bits - 1 : undefined);
-  const effectivePt = selectedScan?.pointTransform ?? frame?.pointTransform ?? 0;
+  const effectivePt = selectedScan?.pointTransform ?? 0;
   setText('precision-bits', formatInt(frame?.bits));
   setText('precision-maxval', formatInt(effectiveMaxval));
   setText('precision-near', formatInt(effectiveNear));
@@ -557,13 +562,15 @@ function renderResult(job) {
   setText('encoded', bytes(jlsBytes));
   setText('ratio', `${(raw / jlsBytes).toFixed(2)}×`);
   setText('error', maxError ?? translate('notCompared'));
-  setText('error-bound', job.decodeOnly ? '' : scaleForScan(frame.near, frame.pointTransform));
+  const scan = firstScan(job);
+  setText('error-bound', job.decodeOnly ? '' : scaleForScan(scan.near, scan.pointTransform));
   setText('error-scope', translate(job.decodeOnly ? 'streamOnlyCheck' : 'fullSampleCheck'));
   setText('latency', `${job.elapsed.toFixed(1)} ms`);
   if (job.firstCanvas !== undefined) setText('first-canvas', `${(job.firstCanvas - job.started).toFixed(1)} ms`);
   setText('host-conv-buffer', bytes(job.hostConversionBufferBytes ?? 0));
   setText('preview-buffer', bytes(job.previewBufferBytes ?? preview.bufferBytes()));
   renderErrorLegend();
+  renderPrecision(job);
   renderMulticomponent(job);
   renderInspector(job);
 }
@@ -573,7 +580,7 @@ function renderPhysicalBudget(job) {
   setHidden('physical-budget', !physical);
   if (physical) {
     setText('physical-budget-value', translate('physicalBudget',
-      formatInt(lunarErrorMeters(scanReconstructionBound(job.frame))),
+      formatInt(lunarErrorMeters(scanReconstructionBound(firstScan(job)))),
       formatInt(job.observedError === undefined ? null : lunarErrorMeters(job.observedError))));
   }
 }
@@ -662,8 +669,8 @@ function setFrame(job, frame) {
 
 function recordStats(job, stats, frame, structure) {
   requireActive(job);
-  setFrame(job, frame);
   if (structure) job.structure = structure;
+  setFrame(job, frame);
   job.stats = stats;
   const totalRows = job.totalRows ?? 0;
   if (totalRows > 0 && stats.rows === totalRows && !job.rowsArrived) {

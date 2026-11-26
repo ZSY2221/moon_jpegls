@@ -45,10 +45,11 @@ export async function workbenchReport(job) {
   const inputFormat = job.inputFormat ?? (job.decodeOnly ? 'jls' : 'pgm');
   const provenance = lunarMetadataFor({ sha256: inputSha, bytes: job.file.size, format: inputFormat });
   const outputRetained = job.status === 'passed' && job.sinkMode !== 'bounded';
-  const physical = provenance && job.frame ? {
+  const firstScan = job.structure?.scans?.[0] ?? job.frame;
+  const physical = provenance && firstScan ? {
     unit: 'm',
     quantity: 'codec_added_elevation_error',
-    errorBound: lunarErrorMeters(reconstructionErrorBound(job.frame.near, job.frame.pointTransform)),
+    errorBound: lunarErrorMeters(reconstructionErrorBound(firstScan.near, firstScan.pointTransform)),
     maxError: job.observedError === undefined ? null : lunarErrorMeters(job.observedError),
   } : null;
   const report = createVerificationReport({
