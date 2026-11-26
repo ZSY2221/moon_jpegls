@@ -1,10 +1,10 @@
 ///|
 let help : String =
   #|moonjls encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--maxval N] [preset flags]
-  #|moonjls encode-planar WIDTH HEIGHT BITS COMPONENTS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--ilv 0|1] [--comp-ids LIST] [--scan-order LIST] [--scan-near LIST] [--maxval N] [preset flags]
+  #|moonjls encode-planar WIDTH HEIGHT BITS COMPONENTS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--ilv 0|1|2] [--comp-ids LIST] [--scan-order LIST] [--scan-near LIST] [--maxval N] [preset flags]
   #|moonjls encode-pgm NEAR INPUT OUTPUT [CHUNK] [preset flags]
-  #|moonjls encode-pgms NEAR OUTPUT [--ilv 0|1] [--chunk N] [preset flags] IN1 [IN2 ...]
-  #|moonjls encode-ppm NEAR INPUT OUTPUT [CHUNK] [--ilv 0|1] [preset flags]
+  #|moonjls encode-pgms NEAR OUTPUT [--ilv 0|1|2] [--chunk N] [preset flags] IN1 [IN2 ...]
+  #|moonjls encode-ppm NEAR INPUT OUTPUT [CHUNK] [--ilv 0|1|2] [preset flags]
   #|moonjls decode INPUT OUTPUT [raw-le|raw-be|pgm|ppm] [CHUNK]
   #|moonjls decode-pgms [--chunk N] INPUT OUT1 [OUT2 ...]
   #|moonjls inspect INPUT [CHUNK] [--json]
@@ -12,7 +12,7 @@ let help : String =
   #|
   #|Use - for stdin or stdout. Files are created without overwriting.
   #|Raw samples use one byte for P<=8, two bytes for P>8 (default raw-le).
-  #|PGM/PPM use header MAXVAL (ILV=0 P6 RGB uses bounded whole-image conversion; ILV=1 uses row buffer).
+  #|PGM/PPM use header MAXVAL. P6 ILV=0 converts the full image. ILV=1 and ILV=2 stream rows.
   #|CHUNK sets the byte buffer size (1–1048576, default 65536).
   #|Inspect and verify each read through EOI and reject trailing bytes.
 
@@ -195,19 +195,25 @@ async fn encode_ppm_stream(
   let mut bytes = 0L
   let mut high_water = 0
   let mut conv_bytes = 0L
-  if ilv == 1 {
-    let ilv_row = FixedArray::make(frame.width * 3, 0)
-    conv_bytes = row_buf.length().to_int64() * 8L
+  if ilv != 0 {
+    let ilv_row = if ilv == 1 {
+      FixedArray::make(frame.width * 3, 0)
+    } else {
+      row_buf
+    }
+    conv_bytes = row_buf.length().to_int64() * (if ilv == 1 { 8L } else { 4L })
     for y in 0..<frame.height {
       let got = source.samples(row_buf, wide, true)
       guard got == row_buf.length() else { raise Input("truncated PPM raster") }
-      let g_off = frame.width
-      let b_off = frame.width * 2
-      for x in 0..<frame.width {
-        let idx = x * 3
-        ilv_row[x] = row_buf[idx]
-        ilv_row[g_off + x] = row_buf[idx + 1]
-        ilv_row[b_off + x] = row_buf[idx + 2]
+      if ilv == 1 {
+        let g_off = frame.width
+        let b_off = frame.width * 2
+        for x in 0..<frame.width {
+          let idx = x * 3
+          ilv_row[x] = row_buf[idx]
+          ilv_row[g_off + x] = row_buf[idx + 1]
+          ilv_row[b_off + x] = row_buf[idx + 2]
+        }
       }
       let is_last = y == frame.height - 1
       if is_last {
@@ -676,7 +682,7 @@ fn parse_encode_options(
     let value = @string.parse_int(args[index + 1][:])
     if allow_ilv && flag == "--ilv" {
       guard (seen & 32) == 0 else { raise Usage("duplicate --ilv flag") }
-      guard value == 0 || value == 1 else { raise Usage("--ilv must be 0 or 1") }
+      guard value >= 0 && value <= 2 else { raise Usage("--ilv must be 0, 1 or 2") }
       seen = seen | 32
       ilv = value
       index += 2
@@ -762,7 +768,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           "--scan-near" => scan_near = Some(parse_int_list(raw_val))
           "--ilv" => {
             ilv = @string.parse_int(raw_val[:])
-            guard ilv == 0 || ilv == 1 else { raise Usage("--ilv must be 0 or 1") }
+            guard ilv >= 0 && ilv <= 2 else { raise Usage("--ilv must be 0, 1 or 2") }
           }
           _ => {
             let value = @string.parse_int(raw_val[:])
@@ -802,8 +808,19 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
         Some(list) => list
         None => Array::make(comp_count, default_near)
       }
-      guard nears.length() == comp_count else {
-        raise @jls.InvalidArgument("scan NEAR count mismatch")
+      if ilv == 0 {
+        guard nears.length() == comp_count else {
+          raise @jls.InvalidArgument("scan NEAR count mismatch")
+        }
+      } else {
+        guard nears.length() == 1 || nears.length() == comp_count else {
+          raise @jls.InvalidArgument("interleaved scan requires one shared NEAR")
+        }
+        for value in nears {
+          guard value == nears[0] else {
+            raise @jls.InvalidArgument("interleaved scan requires one shared NEAR")
+          }
+        }
       }
       let components : Array[@jls.ComponentSpec] = []
       for id in ids {
@@ -863,15 +880,26 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           }
           let reordered = FixedArray::make(planar.length(), 0)
           let plane_len = width * height
+          let component_offsets = order.map(cid => {
+            frame_info.find_component(cid).unwrap() * plane_len
+          })
           let mut dst = 0
           for y in 0..<height {
-            for cid in order {
-              let ci = frame_info.find_component(cid).unwrap()
-              let row_off = ci * plane_len + y * width
-              for x in 0..<width {
-                reordered[dst + x] = planar[row_off + x]
+            let row_off = y * width
+            if ilv == 1 {
+              for comp_off in component_offsets {
+                for x in 0..<width {
+                  reordered[dst + x] = planar[comp_off + row_off + x]
+                }
+                dst += width
               }
-              dst += width
+            } else {
+              for x in 0..<width {
+                for comp_off in component_offsets {
+                  reordered[dst] = planar[comp_off + row_off + x]
+                  dst += 1
+                }
+              }
             }
           }
           with_writer(output, writer => {
@@ -969,7 +997,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
               chunk = value
             }
             "--ilv" => {
-              guard value == 0 || value == 1 else { raise Usage("--ilv must be 0 or 1") }
+              guard value >= 0 && value <= 2 else { raise Usage("--ilv must be 0, 1 or 2") }
               ilv = value
             }
             "--t1" => {
@@ -1004,7 +1032,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
         raise Usage("encode-pgms requires 1..255 input PGM files")
       }
       guard ilv == 0 || (inputs.length() >= 2 && inputs.length() <= 4) else {
-        raise Usage("--ilv 1 requires 2..4 input PGM files")
+        raise Usage("interleaved encoding requires 2..4 input PGM files")
       }
       let sources : Array[(String, @jls.Frame, Int32)] = []
       let components : Array[@jls.ComponentSpec] = []
@@ -1126,6 +1154,13 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
         })
       } else {
         let first_mv = sources[0].2
+        if ilv == 2 {
+          for source in sources {
+            guard source.2 == first_mv else {
+              raise Input("sample-interleaved PGM inputs require the same MAXVAL")
+            }
+          }
+        }
         let scan_preset = if first_mv == frame_info.maxval() {
           preset
         } else {
@@ -1137,7 +1172,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           [
             {
               component_ids: ids,
-              interleave: 1,
+              interleave: ilv,
               near,
               point_transform: 0,
               preset: scan_preset,
@@ -1171,12 +1206,28 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
           let out_buf = FixedArray::make(chunk, b'\x00')
           let mut total_out = 0L
           let mut out_peak = 0
+          let packed = if ilv == 2 {
+            FixedArray::make(width * sources.length(), 0)
+          } else {
+            []
+          }
+          let input_rows = if ilv == 2 { [packed] } else { row_bufs }
           for y in 0..<height {
             for ci in 0..<sources.length() {
-              let row_buf = row_bufs[ci]
-              let got = srcs[ci].samples(row_buf, wides[ci], true)
+              let got = srcs[ci].samples(row_bufs[ci], wides[ci], true)
               guard got == width else { raise Input("truncated component PGM") }
-              let is_last = y == height - 1 && ci == sources.length() - 1
+            }
+            if ilv == 2 {
+              for x in 0..<width {
+                for ci in 0..<sources.length() {
+                  packed[x * sources.length() + ci] = row_bufs[ci][x]
+                }
+              }
+            }
+            for ri in 0..<input_rows.length() {
+              let row_buf = input_rows[ri]
+              let row_len = row_buf.length()
+              let is_last = y == height - 1 && ri == input_rows.length() - 1
               if is_last {
                 for j in 0..<sources.length() {
                   if srcs[j].samples(FixedArray::make(1, 0), wides[j], true) !=
@@ -1187,11 +1238,11 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
                 }
               }
               let mut pos = 0
-              while pos < width || is_last {
+              while pos < row_len || is_last {
                 let step = encoder.step(
                   row_buf,
                   pos,
-                  width - pos,
+                  row_len - pos,
                   out_buf,
                   is_last,
                 )
@@ -1207,7 +1258,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
                 match step.status {
                   Done => break
                   Failed(err) => raise err
-                  NeedInput if !is_last && pos == width => break
+                  NeedInput if !is_last && pos == row_len => break
                   NeedInput if is_last => raise @jls.Truncated
                   NeedInput | NeedOutput | RowReady => ()
                 }
@@ -1222,8 +1273,9 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
               in_peak = s.high_water
             }
           }
+          let conv_bytes = packed.length().to_int64() * 4L
           log_line(
-            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} ilv=1 components=\{sources.length()} scans=1 input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=0 input_high_water=\{in_peak} output_high_water=\{out_peak}",
+            "encoded-pgms width=\{width} height=\{height} bits=\{max_bits} near=\{near} ilv=\{ilv} components=\{sources.length()} scans=1 input_bytes=\{total_in} output_bytes=\{total_out} core_payload_bytes=\{encoder.workspace_bytes()} host_conversion_buffer_bytes=\{conv_bytes} input_high_water=\{in_peak} output_high_water=\{out_peak}",
           )
         })
       }

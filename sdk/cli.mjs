@@ -10,19 +10,20 @@ const help = `Usage: node sdk/cli.mjs encode|decode|inspect --input FILE [--outp
   --chunk N               Samples on encode, bytes on decode
   --output-chunk N        Encoded bytes per sink call
   --width --height --bits Required on encode
-  --components N          Planar components on encode (default: 1)
+  --components N          Components on encode (default: 1)
+  --ilv 0|1|2             Encode order: planes, lines, or samples (default: 0)
   --near N                Default: 0
   --maxval N              Effective MAXVAL, default: full coded range
   --t1 --t2 --t3 --reset  Optional LSE thresholds and reset interval
   --report FILE           Write a verification JSON report to a new file
-All raw input/output samples use unsigned 16-bit little-endian storage (planar across scans).`;
+Raw samples are unsigned 16-bit little-endian. Decode writes component rows in delivery order.`;
 
 function parse(args) {
   const [mode, ...flags] = args;
   if (!['encode', 'decode', 'inspect'].includes(mode)) throw new Error(help);
   const allowed = new Set(['--input', '--output', '--backend', '--chunk', '--output-chunk', '--report']);
   if (mode === 'encode') {
-    for (const key of ['--width', '--height', '--bits', '--components', '--near', '--maxval', '--t1', '--t2', '--t3', '--reset']) allowed.add(key);
+    for (const key of ['--width', '--height', '--bits', '--components', '--ilv', '--near', '--maxval', '--t1', '--t2', '--t3', '--reset']) allowed.add(key);
   }
   const values = new Map();
   for (let i = 0; i < flags.length; i += 2) {
@@ -39,9 +40,16 @@ function parse(args) {
   if (report === '') throw new Error('Report file path is required');
   const number = (key) => values.has(key) ? Number(values.get(key)) : undefined;
   const compCount = number('--components');
+  const interleave = number('--ilv') ?? 0;
+  if (!Number.isInteger(interleave) || interleave < 0 || interleave > 2) {
+    throw new Error('--ilv must be 0, 1 or 2');
+  }
+  if (interleave !== 0 && (!Number.isInteger(compCount) || compCount < 2 || compCount > 4)) {
+    throw new Error('Interleaved encoding requires --components 2, 3 or 4');
+  }
   const frame = {
     width: number('--width'), height: number('--height'), bits: number('--bits'), near: number('--near') ?? 0,
-    maxval: number('--maxval'),
+    interleave, maxval: number('--maxval'),
     preset: { t1: number('--t1'), t2: number('--t2'), t3: number('--t3'), reset: number('--reset') },
     ...(compCount !== undefined ? { components: Array.from({ length: compCount }, (_, i) => ({ id: i + 1 })) } : {}),
   };

@@ -59,6 +59,13 @@ fn pack_scan_samples(
           }
         }
       }
+    } else {
+      let slots = s.component_ids.map(cid => frame.find_component(cid).unwrap())
+      for pixel in 0..<planes[slots[0]].length() {
+        for slot in slots {
+          buf.push(planes[slot][pixel])
+        }
+      }
     }
   }
   FixedArray::from_array(buf[:])
@@ -139,7 +146,14 @@ fn decode_chunked(
         assert_eq(at, coded.length())
         return (dec.frame_info().unwrap(), dec.scans(), pixels, delivery)
       }
-      NeedInput => ()
+      NeedInput => {
+        assert_eq(step.consumed, take)
+        for _ in 0..<2 {
+          let paused = dec.step(coded, at, 0, false)
+          assert_eq(paused.status, NeedInput)
+          assert_eq(paused.consumed, 0)
+        }
+      }
       NeedOutput => fail("unexpected NeedOutput in decoder")
       Failed(err) => raise err
     }
@@ -298,4 +312,286 @@ test "ILV=1 line-interleaved 2/3/4 components, custom LSE1, mixed scans and nega
     (Ok(decode_multicomponent(bad_ns2_ilv0)) catch { e => Err(e) })
     is Err(InvalidData(_)),
   )
+}
+///|
+test "ILV=2 run interruption and zero-gradient regular context match independent literals" {
+  let cases : Array[(Array[Int32], Int32, Int32, Int32, Bool, Bytes)] = [
+    ([201, 9], 2, 0, 1, false, b"\x69\x20"),
+    ([200, 7, 55], 2, 0, 1, false, b"\x69\x49\x00"),
+    ([200, 7, 55], 2, 1, 1, false, b"\x45\x49\x00"),
+    ([200, 7, 55], 2, 2, 1, false, b"\x49\x4a\x00"),
+    ([201, 9, 58, 4], 2, 0, 1, false, b"\x69\x52\x50"),
+    // Four zero vectors grow RUNindex to 4. The middle residual uses its glimit.
+    ([200, 7, 55], 5, 1, 127, true, b"\xf2\x00\x00\x03\xfb\x00"),
+  ]
+  // T.87 B.3 and A.7.2, independently decoded with CharLS Wasm 0.10.0.
+  for entry in cases {
+    let (ids, width, breaker, value, end_only, entropy) = entry
+    let count = ids.length()
+    let frame : FrameInfo = {
+      width,
+      height: 1,
+      bits: 8,
+      components: ids.map(id => { id, h_sampling: 1, v_sampling: 1, }),
+    }
+    let spec : MultiScanSpec = {
+      component_ids: ids,
+      interleave: 2,
+      near: 0,
+      point_transform: 0,
+      preset: Preset::defaults(),
+    }
+    let header = BitWriter::with_capacity(64)
+    header.frame_header(frame)
+    header.scan_header(ids, 0, 2, 0)
+    let expected = Bytes::makei(header.end, i => header.pending[i]) +
+      entropy +
+      b"\xff\xd9"
+    let sample = (slot, x) => {
+      if slot == breaker && (!end_only || x == width - 1) {
+        value
+      } else {
+        0
+      }
+    }
+    let vector = FixedArray::makei(width * count, i => {
+      sample(i % count, i / count)
+    })
+    let planar = FixedArray::makei(width * count, i => {
+      sample(i / width, i % width)
+    })
+    for span in [1, 7, 4096] {
+      let coded = encode_scans_chunks(frame, [spec], vector, span, 1)
+      assert_eq(coded, expected)
+      let (_, scans, pixels, rows) = decode_chunked(expected, span)
+      assert_eq(pixels, planar)
+      assert_eq(scans[0].component_ids, ids)
+      assert_eq(rows, Array::makei(count, slot => (slot, 0)))
+    }
+  }
+}
+
+///|
+test "ILV=2 shared contexts and row groups survive chunk boundaries and scan changes" {
+  let frame : FrameInfo = {
+    width: 5,
+    height: 11,
+    bits: 12,
+    components: [201, 9, 58, 4, 166].map(id => {
+      id,
+      h_sampling: 1,
+      v_sampling: 1,
+    }),
+  }
+  let scans : Array[MultiScanSpec] = [
+    {
+      component_ids: [201, 9, 58, 4],
+      interleave: 2,
+      near: 3,
+      point_transform: 0,
+      preset: { maxval: 1000, t1: 9, t2: 23, t3: 39, reset: 17, },
+    },
+    {
+      component_ids: [166],
+      interleave: 0,
+      near: 0,
+      point_transform: 0,
+      preset: Preset::defaults(),
+    },
+  ]
+  let planes = make_pattern_planes(frame, [1000, 1000, 1000, 1000, 4095])
+  let samples = pack_scan_samples(frame, scans, planes)
+  let coded = encode_scans(frame, scans, samples)
+  for span in [1, 7, 4096] {
+    assert_eq(encode_scans_chunks(frame, scans, samples, span, 1), coded)
+    let (info, scan_info, actual, rows) = decode_chunked(coded, span)
+    assert_eq(info, frame)
+    assert_eq(scan_info[0].preset, scans[0].preset)
+    assert_eq(scan_info[1].preset, default_preset(4095, 0))
+    assert_eq(scan_info[0].rows_decoded, 44)
+    assert_eq(scan_info[1].rows_decoded, 11)
+    assert_eq(rows.length(), 55)
+    for y in 0..<11 {
+      for slot in 0..<4 {
+        assert_eq(rows[y * 4 + slot], (slot, y))
+      }
+      assert_eq(rows[44 + y], (4, y))
+    }
+    for slot in 0..<5 {
+      let near = if slot == 4 { 0 } else { 3 }
+      for px in 0..<55 {
+        assert_true(abs_i32(actual[55 * slot + px] - planes[slot][px]) <= near)
+      }
+    }
+  }
+}
+
+///|
+test "ILV=2 long runs, narrow 16-bit rows and strict invalid streams" {
+  let frame : FrameInfo = {
+    width: 515,
+    height: 2,
+    bits: 16,
+    components: [191, 13, 55, 151].map(id => {
+      id,
+      h_sampling: 1,
+      v_sampling: 1,
+    }),
+  }
+  let spec : MultiScanSpec = {
+    component_ids: [191, 13, 55, 151],
+    interleave: 2,
+    near: 0,
+    point_transform: 0,
+    preset: Preset::defaults(),
+  }
+  let original = FixedArray::makei(515 * 2 * 4, i => {
+    if i == 510 * 4 {
+      65535
+    } else if i >= 515 * 4 + 2 && i % 4 == 2 {
+      32768
+    } else {
+      0
+    }
+  })
+  let coded = encode_scans(frame, [spec], original)
+  let (_, _, actual, _) = decode_chunked(coded, 1)
+  for pixel in 0..<1030 {
+    for slot in 0..<4 {
+      assert_eq(actual[slot * 1030 + pixel], original[pixel * 4 + slot])
+    }
+  }
+  assert_eq(encode_scans_chunks(frame, [spec], original, 7, 1), coded)
+  let narrow = { ..frame, width: 1, height: 3, }
+  let extremes : FixedArray[Int32] = [
+    32768, 65535, 32767, 65535, 0, 32767, 65535, 32768, 65535, 0, 0, 65535,
+  ]
+  let thin = encode_scans_chunks(narrow, [spec], extremes, 1, 1)
+  let (_, _, thin_pixels, _) = decode_chunked(thin, 7)
+  assert_eq(
+    thin_pixels,
+    FixedArray::makei(12, i => extremes[i % 3 * 4 + i / 3]),
+  )
+  let structure = inspect(coded)
+  let sos = structure.scans[0].header_offset.to_int()
+  let entropy = structure.scans[0].entropy_offset.to_int()
+  let unknown_id = Bytes::makei(coded.length(), i => {
+    if i == sos + 7 {
+      b'\x80'
+    } else {
+      coded[i]
+    }
+  })
+  let duplicate_id = Bytes::makei(coded.length(), i => {
+    if i == sos + 7 {
+      coded[sos + 5]
+    } else {
+      coded[i]
+    }
+  })
+  let out_of_order = Bytes::makei(coded.length(), i => {
+    if i == sos + 5 {
+      coded[sos + 7]
+    } else if i == sos + 7 {
+      coded[sos + 5]
+    } else {
+      coded[i]
+    }
+  })
+  // Make the first plane twice as wide as the others via its H factor.
+  let unequal = Bytes::makei(coded.length(), i => {
+    if i == 12 {
+      b'\x21'
+    } else {
+      coded[i]
+    }
+  })
+  for
+    malformed in [
+      unknown_id,
+      duplicate_id,
+      out_of_order,
+      unequal,
+      coded[:entropy].to_owned() + b"\xff\xd9",
+      coded + b"\x00",
+    ] {
+    assert_true(
+      (Ok(decode_multicomponent(malformed)) catch { err => Err(err) })
+      is Err(InvalidData(_)),
+    )
+  }
+  for cut in 0..<coded.length() {
+    assert_true(
+      (Ok(decode_multicomponent(coded[:cut].to_owned())) catch {
+        err => Err(err)
+      })
+      is Err(Truncated),
+    )
+  }
+  let uneven_frame = {
+    ..frame,
+    components: [
+      { id: 191, h_sampling: 2, v_sampling: 1, },
+      frame.components[1],
+      frame.components[2],
+      frame.components[3],
+    ],
+  }
+  assert_true(
+    (Ok(Encoder::new_scans(uneven_frame, [spec], Limits::default())) catch {
+      err => Err(err)
+    })
+    is Err(
+      InvalidArgument(
+        "sample-interleaved components must have identical dimensions",
+      ),
+    ),
+  )
+}
+
+///|
+test "ILV=2 initializes shared state per scan and inherits raw LSE1 defaults" {
+  let frame : FrameInfo = {
+    width: 7,
+    height: 3,
+    bits: 12,
+    components: [211, 9, 58, 4].map(id => { id, h_sampling: 1, v_sampling: 1, }),
+  }
+  let preset = { ..Preset::defaults(), maxval: 1000, }
+  let specs : Array[MultiScanSpec] = [
+    {
+      component_ids: [211, 9],
+      interleave: 2,
+      near: 3,
+      point_transform: 0,
+      preset,
+    },
+    {
+      component_ids: [58, 4],
+      interleave: 2,
+      near: 0,
+      point_transform: 0,
+      preset,
+    },
+  ]
+  let planes = make_pattern_planes(frame, [1000, 1000, 1000, 1000])
+  let coded = encode_scans(
+    frame,
+    specs,
+    pack_scan_samples(frame, specs, planes),
+  )
+  let structure = inspect(coded)
+  let first_lse = structure.scans[0].header_offset.to_int() - 15
+  let second_lse = structure.scans[1].header_offset.to_int() - 15
+  // Keep MAXVAL=1000 and reset all remaining fields to their dynamic defaults.
+  // Strip the second LSE so its scan inherits the first marker with a new NEAR.
+  let inherited = coded[:first_lse + 7].to_owned() +
+    b"\x00\x00\x00\x00\x00\x00\x00\x00" +
+    coded[first_lse + 15:second_lse].to_owned() +
+    coded[second_lse + 15:].to_owned()
+  let (_, parsed, samples, _) = decode_chunked(inherited, 1)
+  let (_, _, original, _) = decode_chunked(coded, 7)
+  assert_eq(samples, original)
+  assert_eq(parsed[0].preset, default_preset(1000, 3))
+  assert_eq(parsed[1].preset, default_preset(1000, 0))
 }

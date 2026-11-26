@@ -191,5 +191,126 @@ if (!isMainThread) {
       pauseCancel?.();
       await assert.rejects(cancelJob.result, { code: 'Cancelled' });
     });
+
+    test(`real ${backend} ILV=2 Worker preserves SOS row order through ACK, cancellation, and restart`, { timeout: 15000 }, async () => {
+      const ilvFrame = {
+        width: 9, height: 4, bits: 16, near: 0,
+        components: [99, 10, 2],
+        scans: [{ componentIds: [99, 10, 2], interleave: 2 }],
+      };
+      const planeSize = ilvFrame.width * ilvFrame.height;
+      const planes = ilvFrame.components.map((_, ci) =>
+        Uint16Array.from({ length: planeSize }, (_, p) => (p * 1297 + ci * 553 + 7) & 65535));
+      const core = await loadCore({ backend });
+      const { bytes: coded } = await encodePlanarImage(core, ilvFrame, planes, { inputChunkSize: 7, outputChunkSize: 3 });
+
+      // The streaming Worker encoder takes one sample per SOS component at each pixel.
+      const packed = new Uint16Array(planeSize * 3);
+      for (let p = 0; p < planeSize; p++) {
+        packed.set([planes[0][p], planes[1][p], planes[2][p]], p * 3);
+      }
+      let packedOffset = 0;
+      const workerBytes = [];
+      const encoder = startWorker({
+        mode: 'encode', backend, frame: ilvFrame, inputChunkSize: 7, outputChunkSize: 3,
+        read(size) {
+          if (packedOffset === packed.length) return null;
+          const chunk = packed.slice(packedOffset, packedOffset + size);
+          packedOffset += chunk.length;
+          return chunk;
+        },
+        onEvent(event) {
+          if (event.type === 'bytes') workerBytes.push(event.chunk);
+        },
+      });
+      const encoded = await encoder.result;
+      assert.deepEqual(Uint8Array.from(workerBytes.flatMap(chunk => [...chunk])), coded);
+      assert.equal(encoded.stats.outputQueueBytes, 0);
+
+      // Cancel while the consumer holds the first row ACK, then immediately start a new decoder.
+      let seenFirstRow;
+      const firstRow = new Promise(resolve => { seenFirstRow = resolve; });
+      let releaseAck;
+      const ackGate = new Promise(resolve => { releaseAck = resolve; });
+      let cancelledOffset = 0;
+      let cancelledRows = 0;
+      let cancelledAcks = 0;
+      const cancelledJob = startWorker({
+        mode: 'decode', backend, inputChunkSize: 7, maxBatchBytes: 54,
+        read(size) {
+          if (cancelledOffset === coded.length) return null;
+          const chunk = coded.slice(cancelledOffset, cancelledOffset + size);
+          cancelledOffset += chunk.length;
+          return chunk;
+        },
+        async onEvent(event) {
+          if (event.type !== 'row') return;
+          cancelledRows++;
+          seenFirstRow();
+          await ackGate;
+        },
+        onAck(event) {
+          if (event.type === 'row') cancelledAcks++;
+        },
+      });
+      await Promise.race([firstRow, cancelledJob.result.then(() => assert.fail('Expected a held row ACK'))]);
+      const cancelled = assert.rejects(cancelledJob.result, { code: 'Cancelled' });
+      cancelledJob.cancel();
+
+      // Stage through the entropy segment and hold EOI until every row has been delivered.
+      const eoi = coded.length - 2;
+      let releaseEoi;
+      const eoiGate = new Promise(resolve => { releaseEoi = resolve; });
+      let rowsReady;
+      const allRows = new Promise(resolve => { rowsReady = resolve; });
+      const delivered = [];
+      let decodedOffset = 0;
+      const job = startWorker({
+        mode: 'decode', backend, inputChunkSize: 7, maxBatchBytes: 54,
+        async read(size) {
+          if (decodedOffset === coded.length) return null;
+          if (decodedOffset === eoi) {
+            assert.equal(delivered.length, 3 * ilvFrame.height, 'All rows must be delivered before reading EOI');
+            await eoiGate;
+          }
+          const end = Math.min(decodedOffset + size, decodedOffset < eoi ? eoi : coded.length);
+          const chunk = coded.slice(decodedOffset, end);
+          decodedOffset = end;
+          return chunk;
+        },
+        onEvent(event) {
+          if (event.type !== 'row' && event.type !== 'rows') return;
+          const payload = event.row ?? event.samples;
+          const index = event.index ?? event.startIndex;
+          assert.equal(event.count ?? 1, 1, 'Rows from different SOS components cannot share a batch');
+          assert.equal(event.scanIndex, 0);
+          assert.equal(event.interleave, 2);
+          assert.equal(event.layout, 'planar');
+          assert.equal(event.stride, ilvFrame.width);
+          assert.equal(event.height, ilvFrame.height);
+          assert.equal(event.sampleBytes, 2);
+          assert.equal(event.stats.outputQueueBytes, payload.buffer.byteLength);
+          assert.deepEqual(payload, planes[event.componentIndex].slice(index * ilvFrame.width, (index + 1) * ilvFrame.width));
+          delivered.push([event.componentId, index]);
+          if (delivered.length === 3 * ilvFrame.height) rowsReady();
+        },
+      });
+      await cancelled;
+      releaseAck();
+      try {
+        await Promise.race([allRows, job.result.then(() => assert.fail('Expected all rows before EOI'))]);
+        assert.equal(cancelledRows, 1);
+        assert.equal(cancelledAcks, 0);
+        assert.deepEqual(delivered, Array.from({ length: ilvFrame.height }, (_, y) => [[99, y], [10, y], [2, y]]).flat());
+        assert.equal(decodedOffset, eoi);
+      } finally {
+        releaseEoi();
+      }
+      const done = await job.result;
+      assert.equal(done.stats.rows, 3 * ilvFrame.height);
+      assert.equal(done.stats.outputQueueBytes, 0);
+      assert.equal(done.stats.outputPeakBytes, 72, '54-byte batch and 18-byte source row');
+      assert.ok(done.scans[0].completed);
+    });
   }
 }

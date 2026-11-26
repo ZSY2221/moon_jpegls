@@ -305,7 +305,7 @@
       "id": "neg-interleaved-ilv2",
       "input": "neg-interleaved-ilv2.jls",
       "sha256": "ff46f8cefcc3dc46af57afa2e2f2a2888d17d30a485d58be36f78bbbfb739943",
-      "expectedCode": "UnsupportedFeature"
+      "expectedCode": "InvalidData"
     },
     {
       "id": "neg-invalid-inherited-lse1",

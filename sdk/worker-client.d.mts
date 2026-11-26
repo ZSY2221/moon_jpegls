@@ -17,6 +17,7 @@ export interface WorkerRowMeta {
   componentId?: number;
   near?: number;
   height?: number;
+  /** Coding interleave. Decoded rows use planar layout for all modes. */
   interleave?: number;
   pointTransform?: number;
   layout?: 'planar';
@@ -36,7 +37,7 @@ interface WorkerOptions extends SessionOptions {
   backend?: Backend;
   /**
    * Decode batch buffer budget, integer 0..1048576 bytes; 0 disables batching.
-   * The first row of each scan is delivered immediately, and batches never span scans.
+   * The first row of each component is delivered immediately, and batches never span components or scans.
    * Rows remain atomic if wider than this budget. An output copy can additionally hold
    * one source row, so this is not a total Worker memory limit. ACK follows completion of onEvent.
    */

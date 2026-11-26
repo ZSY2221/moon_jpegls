@@ -95,11 +95,15 @@ fn Scan::new_interleaved(
   let comp_heights : Array[Int32] = []
   let comp_v_samplings : Array[Int32] = []
   let max_v = info.max_v_sampling()
-  let mcu_rows = ceil_div(info.height, max_v)
   for ci in comp_indices {
     comp_widths.push(info.component_width(ci))
     comp_heights.push(info.component_height(ci))
     comp_v_samplings.push(info.components[ci].v_sampling)
+  }
+  let mcu_rows = if ilv == 2 {
+    comp_heights[0]
+  } else {
+    ceil_div(info.height, max_v)
   }
   if ilv == 0 && ns == 1 {
     let base = Scan::new(comp_widths[0], params)
@@ -145,7 +149,7 @@ fn Scan::new_interleaved(
     comp_curr,
     comp_prev_left: FixedArray::make(ns, 0),
     comp_rows: FixedArray::make(ns, 0),
-    comp_run_index: FixedArray::make(ns, 0),
+    comp_run_index: FixedArray::make(if ilv == 1 { ns } else { 0 }, 0),
     ilv,
     mcu_rows,
     active_comp: 0,
@@ -199,7 +203,11 @@ fn Scan::next_line_or_finish(self : Scan) -> Bool {
     return true
   }
   let c = self.active_comp
-  let line_y = self.mcu_row * self.comp_v_samplings[c] + self.mcu_v_step
+  let line_y = if self.ilv == 2 {
+    self.mcu_row
+  } else {
+    self.mcu_row * self.comp_v_samplings[c] + self.mcu_v_step
+  }
   let is_real = line_y < self.comp_heights[c]
   if is_real {
     self.last_row_comp = c
@@ -211,9 +219,11 @@ fn Scan::next_line_or_finish(self : Scan) -> Bool {
     self.comp_rows[c] += 1
     self.total_rows += 1
   }
-  self.comp_run_index[c] = self.run_index
+  if self.ilv == 1 {
+    self.comp_run_index[c] = self.run_index
+  }
   self.mcu_v_step += 1
-  if self.mcu_v_step >= self.comp_v_samplings[c] {
+  if self.ilv == 2 || self.mcu_v_step >= self.comp_v_samplings[c] {
     self.mcu_v_step = 0
     self.active_comp += 1
     if self.active_comp >= self.comp_indices.length() {
@@ -221,16 +231,52 @@ fn Scan::next_line_or_finish(self : Scan) -> Bool {
       self.mcu_row += 1
     }
   }
-  self.x = 0
+  // In ILV=2 the whole row group is decoded before any component row is delivered.
+  if self.ilv != 2 || self.active_comp == 0 {
+    self.x = 0
+  }
   if self.mcu_row < self.mcu_rows {
-    let nc = self.active_comp
-    self.previous = self.comp_prev[nc]
-    self.current = self.comp_curr[nc]
-    self.previous_left = self.comp_prev_left[nc]
-    self.run_index = self.comp_run_index[nc]
-    self.active_width = self.comp_widths[nc]
+    self.select_component(self.active_comp)
+    if self.ilv == 1 {
+      self.run_index = self.comp_run_index[self.active_comp]
+    }
   }
   is_real
+}
+
+///|
+fn Scan::select_component(self : Scan, slot : Int32) -> Unit {
+  self.active_comp = slot
+  self.previous = self.comp_prev[slot]
+  self.current = self.comp_curr[slot]
+  self.previous_left = self.comp_prev_left[slot]
+  self.active_width = self.comp_widths[slot]
+}
+
+///|
+fn Scan::neighbors(self : Scan) -> (Int32, Int32, Int32, Int32) {
+  let x = self.x
+  let a = self.left()
+  let b = self.previous[x]
+  let c = if x == 0 { self.previous_left } else { self.previous[x - 1] }
+  let d = self.previous[min(x + 1, self.active_width - 1)]
+  (a, b, c, d)
+}
+
+///|
+fn Scan::joint_run_context(self : Scan) -> Bool {
+  // Called at a vector boundary. Scan each component's independent neighborhood.
+  let mut joint = true
+  for slot in 0..<self.comp_indices.length() {
+    self.select_component(slot)
+    let (a, b, c, d) = self.neighbors()
+    if self.context_id(a, b, c, d) != 0 {
+      joint = false
+      break
+    }
+  }
+  self.select_component(0)
+  joint
 }
 
 ///|
@@ -245,6 +291,14 @@ fn Scan::left(self : Scan) -> Int32 {
 ///|
 fn Scan::store(self : Scan, value : Int32) -> Unit {
   self.current[self.x] = value
+  if self.ilv == 2 {
+    let next = self.active_comp + 1
+    if next < self.comp_indices.length() {
+      self.select_component(next)
+      return
+    }
+    self.select_component(0)
+  }
   self.x += 1
 }
 

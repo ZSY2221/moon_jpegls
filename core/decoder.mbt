@@ -204,33 +204,43 @@ pub fn Decoder::cancel(self : Decoder) -> Unit {
 
 ///|
 fn Decoder::start_sample(self : Decoder, scan : Scan) -> Unit {
-  let x = scan.x
-  let a = if x == 0 { scan.previous[0] } else { scan.current[x - 1] }
-  let b = scan.previous[x]
-  let c = if x == 0 { scan.previous_left } else { scan.previous[x - 1] }
-  let d = scan.previous[min(x + 1, scan.active_width - 1)]
+  let (a, b, c, d) = scan.neighbors()
   let id = scan.context_id(a, b, c, d)
-  if id == 0 {
+  let run = if scan.ilv == 2 { scan.joint_run_context() } else { id == 0 }
+  if run {
     self.phase = RunBits
     self.phase_pred = a
   } else {
-    let index = abs_i32(id)
-    let sign = sign_of(id)
-    let k = golomb_order(scan.ctx_a[index], scan.ctx_n[index])
-    let p = scan.params
-    self.golomb.start(k, p.limit, p.qbpp)
-    self.phase = Regular
-    self.phase_index = index
-    self.phase_sign = sign
-    self.phase_pred = scan.prediction_at(a, b, c, index, sign)
-    self.phase_flag = scan.regular_invert(index, k)
+    self.start_regular(scan, a, b, c, id)
   }
+}
+
+///|
+fn Decoder::start_regular(
+  self : Decoder,
+  scan : Scan,
+  a : Int32,
+  b : Int32,
+  c : Int32,
+  id : Int32,
+) -> Unit {
+  let index = abs_i32(id)
+  let sign = sign_of(id)
+  let k = golomb_order(scan.ctx_a[index], scan.ctx_n[index])
+  let p = scan.params
+  self.golomb.start(k, p.limit, p.qbpp)
+  self.phase = Regular
+  self.phase_index = index
+  self.phase_sign = sign
+  self.phase_pred = scan.prediction_at(a, b, c, index, sign)
+  self.phase_flag = scan.regular_invert(index, k)
 }
 
 ///|
 fn Decoder::start_interruption(self : Decoder, scan : Scan, a : Int32) -> Unit {
   let b = scan.previous[scan.x]
-  let (kind, predicted, sign) = if abs_i32(a - b) <= scan.params.near {
+  let (kind, predicted, sign) = if scan.ilv != 2 &&
+    abs_i32(a - b) <= scan.params.near {
     (1, a, 1)
   } else {
     (0, b, sign_of(b - a))
@@ -247,10 +257,20 @@ fn Decoder::start_interruption(self : Decoder, scan : Scan, a : Int32) -> Unit {
 
 ///|
 fn fill_run(scan : Scan, value : Int32, count : Int32) -> Unit {
-  let curr = scan.current
   let start = scan.x
-  for i in 0..<count {
-    curr[start + i] = value
+  if scan.ilv == 2 {
+    for slot in 0..<scan.comp_indices.length() {
+      scan.select_component(slot)
+      let a = scan.left()
+      for i in 0..<count {
+        scan.current[start + i] = a
+      }
+    }
+    scan.select_component(0)
+  } else {
+    for i in 0..<count {
+      scan.current[start + i] = value
+    }
   }
   scan.x = start + count
 }
@@ -280,7 +300,12 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
       }
       scan.update_regular(self.phase_index, error)
       scan.store(p.reconstruct(self.phase_pred, self.phase_sign * error))
-      self.phase = Sample
+      if scan.active_comp != 0 && scan.ilv == 2 {
+        let (a, b, c, d) = scan.neighbors()
+        self.start_regular(scan, a, b, c, scan.context_id(a, b, c, d))
+      } else {
+        self.phase = Sample
+      }
       1
     }
     RunBits => {
@@ -341,8 +366,12 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
       }
       scan.update_run(kind, error, mapped)
       scan.store(p.reconstruct(self.phase_pred, self.phase_sign * error))
-      scan.run_index = max(0, scan.run_index - 1)
-      self.phase = Sample
+      if scan.active_comp != 0 && scan.ilv == 2 {
+        self.start_interruption(scan, scan.left())
+      } else {
+        scan.run_index = max(0, scan.run_index - 1)
+        self.phase = Sample
+      }
       1
     }
     _ => 0
@@ -381,7 +410,11 @@ fn Decoder::record_error_location(self : Decoder) -> Unit {
       offset,
     })
   } else {
-    let comp_id = self.current_component_id()
+    // Entropy errors refer to the component being read, even after earlier row deliveries.
+    let comp_id = match self.scan {
+      Some(scan) if scan.ilv == 2 => scan.comp_ids[scan.active_comp]
+      _ => self.current_component_id()
+    }
     let marker = match self.phase {
       EndPrefix | EndCode => self.header.marker
       _ => 0xDA
@@ -487,7 +520,7 @@ pub fn Decoder::step(
             }
             continue
           }
-          if self.phase is Sample && consumed < length {
+          if scan.ilv != 2 && self.phase is Sample && consumed < length {
             let p = scan.params
             let prev = scan.previous
             let curr = scan.current
@@ -631,7 +664,7 @@ pub fn Decoder::step(
                     r
                   }
                   let mut mapped = (zeros << k) | rem
-                  if near == 0 && k == 0 && (cb << 1) <= -cn {
+                  if near == 0 && k == 0 && cb << 1 <= -cn {
                     mapped = mapped ^ 1
                   }
                   let error = if (mapped & 1) == 0 {
@@ -709,7 +742,7 @@ pub fn Decoder::step(
                   self.phase_index = index
                   self.phase_sign = sign
                   self.phase_pred = predicted
-                  self.phase_flag = if near == 0 && k == 0 && (cb << 1) <= -cn {
+                  self.phase_flag = if near == 0 && k == 0 && cb << 1 <= -cn {
                     1
                   } else {
                     0
@@ -838,9 +871,11 @@ pub fn Decoder::step(
                     }
                     let rb = prev[x]
                     let d_ab = a - rb
-                    let (kind, predicted, sign) = if (
-                        if d_ab < 0 { -d_ab } else { d_ab }
-                      ) <=
+                    let (kind, predicted, sign) = if (if d_ab < 0 {
+                        -d_ab
+                      } else {
+                        d_ab
+                      }) <=
                       near {
                       (1, a, 1)
                     } else {
@@ -849,7 +884,8 @@ pub fn Decoder::step(
                     let rn = run_n[kind]
                     let ra = run_a[kind]
                     let k = golomb_order(
-                      ra + ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
+                      ra +
+                      ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
                       rn,
                     )
                     let r_esc = escape_limit - exponent - 1
@@ -868,7 +904,7 @@ pub fn Decoder::step(
                       let mapped = (zeros << k) | rem
                       let shifted = mapped + kind
                       let magnitude = (shifted + 1) >> 1
-                      let neg_odd = k != 0 || (run_neg[kind] << 1) >= rn
+                      let neg_odd = k != 0 || run_neg[kind] << 1 >= rn
                       let negative = ((shifted & 1) == 1) == neg_odd
                       let error = if negative { -magnitude } else { magnitude }
                       if error < min_err || error > max_err {
@@ -880,7 +916,8 @@ pub fn Decoder::step(
                       }
                       let mut rneg = run_neg[kind] +
                         (if error < 0 { 1 } else { 0 })
-                      let mut ua = ra + ((mapped + 1 - kind) >> 1).reinterpret_as_uint()
+                      let mut ua = ra +
+                        ((mapped + 1 - kind) >> 1).reinterpret_as_uint()
                       let mut un = rn
                       if un == reset {
                         ua = ua >> 1
@@ -917,7 +954,7 @@ pub fn Decoder::step(
                       self.phase_index = kind
                       self.phase_pred = predicted
                       self.phase_sign = sign
-                      self.phase_flag = if k != 0 || (run_neg[kind] << 1) >= rn {
+                      self.phase_flag = if k != 0 || run_neg[kind] << 1 >= rn {
                         1
                       } else {
                         0
@@ -1028,7 +1065,9 @@ pub fn Decoder::step(
                   self.frame = Some(frame)
                   self.scans.push(scan_info)
                   self.current_scan = self.scans.length() - 1
-                  self.scan = Some(Scan::new_interleaved(info, scan_info, params))
+                  self.scan = Some(
+                    Scan::new_interleaved(info, scan_info, params),
+                  )
                 }
               }
             }

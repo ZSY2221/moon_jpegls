@@ -136,7 +136,6 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
     raise InvalidData("SOF55 fields or length")
   }
   let parsed : Array[ComponentSpec] = []
-  let mut has_subsampling = false
   for index in 0..<count {
     let pos = 6 + 3 * index
     let id = self.at(pos)
@@ -151,13 +150,7 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
         raise InvalidData("duplicate SOF55 component identifier")
       }
     }
-    if h != 1 || v != 1 {
-      has_subsampling = true
-    }
-    parsed.push({ id, h_sampling: h, v_sampling: v })
-  }
-  guard !has_subsampling else {
-    raise UnsupportedFeature("component subsampling")
+    parsed.push({ id, h_sampling: h, v_sampling: v, })
   }
   let height = self.word(1)
   let width = self.word(3)
@@ -258,8 +251,26 @@ fn HeaderParser::scan_segment(
     (transform == 0 || !any_mapping) else {
     raise InvalidData("SOS scan parameters")
   }
-  guard ilv != 2 else {
-    raise UnsupportedFeature("sample-interleaved scan")
+  if ilv == 2 {
+    let frame = self.frame_info()
+    let first = selected[0]
+    let width = frame.component_width(first)
+    let height = frame.component_height(first)
+    for i in 1..<selected.length() {
+      let ci = selected[i]
+      self.last_component_id = comp_ids[i]
+      guard ci > selected[i - 1] else {
+        raise InvalidData(
+          "sample-interleaved components must follow frame order",
+        )
+      }
+      guard frame.component_width(ci) == width &&
+        frame.component_height(ci) == height else {
+        raise InvalidData(
+          "sample-interleaved components must have identical dimensions",
+        )
+      }
+    }
   }
   for comp_idx in selected {
     guard !self.seen_components[comp_idx] else {
@@ -267,10 +278,20 @@ fn HeaderParser::scan_segment(
       raise InvalidData("duplicate scan for component")
     }
   }
+  for comp in self.components {
+    guard comp.h_sampling == 1 && comp.v_sampling == 1 else {
+      raise UnsupportedFeature("component subsampling")
+    }
+  }
   let comp_idx = selected[0]
   let comp_id = comp_ids[0]
   self.last_component_id = comp_id
-  let frame : Frame = { width: self.width, height: self.height, bits: self.bits, near }
+  let frame : Frame = {
+    width: self.width,
+    height: self.height,
+    bits: self.bits,
+    near,
+  }
   let requested : Preset = {
     maxval: self.preset[0],
     t1: self.preset[1],
@@ -291,7 +312,13 @@ fn HeaderParser::scan_segment(
   }
   self.scanned_count += count
   self.scan_count += 1
-  self.record_marker(0xDA, self.marker_offset, self.length + 4, scan_index, comp_id)
+  self.record_marker(
+    0xDA,
+    self.marker_offset,
+    self.length + 4,
+    scan_index,
+    comp_id,
+  )
   let scan_info : ScanInfo = {
     scan_index,
     component_index: comp_idx,

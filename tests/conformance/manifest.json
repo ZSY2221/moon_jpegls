@@ -402,7 +402,7 @@
       "scans": 1,
       "interleave": 1,
       "feature": "Three components, line interleave",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
@@ -450,7 +450,7 @@
       "scans": 1,
       "interleave": 2,
       "feature": "Three components, sample interleave",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
@@ -552,7 +552,7 @@
       "scans": 1,
       "interleave": 1,
       "feature": "Three components, line interleave",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
@@ -600,7 +600,7 @@
       "scans": 1,
       "interleave": 2,
       "feature": "Three components, sample interleave",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {

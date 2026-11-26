@@ -312,6 +312,9 @@ class Session {
           : resolved.frame;
         this.#preset = resolved.preset;
       } else {
+        if (frame.interleave === 2) {
+          throw new CodecError('InvalidArgument', 'Sample interleave requires multiple frame components');
+        }
         const preset = requestedPreset(frame);
         const args = [...frameValues, near, inputChunkSize, outputChunkSize, ...budget];
         if (bindings.encoder_new_with_preset) {
@@ -766,8 +769,17 @@ export async function encodePlanarImage(core, frame, input, options = {}) {
             }
           }
         }
+      } else if (ilv === 2) {
+        const width = dims.widths[idxs[0]];
+        const height = dims.heights[idxs[0]];
+        if (!idxs.every((ci) => dims.widths[ci] === width && dims.heights[ci] === height)) {
+          throw new CodecError('InvalidArgument', 'Sample-interleaved scan components must have equal dimensions');
+        }
+        for (let sample = 0; sample < width * height; sample++) {
+          for (const ci of idxs) samples[outOffset++] = input[ci][sample];
+        }
       } else {
-        throw new CodecError('UnsupportedFeature', 'Sample-interleaved packing requires M3-B1b');
+        throw new CodecError('InvalidArgument', 'Invalid scan interleave mode');
       }
     }
   } else {

@@ -20,6 +20,7 @@ export interface ComponentSpec {
 export interface ScanSpec {
   readonly componentId?: number;
   readonly componentIds?: readonly number[];
+  /** 0: one component per scan, 1: line-interleaved, 2: sample-interleaved. */
   readonly interleave?: number;
   readonly pointTransform?: number;
   readonly near?: number;
@@ -233,6 +234,10 @@ export function componentDimensions(frame: Pick<Frame, 'width' | 'height' | 'com
   offsets: number[];
   total: number;
 };
+/**
+ * An array holds one plane per declared component. A flat array already follows scan order:
+ * full planes for ILV=0, lines for ILV=1, and one sample per SOS component at each pixel for ILV=2.
+ */
 export function encodePlanarImage(core: Core, frame: Frame, input: Uint16Array | readonly Uint16Array[],
   options?: Omit<EncodeOptions, 'frame' | 'onBytes' | 'read'>): Promise<StreamResult & { bytes: Uint8Array; hostConversionBufferBytes: number }>;
 export function decodeImage(core: Core, bytes: Uint8Array,

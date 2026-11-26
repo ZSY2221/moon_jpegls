@@ -16,11 +16,13 @@ pub struct Encoder {
   priv mut scan_header : Bool
   priv mut trailer : Bool
   priv mut run : Int32
+  priv vector : FixedArray[Int32]
+  priv mut vector_size : Int32
   priv mut terminal : Status?
 }
 
 ///|
-/// Creates a multi-component encoder supporting ILV=0 and ILV=1 scans.
+/// Creates a multi-component encoder supporting ILV=0, ILV=1 and ILV=2 scans.
 pub fn Encoder::new_scans(
   frame_info : FrameInfo,
   scans : Array[MultiScanSpec],
@@ -37,8 +39,11 @@ pub fn Encoder::new_scans(
     guard comp.id >= 0 && comp.id <= 255 else {
       raise InvalidArgument("component id must be in 0..255")
     }
-    guard comp.h_sampling == 1 && comp.v_sampling == 1 else {
-      raise UnsupportedFeature("component sampling factors must be 1x1")
+    guard comp.h_sampling >= 1 &&
+      comp.h_sampling <= 4 &&
+      comp.v_sampling >= 1 &&
+      comp.v_sampling <= 4 else {
+      raise InvalidArgument("component sampling factors must be in 1..4")
     }
     for earlier in 0..<index {
       guard comp.id != frame_info.components[earlier].id else {
@@ -51,6 +56,7 @@ pub fn Encoder::new_scans(
   }
   let seen = Array::make(count, false)
   let mut scanned_count = 0
+  let mut max_vector_size = 0
   let resolved : Array[ResolvedScan] = []
   let mut last_emitted_lse : Preset? = None
   for i in 0..<scans.length() {
@@ -63,11 +69,11 @@ pub fn Encoder::new_scans(
       raise UnsupportedFeature("point transform is not supported yet")
     }
     guard (ns == 1 && spec.interleave == 0) ||
-      (ns > 1 && spec.interleave == 1) else {
-      if ns > 1 && spec.interleave == 2 {
-        raise UnsupportedFeature("sample-interleaved scan")
-      }
+      (ns > 1 && (spec.interleave == 1 || spec.interleave == 2)) else {
       raise InvalidArgument("invalid scan interleave mode")
+    }
+    if spec.interleave == 2 {
+      max_vector_size = max(max_vector_size, ns)
     }
     let comp_indices : Array[Int32] = []
     let comp_ids : Array[Int32] = []
@@ -77,6 +83,22 @@ pub fn Encoder::new_scans(
       }
       guard !seen[comp_idx] else {
         raise InvalidArgument("duplicate scan for component id")
+      }
+      if spec.interleave == 2 && comp_indices.length() > 0 {
+        let first = comp_indices[0]
+        guard frame_info.component_width(comp_idx) ==
+          frame_info.component_width(first) &&
+          frame_info.component_height(comp_idx) ==
+          frame_info.component_height(first) else {
+          raise InvalidArgument(
+            "sample-interleaved components must have identical dimensions",
+          )
+        }
+        guard comp_idx > comp_indices[comp_indices.length() - 1] else {
+          raise InvalidArgument(
+            "sample-interleaved components must follow frame order",
+          )
+        }
       }
       seen[comp_idx] = true
       comp_indices.push(comp_idx)
@@ -124,7 +146,15 @@ pub fn Encoder::new_scans(
   guard scanned_count == count else {
     raise InvalidArgument("scans must cover every declared frame component")
   }
-  let cap = if count == 1 { 32 } else { max(32, 16 + 3 * count) }
+  for comp in frame_info.components {
+    guard comp.h_sampling == 1 && comp.v_sampling == 1 else {
+      raise UnsupportedFeature("component sampling factors must be 1x1")
+    }
+  }
+  // A vector can emit four 64-bit Golomb symbols plus the run prefix.
+  // Include the partially filled byte and allow as few as seven bits per byte.
+  let vector_bytes = ceil_div(64 * max_vector_size + 16 + 7, 7)
+  let cap = max(32, max(16 + 3 * count, vector_bytes))
   let bits = BitWriter::with_capacity(cap)
   bits.frame_header(frame_info)
   let first = resolved[0]
@@ -143,6 +173,8 @@ pub fn Encoder::new_scans(
     scan_header: false,
     trailer: false,
     run: -1,
+    vector: FixedArray::make(max_vector_size, 0),
+    vector_size: 0,
     terminal: None,
   }
 }
@@ -251,7 +283,9 @@ pub fn Encoder::preset(self : Encoder) -> Preset {
 
 ///|
 pub fn Encoder::workspace_bytes(self : Encoder) -> Int32 {
-  self.scan.workspace_bytes() + self.bits.pending.length()
+  self.scan.workspace_bytes() +
+  self.bits.pending.length() +
+  4 * self.vector.length()
 }
 
 ///|
@@ -314,19 +348,93 @@ fn Encoder::run_sample(self : Encoder, sample : Int32, a : Int32) -> Unit {
     } else {
       (0, b, sign_of(b - a))
     }
-    let k = scan.run_order(kind)
-    let error = p.reduce(sign * (sample - predicted))
-    let mapped_sign = if error == 0 {
-      0
-    } else if (error < 0) == scan.run_negative_odd(kind, k) {
-      1
-    } else {
-      0
+    self.interruption(sample, kind, predicted, sign, exponent)
+    scan.run_index = max(0, scan.run_index - 1)
+    self.run = -1
+  }
+}
+
+///|
+fn Encoder::interruption(
+  self : Encoder,
+  sample : Int32,
+  kind : Int32,
+  predicted : Int32,
+  sign : Int32,
+  exponent : Int32,
+) -> Unit {
+  let scan = self.scan
+  let p = scan.params
+  let k = scan.run_order(kind)
+  let error = p.reduce(sign * (sample - predicted))
+  let mapped_sign = if error != 0 &&
+    (error < 0) == scan.run_negative_odd(kind, k) {
+    1
+  } else {
+    0
+  }
+  let mapped = 2 * abs_i32(error) - kind - mapped_sign
+  self.bits.symbol(mapped, k, p.limit - exponent - 1, p.qbpp)
+  scan.update_run(kind, error, mapped)
+  scan.store(p.reconstruct(predicted, sign * error))
+}
+
+///|
+fn Encoder::sample_vector(self : Encoder, value : Int32) -> Unit {
+  let scan = self.scan
+  let count = scan.comp_indices.length()
+  self.vector[self.vector_size] = value
+  self.vector_size += 1
+  if self.vector_size < count {
+    return
+  }
+  self.vector_size = 0
+  if self.run < 0 && scan.joint_run_context() {
+    self.run = 0
+  }
+  if self.run < 0 {
+    for slot in 0..<count {
+      let (a, b, c, d) = scan.neighbors()
+      self.regular(self.vector[slot], a, b, c, scan.context_id(a, b, c, d))
     }
-    let mapped = 2 * abs_i32(error) - kind - mapped_sign
-    self.bits.symbol(mapped, k, p.limit - exponent - 1, p.qbpp)
-    scan.update_run(kind, error, mapped)
-    scan.store(p.reconstruct(predicted, sign * error))
+    return
+  }
+  let mut continues = true
+  for slot in 0..<count {
+    scan.select_component(slot)
+    if abs_i32(self.vector[slot] - scan.left()) > scan.params.near {
+      continues = false
+      break
+    }
+  }
+  scan.select_component(0)
+  let exponent = run_exponents[scan.run_index]
+  if continues {
+    for _ in 0..<count {
+      scan.store(scan.left())
+    }
+    self.run += 1
+    if self.run == 1 << exponent {
+      self.bits.bits(1, 1)
+      scan.run_index = min(31, scan.run_index + 1)
+      self.run = 0
+    }
+    if scan.x == scan.active_width && self.run != 0 {
+      self.bits.bits(1, 1)
+    }
+  } else {
+    self.bits.bits(0, 1)
+    self.bits.bits(self.run, exponent)
+    for slot in 0..<count {
+      let b = scan.previous[scan.x]
+      self.interruption(
+        self.vector[slot],
+        0,
+        b,
+        sign_of(b - scan.left()),
+        exponent,
+      )
+    }
     scan.run_index = max(0, scan.run_index - 1)
     self.run = -1
   }
@@ -338,11 +446,7 @@ fn Encoder::sample(self : Encoder, value : Int32) -> Unit {
   if self.run >= 0 {
     self.run_sample(value, scan.left())
   } else {
-    let x = scan.x
-    let a = if x == 0 { scan.previous[0] } else { scan.current[x - 1] }
-    let b = scan.previous[x]
-    let c = if x == 0 { scan.previous_left } else { scan.previous[x - 1] }
-    let d = scan.previous[min(x + 1, scan.active_width - 1)]
+    let (a, b, c, d) = scan.neighbors()
     let id = scan.context_id(a, b, c, d)
     if id == 0 {
       self.run = 0
@@ -444,7 +548,7 @@ pub fn Encoder::step(
         }
         break NeedInput
       }
-      if produced <= out_safe {
+      if self.scan.ilv != 2 && produced <= out_safe {
         let scan = self.scan
         let p = scan.params
         let prev = scan.previous
@@ -551,9 +655,11 @@ pub fn Encoder::step(
               }
               let rb = prev[x]
               let d_ab = a - rb
-              let (kind, predicted, sign) = if (
-                  if d_ab < 0 { -d_ab } else { d_ab }
-                ) <=
+              let (kind, predicted, sign) = if (if d_ab < 0 {
+                  -d_ab
+                } else {
+                  d_ab
+                }) <=
                 near {
                 (1, a, 1)
               } else {
@@ -562,11 +668,12 @@ pub fn Encoder::step(
               let rn = run_n[kind]
               let ra = run_a[kind]
               let k = golomb_order(
-                ra + ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
+                ra +
+                ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
                 rn,
               )
               let error = p.reduce(sign * (sample - predicted))
-              let neg_odd = k != 0 || (run_neg[kind] << 1) >= rn
+              let neg_odd = k != 0 || run_neg[kind] << 1 >= rn
               let mapped_sign = if error == 0 {
                 0
               } else if (error < 0) == neg_odd {
@@ -799,7 +906,7 @@ pub fn Encoder::step(
             } else {
               quantized
             }
-            let invert = if near == 0 && k == 0 && (cb << 1) <= -cn {
+            let invert = if near == 0 && k == 0 && cb << 1 <= -cn {
               1
             } else {
               0
@@ -976,7 +1083,11 @@ pub fn Encoder::step(
         raise InvalidArgument("sample is outside MAXVAL")
       }
       consumed += 1
-      self.sample(sample)
+      if self.scan.ilv == 2 {
+        self.sample_vector(sample)
+      } else {
+        self.sample(sample)
+      }
     } nobreak {
       NeedInput
     }

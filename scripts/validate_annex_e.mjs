@@ -5,18 +5,17 @@ import { mkdtemp, readFile, rmdir, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { decodePlanarImage, encodePlanarImage, inspectStream, loadCore } from '../sdk/index.mjs';
+import { decodePlanarImage, encodePlanarImage, loadCore } from '../sdk/index.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const manifest = JSON.parse(await readFile(join(root, 'tests/conformance/manifest.json'), 'utf8'));
-const usage = 'Usage: node scripts/validate_annex_e.mjs --check-manifest | --fixtures DIR [--native-exe FILE [--native-wsl DISTRO]] [--hp-reference DIR]';
+const usage = 'Usage: node scripts/validate_annex_e.mjs --check-manifest | --fixtures DIR [--cases ID,ID,...] [--native-exe FILE [--native-wsl DISTRO]] [--hp-reference DIR]';
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const backends = ['js', 'wasm-gc'];
 
 function checkManifest() {
   const digest = /^[0-9a-f]{64}$/;
   const states = new Set(['passed', 'unsupported', 'recognized_only', 'not_run', 'planned', 'blocked', 'failed']);
-  const supportedCases = new Set([1, 4, 9, 10, 11, 12]);
   assert.equal(manifest.schemaVersion, 1);
   assert.match(manifest.fixtureArchive.sha256, digest);
   assert.match(manifest.officialReference.sha256, digest);
@@ -25,7 +24,8 @@ function checkManifest() {
     assert.equal(item.test_id, `E.2-${item.id}`);
     assert.match(item.sha256, digest);
     assert.ok(item.bytes > 0 && item.sourceFiles.length > 0);
-    assert.equal(item.expected, supportedCases.has(item.id) ? 'supported' : 'unsupported');
+    assert.ok(['supported', 'unsupported'].includes(item.expected), `${item.test_id} scope`);
+    assert.ok([0, 1, 2].includes(item.interleave), `${item.test_id} interleave`);
     for (const name of item.sourceFiles) assert.match(manifest.sourceFiles[name].sha256, digest);
   }
   const ids = manifest.features.map((feature) => feature.feature_id);
@@ -46,7 +46,7 @@ function parse(args) {
   const options = new Map();
   for (let index = 0; index < args.length; index += 2) {
     const [flag, value] = args.slice(index, index + 2);
-    if (!['--fixtures', '--native-exe', '--native-wsl', '--hp-reference'].includes(flag) || !value || options.has(flag)) {
+    if (!['--fixtures', '--cases', '--native-exe', '--native-wsl', '--hp-reference'].includes(flag) || !value || options.has(flag)) {
       throw new Error(usage);
     }
     options.set(flag, value);
@@ -55,10 +55,22 @@ function parse(args) {
   return options;
 }
 
+function selectedCases(value) {
+  if (!value) return null;
+  const selected = value.split(',').map(Number);
+  const ids = new Set(selected);
+  if (!/^[0-9]+(?:,[0-9]+)*$/.test(value) || ids.size !== selected.length ||
+    selected.some((id) => !manifest.cases.some((item) => item.id === id))) {
+    throw new Error('Choose distinct numeric Annex E case IDs for --cases');
+  }
+  return ids;
+}
+
 function child(command, args, options = {}) {
   const result = spawnSync(command, args, { timeout: 30_000, ...options });
-  if (result.error) throw result.error;
-  return { status: result.status, stdout: result.stdout, stderr: result.stderr.toString('utf8').trimEnd() };
+  const run = { command: [command, ...args], exitCode: result.status, signal: result.signal };
+  if (result.error) throw Object.assign(result.error, { run });
+  return { run, stdout: result.stdout, stderr: result.stderr.toString('utf8').trimEnd() };
 }
 
 function nativeCommand(file, distro) {
@@ -66,7 +78,7 @@ function nativeCommand(file, distro) {
   if (!distro) return { binary, run: (args, input) => child(binary, args, { input }) };
   const args = ['--distribution', distro, '--exec'];
   const converted = child('wsl.exe', [...args, 'wslpath', '-a', '-u', binary]);
-  assert.equal(converted.status, 0, converted.stderr);
+  assert.equal(converted.run.exitCode, 0, converted.stderr);
   return { binary, run: (parameters, input) => child('wsl.exe', [...args, converted.stdout.toString().trim(), ...parameters], { input }) };
 }
 
@@ -92,16 +104,26 @@ function samplesFromPgm(bytes, expected) {
   return samplesFromPnm(bytes, expected, 'P5', 1);
 }
 
-function planarFromPpm(bytes, expected) {
-  const interleaved = samplesFromPnm(bytes, expected, 'P6', expected.components);
-  const planeSize = expected.width * expected.height;
-  const planar = new Uint16Array(planeSize * expected.components);
+function planarFromInterleaved(interleaved, item) {
+  const planeSize = item.width * item.height;
+  assert.equal(interleaved.length, planeSize * item.components, 'Interleaved sample count');
+  const planar = new Uint16Array(interleaved.length);
   for (let i = 0; i < planeSize; i++) {
-    for (let c = 0; c < expected.components; c++) {
-      planar[c * planeSize + i] = interleaved[i * expected.components + c];
+    for (let c = 0; c < item.components; c++) {
+      planar[c * planeSize + i] = interleaved[i * item.components + c];
     }
   }
   return planar;
+}
+
+function planarFromPpm(bytes, item) {
+  return planarFromInterleaved(samplesFromPnm(bytes, item, 'P6', item.components), item);
+}
+
+function nativeSamples(bytes, bits) {
+  if (bits <= 8) return Uint16Array.from(bytes);
+  assert.equal(bytes.length % 2, 0, 'Native raw-le sample storage');
+  return Uint16Array.from({ length: bytes.length / 2 }, (_, i) => bytes.readUInt16LE(i * 2));
 }
 
 function nativeRaw(pixels, bits) {
@@ -111,21 +133,65 @@ function nativeRaw(pixels, bits) {
   return bytes;
 }
 
-function compare(actual, expected, tolerance = 0) {
+function compare(actual, expected, item, tolerance = 0) {
   assert.equal(actual.length, expected.length, 'Sample count');
+  const planeSize = item.width * item.height;
   let maxAbsoluteError = 0;
+  let firstDifference = null;
   for (let i = 0; i < actual.length; i++) {
     const difference = Math.abs(actual[i] - expected[i]);
-    assert.ok(difference <= tolerance, `Sample ${i}: ${actual[i]} vs ${expected[i]}, allowed ${tolerance}`);
+    if (difference > tolerance && firstDifference === null) {
+      const withinPlane = i % planeSize;
+      firstDifference = {
+        componentIndex: Math.floor(i / planeSize), x: withinPlane % item.width, y: Math.floor(withinPlane / item.width),
+        actual: actual[i], expected: expected[i],
+      };
+    }
     maxAbsoluteError = Math.max(maxAbsoluteError, difference);
   }
-  return maxAbsoluteError;
+  const comparison = { samples: actual.length, maxAbsoluteError, firstDifference };
+  if (firstDifference !== null) {
+    const { componentIndex, x, y } = firstDifference;
+    throw Object.assign(new Error(`First disagreement at component index ${componentIndex}, (${x}, ${y}); tolerance ${tolerance}`),
+      { comparison });
+  }
+  return comparison;
+}
+
+function sampleDigest(samples) {
+  return sha256(nativeRaw(samples, 16));
 }
 
 function checkFrame(actual, item) {
   for (const key of ['width', 'height', 'bits', 'near']) assert.equal(actual[key], item[key], key);
   const actualComps = Array.isArray(actual.components) ? actual.components.length : (actual.components ?? 1);
   assert.equal(actualComps, item.components, 'components');
+}
+
+function streamEvidence(bytes, frame, components, scans, item) {
+  checkFrame(frame, item);
+  assert.equal(scans.length, item.scans, 'Scan count');
+  const expectedIds = Array.from({ length: item.components }, (_, i) => i + 1);
+  const sampling = components.map((comp) => ({
+    id: comp.id, h: comp.hSampling ?? comp.h, v: comp.vSampling ?? comp.v,
+  }));
+  assert.deepEqual(sampling, expectedIds.map((id) => ({ id, h: 1, v: 1 })), 'Frame components and sampling');
+  return {
+    components: sampling,
+    scans: scans.map((scan, index) => {
+      assert.ok(scan.completed, 'Complete scan');
+      assert.equal(scan.near, item.near, 'Scan NEAR');
+      assert.equal(scan.interleave, item.interleave, 'Scan ILV');
+      assert.equal(scan.pointTransform, 0, 'Point transform');
+      assert.deepEqual(scan.componentIds, item.interleave === 0 ? [expectedIds[index]] : expectedIds, 'Scan order');
+      assert.ok(scan.entropyOffset < scan.endOffset && scan.endOffset <= bytes.length, 'Entropy bounds');
+      const coded = bytes.subarray(scan.entropyOffset, scan.endOffset);
+      return {
+        componentIds: scan.componentIds, near: scan.near, interleave: scan.interleave,
+        pointTransform: scan.pointTransform, preset: scan.preset, codedBytes: coded.length, codedSha256: sha256(coded),
+      };
+    }),
+  };
 }
 
 function checkPreset(bytes, item) {
@@ -154,10 +220,20 @@ async function createReference(hpDirectory) {
     const oracle = await createOracle();
     return {
       identity: { name: 'CharLS Wasm', version: '0.10.0', officialSoftware: false },
-      decode(bytes, item) {
-        const result = oracle.decode(bytes);
+      decode(bytes, item, evidence) {
+        evidence.run = { api: 'CharLS Wasm createJpegLSDecoder().decode', exitCode: null };
+        let result;
+        try {
+          result = oracle.decode(bytes);
+        } catch (error) {
+          if (/\berrorCode: 7\b/.test(error.message)) {
+            throw Object.assign(error, { status: 'reference_unsupported' });
+          }
+          throw error;
+        }
         checkFrame(result.frame, item);
-        return result.pixels;
+        // CharLS returns component planes for ILV=0 and pixel order for both interleaved modes.
+        return item.interleave === 0 ? result.pixels : planarFromInterleaved(result.pixels, item);
       },
       close: () => oracle.close(),
     };
@@ -176,17 +252,18 @@ async function createReference(hpDirectory) {
   return {
     identity: { name: 'HP JPEG-LS reference software', version: '1.00', officialSoftware: true,
       executableSha256: Object.fromEntries(binaries) },
-    async decode(bytes, item) {
+    async decode(bytes, item, evidence) {
       const name = `${item.near ? 'n' : ''}loco${item.bits > 8 ? '16' : ''}d.exe`;
       await writeFile(input, bytes);
-      const outNames = item.components === 1
-        ? ['result.pgm']
-        : Array.from({ length: item.components }, (_, idx) => `comp${idx}.pgm`);
+      const outNames = item.interleave === 2 ? ['result.ppm'] : item.components === 1
+        ? ['result.pgm'] : Array.from({ length: item.components }, (_, idx) => `comp${idx}.pgm`);
       const outPaths = outNames.map((n) => join(work, n));
       outPaths.forEach((p) => createdOutputs.add(p));
       await Promise.all(outPaths.map(remove));
       const result = child(join(path, name), ['stream.jls', ...outNames], { cwd: work });
-      assert.equal(result.status, 0, `${name}: ${result.stderr}\n${result.stdout}`);
+      evidence.run = result.run;
+      assert.equal(result.run.exitCode, 0, `${name}: ${result.stderr}\n${result.stdout}`);
+      if (item.interleave === 2) return planarFromPpm(await readFile(outPaths[0]), item);
       if (item.components === 1) {
         return samplesFromPgm(await readFile(outPaths[0]), item);
       }
@@ -204,13 +281,106 @@ async function createReference(hpDirectory) {
   };
 }
 
-async function classified(check) {
-  try { return await check(); }
-  catch (error) { return { status: 'failed', message: error.message, code: error.code ?? null }; }
+async function classified(evidence, check) {
+  try {
+    await check(evidence);
+    evidence.status ??= 'passed';
+  } catch (error) {
+    evidence.status = error.status ?? (error.run ? 'blocked' : 'failed');
+    evidence.message = error.message;
+    evidence.code = error.code ?? null;
+    if (error.comparison) evidence.comparison = error.comparison;
+    if (error.run) evidence.failedRun = error.run;
+  }
+  return evidence;
+}
+
+async function readOriginal(fixtures, item, evidence) {
+  const sources = new Map(await Promise.all(item.sourceFiles.map(async (name) =>
+    [name, await knownBytes(fixtures, name, manifest.sourceFiles[name])])));
+  evidence.files = Object.fromEntries([...sources].map(([name, bytes]) =>
+    [name, { bytes: bytes.length, sha256: sha256(bytes) }]));
+  const pgms = [...sources].filter(([name]) => name.endsWith('.PGM'));
+  const ppm = [...sources].find(([name]) => name.endsWith('.PPM'));
+  const planeSize = item.width * item.height;
+  let pixels;
+  if (pgms.length) {
+    assert.equal(pgms.length, item.components, 'Source plane count');
+    pixels = new Uint16Array(planeSize * item.components);
+    pgms.forEach(([, bytes], c) => pixels.set(samplesFromPgm(bytes, item), c * planeSize));
+  }
+  if (ppm) {
+    const ppmPixels = planarFromPpm(ppm[1], item);
+    if (pixels) compare(ppmPixels, pixels, item);
+    else pixels = ppmPixels;
+  }
+  assert.ok(pixels, 'Source samples');
+  evidence.samples = pixels.length;
+  evidence.planarU16leSha256 = sampleDigest(pixels);
+  return pixels;
+}
+
+async function decodeTarget(core, native, bytes, item, evidence) {
+  if (core) {
+    evidence.decodeRun = { api: 'SDK decodePlanarImage', exitCode: null };
+    const result = await decodePlanarImage(core, bytes);
+    const structure = streamEvidence(bytes, result.frame, result.frameInfo.components, result.scans, item);
+    return { pixels: result.samples, structure };
+  }
+  const result = native.run(['decode', '-', '-', item.components > 1 ? 'ppm' : 'raw-le', '4096'], bytes);
+  evidence.decodeRun = result.run;
+  assert.equal(result.run.exitCode, 0, result.stderr);
+  const pixels = item.components > 1 ? planarFromPpm(result.stdout, item) : nativeSamples(result.stdout, item.bits);
+  const inspected = native.run(['inspect', '-', '4096', '--json'], bytes);
+  evidence.inspectRun = inspected.run;
+  assert.equal(inspected.run.exitCode, 0, inspected.stderr);
+  const metadata = JSON.parse(inspected.stdout);
+  const structure = streamEvidence(bytes, metadata, metadata.components, metadata.scans, item);
+  return { pixels, structure };
+}
+
+async function encodeTarget(core, native, original, item, evidence) {
+  const { width, height, bits, near, preset, components, interleave } = item;
+  const componentIds = Array.from({ length: components }, (_, i) => i + 1);
+  if (core) {
+    const frame = { width, height, bits, near, ...(preset && { preset }) };
+    if (components > 1) {
+      frame.components = componentIds.map((id) => ({ id }));
+      frame.interleave = interleave;
+    }
+    const planeSize = width * height;
+    const planes = componentIds.map((_, c) => original.subarray(c * planeSize, (c + 1) * planeSize));
+    evidence.encodeRun = { api: 'SDK encodePlanarImage', exitCode: null };
+    return Buffer.from((await encodePlanarImage(core, frame, planes)).bytes);
+  }
+  const flags = preset ? Object.entries(preset).flatMap(([name, value]) => [`--${name}`, String(value)]) : [];
+  const args = components > 1
+    ? ['encode-planar', ...[width, height, bits, components, near].map(String), '-', '-', 'raw-le', '4096',
+      '--ilv', String(interleave), ...flags]
+    : ['encode', ...[width, height, bits, near].map(String), '-', '-', 'raw-le', '4096', ...flags];
+  const result = native.run(args, nativeRaw(original, bits));
+  evidence.encodeRun = result.run;
+  assert.equal(result.run.exitCode, 0, result.stderr);
+  return result.stdout;
+}
+
+async function rejectUnsupported(core, native, official, evidence) {
+  if (core) {
+    evidence.decodeRun = { api: 'SDK decodePlanarImage', exitCode: null };
+    await assert.rejects(decodePlanarImage(core, official), { code: 'UnsupportedFeature' });
+  } else {
+    const result = native.run(['decode', '-', '-', 'raw-le', '4096'], official);
+    evidence.decodeRun = result.run;
+    assert.ok(result.run.exitCode && /\bUnsupportedFeature\b/.test(result.stderr), result.stderr);
+    assert.equal(result.stdout.length, 0, 'Unsupported input emits no bytes');
+  }
+  evidence.status = 'expected_unsupported';
+  evidence.code = 'UnsupportedFeature';
 }
 
 async function run(args) {
   const options = parse(args);
+  const selected = selectedCases(options.get('--cases'));
   const fixtures = resolve(options.get('--fixtures'));
   const cores = new Map(await Promise.all(backends.map(async (backend) => [backend, await loadCore({ backend })])));
   const native = options.has('--native-exe') ? nativeCommand(options.get('--native-exe'), options.get('--native-wsl')) : null;
@@ -219,94 +389,72 @@ async function run(args) {
   let failed = false;
   try {
     for (const item of manifest.cases) {
+      if (selected && !selected.has(item.id)) continue;
       const official = await knownBytes(fixtures, item.file, item);
-      const outside = item.expected === 'unsupported';
-      const row = { id: item.id, test_id: item.test_id, file: item.file, sha256: item.sha256, expected: item.expected, backends: {} };
+      const outside = item.expected === 'unsupported' && !selected;
+      const row = { id: item.id, test_id: item.test_id, file: item.file, bytes: item.bytes, sha256: item.sha256,
+        expected: outside ? 'unsupported' : 'supported', backends: {} };
       let original;
       let expected;
       if (!outside) {
-        if (item.components === 1) {
-          const name = item.sourceFiles[0];
-          original = samplesFromPgm(await knownBytes(fixtures, name, manifest.sourceFiles[name]), item);
-        } else {
-          const ppmName = item.sourceFiles.find((n) => n.endsWith('.PPM'));
-          const pgmNames = item.sourceFiles.filter((n) => n.endsWith('.PGM'));
-          assert.equal(pgmNames.length, item.components, `${item.test_id} source PGM planes`);
-          const planeSize = item.width * item.height;
-          original = new Uint16Array(planeSize * item.components);
-          for (let c = 0; c < item.components; c++) {
-            const pName = pgmNames[c];
-            original.set(samplesFromPgm(await knownBytes(fixtures, pName, manifest.sourceFiles[pName]), item), c * planeSize);
-          }
-          if (ppmName) {
-            const fromPpm = planarFromPpm(await knownBytes(fixtures, ppmName, manifest.sourceFiles[ppmName]), item);
-            compare(fromPpm, original, 0);
-          }
-        }
-        expected = await reference.decode(official, item);
-        row.reference = { status: 'passed', samples: expected.length, maxAbsoluteError: compare(expected, original, item.near) };
+        row.original = await classified({}, async (evidence) => { original = await readOriginal(fixtures, item, evidence); });
+        row.reference = await classified({}, async (evidence) => {
+          expected = await reference.decode(official, item, evidence);
+          evidence.planarU16leSha256 = sampleDigest(expected);
+          if (row.original.status === 'passed') Object.assign(evidence, compare(expected, original, item, item.near));
+        });
       }
-      let canonicalEncoded = null;
       for (const backend of [...backends, 'native']) {
         const core = cores.get(backend);
         if (!core && !native) {
           row.backends[backend] = { encode: { status: 'not_run' }, decode: { status: 'not_run' } };
           continue;
         }
-        const decode = await classified(async () => {
-          if (outside) {
-            if (core) await assert.rejects(decodePlanarImage(core, official), { code: 'UnsupportedFeature' });
-            else {
-              const result = native.run(['decode', '-', '-', 'raw-le', '4096'], official);
-              assert.ok(result.status && /\bUnsupportedFeature\b/.test(result.stderr), result.stderr);
-              assert.equal(result.stdout.length, 0, 'Unsupported input emits no bytes');
-            }
-            return { status: 'expected_unsupported', code: 'UnsupportedFeature' };
-          }
-          if (core) {
-            const result = await decodePlanarImage(core, official);
-            checkFrame(result.frame, item);
-            assert.equal(result.scans?.length ?? 1, item.scans);
-            compare(result.samples, expected);
-          } else {
-            const result = native.run(['decode', '-', '-', 'raw-le', '4096'], official);
-            assert.equal(result.status, 0, result.stderr);
-            assert.deepEqual(result.stdout, nativeRaw(expected, item.bits));
-          }
-          return { status: 'passed', samples: expected.length, maxAbsoluteError: row.reference.maxAbsoluteError };
+        if (outside) {
+          const decode = await classified({}, (evidence) => rejectUnsupported(core, native, official, evidence));
+          row.backends[backend] = { encode: { status: 'not_run', reason: 'outside current interleave/subsampling scope' }, decode };
+          failed ||= decode.status !== 'expected_unsupported';
+          continue;
+        }
+        if (row.original.status !== 'passed' || row.reference.status !== 'passed') {
+          const status = row.reference.status === 'reference_unsupported' ? 'reference_unsupported' : 'blocked';
+          const reason = 'An original or reference reconstruction was unavailable';
+          row.backends[backend] = { encode: { status, reason }, decode: { status, reason } };
+          failed = true;
+          continue;
+        }
+        const decode = await classified({}, async (evidence) => {
+          const result = await decodeTarget(core, native, official, item, evidence);
+          evidence.structure = result.structure;
+          evidence.planarU16leSha256 = sampleDigest(result.pixels);
+          evidence.referenceComparison = compare(result.pixels, item.near ? expected : original, item);
+          Object.assign(evidence, compare(result.pixels, original, item, item.near));
         });
-        const encode = outside ? { status: 'not_run', reason: 'outside current interleave/subsampling scope' } : await classified(async () => {
-          let bytes;
-          if (core) {
-            const { width, height, bits, near, preset, components } = item;
-            const frame = components > 1
-              ? { width, height, bits, near, ...(preset && { preset }), components: Array.from({ length: components }, (_, i) => ({ id: i + 1 })) }
-              : { width, height, bits, near, ...(preset && { preset }) };
-            bytes = Buffer.from((await encodePlanarImage(core, frame, original)).bytes);
-          } else {
-            const flags = item.preset ? Object.entries(item.preset).flatMap(([name, value]) => [`--${name}`, String(value)]) : [];
-            const cmdArgs = item.components > 1
-              ? ['encode-planar', ...[item.width, item.height, item.bits, item.components, item.near].map(String), '-', '-', 'raw-le', '4096', ...flags]
-              : ['encode', ...[item.width, item.height, item.bits, item.near].map(String), '-', '-', 'raw-le', '4096', ...flags];
-            const result = native.run(cmdArgs, nativeRaw(original, item.bits));
-            assert.equal(result.status, 0, result.stderr);
-            bytes = result.stdout;
-          }
-          if (canonicalEncoded === null) canonicalEncoded = bytes;
-          else assert.ok(bytes.equals(canonicalEncoded), `${item.test_id} ${backend}: cross-backend encoded byte mismatch`);
+        const encode = await classified({}, async (evidence) => {
+          const bytes = await encodeTarget(core, native, original, item, evidence);
+          evidence.bytes = bytes.length;
+          evidence.sha256 = sha256(bytes);
+          evidence.byteIdenticalToOfficial = bytes.equals(official);
           checkPreset(bytes, item);
-          if (core) {
-            const inspected = await inspectStream(core, bytes);
-            assert.equal(inspected.scans?.length ?? 1, item.scans);
+          evidence.reference = {};
+          const actual = await reference.decode(bytes, item, evidence.reference);
+          evidence.reference.planarU16leSha256 = sampleDigest(actual);
+          evidence.reference.comparison = compare(actual, item.near ? expected : original, item);
+          evidence.candidateDecode = {};
+          const decoded = await decodeTarget(core, native, bytes, item, evidence.candidateDecode);
+          evidence.candidateDecode.planarU16leSha256 = sampleDigest(decoded.pixels);
+          evidence.candidateDecode.comparison = compare(decoded.pixels, actual, item);
+          evidence.structure = decoded.structure;
+          if (!evidence.byteIdenticalToOfficial) {
+            assert.deepEqual(decoded.structure, decode.structure, 'Official and candidate effective parameters and coded data');
           }
-          const actual = await reference.decode(bytes, item);
-          compare(actual, item.near ? expected : original);
-          return { status: 'passed', samples: actual.length, maxAbsoluteError: compare(actual, original, item.near),
-            bytes: bytes.length, sha256: sha256(bytes) };
+          Object.assign(evidence, compare(actual, original, item, item.near));
         });
         row.backends[backend] = { encode, decode };
-        failed ||= encode.status === 'failed' || decode.status === 'failed';
+        failed ||= encode.status !== 'passed' || decode.status !== 'passed';
       }
+      const encodedDigests = Object.values(row.backends).map(({ encode }) => encode.sha256).filter(Boolean);
+      if (encodedDigests.length >= 2) row.crossBackendByteIdentical = new Set(encodedDigests).size === 1;
       rows.push(row);
     }
   } finally {
@@ -317,11 +465,13 @@ async function run(args) {
   const artifactSha256 = Object.fromEntries(await Promise.all(Object.entries(artifactFiles).map(async ([key, path]) =>
     [key, sha256(await readFile(path))])));
   const git = child('git', ['rev-parse', 'HEAD'], { cwd: root });
-  const sourceRevision = git.status === 0 ? git.stdout.toString().trim() : null;
+  const sourceRevision = git.run.exitCode === 0 ? git.stdout.toString().trim() : null;
   const diff = child('git', ['status', '--porcelain', '--', 'core', 'cmd', 'sdk', 'moon.mod'], { cwd: root });
-  const sourceDirty = diff.status === 0 ? diff.stdout.length > 0 : null;
+  const sourceDirty = diff.run.exitCode === 0 ? diff.stdout.length > 0 : null;
+  const runnerSha256 = sha256(await readFile(fileURLToPath(import.meta.url)));
   process.stdout.write(`${JSON.stringify({ standard: manifest.standard, sourceRevision, sourceDirty, node: process.version,
-    command: ['node', 'scripts/validate_annex_e.mjs', ...args], fixtureArchive: manifest.fixtureArchive,
+    command: ['node', 'scripts/validate_annex_e.mjs', ...args], exitCode: failed ? 1 : 0,
+    fixtureArchive: manifest.fixtureArchive, runnerSha256,
     reference: reference.identity, artifactSha256, cases: rows }, null, 2)}\n`);
   process.exitCode = failed ? 1 : 0;
 }
