@@ -65,6 +65,7 @@ export async function openSink(mode, name, type) {
     const writer = await handle.createWritable();
     return {
       write: (bytes) => writer.write(bytes),
+      writeAt: (bytes, position) => writer.write({ type: 'write', position, data: bytes }),
       close: () => writer.close(),
       abort: () => writer.abort(),
     };
@@ -74,34 +75,32 @@ export async function openSink(mode, name, type) {
     const limit = 64 * 1024 * 1024;
     const pageSize = 64 * 1024;
     let size = 0;
-    let page;
-    let used = 0;
+    const writeAt = (bytes, position) => {
+      const end = position + bytes.byteLength;
+      if (end > limit) throw new CodecError('ResourceLimit', 'Buffered download exceeds 64 MiB. Use a file sink or bounded verification.');
+      size = Math.max(size, end);
+      for (let offset = 0; offset < bytes.length;) {
+        const pageIndex = Math.floor(position / pageSize);
+        const withinPage = position % pageSize;
+        const page = parts[pageIndex] ??= new Uint8Array(pageSize);
+        const length = Math.min(bytes.length - offset, pageSize - withinPage);
+        page.set(bytes.subarray(offset, offset + length), withinPage);
+        offset += length;
+        position += length;
+      }
+    };
     return {
-      write(bytes) {
-        size += bytes.byteLength;
-        if (size > limit) throw new CodecError('ResourceLimit', 'Buffered download exceeds 64 MiB. Use a file sink or bounded verification.');
-        for (let offset = 0; offset < bytes.length;) {
-          page ??= new Uint8Array(pageSize);
-          const length = Math.min(bytes.length - offset, pageSize - used);
-          page.set(bytes.subarray(offset, offset + length), used);
-          offset += length;
-          used += length;
-          if (used === pageSize) {
-            parts.push(page);
-            page = undefined;
-            used = 0;
-          }
-        }
-      },
-      close() {
-        if (page) parts.push(page.subarray(0, used));
-        const result = new Blob(parts, { type });
+      write: (bytes) => writeAt(bytes, size),
+      writeAt,
+      close(mimeType = type) {
+        const tail = size % pageSize;
+        if (tail) parts[parts.length - 1] = parts.at(-1).subarray(0, tail);
+        const result = new Blob(parts, { type: mimeType });
         parts.length = 0;
-        page = undefined;
         return result;
       },
-      abort() { parts.length = 0; page = undefined; },
+      abort() { parts.length = 0; },
     };
   }
-  return { write() {}, close() {}, abort() {} };
+  return { write() {}, writeAt() {}, close() {}, abort() {} };
 }

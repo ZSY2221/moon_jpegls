@@ -1,0 +1,13 @@
+{
+  "url": "https://www.itu.int/rec/dologin_pub.asp?id=T-REC-T.87-199806-I%21%21ZPF-E&lang=e&type=items",
+  "bundleSha256": "c54f20d167485399d2094d3375151d2ec31535d4c32d92fb929b15fc364ea41a",
+  "softwareSha256": "a96fc46088e0ea89b17eea7d14fa909fe3a5c6c934c6f5d63e03076bb5eae889",
+  "localBundle": null,
+  "fixtures": {
+    "path": ".tools\\annex-e-ci",
+    "verifiedFiles": 19,
+    "sha256": "b2c250453f631248bc3744bc50c935adcc94f55784f19b2fa1fa28ee8b803b70"
+  },
+  "status": "passed",
+  "exitCode": 0
+}

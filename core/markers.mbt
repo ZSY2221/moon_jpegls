@@ -24,6 +24,7 @@ priv struct HeaderParser {
   components : Array[ComponentSpec]
   seen_components : Array[Bool]
   mut scanned_count : Int32
+  mut scan_count : Int32
   mut soi_offset : Int64
   mut sof_offset : Int64
   mut sof_length : Int32
@@ -50,6 +51,7 @@ fn HeaderParser::new(limits : Limits) -> HeaderParser {
     components: [],
     seen_components: [],
     scanned_count: 0,
+    scan_count: 0,
     soi_offset: -1L,
     sof_offset: -1L,
     sof_length: 0,
@@ -134,7 +136,6 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
     raise InvalidData("SOF55 fields or length")
   }
   let parsed : Array[ComponentSpec] = []
-  let mut has_subsampling = false
   for index in 0..<count {
     let pos = 6 + 3 * index
     let id = self.at(pos)
@@ -149,20 +150,17 @@ fn HeaderParser::frame_segment(self : HeaderParser) -> Unit raise CodecError {
         raise InvalidData("duplicate SOF55 component identifier")
       }
     }
-    if h != 1 || v != 1 {
-      has_subsampling = true
-    }
-    parsed.push({ id, h_sampling: h, v_sampling: v })
-  }
-  guard !has_subsampling else {
-    raise UnsupportedFeature("component subsampling")
+    parsed.push({ id, h_sampling: h, v_sampling: v, })
   }
   let height = self.word(1)
   let width = self.word(3)
   guard width != 0 && height != 0 else {
     raise UnsupportedFeature("deferred or extended dimensions")
   }
-  validate_frame_dimensions(width, height, count, self.limits)
+  validate_frame_dimensions(
+    { width, height, bits, components: parsed, },
+    self.limits,
+  )
   self.width = width
   self.height = height
   self.bits = bits
@@ -184,7 +182,7 @@ fn HeaderParser::preset_segment(self : HeaderParser) -> Unit raise CodecError {
       for index in 0..<5 {
         self.preset[index] = self.word(1 + 2 * index)
       }
-      let scan_hint = if self.bits == 0 { -1 } else { self.scanned_count }
+      let scan_hint = if self.bits == 0 { -1 } else { self.scan_count }
       self.record_marker(0xF8, self.marker_offset, self.length + 4, scan_hint, 1)
     }
     0 => raise InvalidData("LSE identifier zero")
@@ -226,9 +224,11 @@ fn HeaderParser::scan_segment(
   }
   let mut any_mapping = false
   let selected : Array[Int32] = []
+  let comp_ids : Array[Int32] = []
   for i in 0..<count {
     let cs = self.at(1 + 2 * i)
     let tm = self.at(2 + 2 * i)
+    self.last_component_id = cs
     guard self.find_component(cs) is Some(comp_idx) else {
       raise InvalidData("SOS component selector")
     }
@@ -238,6 +238,7 @@ fn HeaderParser::scan_segment(
       }
     }
     selected.push(comp_idx)
+    comp_ids.push(cs)
     if tm != 0 {
       any_mapping = true
     }
@@ -253,16 +254,42 @@ fn HeaderParser::scan_segment(
     (transform == 0 || !any_mapping) else {
     raise InvalidData("SOS scan parameters")
   }
-  guard count == 1 else {
-    raise UnsupportedFeature("interleaved multi-component scan")
+  if ilv == 2 {
+    let frame = self.frame_info()
+    let first = selected[0]
+    let width = frame.component_width(first)
+    let height = frame.component_height(first)
+    for i in 1..<selected.length() {
+      let ci = selected[i]
+      self.last_component_id = comp_ids[i]
+      guard ci > selected[i - 1] else {
+        raise InvalidData(
+          "sample-interleaved components must follow frame order",
+        )
+      }
+      guard frame.component_width(ci) == width &&
+        frame.component_height(ci) == height else {
+        raise InvalidData(
+          "sample-interleaved components must have identical dimensions",
+        )
+      }
+    }
+  }
+  for comp_idx in selected {
+    guard !self.seen_components[comp_idx] else {
+      self.last_component_id = self.components[comp_idx].id
+      raise InvalidData("duplicate scan for component")
+    }
   }
   let comp_idx = selected[0]
-  let comp_id = self.components[comp_idx].id
+  let comp_id = comp_ids[0]
   self.last_component_id = comp_id
-  guard !self.seen_components[comp_idx] else {
-    raise InvalidData("duplicate scan for component")
+  let frame : Frame = {
+    width: self.width,
+    height: self.height,
+    bits: self.bits,
+    near,
   }
-  let frame : Frame = { width: self.width, height: self.height, bits: self.bits, near }
   let requested : Preset = {
     maxval: self.preset[0],
     t1: self.preset[1],
@@ -277,14 +304,25 @@ fn HeaderParser::scan_segment(
   guard !any_mapping && transform == 0 else {
     raise UnsupportedFeature("mapping selector or point transform")
   }
-  let scan_index = self.scanned_count
-  self.seen_components[comp_idx] = true
-  self.scanned_count += 1
-  self.record_marker(0xDA, self.marker_offset, self.length + 4, scan_index, comp_id)
+  let scan_index = self.scan_count
+  for ci in selected {
+    self.seen_components[ci] = true
+  }
+  self.scanned_count += count
+  self.scan_count += 1
+  self.record_marker(
+    0xDA,
+    self.marker_offset,
+    self.length + 4,
+    scan_index,
+    comp_id,
+  )
   let scan_info : ScanInfo = {
     scan_index,
     component_index: comp_idx,
     component_id: comp_id,
+    component_indices: selected,
+    component_ids: comp_ids,
     near,
     interleave: ilv,
     point_transform: transform,
@@ -315,11 +353,11 @@ fn HeaderParser::finish_segment(
         nonzero = nonzero || self.at(index) != 0
       }
       guard !nonzero else { raise UnsupportedFeature("restart interval") }
-      let scan_hint = if self.bits == 0 { -1 } else { self.scanned_count }
+      let scan_hint = if self.bits == 0 { -1 } else { self.scan_count }
       self.record_marker(0xDD, self.marker_offset, self.length + 4, scan_hint, interval)
     }
     code if is_metadata(code) => {
-      let scan_hint = if self.bits == 0 { -1 } else { self.scanned_count }
+      let scan_hint = if self.bits == 0 { -1 } else { self.scan_count }
       self.record_marker(code, self.marker_offset, self.length + 4, scan_hint, self.length)
     }
     _ => ()

@@ -54,8 +54,8 @@ async function run(message) {
   let outputPeakBytes = 0;
   const outputQueueBytes = () => (batch?.samples.buffer.byteLength ?? 0) + inFlightOutputBytes;
   const recordOutput = (stats, sourceBytes = 0) => {
-    // Count explicit ArrayBuffer payloads, including the source row while it
-    // is copied into a batch. This is not JS heap/RSS or consumer retention.
+    // Include the current source row during batch copies and component switches.
+    // This counts explicit output payloads throughout the ACK lifetime.
     outputPeakBytes = Math.max(outputPeakBytes, stats.outputPeakBytes, outputQueueBytes() + sourceBytes);
   };
   const outputStats = (stats) => {
@@ -74,26 +74,14 @@ async function run(message) {
   };
   const flushBatch = () => {
     if (!batch || batch.count === 0) return;
-    const { startIndex, count, samples, frame: info, preset, stats, meta } = batch;
+    const { startIndex, count, samples, frame: info, preset, stats, meta, stride } = batch;
     batch = null;
     lastBatchFlush = stats.elapsedMs;
-    const used = count * info.width;
+    const used = count * stride;
     // Keep a short view for the final/time-limited batch without a second copy.
     const payload = used === samples.length ? samples : samples.subarray(0, used);
     return sendOutput('rows', {
-      startIndex,
-      count,
-      samples: payload,
-      frame: info,
-      preset,
-      scanIndex: meta?.scanIndex ?? 0,
-      componentIndex: meta?.componentIndex ?? 0,
-      componentId: meta?.componentId ?? 1,
-      near: meta?.near ?? info.near,
-      layout: meta?.layout ?? 'planar',
-      stride: meta?.stride ?? info.width,
-      sampleBytes: meta?.sampleBytes ?? 2,
-      endianness: meta?.endianness ?? 'host-u16',
+      startIndex, count, samples: payload, frame: info, preset, ...meta,
     }, payload, stats);
   };
   const settings = {
@@ -121,45 +109,50 @@ async function run(message) {
       lastProgress = stats.elapsedMs;
       const scanKey = rowMeta ? `${rowMeta.scanIndex}:${rowMeta.componentIndex}` : '0:0';
       if (batch && batch.scanKey !== scanKey) {
+        recordOutput(stats, row.buffer.byteLength);
         await flushBatch();
       }
+      const stride = rowMeta?.stride ?? info.width;
       const metaFields = {
         scanIndex: rowMeta?.scanIndex ?? 0,
         componentIndex: rowMeta?.componentIndex ?? 0,
         componentId: rowMeta?.componentId ?? 1,
         near: rowMeta?.near ?? info.near,
+        height: rowMeta?.height ?? info.height,
+        interleave: rowMeta?.interleave ?? 0,
+        pointTransform: rowMeta?.pointTransform ?? 0,
         layout: rowMeta?.layout ?? 'planar',
-        stride: rowMeta?.stride ?? info.width,
+        width: rowMeta?.width ?? stride,
+        stride,
         sampleBytes: rowMeta?.sampleBytes ?? 2,
         endianness: rowMeta?.endianness ?? 'host-u16',
       };
-      if (index === 0 || maxBatchBytes <= 0) {
-        lastBatchFlush = stats.elapsedMs;
-        return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
-      }
-      const maxRows = Math.max(1, Math.floor(maxBatchBytes / (info.width * 2)));
-      if (maxRows <= 1) {
+      const maxRows = Math.floor(maxBatchBytes / (stride * 2));
+      if (index === 0 || maxRows <= 1) {
         lastBatchFlush = stats.elapsedMs;
         return sendOutput('row', { row, index, frame: info, preset, ...metaFields }, row, stats);
       }
       if (!batch) {
-        const capacityRows = Math.min(maxRows, info.height - index);
+        const compHeight = rowMeta?.height ?? info.height;
+        const capacityRows = Math.min(maxRows, compHeight - index);
         batch = {
           scanKey,
           meta: metaFields,
+          stride,
+          compHeight,
           startIndex: index,
           count: 0,
-          samples: new Uint16Array(capacityRows * info.width),
+          samples: new Uint16Array(capacityRows * stride),
           frame: info,
           preset,
           stats,
         };
       }
       recordOutput(stats, row.buffer.byteLength);
-      batch.samples.set(row, batch.count * info.width);
+      batch.samples.set(row, batch.count * batch.stride);
       batch.count++;
       batch.stats = stats;
-      if (batch.count * info.width === batch.samples.length || index === info.height - 1 || paused || abort.signal.aborted || stats.elapsedMs - lastBatchFlush >= 16) {
+      if (batch.count * batch.stride === batch.samples.length || index === batch.compHeight - 1 || paused || abort.signal.aborted || stats.elapsedMs - lastBatchFlush >= 16) {
         return flushBatch();
       }
     },

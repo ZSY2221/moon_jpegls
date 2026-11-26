@@ -1,0 +1,346 @@
+{
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.evidence\\codex-m3b-sampling\\verify_lunar_fixed.mjs",
+    "--project",
+    ".",
+    "--pgm",
+    "../moon_jpegls/.evidence/real/lola.pgm",
+    "--jls",
+    "../moon_jpegls/.evidence/lunar-budget-20261125/js-near3-9ca2f131-a782-4f31-9e5b-7da07274be5e/lola.jls",
+    "--native-exe",
+    ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+    "--native-wsl",
+    "OpenAtom-Validation-2204-20261120",
+    "--encode"
+  ],
+  "cwd": "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity",
+  "node": "v24.20.0",
+  "frame": {
+    "width": 1440,
+    "height": 720,
+    "bits": 16,
+    "near": 3
+  },
+  "fixture": "NASA LOLA pinned ldem_4_uint.tif raster",
+  "runnerSha256": "7e76cee0690be4d1eef4b20a73933208be670e84809611d57c6a312643fe64c0",
+  "inputs": {
+    "pgm": {
+      "path": "D:\\Program Files\\GPT_project\\moon_jpegls\\.evidence\\real\\lola.pgm",
+      "bytes": 2073618,
+      "sha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+      "planarU16leSha256": "d1f607e938a4a38ca06fe4b81be98ba9cda410f1598b1a1177bf096a163a6a1b"
+    },
+    "jls": {
+      "path": "D:\\Program Files\\GPT_project\\moon_jpegls\\.evidence\\lunar-budget-20261125\\js-near3-9ca2f131-a782-4f31-9e5b-7da07274be5e\\lola.jls",
+      "bytes": 999459,
+      "sha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9"
+    }
+  },
+  "backends": {
+    "js": {
+      "fixedDecode": {
+        "run": {
+          "api": "SDK decodeImage",
+          "exitCode": null
+        },
+        "status": "passed",
+        "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+        "exact": {
+          "status": "passed",
+          "samples": 1036800,
+          "maxAbsoluteError": 0,
+          "tolerance": 0,
+          "firstDifference": null
+        },
+        "original": {
+          "status": "passed",
+          "samples": 1036800,
+          "maxAbsoluteError": 3,
+          "tolerance": 3,
+          "firstDifference": null
+        }
+      },
+      "candidateEncode": {
+        "run": {
+          "api": "SDK encodeImage",
+          "exitCode": null
+        },
+        "bytes": 999459,
+        "sha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+        "byteIdenticalToFixed": true,
+        "reference": {
+          "api": "CharLS Wasm createJpegLSDecoder().decode",
+          "exitCode": null,
+          "status": "passed",
+          "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+          "exact": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 0,
+            "tolerance": 0,
+            "firstDifference": null
+          },
+          "original": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 3,
+            "tolerance": 3,
+            "firstDifference": null
+          }
+        },
+        "sameStream": {
+          "run": {
+            "api": "SDK decodeImage",
+            "exitCode": null
+          },
+          "status": "passed",
+          "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+          "exact": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 0,
+            "tolerance": 0,
+            "firstDifference": null
+          },
+          "original": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 3,
+            "tolerance": 3,
+            "firstDifference": null
+          }
+        },
+        "status": "passed"
+      }
+    },
+    "wasm-gc": {
+      "fixedDecode": {
+        "run": {
+          "api": "SDK decodeImage",
+          "exitCode": null
+        },
+        "status": "passed",
+        "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+        "exact": {
+          "status": "passed",
+          "samples": 1036800,
+          "maxAbsoluteError": 0,
+          "tolerance": 0,
+          "firstDifference": null
+        },
+        "original": {
+          "status": "passed",
+          "samples": 1036800,
+          "maxAbsoluteError": 3,
+          "tolerance": 3,
+          "firstDifference": null
+        }
+      },
+      "candidateEncode": {
+        "run": {
+          "api": "SDK encodeImage",
+          "exitCode": null
+        },
+        "bytes": 999459,
+        "sha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+        "byteIdenticalToFixed": true,
+        "reference": {
+          "api": "CharLS Wasm createJpegLSDecoder().decode",
+          "exitCode": null,
+          "status": "passed",
+          "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+          "exact": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 0,
+            "tolerance": 0,
+            "firstDifference": null
+          },
+          "original": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 3,
+            "tolerance": 3,
+            "firstDifference": null
+          }
+        },
+        "sameStream": {
+          "run": {
+            "api": "SDK decodeImage",
+            "exitCode": null
+          },
+          "status": "passed",
+          "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+          "exact": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 0,
+            "tolerance": 0,
+            "firstDifference": null
+          },
+          "original": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 3,
+            "tolerance": 3,
+            "firstDifference": null
+          }
+        },
+        "status": "passed"
+      }
+    },
+    "native": {
+      "fixedDecode": {
+        "run": {
+          "command": [
+            "wsl.exe",
+            "--distribution",
+            "OpenAtom-Validation-2204-20261120",
+            "--exec",
+            "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+            "decode",
+            "-",
+            "-",
+            "raw-le",
+            "4096"
+          ],
+          "exitCode": 0,
+          "signal": null,
+          "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000decoded width=1440 height=720 bits=16 maxval=65535 near=3 t1=27 t2=82 t3=297 reset=64 components=1 scans=1 rows=720 input_bytes=999459 output_bytes=2073600 first_row_at=287 core_payload_bytes=20555 host_conversion_buffer_bytes=0 input_high_water=4096 output_high_water=2880"
+        },
+        "status": "passed",
+        "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+        "exact": {
+          "status": "passed",
+          "samples": 1036800,
+          "maxAbsoluteError": 0,
+          "tolerance": 0,
+          "firstDifference": null
+        },
+        "original": {
+          "status": "passed",
+          "samples": 1036800,
+          "maxAbsoluteError": 3,
+          "tolerance": 3,
+          "firstDifference": null
+        }
+      },
+      "candidateEncode": {
+        "run": {
+          "command": [
+            "wsl.exe",
+            "--distribution",
+            "OpenAtom-Validation-2204-20261120",
+            "--exec",
+            "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+            "encode-pgm",
+            "3",
+            "-",
+            "-",
+            "4096"
+          ],
+          "exitCode": 0,
+          "signal": null,
+          "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000encoded width=1440 height=720 bits=16 maxval=65535 near=0 t1=27 t2=82 t3=297 reset=64 components=1 scans=1 input_bytes=2073618 output_bytes=999459 core_payload_bytes=19796 host_conversion_buffer_bytes=0 input_high_water=4096 output_high_water=1531"
+        },
+        "bytes": 999459,
+        "sha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+        "byteIdenticalToFixed": true,
+        "reference": {
+          "api": "CharLS Wasm createJpegLSDecoder().decode",
+          "exitCode": null,
+          "status": "passed",
+          "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+          "exact": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 0,
+            "tolerance": 0,
+            "firstDifference": null
+          },
+          "original": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 3,
+            "tolerance": 3,
+            "firstDifference": null
+          }
+        },
+        "sameStream": {
+          "run": {
+            "command": [
+              "wsl.exe",
+              "--distribution",
+              "OpenAtom-Validation-2204-20261120",
+              "--exec",
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "4096"
+            ],
+            "exitCode": 0,
+            "signal": null,
+            "stderr": "w\u0000s\u0000l\u0000:\u0000 \u0000�hKm0R \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006tM�n\f�FO*g\\��P0R \u0000W\u0000S\u0000L\u0000\u00020N\u0000A\u0000T\u0000 \u0000!j\u000f_\u000bN�v \u0000W\u0000S\u0000L\u0000 \u0000\rN/e\u0001c \u0000l\u0000o\u0000c\u0000a\u0000l\u0000h\u0000o\u0000s\u0000t\u0000 \u0000�N\u0006t\u00020\r\u0000\n\u0000decoded width=1440 height=720 bits=16 maxval=65535 near=3 t1=27 t2=82 t3=297 reset=64 components=1 scans=1 rows=720 input_bytes=999459 output_bytes=2073600 first_row_at=287 core_payload_bytes=20555 host_conversion_buffer_bytes=0 input_high_water=4096 output_high_water=2880"
+          },
+          "status": "passed",
+          "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+          "exact": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 0,
+            "tolerance": 0,
+            "firstDifference": null
+          },
+          "original": {
+            "status": "passed",
+            "samples": 1036800,
+            "maxAbsoluteError": 3,
+            "tolerance": 3,
+            "firstDifference": null
+          }
+        },
+        "status": "passed"
+      }
+    }
+  },
+  "sourceRevision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
+  "sourceDirty": false,
+  "artifacts": {
+    "js": {
+      "path": "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\sdk\\generated\\core.mjs",
+      "bytes": 277920,
+      "sha256": "67f7178198b6a1494bd3a66adb4cec196941eca174468b017b5d48d8452ebbd8"
+    },
+    "wasm-gc": {
+      "path": "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\sdk\\generated\\core.wasm",
+      "bytes": 51781,
+      "sha256": "f7292aa28a1a40fb3ebba298cf854e6ba62caf19343e4527edf7b67c98c1ad0d"
+    },
+    "native": {
+      "path": "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\wsl-build-codex-sampling\\native\\release\\build\\cmd\\moonjls\\moonjls.exe",
+      "bytes": 1521520,
+      "sha256": "38f8e842b3f075e32f6c583ae4b2462f417f2398ad5910febd41226bf22131ba"
+    }
+  },
+  "reference": {
+    "name": "CharLS Wasm",
+    "version": "0.10.0",
+    "run": {
+      "api": "createJpegLSDecoder().decode",
+      "exitCode": null
+    },
+    "planarU16leSha256": "58c309ec23c735c14367a1a81cdb1c04f7f4db24c3fe80224be8cc22b829e53b",
+    "original": {
+      "status": "passed",
+      "samples": 1036800,
+      "maxAbsoluteError": 3,
+      "tolerance": 3,
+      "firstDifference": null
+    }
+  },
+  "status": "passed",
+  "exitCode": 0
+}

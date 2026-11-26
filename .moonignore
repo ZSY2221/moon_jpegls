@@ -5,6 +5,8 @@ node_modules/
 **/*.pyc
 sdk/generated/
 reports/
+submission/
+REVIEW_EVIDENCE/
 .evidence/
 web/dist/
 _build/

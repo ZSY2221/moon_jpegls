@@ -8,7 +8,7 @@
 
 **MoonJLS 的最终目标是完整实现 ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1 的编码、解码和数据格式能力，并通过 T.87 §8、Annex E 及独立参考实现逐项验收。**
 
-**当前已交付的 M3-A 版本是演进路线上的阶段版本（单帧、多分量非交错 `ILV=0` 多扫描 + 跨扫描 `LSE1`），仍不是 MoonJLS 的最终完整 T.87 Part 1 标准范围。**
+**当前 M3-B 在 M2 和 M3-A 基础上交付 `ILV=1/2`、H/V 采样和边缘 MCU。完整 Part 1 的剩余能力及其退出条件列在下方矩阵。**
 
 标准条款基线为 ITU-T T.87（06/1998）英文正文，ISO 对应版本为 ISO/IEC 14495-1:1999 第 1 版（含 2000-09 更正版）。后续若纳入勘误或后续标准补充，将逐项记录差异及影响。[ITU-T T.87 官方文本](https://www.itu.int/rec/T-REC-T.87-199806-I/en) · [ISO 标准条目](https://www.iso.org/standard/22397.html)
 
@@ -66,7 +66,7 @@
   3. M2 本机独立合成矩阵：**388 组 M2 新增正例**（HP JPEG-LS 1.00 及 `MAXVAL=1/2` 独立 Annex A 推导向量）+ **18 个 LSE 码流变体**（5 有效 + 13 拒绝）+ **7 个非法编码用例** + **6 项 Native PGM 检查**，三后端通过（`826 SDK / 413 Native / 388 reciprocal`）。
   4. GitHub Actions CI 固定黄金回归（[`scripts/verify_m2_golden.mjs`](../scripts/verify_m2_golden.mjs) 与 `verify_m3a_golden.mjs`）：每次 push/PR 实跑 M2 冻结黄金回归（**12 正例 + 18 LSE 变体 + 7 非法编码 + 4 Native PGM**；注：`lse-after-scan` 已依据 HP `nlocod.exe` 与 CharLS Wasm 实际行为校准为 `InvalidData`）及 M3-A **7+7** 黄金回归（注：黄金回归不等同于官方 Annex E 12 项全部通过）。
   5. **640 组 NEAR 回归口径澄清**：[`scripts/validate.py`](../scripts/validate.py) `--near-matrix`（`imagecodecs 2026.11.11 / CharLS 2.4.5` 与 `@team-charls/charls-wasm 0.10.0`）**640/640** 双向回归仅覆盖**单分量满量程 8 位（`NEAR=0–127`）与 12/16 位（`NEAR=0–255`）**的合法 `NEAR` 组合（`5,120 SDK + 3,200 Native = 8,320` 核对），**不是** `P=2–16 × 任意 MAXVAL × 多分量 × 自定义 LSE1` 全部参数空间的完整笛卡尔积。
-  6. **Annex E Table E.2 口径澄清**：[`scripts/validate_annex_e.mjs`](../scripts/validate_annex_e.mjs) 对 HP 1.00 与 CharLS Wasm 实测 **6/12 通过**（`E.2-1`、`E.2-4` 与 `E.2-9` 至 `E.2-12`，18 次候选编码与官方 `.JLS` 逐字节一致）；其余 6 项（`E.2-2/3/5/6/7/8`，涉及 `ILV=1/2`、子采样与 `Pt=3`）解码按预期返回 `expected_unsupported`、`encode_status = not_run`。
+  6. **Annex E Table E.2 口径澄清**：[`scripts/validate_annex_e.mjs`](../scripts/validate_annex_e.mjs) 对 HP 1.00 与 CharLS Wasm 实测 **6/12 通过**（`E.2-1`、`E.2-4` 与 `E.2-9` 至 `E.2-12`，18 次候选编码与官方 `.JLS` 逐字节一致）；其余 6 项（`E.2-2/3/5/6/7/8`，涉及 `ILV=1/2` 与子采样）解码按预期返回 `expected_unsupported`、`encode_status = not_run`。
   7. **Native 流式与工作台实测**：Native 逐行交付、多扫描分块交付（`96x48` 16 位 3 分量与 `64x16` 8 位 4 分量，含扫描尾部合法性拒收）及 Chrome `158.0.8127.37` 对 `web/dist/` 无报错冒烟与 1,036,800 样本 NASA LOLA 核对均归档于 `reports/t87-m3a-20261125/`。
 
 ---
@@ -90,18 +90,18 @@
 | 按有效 `MAXVAL` 约束 `NEAR`（`0..min(255, floor(MAXVAL/2))`） | Annex A；C.2.3 | `passed` | `passed` | `passed` | `scripts/test_m2.py`；`scripts/verify_m2_golden.mjs`；`lse-near-over-maxval` | HP V.1.00 及 Annex A 向量 | [M2 合成矩阵](../reports/t87-m2-20261125/synthetic-matrix.md) | JS / Wasm GC / Native 全部通过 | M2 已完成；`fc43bc2` |
 | `LSE ID=1` 默认/零字段与自定义 `T1/T2/T3/RESET` | C.2.4.1.1、Tables C.1–C.2 | `passed` | `passed` | `passed` | `E.2-9`、`E.2-10`、`scripts/test_m2.py`、`scripts/verify_m2_golden.mjs`、`scripts/verify_m3a_golden.mjs` | 官方 HP 1.00、CharLS Wasm 0.10.0 | [Annex E 结果](CONFORMANCE_RESULTS.md) · [M3-A 汇总](../reports/t87-m3a-20261125/README.md) | JS / Wasm GC / Native 全部通过 | M2 单扫描与 M3-A 跨扫描继承/零重置均已验收 |
 | 多分量与非交错多扫描（`ILV=0`, `Ns=1`, `H=V=1`, `Pt=0`） | Annexes B、C、D | `passed` | `passed` | `passed` | `E.2-1`、`E.2-4`、`scripts/verify_m3a_golden.mjs`（7+7）、`multiscan_wbtest.mbt`、`native_multiscan_delivery_regression.py` | HP 1.00 & CharLS Wasm 0.10.0（E.2-1/4 及 3 通道黄金流） | [Annex E 结果](CONFORMANCE_RESULTS.md) · [M3-A 验收](../reports/t87-m3a-20261125/README.md) · [能力清单](../tests/conformance/manifest.json) | JS / Wasm GC / Native 全部通过（E.2-1/4 逐字节一致；首分量不等待后续 SOS/EOI） | **M3-A 已完成（`36bb9e6`）**；支持 1–255 分量、非连续 ID、重排扫描、严格负拓扑 |
-| 交错模式 `ILV=1`（行交错）与 `ILV=2`（样本交错） | Annex B；C.2.3 | `unsupported` | `unsupported` | `recognized_only` | `E.2-2`、`E.2-3`、`E.2-5`、`E.2-6` | 需按模式核对参考实现能力 | [Annex E 结果](CONFORMANCE_RESULTS.md) | 编码 `not_run`；三后端解码预期返回 `UnsupportedFeature` | 尚未实现交错扫描状态共享与样本布局；目标 **M3-B（2026-12-25）** |
-| 采样因子（`H/V`）与边缘 MCU | §4.3.1；Annex B、D | `unsupported` | `unsupported` | `recognized_only` | `E.2-7`、`E.2-8` | 官方子采样流（`T8SSE0/3.JLS`）；需分别确认参考库支持范围 | [Annex E 结果](CONFORMANCE_RESULTS.md) | 编码 `not_run`；三后端解码预期返回 `UnsupportedFeature` | 尚未实现非等采样与边缘 MCU；目标 **M3-B（2026-12-25）** |
-| 点变换 `Pt`（`Pt>0` 正逆变换与双尺度误差） | §4.3.2；C.2.3（所引 T.81） | `unsupported` | `unsupported` | `recognized_only` | 待建独立用例（暂空） | 待确定适用参考工具与独立推导向量 | 无运行证据 | `not_run` | 仅支持 `Pt=0`；需实现变换域/原始域双尺度误差核验；目标 **M3-B（2026-12-25）** |
+| 交错模式 `ILV=1`（行交错）与 `ILV=2`（样本交错），`H=V=1, Pt=0` | Annex B.1–B.3；C.2.3；C.2.4.1.1 | `passed` | `passed` | `passed` | `E.2-2/3/5/6` | HP 1.00 和 CharLS Wasm 0.10.0 | [Annex E 结果](CONFORMANCE_RESULTS.md) | JS / Wasm GC / Native 双向逐样本符合双参考，每条候选与官方流逐字节一致 | **M3-B 已验收** |
+| 采样因子（`H/V`）与边缘 MCU | §4.3.1、Annex B.2/B.4、C.2、Annex E | `passed` | `passed` | `passed` | E.2-7/8 与奇数尺寸、短行组、补行字面量 | HP 1.00 验收 E.2-7/8。CharLS Wasm 0.10.0 的采样模式为 `reference_unsupported` | [Annex E 结果](CONFORMANCE_RESULTS.md) | 三后端双向逐样本匹配适用参考。奇数尺寸和末组补行另有定向用例 | **M3-B 已验收** |
+| 点变换 `Pt`（`Pt>0` 正逆变换与双尺度误差） | §4.3.2；C.2.3（所引 T.81） | `unsupported` | `unsupported` | `recognized_only` | 待建独立用例（暂空） | 待确定适用参考工具与独立推导向量 | 无运行证据 | `not_run` | 当前支持 `Pt=0`；非零 Pt 独立推进，需独立参考与两域误差核验。Annex E 全部使用 Pt=0 |
 | `LSE ID=2` 映射表与 `LSE ID=3` 映射表续表 | C.2.4.1.2–3 | `unsupported` | `unsupported` | `recognized_only` | 待建有效与截断/缺失续表用例 | 待确定适用参考工具与独立向量 | 无运行证据 | `not_run` | 解析器仅识别分段长度后拒绝；缺表结构、条目宽度与重定义管理；目标 **M4（2027-01-10）** |
 | 表规范数据与简略图像格式 | §7(b)(c)；C.3、C.4 | `unsupported` | `unsupported` | `planned` | 待建跨流外部表生命周期用例 | 待确定适用参考工具与独立向量 | 无运行证据 | `not_run` | 需实现无帧表加载、保持、校验与简略图像编码/解码；目标 **M4（2027-01-10）** |
 | 重启间隔 `DRI` 与 `RST0–RST7` 标记 | C.2.5；Annex D | `unsupported` | `unsupported` | `recognized_only` | 待建重启间隔与错序/损坏用例 | 需按间隔与交错模式核实参考库 | 无运行证据 | `not_run` | 解码仅接受 `DRI=0`；非零 `DRI`、编号循环及上下文复位待实现；目标 **M4（2027-01-10）** |
 | 延后行数 `DNL` | C.2.2；C.2.6 | `unsupported` | `unsupported` | `recognized_only` | 待建 `height=0 + DNL` 用例 | 待确定适用参考工具 | 无运行证据 | `not_run` | 尚未支持未知高度帧与扫描后 `DNL` 定界；目标 **M4（2027-01-10）** |
 | 扩展尺寸 `LSE ID=4` | C.2.2；C.2.4.1.4 | `unsupported` | `unsupported` | `recognized_only` | 待建 `LSE4` 正常、溢出与资源上限用例 | 待确定独立向量 | 无运行证据 | `not_run` | 需区分配额资源上限与标准合法尺寸；目标 **M4（2027-01-10）** |
 | 剩余标准标记位置与尾随/填充语法（`APPn`、`COM`、`FF` 填充） | Annex C 及所引 T.81 | `partially_supported` | `partially_supported` | `partially_supported` | `core/stream_wbtest.mbt`、`lse-after-scan`、`lse-after-eoi` | 定向标记与截断夹具 | [M2 合成矩阵](../reports/t87-m2-20261125/synthetic-matrix.md) | JS / Wasm GC / Native 已测当前已支持位置 | 多扫描间/表流/重启位置标记将在 M3-A/M3-B/M4 补全；目标 **M4（2027-01-10）** |
-| 完整 Part 1 符合性闭环验收 | §§6–8；Annex E | `partially_supported` | `partially_supported` | `partially_supported` | `E.2-1` 至 `E.2-12` + §8 补充矩阵 | 官方 Annex E + 经核实参考工具 | [Annex E 结果](CONFORMANCE_RESULTS.md) · [能力清单](../tests/conformance/manifest.json) | 6/12 官方流双向通过（`E.2-1/4/9–12`），6/12 交错/子采样流当前拒收 | 目标 **M5（2027-01-20）** 完成全矩阵闭环；在此之前最终完整标签保持未达成 |
+| 完整 Part 1 符合性闭环验收 | §§6–8；Annex E | `partially_supported` | `partially_supported` | `partially_supported` | `E.2-1` 至 `E.2-12` + §8 补充矩阵 | 官方 Annex E + 经核实参考工具 | [Annex E 结果](CONFORMANCE_RESULTS.md) · [能力清单](../tests/conformance/manifest.json) | 12/12 官方流三后端双向通过，Part 1 补充矩阵待完成 | 目标 **M5（2027-01-20）** 完成全矩阵闭环；在此之前最终完整标签保持未达成 |
 
-> 上表 **M3-A（非交错多分量/多扫描，已于 2026-11-25 提前交付）** 与后续 **M3-B（交错/采样/点变换，目标 2026-12-25）** 与 [分阶段兼容路线](ROADMAP.md) 及 [机器可读能力清单](../tests/conformance/manifest.json) 保持完全一致。
+> 上表 **M3-A（非交错多分量/多扫描，已于 2026-11-25 提前交付）** 与后续 **M3-B（交错与采样已验收）** 与 [分阶段兼容路线](ROADMAP.md) 及 [机器可读能力清单](../tests/conformance/manifest.json) 保持完全一致。
 
 ---
 

@@ -1,0 +1,1300 @@
+{
+  "productRevision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
+  "productTree": "62dbd8f829e0d6512d606fef269e44a12bcefd59",
+  "localRawReceipts": ".evidence/codex-m3b-sampling",
+  "toolchain": {
+    "moon": "0.1.20261119 (738607b)",
+    "moonc": "v0.10.22+124d61d05",
+    "node": "24.20.0",
+    "typescript": "7.0.2",
+    "nativeWslDistro": "OpenAtom-Validation-2204-20261120",
+    "nativeOs": "Ubuntu 22.04.5 LTS",
+    "nativeCCompiler": "GCC 11.4.0",
+    "charlsWasmVersion": "0.10.0",
+    "charlsWasmSha256": "068064e4a632803de18e9fac6c70d9852900975f2c32ff9956a3d15e53e0bbd6"
+  },
+  "artifacts": {
+    "js": {
+      "path": "sdk/generated/core.mjs",
+      "sha256": "67f7178198b6a1494bd3a66adb4cec196941eca174468b017b5d48d8452ebbd8"
+    },
+    "wasm-gc": {
+      "path": "sdk/generated/core.wasm",
+      "sha256": "f7292aa28a1a40fb3ebba298cf854e6ba62caf19343e4527edf7b67c98c1ad0d"
+    },
+    "native": {
+      "path": ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+      "sha256": "38f8e842b3f075e32f6c583ae4b2462f417f2398ad5910febd41226bf22131ba"
+    }
+  },
+  "hpEdge": {
+    "status": "reference_unsupported",
+    "details": "HP 1.00 decodes the aligned-width padded literals but emits padding and truncates a short PGM header. Non-consecutive IDs and fractional horizontal dimensions are outside its usable edge profile.",
+    "testEvidence": "The FF00 and EBBC entropy literals are also frozen in core/interleave_wbtest.mbt.",
+    "rawFiles": [
+      {
+        "path": ".evidence/codex-m3b-sampling/hp-edge/edge-receipts/report.json",
+        "sha256": "c540e1ca82ac6578b3a48ee494b7ee6d09cf538203fa59104b8bfeb76e3ef27b",
+        "bytes": 18006
+      },
+      {
+        "path": ".evidence/codex-m3b-sampling/hp-edge/probe_hp_edge.py",
+        "sha256": "61173fb1f96d80d96214b040f333c39e6fc71a7a0e111c50da6000a533cc7a5d",
+        "bytes": 4051
+      }
+    ]
+  },
+  "gates": [
+    {
+      "name": "check",
+      "program": "moon",
+      "args": [
+        "check",
+        "--target",
+        "all",
+        "--deny-warn"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-check.log",
+          "sha256": "d2c5169c01cc534a065543c71f1b78a71495cff628c7890ade23ad6cf0902ec9",
+          "bytes": 45
+        }
+      ]
+    },
+    {
+      "name": "js",
+      "program": "moon",
+      "args": [
+        "test",
+        "core",
+        "--target",
+        "js",
+        "--deny-warn"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-js.log",
+          "sha256": "502ee85db9a682e2548c71fecaba27e3be76c51f58f6c3bf4b538c046b194fcd",
+          "bytes": 41
+        }
+      ],
+      "testsPassed": 26
+    },
+    {
+      "name": "wasm-gc",
+      "program": "moon",
+      "args": [
+        "test",
+        "core",
+        "--target",
+        "wasm-gc",
+        "--deny-warn"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-wasm-gc.log",
+          "sha256": "502ee85db9a682e2548c71fecaba27e3be76c51f58f6c3bf4b538c046b194fcd",
+          "bytes": 41
+        }
+      ],
+      "testsPassed": 26
+    },
+    {
+      "name": "sdk",
+      "program": "node",
+      "args": [
+        "sdk/build.mjs"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-sdk.log",
+          "sha256": "144812e0bc3c28f589ceba2a956d65c00fafed18c6ff967a997a68413176677a",
+          "bytes": 372
+        }
+      ]
+    },
+    {
+      "name": "worker",
+      "program": "node",
+      "args": [
+        "--experimental-vm-modules",
+        "--test",
+        "scripts/test_worker_protocol.mjs"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-worker.log",
+          "sha256": "ced2be1cf78f9e8b1865998670acbeb78f51d3dec90661e24c6a8859a030fc46",
+          "bytes": 2738
+        }
+      ],
+      "testsPassed": 21
+    },
+    {
+      "name": "node",
+      "program": "node",
+      "args": [
+        "--test",
+        "scripts/test_worker_codec.mjs",
+        "scripts/test_verification_report.mjs",
+        "web/pgm.test.mjs",
+        "web/preview.test.mjs"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-node.log",
+          "sha256": "292a374b9dea843ec78f19cff35273f791a655df99c488cf80fd90004524e0f1",
+          "bytes": 3540
+        }
+      ],
+      "testsPassed": 26
+    },
+    {
+      "name": "types",
+      "program": "npx.cmd",
+      "args": [
+        "--yes",
+        "--package",
+        "typescript@7.0.2",
+        "tsc",
+        "--noEmit",
+        "--strict",
+        "--module",
+        "nodenext",
+        "--target",
+        "es2022",
+        "--lib",
+        "es2022,dom",
+        "sdk/index.d.mts",
+        "sdk/lunar.d.mts",
+        "sdk/verification-report.d.mts",
+        "sdk/worker-client.d.mts"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-types.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "name": "web-build",
+      "program": "node",
+      "args": [
+        "web/build.mjs"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-web-build.log",
+          "sha256": "6bfeec697d1655d7b78ee652f64a91ae09303bf145ba4ddfa3b1e532a510132a",
+          "bytes": 103
+        }
+      ]
+    },
+    {
+      "name": "manifest",
+      "program": "node",
+      "args": [
+        "scripts/validate_annex_e.mjs",
+        "--check-manifest"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-manifest.log",
+          "sha256": "bb1f50fe1074c30a0d68ad70ae67c75e76e9f0b4e8516f9117e925d003fb85de",
+          "bytes": 48
+        }
+      ]
+    },
+    {
+      "name": "native",
+      "program": "wsl",
+      "args": [
+        "-d",
+        "OpenAtom-Validation-2204-20261120",
+        "--exec",
+        "/root/.moon/bin/moon",
+        "test",
+        "core",
+        "--target",
+        "native",
+        "--target-dir",
+        ".tools/wsl-build-codex-sampling",
+        "--deny-warn"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-native.log",
+          "sha256": "132910e2bf589e25270f015ad79484bc2e1d953765378ad56be49c1a3c20094c",
+          "bytes": 194
+        }
+      ],
+      "testsPassed": 26
+    },
+    {
+      "name": "native-build",
+      "program": "wsl",
+      "args": [
+        "-d",
+        "OpenAtom-Validation-2204-20261120",
+        "--exec",
+        "/root/.moon/bin/moon",
+        "build",
+        "cmd/moonjls",
+        "--target",
+        "native",
+        "--release",
+        "--target-dir",
+        ".tools/wsl-build-codex-sampling",
+        "--deny-warn"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-native-build.log",
+          "sha256": "72de0bc2f6597e554549f553c3421f8b83f270097b62e77da249e01860329e37",
+          "bytes": 386
+        }
+      ]
+    },
+    {
+      "name": "m2 golden",
+      "command": [
+        "node",
+        "scripts/verify_m2_golden.mjs",
+        "--native-exe",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+        "--native-wsl",
+        "OpenAtom-Validation-2204-20261120"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "status": "passed",
+        "verifiedFixtureFiles": 54,
+        "cases": 12,
+        "variants": 18,
+        "invalidEncodes": 7,
+        "pgmChecks": 4,
+        "backends": [
+          "js",
+          "wasm-gc",
+          "native"
+        ]
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-m2-golden.json",
+          "sha256": "5f0e39251e8d7db793ad62d4a6d0fa2010d45dee0b3d34a80f6b5d347b5dc137",
+          "bytes": 141
+        }
+      ]
+    },
+    {
+      "name": "m3a golden",
+      "command": [
+        "node",
+        "scripts/verify_m3a_golden.mjs",
+        "--native-exe",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+        "--native-wsl",
+        "OpenAtom-Validation-2204-20261120",
+        "--with-oracle"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "status": "passed",
+        "verifiedFrozenFiles": 21,
+        "positiveCases": 7,
+        "negativeCases": 7,
+        "backendChecks": 21,
+        "oracleChecks": 2,
+        "backends": [
+          "js",
+          "wasm-gc",
+          "native"
+        ]
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-m3a-golden.json",
+          "sha256": "2be02862dd0e18724fcc95e4d5a19d0f1404035f026da30963de8ac520626f18",
+          "bytes": 201
+        }
+      ]
+    },
+    {
+      "name": "native_row_delivery_regression",
+      "command": [
+        "wsl",
+        "-d",
+        "OpenAtom-Validation-2204-20261120",
+        "--exec",
+        "python3",
+        "REVIEW_EVIDENCE/native_row_delivery_regression.py",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "binary": "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+        "binarySha256": "38f8e842b3f075e32f6c583ae4b2462f417f2398ad5910febd41226bf22131ba",
+        "fixtureEncoder": "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+        "fixtureEncoderSha256": "38f8e842b3f075e32f6c583ae4b2462f417f2398ad5910febd41226bf22131ba",
+        "observationSecondsPerGate": 1.0,
+        "scope": "Native CLI correctness and liveness; no throughput measurement",
+        "trials": [
+          {
+            "case": "narrow-row",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "1"
+            ],
+            "bits": 8,
+            "width": 1,
+            "height": 4,
+            "cliChunkBytes": 1,
+            "rowBytes": 1,
+            "streamSha256": "e8075cfec5a473820b587a8fe64ab31a040c2cb495aa1c4e692496a5d7b19648",
+            "expectedOutputBytes": 4,
+            "prefixFragmentBytes": [
+              26
+            ],
+            "inputHighWaterBytes": 1,
+            "outputBeforeEoiBytes": 4,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.0065051009999997,
+            "stdinClosedSeconds": 2.0077946309999994,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=1 height=4 bits=8 maxval=255 near=0 t1=3 t2=7 t3=21 reset=64 components=1 scans=1 rows=4 input_bytes=28 output_bytes=4 first_row_at=26 core_payload_bytes=6835 host_conversion_buffer_bytes=0 input_high_water=1 output_high_water=1\n",
+            "passed": true
+          },
+          {
+            "case": "narrow-row",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "4096"
+            ],
+            "bits": 8,
+            "width": 1,
+            "height": 4,
+            "cliChunkBytes": 4096,
+            "rowBytes": 1,
+            "streamSha256": "e8075cfec5a473820b587a8fe64ab31a040c2cb495aa1c4e692496a5d7b19648",
+            "expectedOutputBytes": 4,
+            "prefixFragmentBytes": [
+              26
+            ],
+            "inputHighWaterBytes": 26,
+            "outputBeforeEoiBytes": 4,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.0089181809999994,
+            "stdinClosedSeconds": 2.0103091389999994,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=1 height=4 bits=8 maxval=255 near=0 t1=3 t2=7 t3=21 reset=64 components=1 scans=1 rows=4 input_bytes=28 output_bytes=4 first_row_at=26 core_payload_bytes=6835 host_conversion_buffer_bytes=0 input_high_water=26 output_high_water=1\n",
+            "passed": true
+          },
+          {
+            "case": "narrow-row",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "65536"
+            ],
+            "bits": 8,
+            "width": 1,
+            "height": 4,
+            "cliChunkBytes": 65536,
+            "rowBytes": 1,
+            "streamSha256": "e8075cfec5a473820b587a8fe64ab31a040c2cb495aa1c4e692496a5d7b19648",
+            "expectedOutputBytes": 4,
+            "prefixFragmentBytes": [
+              26
+            ],
+            "inputHighWaterBytes": 26,
+            "outputBeforeEoiBytes": 4,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.0063961729999997,
+            "stdinClosedSeconds": 2.0077290970000004,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=1 height=4 bits=8 maxval=255 near=0 t1=3 t2=7 t3=21 reset=64 components=1 scans=1 rows=4 input_bytes=28 output_bytes=4 first_row_at=26 core_payload_bytes=6835 host_conversion_buffer_bytes=0 input_high_water=26 output_high_water=1\n",
+            "passed": true
+          },
+          {
+            "case": "narrow-row",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "1"
+            ],
+            "bits": 16,
+            "width": 1,
+            "height": 4,
+            "cliChunkBytes": 1,
+            "rowBytes": 2,
+            "streamSha256": "b08434074ed42f671aefbff039a1e2b2b0b8a9c8eb214ac09a8597038657eabf",
+            "expectedOutputBytes": 8,
+            "prefixFragmentBytes": [
+              26
+            ],
+            "inputHighWaterBytes": 1,
+            "outputBeforeEoiBytes": 8,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.006712683,
+            "stdinClosedSeconds": 2.0081041479999993,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=1 height=4 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=1 scans=1 rows=4 input_bytes=28 output_bytes=8 first_row_at=26 core_payload_bytes=8875 host_conversion_buffer_bytes=0 input_high_water=1 output_high_water=2\n",
+            "passed": true
+          },
+          {
+            "case": "narrow-row",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "4096"
+            ],
+            "bits": 16,
+            "width": 1,
+            "height": 4,
+            "cliChunkBytes": 4096,
+            "rowBytes": 2,
+            "streamSha256": "b08434074ed42f671aefbff039a1e2b2b0b8a9c8eb214ac09a8597038657eabf",
+            "expectedOutputBytes": 8,
+            "prefixFragmentBytes": [
+              26
+            ],
+            "inputHighWaterBytes": 26,
+            "outputBeforeEoiBytes": 8,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.0067575369999986,
+            "stdinClosedSeconds": 2.0080091079999995,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=1 height=4 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=1 scans=1 rows=4 input_bytes=28 output_bytes=8 first_row_at=26 core_payload_bytes=8875 host_conversion_buffer_bytes=0 input_high_water=26 output_high_water=2\n",
+            "passed": true
+          },
+          {
+            "case": "narrow-row",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "65536"
+            ],
+            "bits": 16,
+            "width": 1,
+            "height": 4,
+            "cliChunkBytes": 65536,
+            "rowBytes": 2,
+            "streamSha256": "b08434074ed42f671aefbff039a1e2b2b0b8a9c8eb214ac09a8597038657eabf",
+            "expectedOutputBytes": 8,
+            "prefixFragmentBytes": [
+              26
+            ],
+            "inputHighWaterBytes": 26,
+            "outputBeforeEoiBytes": 8,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.0069043470000008,
+            "stdinClosedSeconds": 2.008177356000001,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=1 height=4 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=1 scans=1 rows=4 input_bytes=28 output_bytes=8 first_row_at=26 core_payload_bytes=8875 host_conversion_buffer_bytes=0 input_high_water=26 output_high_water=2\n",
+            "passed": true
+          },
+          {
+            "case": "row-wider-than-output-buffer",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "4096"
+            ],
+            "bits": 16,
+            "width": 2049,
+            "height": 2,
+            "cliChunkBytes": 4096,
+            "rowBytes": 4098,
+            "streamSha256": "b68ac24e9c4764094ff820375c3c5338efa8fc882be8861fb740942549c1d984",
+            "expectedOutputBytes": 8196,
+            "prefixFragmentBytes": [
+              44
+            ],
+            "inputHighWaterBytes": 44,
+            "outputBeforeEoiBytes": 8196,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.0070323079999994,
+            "stdinClosedSeconds": 2.008318505,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=2049 height=2 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=1 scans=1 rows=2 input_bytes=46 output_bytes=8196 first_row_at=44 core_payload_bytes=25259 host_conversion_buffer_bytes=0 input_high_water=44 output_high_water=4096\n",
+            "passed": true
+          },
+          {
+            "case": "row-wider-than-output-buffer",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "65536"
+            ],
+            "bits": 16,
+            "width": 32769,
+            "height": 2,
+            "cliChunkBytes": 65536,
+            "rowBytes": 65538,
+            "streamSha256": "287abc8e83127dee950ae6efc67814b4ccf9ff2220ef954ebdc646de0123b2e1",
+            "expectedOutputBytes": 131076,
+            "prefixFragmentBytes": [
+              45
+            ],
+            "inputHighWaterBytes": 45,
+            "outputBeforeEoiBytes": 131076,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.0063771270000004,
+            "stdinClosedSeconds": 2.0080067380000024,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=32769 height=2 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=1 scans=1 rows=2 input_bytes=47 output_bytes=131076 first_row_at=45 core_payload_bytes=271019 host_conversion_buffer_bytes=0 input_high_water=45 output_high_water=65536\n",
+            "passed": true
+          },
+          {
+            "case": "short-input-reads",
+            "command": [
+              "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+              "decode",
+              "-",
+              "-",
+              "raw-le",
+              "4096"
+            ],
+            "bits": 16,
+            "width": 1,
+            "height": 4,
+            "cliChunkBytes": 4096,
+            "rowBytes": 2,
+            "streamSha256": "b08434074ed42f671aefbff039a1e2b2b0b8a9c8eb214ac09a8597038657eabf",
+            "expectedOutputBytes": 8,
+            "prefixFragmentBytes": [
+              1,
+              3,
+              5,
+              1,
+              3,
+              5,
+              1,
+              3,
+              4
+            ],
+            "inputHighWaterBytes": 5,
+            "outputBeforeEoiBytes": 8,
+            "outputBetweenEoiAndEofBytes": 0,
+            "outputAfterEofBytes": 0,
+            "waitedForStdinEof": true,
+            "eoiSentSeconds": 1.0390233460000005,
+            "stdinClosedSeconds": 2.0402682159999976,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=1 height=4 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=1 scans=1 rows=4 input_bytes=28 output_bytes=8 first_row_at=26 core_payload_bytes=8875 host_conversion_buffer_bytes=0 input_high_water=5 output_high_water=2\n",
+            "passed": true
+          },
+          {
+            "case": "late-tail",
+            "cliChunkBytes": 4096,
+            "outputBeforeLateTailBytes": 4,
+            "outputAfterLateTailBytes": 0,
+            "waitedForStdinEof": true,
+            "exitCode": 1,
+            "stderr": "ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input: trailing bytes after EOI\n",
+            "passed": true
+          },
+          {
+            "case": "late-tail",
+            "cliChunkBytes": 65536,
+            "outputBeforeLateTailBytes": 4,
+            "outputAfterLateTailBytes": 0,
+            "waitedForStdinEof": true,
+            "exitCode": 1,
+            "stderr": "ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input: trailing bytes after EOI\n",
+            "passed": true
+          },
+          {
+            "case": "blocked-output-resumes",
+            "cliChunkBytes": 4096,
+            "stdoutPipeCapacityBytes": 4096,
+            "queuedBeforeHoldBytes": 4096,
+            "queuedAfterHoldBytes": 4096,
+            "holdSeconds": 0.10016294899999778,
+            "runningWhileHeld": true,
+            "expectedOutputBytes": 131072,
+            "actualOutputBytes": 131072,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=4096 height=16 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=1 scans=1 rows=16 input_bytes=48 output_bytes=131072 first_row_at=44 core_payload_bytes=41635 host_conversion_buffer_bytes=0 input_high_water=48 output_high_water=4096\n",
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-native-row.json",
+          "sha256": "1c487ba5fe04f044bb90bcac20816f289a2004d94c790e4afca4c6743e1db279",
+          "bytes": 12652
+        }
+      ]
+    },
+    {
+      "name": "native_multiscan_delivery_regression",
+      "command": [
+        "wsl",
+        "-d",
+        "OpenAtom-Validation-2204-20261120",
+        "--exec",
+        "python3",
+        "REVIEW_EVIDENCE/native_multiscan_delivery_regression.py",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "binary": "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+        "binarySha256": "38f8e842b3f075e32f6c583ae4b2462f417f2398ad5910febd41226bf22131ba",
+        "trials": [
+          {
+            "case": "multiscan-delivery-16b-3ch",
+            "width": 96,
+            "height": 48,
+            "bits": 16,
+            "components": 3,
+            "streamBytes": 27066,
+            "streamSha256": "e9c14bfc4be07da1966e2402eefa42017ac7b5760c04f478b6d473140777f2e1",
+            "scan0EndOffset": 9041,
+            "scan1EndOffset": 18048,
+            "eoiOffset": 27064,
+            "chunkWrites": {
+              "scan1": [
+                4096,
+                4096,
+                849
+              ],
+              "scan2": [
+                4096,
+                4096,
+                815
+              ],
+              "scan3PlusEoi": [
+                4096,
+                4096,
+                826
+              ]
+            },
+            "planeBytes": 9216,
+            "deliveredBeforeScan2Bytes": 9216,
+            "deliveredAfterScan2BeforeScan3Bytes": 9216,
+            "deliveredAtEoiBeforeEofBytes": 9216,
+            "deliveredAfterEofBytes": 0,
+            "aliveAfterScan1": true,
+            "aliveAfterScan2": true,
+            "waitedForStdinEof": true,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=96 height=48 bits=16 maxval=65535 near=0 t1=18 t2=67 t3=276 reset=64 components=3 scans=3 rows=144 input_bytes=27066 output_bytes=27648 first_row_at=232 core_payload_bytes=9635 host_conversion_buffer_bytes=0 input_high_water=4096 output_high_water=192\n",
+            "passed": true
+          },
+          {
+            "case": "multiscan-delivery-8b-4ch",
+            "width": 64,
+            "height": 16,
+            "bits": 8,
+            "components": 4,
+            "streamBytes": 4747,
+            "streamSha256": "8872940ac99b63eeede78e8ac02b8806bfac33df1717b34c0fc6fa5a5b046eef",
+            "scan0EndOffset": 1219,
+            "scan1EndOffset": 2398,
+            "eoiOffset": 4745,
+            "chunkWrites": {
+              "scan1": [
+                1219
+              ],
+              "scan2": [
+                1179
+              ],
+              "scan3PlusEoi": [
+                2349
+              ]
+            },
+            "planeBytes": 1024,
+            "deliveredBeforeScan2Bytes": 1024,
+            "deliveredAfterScan2BeforeScan3Bytes": 1024,
+            "deliveredAtEoiBeforeEofBytes": 2048,
+            "deliveredAfterEofBytes": 0,
+            "aliveAfterScan1": true,
+            "aliveAfterScan2": true,
+            "waitedForStdinEof": true,
+            "outputExact": true,
+            "exitCode": 0,
+            "stderr": "decoded width=64 height=16 bits=8 maxval=255 near=0 t1=3 t2=7 t3=21 reset=64 components=4 scans=4 rows=64 input_bytes=4747 output_bytes=4096 first_row_at=97 core_payload_bytes=7339 host_conversion_buffer_bytes=0 input_high_water=2349 output_high_water=64\n",
+            "passed": true
+          },
+          {
+            "case": "multiscan-late-tail-rejected",
+            "deliveredBeforeTailBytes": 27648,
+            "deliveredAfterTailBytes": 0,
+            "waitedForStdinEof": true,
+            "exitCode": 1,
+            "stderr": "ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input: trailing bytes after EOI\n",
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-native-multiscan.json",
+          "sha256": "e0d12dc020e91f19fe854f4566904ac7928c793a4405de6daba8bee17bf2a6e5",
+          "bytes": 2986
+        }
+      ]
+    },
+    {
+      "name": "native_tail_matrix",
+      "command": [
+        "wsl",
+        "-d",
+        "OpenAtom-Validation-2204-20261120",
+        "--exec",
+        "python3",
+        "REVIEW_EVIDENCE/native_tail_matrix.py",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "trials": [
+          {
+            "case": "complete",
+            "chunk": 1,
+            "exitCode": 0
+          },
+          {
+            "case": "missing-eoi",
+            "chunk": 1,
+            "exitCode": 1
+          },
+          {
+            "case": "short-eoi",
+            "chunk": 1,
+            "exitCode": 1
+          },
+          {
+            "case": "nonzero-padding",
+            "chunk": 1,
+            "exitCode": 1
+          },
+          {
+            "case": "trailing-data",
+            "chunk": 1,
+            "exitCode": 1
+          },
+          {
+            "case": "complete",
+            "chunk": 2,
+            "exitCode": 0
+          },
+          {
+            "case": "missing-eoi",
+            "chunk": 2,
+            "exitCode": 1
+          },
+          {
+            "case": "short-eoi",
+            "chunk": 2,
+            "exitCode": 1
+          },
+          {
+            "case": "nonzero-padding",
+            "chunk": 2,
+            "exitCode": 1
+          },
+          {
+            "case": "trailing-data",
+            "chunk": 2,
+            "exitCode": 1
+          },
+          {
+            "case": "complete",
+            "chunk": 7,
+            "exitCode": 0
+          },
+          {
+            "case": "missing-eoi",
+            "chunk": 7,
+            "exitCode": 1
+          },
+          {
+            "case": "short-eoi",
+            "chunk": 7,
+            "exitCode": 1
+          },
+          {
+            "case": "nonzero-padding",
+            "chunk": 7,
+            "exitCode": 1
+          },
+          {
+            "case": "trailing-data",
+            "chunk": 7,
+            "exitCode": 1
+          },
+          {
+            "case": "complete",
+            "chunk": 4096,
+            "exitCode": 0
+          },
+          {
+            "case": "missing-eoi",
+            "chunk": 4096,
+            "exitCode": 1
+          },
+          {
+            "case": "short-eoi",
+            "chunk": 4096,
+            "exitCode": 1
+          },
+          {
+            "case": "nonzero-padding",
+            "chunk": 4096,
+            "exitCode": 1
+          },
+          {
+            "case": "trailing-data",
+            "chunk": 4096,
+            "exitCode": 1
+          }
+        ],
+        "lateTrailingDataWhileInputOpen": "rejected"
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-native-tail.json",
+          "sha256": "12b61bb98a5e918e0bd22c2d0909afedb0ca8fb37b673a66b5bbba01c12e5c95",
+          "bytes": 1688
+        }
+      ]
+    },
+    {
+      "name": "native_sampling_delivery_regression",
+      "command": [
+        "wsl",
+        "-d",
+        "OpenAtom-Validation-2204-20261120",
+        "--exec",
+        "python3",
+        "REVIEW_EVIDENCE/native_sampling_delivery_regression.py",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "status": "passed",
+        "sampleCounts": [
+          25,
+          12,
+          10
+        ],
+        "validRows": 11,
+        "streamSha256": "43132d36edc68887a0b5918936bcb0f6fa2f0504e8829fee68fbc88843956b6e",
+        "binarySha256": "38f8e842b3f075e32f6c583ae4b2462f417f2398ad5910febd41226bf22131ba",
+        "encodeExitCode": 0,
+        "decodePgmsExitCode": 0,
+        "invalidPpmExitCode": 1,
+        "deliveryCommand": [
+          "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+          "decode",
+          "-",
+          "-",
+          "raw-le",
+          "7"
+        ],
+        "payloadBytesBeforeEoi": 47,
+        "largestInputWriteBeforeEoi": 1,
+        "lateTailExitCode": 1,
+        "stderr": "ZSY2221/moon_jpegls/cmd/moonjls.CommandError.Input: trailing bytes after EOI\n"
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-native-sampling.json",
+          "sha256": "e4973ddd8d2bdbeff91df1e1d92d66ea961df3238aaa4427b68c835165093796",
+          "bytes": 749
+        }
+      ]
+    },
+    {
+      "name": "M2 full matrix",
+      "command": [
+        "python",
+        "scripts/test_m2.py",
+        "--hp-archive",
+        "../moon_jpegls/.tools/itu-reference/jlsrefV100.zip",
+        "--native-binary",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+        "--native-wsl",
+        "OpenAtom-Validation-2204-20261120",
+        "--directory",
+        ".evidence/codex-m3b-sampling/m2-388"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "positiveCases": 388,
+        "wireVariants": 18,
+        "invalidEncodes": 7,
+        "nativePgmChecks": 6,
+        "referenceArchiveSha256": "085285f0552ef0b6ebcf29bc5a6d3bc0d6bda0408e9f2f1c138be2e55200814f",
+        "referenceBinariesSha256": {
+          "locoe.exe": "20c3e1f2e61464438c6e348bdb187d17d1ea25d44c5a429bca948fad0426c699",
+          "locod.exe": "36516cba57c7706a76d9ae3f21c4e35f2b3bd1a7a0ef7ca0f0124f18b78015c0",
+          "nlocoe.exe": "706a81309493b6a8edeb3cb1cbfce810282aa05daeca22ae58af296bcf7ee3c3",
+          "nlocod.exe": "7cbc4c9506c9031a53b863793ad27c6bcb90f83c7fa257c53a90e83c5a6d5e86",
+          "loco16e.exe": "a0573719d3b76d980d80c50fe51fdaf806267c54c58eacf720dc8f79fd4c2766",
+          "loco16d.exe": "f080d7cd7722ffbbd4e8887a229cb023e2c7ca471a69f6730d2ac41a09a6e7f5",
+          "nloco16e.exe": "516ca3ca2093e62e8c9596c5f9927933a442af1305dbea0cd7921842ad0ce32e",
+          "nloco16d.exe": "84682e13e6a12cd60e758cfd8d4c1c4c82d49bd415b76ae0c58a745bc71e4b00"
+        }
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/m2-388/report.json",
+          "sha256": "65b5299b6fcb611e7aed69a89faad3d69421af493d788fa09284375b25f8322b",
+          "bytes": 490928
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/m2-388/manifest.json",
+          "sha256": "4cc50b7f877f5d476cacbf83690089a930fa222abf9041c10112da55b059fd26",
+          "bytes": 410990
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/final-m2-matrix.stdout",
+          "sha256": "3f95934a8a24d8a2c250b5e2552a843245dfcf91bf9ff8ffc330b12241dfa0fe",
+          "bytes": 184
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/final-m2-matrix.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "name": "NEAR full matrix",
+      "command": [
+        "../moon_jpegls/.tools/oracle-venv/Scripts/python.exe",
+        "scripts/validate.py",
+        "--near-matrix",
+        "--native-exe",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+        "--native-wsl",
+        "OpenAtom-Validation-2204-20261120",
+        "--directory",
+        ".evidence/codex-m3b-sampling/near-640"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "images": 640,
+        "encodes": 2560,
+        "sameStreamComparisons": 5120,
+        "nativeCLIImages": 640,
+        "nativeCLISameStreamComparisons": 3200,
+        "nativeOracleSameStreamComparisons": 8320,
+        "node": "v24.20.0",
+        "python": "3.12.10",
+        "nativeOracle": "imagecodecs 2026.11.11 / CharLS 2.4.5",
+        "wasmOracle": "@team-charls/charls-wasm 0.10.0",
+        "backends": [
+          "js",
+          "wasm-gc",
+          "native"
+        ]
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/near-640/report.json",
+          "sha256": "8068defbf6663aa96efda163646691f4a71489f5bc586801e53296712fd63294",
+          "bytes": 12916
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/near-640/near-matrix-cases.json",
+          "sha256": "b2447966ce94755f1da781a227af972fcd7f2129169123b7dc30009bafed0fcb",
+          "bytes": 1354966
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/final-near.stdout",
+          "sha256": "f0b5c1e90531d836a1d39e80d48fe81a5f936ecf5409db1f5fac17398270962b",
+          "bytes": 13759
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/final-near.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "name": "Chrome full workbench smoke",
+      "command": [
+        "node",
+        "web/smoke.mjs"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "browser": "158.0.8127.37",
+        "node": "v24.20.0",
+        "responses": {
+          "/web/style.css": {
+            "sha256": "3f8c9eafbaa21cdd6bb137d659f6b9e9b1fbca9c89d36fb02d0062e81776db85",
+            "bytes": 29792
+          },
+          "/web/app.mjs": {
+            "sha256": "4dc4716d046e469a100d5f403b3f70cc99221e20ea96f15a7664bb7ef431de4b",
+            "bytes": 48475
+          },
+          "/sdk/lunar.mjs": {
+            "sha256": "9b63d807462c0176cb9d0e38a369f688c4c7d192122c7963d20764b89b02b957",
+            "bytes": 1259
+          },
+          "/sdk/verification-report.mjs": {
+            "sha256": "316c710857034f50c09b815697d26ebc03be95887b18714db4a3f03e70836e15",
+            "bytes": 4847
+          },
+          "/web/pgm.mjs": {
+            "sha256": "4f8fdf96bb184ee97dce809a3188bce87cb5f9ed79b4aa43878a3d8b137b27c1",
+            "bytes": 7038
+          },
+          "/web/run-report.mjs": {
+            "sha256": "01c223751a97e837ecdf15aa92bc736d931110d4faac443a0fd2407dd08b6f94",
+            "bytes": 4359
+          },
+          "/web/labels.mjs": {
+            "sha256": "353c1f947ad89ef751760b484cff377288fd750698b5fb1f4f2869e43b4477a3",
+            "bytes": 20931
+          },
+          "/sdk/worker-client.mjs": {
+            "sha256": "ea2c02a798812c267c2845c9fcb5b803154bc613ea720e1a94bd05703faab6b5",
+            "bytes": 5091
+          },
+          "/web/compatibility.mjs": {
+            "sha256": "247d9dd9b8d48cc8a39b428ab7b223a083ada49fca88ca3f97c1722fcda7b284",
+            "bytes": 3559
+          },
+          "/sdk/index.mjs": {
+            "sha256": "aa4c072d3a5151c326a78d1f913c064da02c4ce7a5de908b0289111bc1861fad",
+            "bytes": 35588
+          },
+          "/web/ppm.mjs": {
+            "sha256": "00865cb08cf339a2cf8a681e48c68b471dc17e4602f5dfe0c969556a4680829f",
+            "bytes": 10059
+          },
+          "/web/preview.mjs": {
+            "sha256": "d6dadca6b67e2366ad6ba708623e988b26f0cc372a526197a71f268e07d1289d",
+            "bytes": 19531
+          },
+          "/web/transport.mjs": {
+            "sha256": "61a7c555428636ea49da296ff0e647ae0e52ab94946dcec7512583744a441787",
+            "bytes": 3533
+          },
+          "/web/scan-inspector.mjs": {
+            "sha256": "361629fdc9a310cbba47c31e4023e963ea6e52efd3f1e96cf507db8d32758d3f",
+            "bytes": 5232
+          },
+          "/sdk/generated/core.wasm": {
+            "sha256": "f7292aa28a1a40fb3ebba298cf854e6ba62caf19343e4527edf7b67c98c1ad0d",
+            "bytes": 51781
+          },
+          "/sdk/worker.mjs": {
+            "sha256": "891a4d08e9388bb4bb81ecbd3248caf13cab9dc47bdf22c2c7bb628e9736cf86",
+            "bytes": 7569
+          },
+          "/sdk/generated/core.mjs": {
+            "sha256": "67f7178198b6a1494bd3a66adb4cec196941eca174468b017b5d48d8452ebbd8",
+            "bytes": 277920
+          }
+        },
+        "build": {
+          "source": {
+            "revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
+            "dirty": false
+          },
+          "artifacts": {
+            "js": {
+              "name": "core.mjs",
+              "sha256": "67f7178198b6a1494bd3a66adb4cec196941eca174468b017b5d48d8452ebbd8"
+            },
+            "wasm-gc": {
+              "name": "core.wasm",
+              "sha256": "f7292aa28a1a40fb3ebba298cf854e6ba62caf19343e4527edf7b67c98c1ad0d"
+            }
+          }
+        },
+        "sampledRuns": [
+          {
+            "test": "sampled Annex E browser decode and planar export",
+            "fixture": "T8SSE0",
+            "backend": "js",
+            "inputSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+            "outputSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec",
+            "rows": 448,
+            "samples": 98304,
+            "hostConversionBufferBytes": 512
+          },
+          {
+            "test": "sampled Annex E browser decode and planar export",
+            "fixture": "T8SSE3",
+            "backend": "wasm-gc",
+            "inputSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+            "outputSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af",
+            "rows": 448,
+            "samples": 98304,
+            "hostConversionBufferBytes": 512
+          }
+        ],
+        "lunar": {
+          "test": "NASA LOLA real browser downloads agree with CharLS",
+          "near": 3,
+          "maxError": 3,
+          "samples": 1036800,
+          "fixtureSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "jlsBytes": 999459,
+          "jlsSha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+          "pgmBytes": 2073618,
+          "pgmSha256": "0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002"
+        },
+        "fixtureEnv": {
+          "MOONJLS_ANNEX_FIXTURES": ".tools/annex-e",
+          "MOONJLS_LOLA": "../moon_jpegls/.evidence/real/lola.pgm"
+        }
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-chrome-receipt.json",
+          "sha256": "d5d4dcd74a8976dca116d663992094a7f19193a1fe79f9038b053c3b5a1b40ec",
+          "bytes": 2445
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/final-chrome.stdout",
+          "sha256": "9c8e532bd8559a792bfbbc20e90728e4b088bd31c7c48ef1d0ed31cd11ea4711",
+          "bytes": 5288
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/chrome-screens/sampled-T8SSE0.png",
+          "sha256": "88aba478f6918d77593f229b77c9664d73fe73d27446d866db6c674a2a6b8732",
+          "bytes": 99460
+        },
+        {
+          "path": ".evidence/codex-m3b-sampling/chrome-screens/sampled-T8SSE3.png",
+          "sha256": "50f0f64eb2477d4984a930c4ab0057e68e144e50b43a467cf477ca56adef4fcc",
+          "bytes": 100870
+        }
+      ]
+    },
+    {
+      "name": "NASA fixed stream and new independent candidate encodes",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.evidence\\codex-m3b-sampling\\verify_lunar_fixed.mjs",
+        "--project",
+        ".",
+        "--pgm",
+        "../moon_jpegls/.evidence/real/lola.pgm",
+        "--jls",
+        "../moon_jpegls/.evidence/lunar-budget-20261125/js-near3-9ca2f131-a782-4f31-9e5b-7da07274be5e/lola.jls",
+        "--native-exe",
+        ".tools/wsl-build-codex-sampling/native/release/build/cmd/moonjls/moonjls.exe",
+        "--native-wsl",
+        "OpenAtom-Validation-2204-20261120",
+        "--encode"
+      ],
+      "exitCode": 0,
+      "status": "passed",
+      "details": {
+        "samples": 1036800,
+        "fixedAndCandidateStreamsExact": true
+      },
+      "rawFiles": [
+        {
+          "path": ".evidence/codex-m3b-sampling/final-lola-fixed.json",
+          "sha256": "606578f6e7526f188b19f01e3c293d8065287a9bf14fcdd10b8576339251180d",
+          "bytes": 12820
+        }
+      ]
+    }
+  ]
+}

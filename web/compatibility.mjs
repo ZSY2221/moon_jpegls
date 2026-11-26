@@ -48,7 +48,18 @@ export async function mountCompatibility(unavailable) {
     if (!response.ok) throw new Error('Could not load the conformance manifest');
     const manifest = await response.json();
     showFeatures(manifest.features, destination);
-    standard.textContent = manifest.standard;
+    const byRevision = new Map();
+    for (const item of manifest.cases) {
+      const passed = ['js', 'wasm-gc', 'native'].every((backend) => {
+        const result = item.results?.[backend];
+        return result?.encode?.status === 'passed' && result?.decode?.status === 'passed';
+      });
+      if (passed && item.source_revision) {
+        byRevision.set(item.source_revision, (byRevision.get(item.source_revision) ?? 0) + 1);
+      }
+    }
+    const passed = Math.max(0, ...byRevision.values());
+    standard.textContent = `${manifest.standard} · ${passed}/${manifest.cases.length}`;
     const cases = manifest.cases.map((fixture) => {
       const item = element('li', `${fixture.test_id} ${fixture.file} (${fixture.expected})`);
       item.title = fixture.sha256;

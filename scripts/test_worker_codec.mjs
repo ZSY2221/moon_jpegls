@@ -21,7 +21,7 @@ if (!isMainThread) {
   for (const data of inbox) self.onmessage({ data });
 } else {
   const root = process.env.MOONJLS_WORKER_SOURCE_ROOT || fileURLToPath(new URL('../', import.meta.url));
-  const { loadCore, encodeImage, encodePlanarImage, inspectStream } = await import(pathToFileURL(path.join(root, 'sdk/index.mjs')).href);
+  const { loadCore, encodeImage, encodePlanarImage, decodePlanarImage, inspectStream } = await import(pathToFileURL(path.join(root, 'sdk/index.mjs')).href);
   class WebWorkerAdapter {
     constructor(url) {
       this.thread = new NodeWorker(new URL(import.meta.url), { workerData: { workerUrl: url.href } });
@@ -37,6 +37,16 @@ if (!isMainThread) {
   const frame = { width: 8, height: 12, bits: 16, near: 0 };
   const samples = Uint16Array.from({ length: frame.width * frame.height }, (_, i) => i * 123);
   const reference = await encodeImage(await loadCore({ backend: 'js' }), frame, samples);
+
+  function readBytes(bytes) {
+    let offset = 0;
+    return (size) => {
+      if (offset === bytes.length) return null;
+      const chunk = bytes.slice(offset, offset + size);
+      offset += chunk.length;
+      return chunk;
+    };
+  }
 
   for (const backend of ['js', 'wasm-gc']) {
     test(`real ${backend} codec + real Worker/client: pixels, buffer high water, terminal queue`, { timeout: 10000 }, async () => {
@@ -190,6 +200,226 @@ if (!isMainThread) {
       cancelJob.cancel();
       pauseCancel?.();
       await assert.rejects(cancelJob.result, { code: 'Cancelled' });
+    });
+
+    test(`real ${backend} ILV=2 Worker preserves SOS row order through ACK, cancellation, and restart`, { timeout: 15000 }, async () => {
+      const ilvFrame = {
+        width: 9, height: 4, bits: 16, near: 0,
+        components: [99, 10, 2],
+        scans: [{ componentIds: [99, 10, 2], interleave: 2 }],
+      };
+      const planeSize = ilvFrame.width * ilvFrame.height;
+      const planes = ilvFrame.components.map((_, ci) =>
+        Uint16Array.from({ length: planeSize }, (_, p) => (p * 1297 + ci * 553 + 7) & 65535));
+      const core = await loadCore({ backend });
+      const { bytes: coded } = await encodePlanarImage(core, ilvFrame, planes, { inputChunkSize: 7, outputChunkSize: 3 });
+
+      // The streaming Worker encoder takes one sample per SOS component at each pixel.
+      const packed = new Uint16Array(planeSize * 3);
+      for (let p = 0; p < planeSize; p++) {
+        packed.set([planes[0][p], planes[1][p], planes[2][p]], p * 3);
+      }
+      let packedOffset = 0;
+      const workerBytes = [];
+      const encoder = startWorker({
+        mode: 'encode', backend, frame: ilvFrame, inputChunkSize: 7, outputChunkSize: 3,
+        read(size) {
+          if (packedOffset === packed.length) return null;
+          const chunk = packed.slice(packedOffset, packedOffset + size);
+          packedOffset += chunk.length;
+          return chunk;
+        },
+        onEvent(event) {
+          if (event.type === 'bytes') workerBytes.push(event.chunk);
+        },
+      });
+      const encoded = await encoder.result;
+      assert.deepEqual(Uint8Array.from(workerBytes.flatMap(chunk => [...chunk])), coded);
+      assert.equal(encoded.stats.outputQueueBytes, 0);
+
+      // Cancel while the consumer holds the first row ACK, then immediately start a new decoder.
+      let seenFirstRow;
+      const firstRow = new Promise(resolve => { seenFirstRow = resolve; });
+      let releaseAck;
+      const ackGate = new Promise(resolve => { releaseAck = resolve; });
+      let cancelledOffset = 0;
+      let cancelledRows = 0;
+      let cancelledAcks = 0;
+      const cancelledJob = startWorker({
+        mode: 'decode', backend, inputChunkSize: 7, maxBatchBytes: 54,
+        read(size) {
+          if (cancelledOffset === coded.length) return null;
+          const chunk = coded.slice(cancelledOffset, cancelledOffset + size);
+          cancelledOffset += chunk.length;
+          return chunk;
+        },
+        async onEvent(event) {
+          if (event.type !== 'row') return;
+          cancelledRows++;
+          seenFirstRow();
+          await ackGate;
+        },
+        onAck(event) {
+          if (event.type === 'row') cancelledAcks++;
+        },
+      });
+      await Promise.race([firstRow, cancelledJob.result.then(() => assert.fail('Expected a held row ACK'))]);
+      const cancelled = assert.rejects(cancelledJob.result, { code: 'Cancelled' });
+      cancelledJob.cancel();
+
+      // Stage through the entropy segment and hold EOI until every row has been delivered.
+      const eoi = coded.length - 2;
+      let releaseEoi;
+      const eoiGate = new Promise(resolve => { releaseEoi = resolve; });
+      let rowsReady;
+      const allRows = new Promise(resolve => { rowsReady = resolve; });
+      const delivered = [];
+      let decodedOffset = 0;
+      const job = startWorker({
+        mode: 'decode', backend, inputChunkSize: 7, maxBatchBytes: 54,
+        async read(size) {
+          if (decodedOffset === coded.length) return null;
+          if (decodedOffset === eoi) {
+            assert.equal(delivered.length, 3 * ilvFrame.height, 'All rows must be delivered before reading EOI');
+            await eoiGate;
+          }
+          const end = Math.min(decodedOffset + size, decodedOffset < eoi ? eoi : coded.length);
+          const chunk = coded.slice(decodedOffset, end);
+          decodedOffset = end;
+          return chunk;
+        },
+        onEvent(event) {
+          if (event.type !== 'row' && event.type !== 'rows') return;
+          const payload = event.row ?? event.samples;
+          const index = event.index ?? event.startIndex;
+          assert.equal(event.count ?? 1, 1, 'Rows from different SOS components cannot share a batch');
+          assert.equal(event.scanIndex, 0);
+          assert.equal(event.interleave, 2);
+          assert.equal(event.layout, 'planar');
+          assert.equal(event.stride, ilvFrame.width);
+          assert.equal(event.height, ilvFrame.height);
+          assert.equal(event.sampleBytes, 2);
+          assert.equal(event.stats.outputQueueBytes, payload.buffer.byteLength);
+          assert.deepEqual(payload, planes[event.componentIndex].slice(index * ilvFrame.width, (index + 1) * ilvFrame.width));
+          delivered.push([event.componentId, index]);
+          if (delivered.length === 3 * ilvFrame.height) rowsReady();
+        },
+      });
+      await cancelled;
+      releaseAck();
+      try {
+        await Promise.race([allRows, job.result.then(() => assert.fail('Expected all rows before EOI'))]);
+        assert.equal(cancelledRows, 1);
+        assert.equal(cancelledAcks, 0);
+        assert.deepEqual(delivered, Array.from({ length: ilvFrame.height }, (_, y) => [[99, y], [10, y], [2, y]]).flat());
+        assert.equal(decodedOffset, eoi);
+      } finally {
+        releaseEoi();
+      }
+      const done = await job.result;
+      assert.equal(done.stats.rows, 3 * ilvFrame.height);
+      assert.equal(done.stats.outputQueueBytes, 0);
+      assert.equal(done.stats.outputPeakBytes, 72, '54-byte batch and 18-byte source row');
+      assert.ok(done.scans[0].completed);
+    });
+
+    test(`real ${backend} sampled Worker keeps real rows through ACK, cancellation, and finalization`, { timeout: 15000 }, async () => {
+      const sampled = {
+        width: 9, height: 7, bits: 8, near: 0, interleave: 1,
+        components: [{ id: 10, hSampling: 1, vSampling: 2 }, { id: 20, hSampling: 2, vSampling: 1 }],
+      };
+      const widths = [5, 9];
+      const heights = [7, 4];
+      const planes = widths.map((width, ci) =>
+        Uint16Array.from({ length: width * heights[ci] }, (_, p) => (p * 23 + ci * 75) & 255));
+      const core = await loadCore({ backend });
+      const { bytes: coded } = await encodePlanarImage(core, sampled, planes, {
+        inputChunkSize: 7, outputChunkSize: 1, limits: { maxPixels: 71 },
+      });
+      await assert.rejects(decodePlanarImage(core, coded, { limits: { maxPixels: 70 } }), { code: 'ResourceLimit' });
+      await assert.rejects(encodePlanarImage(core, { ...sampled, interleave: 2 }, planes), { code: 'InvalidArgument' });
+
+      let heldBatch;
+      const firstBatch = new Promise(resolve => { heldBatch = resolve; });
+      let releaseAck;
+      const ack = new Promise(resolve => { releaseAck = resolve; });
+      let cancelledAcks = 0;
+      const cancelledJob = startWorker({
+        mode: 'decode', backend, inputChunkSize: 7, maxBatchBytes: 28,
+        read: readBytes(coded),
+        async onEvent(event) {
+          if (event.type !== 'rows') return;
+          heldBatch();
+          await ack;
+        },
+        onAck(event) { if (event.type === 'rows') cancelledAcks++; },
+      });
+      await Promise.race([firstBatch, cancelledJob.result.then(() => assert.fail('Expected a held component batch ACK'))]);
+      const cancelled = assert.rejects(cancelledJob.result, { code: 'Cancelled' });
+      cancelledJob.pause();
+      cancelledJob.cancel();
+
+      let offset = 0;
+      const eoi = coded.length - 2;
+      const emitted = [];
+      let deliveredSamples = 0;
+      let reachedEoi;
+      const eoiRequested = new Promise(resolve => { reachedEoi = resolve; });
+      let resumeEoi;
+      const heldEoi = new Promise(resolve => { resumeEoi = resolve; });
+      const job = startWorker({
+        mode: 'decode', backend, inputChunkSize: 7, maxBatchBytes: 28,
+        limits: { maxPixels: 71 },
+        async read(size) {
+          if (offset === coded.length) return null;
+          if (offset === eoi) {
+            assert.equal(emitted.length, 11, 'All valid rows are delivered before requesting EOI');
+            reachedEoi();
+            await heldEoi;
+          }
+          const end = Math.min(offset + size, offset < eoi ? eoi : coded.length);
+          const bytes = coded.slice(offset, end);
+          offset = end;
+          return bytes;
+        },
+        onEvent(event) {
+          if (event.type !== 'row' && event.type !== 'rows') return;
+          const ci = event.componentIndex;
+          const index = event.index ?? event.startIndex;
+          const count = event.count ?? 1;
+          const row = event.row ?? event.samples;
+          assert.equal(event.width, widths[ci]);
+          assert.equal(event.stride, widths[ci]);
+          assert.equal(event.height, heights[ci]);
+          assert.equal(event.interleave, 1);
+          assert.equal(event.layout, 'planar');
+          assert.equal(event.sampleBytes, 2);
+          assert.deepEqual(row, planes[ci].slice(index * event.stride, (index + count) * event.stride));
+          assert.equal(event.stats.outputQueueBytes, row.buffer.byteLength);
+          deliveredSamples += row.length;
+          for (let i = 0; i < count; i++) emitted.push([event.componentId, index + i]);
+        },
+      });
+      await cancelled;
+      releaseAck();
+      try {
+        await Promise.race([eoiRequested, job.result.then(() => assert.fail('Expected the EOI request'))]);
+        assert.equal(cancelledAcks, 0);
+        assert.equal(deliveredSamples, 71);
+        assert.deepEqual(emitted, [
+          [10, 0], [10, 1], [20, 0],
+          [10, 2], [10, 3], [20, 1],
+          [10, 4], [10, 5], [20, 2],
+          [10, 6], [20, 3],
+        ]);
+      } finally {
+        resumeEoi();
+      }
+      const done = await job.result;
+      assert.equal(done.stats.outputQueueBytes, 0);
+      assert.equal(done.stats.rows, 11);
+      assert.equal(done.stats.outputProduced, 71);
+      assert.equal(done.scans[0].completed, true);
     });
   }
 }

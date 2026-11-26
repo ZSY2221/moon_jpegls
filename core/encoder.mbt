@@ -1,15 +1,12 @@
 ///|
 priv struct ResolvedScan {
-  component_index : Int32
-  component_id : Int32
-  near : Int32
+  scan_info : ScanInfo
   params : Parameters
   lse_marker : Preset?
 }
 
 ///|
 pub struct Encoder {
-  priv mut frame : Frame
   priv frame_info : FrameInfo
   priv scans : Array[ResolvedScan]
   priv mut scan_index : Int32
@@ -18,14 +15,16 @@ pub struct Encoder {
   priv mut scan_header : Bool
   priv mut trailer : Bool
   priv mut run : Int32
+  priv vector : FixedArray[Int32]
+  priv mut vector_size : Int32
   priv mut terminal : Status?
 }
 
 ///|
-/// Creates a multi-component non-interleaved (ILV=0, Ns=1 per scan) encoder.
-pub fn Encoder::new_multicomponent(
+/// Creates a multi-component encoder supporting ILV=0, ILV=1 and ILV=2 scans.
+pub fn Encoder::new_scans(
   frame_info : FrameInfo,
-  scans : Array[ScanSpec],
+  scans : Array[MultiScanSpec],
   limits : Limits,
 ) -> Encoder raise CodecError {
   validate_limits(limits)
@@ -33,14 +32,16 @@ pub fn Encoder::new_multicomponent(
   guard frame_info.bits >= 2 && frame_info.bits <= 16 else {
     raise InvalidArgument("sample precision must be in 2..16")
   }
-  validate_frame_dimensions(frame_info.width, frame_info.height, count, limits)
   for index in 0..<count {
     let comp = frame_info.components[index]
     guard comp.id >= 0 && comp.id <= 255 else {
       raise InvalidArgument("component id must be in 0..255")
     }
-    guard comp.h_sampling == 1 && comp.v_sampling == 1 else {
-      raise UnsupportedFeature("component sampling factors must be 1x1")
+    guard comp.h_sampling >= 1 &&
+      comp.h_sampling <= 4 &&
+      comp.v_sampling >= 1 &&
+      comp.v_sampling <= 4 else {
+      raise InvalidArgument("component sampling factors must be in 1..4")
     }
     for earlier in 0..<index {
       guard comp.id != frame_info.components[earlier].id else {
@@ -48,21 +49,61 @@ pub fn Encoder::new_multicomponent(
       }
     }
   }
-  guard scans.length() == count else {
-    raise InvalidArgument("non-interleaved scan count must equal component count")
+  validate_frame_dimensions(frame_info, limits)
+  guard scans.length() > 0 else {
+    raise InvalidArgument("at least one scan is required")
   }
   let seen = Array::make(count, false)
+  let mut scanned_count = 0
+  let mut max_vector_size = 0
   let resolved : Array[ResolvedScan] = []
   let mut last_emitted_lse : Preset? = None
   for i in 0..<scans.length() {
     let spec = scans[i]
-    guard frame_info.find_component(spec.component_id) is Some(comp_idx) else {
-      raise InvalidArgument("scan references an undeclared component id")
+    let ns = spec.component_ids.length()
+    guard ns >= 1 && ns <= 4 else {
+      raise InvalidArgument("scan component count must be in 1..4")
     }
-    guard !seen[comp_idx] else {
-      raise InvalidArgument("duplicate scan for component id")
+    guard spec.point_transform == 0 else {
+      raise UnsupportedFeature("point transform is not supported yet")
     }
-    seen[comp_idx] = true
+    guard (ns == 1 && spec.interleave == 0) ||
+      (ns > 1 && (spec.interleave == 1 || spec.interleave == 2)) else {
+      raise InvalidArgument("invalid scan interleave mode")
+    }
+    if spec.interleave == 2 {
+      max_vector_size = max(max_vector_size, ns)
+    }
+    let comp_indices : Array[Int32] = []
+    let comp_ids : Array[Int32] = []
+    for cid in spec.component_ids {
+      guard frame_info.find_component(cid) is Some(comp_idx) else {
+        raise InvalidArgument("scan references an undeclared component id")
+      }
+      guard !seen[comp_idx] else {
+        raise InvalidArgument("duplicate scan for component id")
+      }
+      if spec.interleave == 2 && comp_indices.length() > 0 {
+        let first = comp_indices[0]
+        guard frame_info.component_width(comp_idx) ==
+          frame_info.component_width(first) &&
+          frame_info.component_height(comp_idx) ==
+          frame_info.component_height(first) else {
+          raise InvalidArgument(
+            "sample-interleaved components must have identical dimensions",
+          )
+        }
+        guard comp_idx > comp_indices[comp_indices.length() - 1] else {
+          raise InvalidArgument(
+            "sample-interleaved components must follow frame order",
+          )
+        }
+      }
+      seen[comp_idx] = true
+      comp_indices.push(comp_idx)
+      comp_ids.push(cid)
+      scanned_count += 1
+    }
     let scan_frame : Frame = {
       width: frame_info.width,
       height: frame_info.height,
@@ -79,35 +120,71 @@ pub fn Encoder::new_multicomponent(
     } else {
       None
     }
-    resolved.push({
-      component_index: comp_idx,
-      component_id: spec.component_id,
+    let scan_info : ScanInfo = {
+      scan_index: i,
+      component_index: comp_indices[0],
+      component_id: comp_ids[0],
+      component_indices: comp_indices,
+      component_ids: comp_ids,
       near: spec.near,
+      interleave: spec.interleave,
+      point_transform: spec.point_transform,
+      preset: effective,
+      header_offset: 0L,
+      entropy_offset: 0L,
+      end_offset: 0L,
+      rows_decoded: 0,
+      completed: false,
+    }
+    resolved.push({
+      scan_info,
       params: Parameters::new(effective, spec.near),
       lse_marker,
     })
   }
-  let cap = if count == 1 { 32 } else { max(32, 16 + 3 * count) }
+  guard scanned_count == count else {
+    raise InvalidArgument("scans must cover every declared frame component")
+  }
+  // A vector can emit four 64-bit Golomb symbols plus the run prefix.
+  // Include the partially filled byte and allow as few as seven bits per byte.
+  let vector_bytes = ceil_div(64 * max_vector_size + 16 + 7, 7)
+  let cap = max(32, max(16 + 3 * count, vector_bytes))
   let bits = BitWriter::with_capacity(cap)
   bits.frame_header(frame_info)
   let first = resolved[0]
   {
-    frame: {
-      width: frame_info.width,
-      height: frame_info.height,
-      bits: frame_info.bits,
-      near: first.near,
-    },
     frame_info,
     scans: resolved,
     scan_index: 0,
-    scan: Scan::new(frame_info.width, first.params),
+    scan: Scan::new_interleaved(frame_info, first.scan_info, first.params),
     bits,
     scan_header: false,
     trailer: false,
     run: -1,
+    vector: FixedArray::make(max_vector_size, 0),
+    vector_size: 0,
     terminal: None,
   }
+}
+
+///|
+/// Creates a multi-component non-interleaved (ILV=0, Ns=1 per scan) encoder.
+pub fn Encoder::new_multicomponent(
+  frame_info : FrameInfo,
+  scans : Array[ScanSpec],
+  limits : Limits,
+) -> Encoder raise CodecError {
+  let multi : Array[MultiScanSpec] = []
+  for spec in scans {
+    multi.push({
+      component_ids: [spec.component_id],
+      interleave: 0,
+      near: spec.near,
+      point_transform: 0,
+      preset: spec.preset,
+    })
+  }
+  Encoder::new_scans(frame_info, multi, limits)
 }
 
 ///|
@@ -145,17 +222,46 @@ pub fn Encoder::scan_count(self : Encoder) -> Int32 {
 
 ///|
 pub fn Encoder::component_index(self : Encoder) -> Int32 {
-  self.scans[self.scan_index].component_index
+  self.scans[self.scan_index].scan_info.component_index
 }
 
 ///|
 pub fn Encoder::component_id(self : Encoder) -> Int32 {
-  self.scans[self.scan_index].component_id
+  self.scans[self.scan_index].scan_info.component_id
+}
+
+///|
+pub fn Encoder::current_component_index(self : Encoder) -> Int32 {
+  let slot = if self.scan.last_row_idx >= 0 {
+    self.scan.last_row_comp
+  } else {
+    self.scan.active_comp
+  }
+  self.scan.comp_indices[slot]
+}
+
+///|
+pub fn Encoder::current_component_id(self : Encoder) -> Int32 {
+  let slot = if self.scan.last_row_idx >= 0 {
+    self.scan.last_row_comp
+  } else {
+    self.scan.active_comp
+  }
+  self.scan.comp_ids[slot]
+}
+
+///|
+pub fn Encoder::current_row(self : Encoder) -> Int32 {
+  self.scan.last_row_idx
 }
 
 ///|
 pub fn Encoder::row_index(self : Encoder) -> Int32 {
-  self.scan.rows
+  if self.scan.comp_prev.length() == 0 {
+    self.scan.rows
+  } else {
+    self.scan.total_rows
+  }
 }
 
 ///|
@@ -165,7 +271,9 @@ pub fn Encoder::preset(self : Encoder) -> Preset {
 
 ///|
 pub fn Encoder::workspace_bytes(self : Encoder) -> Int32 {
-  self.scan.workspace_bytes() + self.bits.pending.length()
+  self.scan.workspace_bytes() +
+  self.bits.pending.length() +
+  4 * self.vector.length()
 }
 
 ///|
@@ -216,7 +324,7 @@ fn Encoder::run_sample(self : Encoder, sample : Int32, a : Int32) -> Unit {
       scan.run_index = min(31, scan.run_index + 1)
       self.run = 0
     }
-    if scan.x == scan.width && self.run != 0 {
+    if scan.x == scan.active_width && self.run != 0 {
       self.bits.bits(1, 1)
     }
   } else {
@@ -228,19 +336,93 @@ fn Encoder::run_sample(self : Encoder, sample : Int32, a : Int32) -> Unit {
     } else {
       (0, b, sign_of(b - a))
     }
-    let k = scan.run_order(kind)
-    let error = p.reduce(sign * (sample - predicted))
-    let mapped_sign = if error == 0 {
-      0
-    } else if (error < 0) == scan.run_negative_odd(kind, k) {
-      1
-    } else {
-      0
+    self.interruption(sample, kind, predicted, sign, exponent)
+    scan.run_index = max(0, scan.run_index - 1)
+    self.run = -1
+  }
+}
+
+///|
+fn Encoder::interruption(
+  self : Encoder,
+  sample : Int32,
+  kind : Int32,
+  predicted : Int32,
+  sign : Int32,
+  exponent : Int32,
+) -> Unit {
+  let scan = self.scan
+  let p = scan.params
+  let k = scan.run_order(kind)
+  let error = p.reduce(sign * (sample - predicted))
+  let mapped_sign = if error != 0 &&
+    (error < 0) == scan.run_negative_odd(kind, k) {
+    1
+  } else {
+    0
+  }
+  let mapped = 2 * abs_i32(error) - kind - mapped_sign
+  self.bits.symbol(mapped, k, p.limit - exponent - 1, p.qbpp)
+  scan.update_run(kind, error, mapped)
+  scan.store(p.reconstruct(predicted, sign * error))
+}
+
+///|
+fn Encoder::sample_vector(self : Encoder, value : Int32) -> Unit {
+  let scan = self.scan
+  let count = scan.comp_indices.length()
+  self.vector[self.vector_size] = value
+  self.vector_size += 1
+  if self.vector_size < count {
+    return
+  }
+  self.vector_size = 0
+  if self.run < 0 && scan.joint_run_context() {
+    self.run = 0
+  }
+  if self.run < 0 {
+    for slot in 0..<count {
+      let (a, b, c, d) = scan.neighbors()
+      self.regular(self.vector[slot], a, b, c, scan.context_id(a, b, c, d))
     }
-    let mapped = 2 * abs_i32(error) - kind - mapped_sign
-    self.bits.symbol(mapped, k, p.limit - exponent - 1, p.qbpp)
-    scan.update_run(kind, error, mapped)
-    scan.store(p.reconstruct(predicted, sign * error))
+    return
+  }
+  let mut continues = true
+  for slot in 0..<count {
+    scan.select_component(slot)
+    if abs_i32(self.vector[slot] - scan.left()) > scan.params.near {
+      continues = false
+      break
+    }
+  }
+  scan.select_component(0)
+  let exponent = run_exponents[scan.run_index]
+  if continues {
+    for _ in 0..<count {
+      scan.store(scan.left())
+    }
+    self.run += 1
+    if self.run == 1 << exponent {
+      self.bits.bits(1, 1)
+      scan.run_index = min(31, scan.run_index + 1)
+      self.run = 0
+    }
+    if scan.x == scan.active_width && self.run != 0 {
+      self.bits.bits(1, 1)
+    }
+  } else {
+    self.bits.bits(0, 1)
+    self.bits.bits(self.run, exponent)
+    for slot in 0..<count {
+      let b = scan.previous[scan.x]
+      self.interruption(
+        self.vector[slot],
+        0,
+        b,
+        sign_of(b - scan.left()),
+        exponent,
+      )
+    }
     scan.run_index = max(0, scan.run_index - 1)
     self.run = -1
   }
@@ -252,11 +434,7 @@ fn Encoder::sample(self : Encoder, value : Int32) -> Unit {
   if self.run >= 0 {
     self.run_sample(value, scan.left())
   } else {
-    let x = scan.x
-    let a = if x == 0 { scan.previous[0] } else { scan.current[x - 1] }
-    let b = scan.previous[x]
-    let c = if x == 0 { scan.previous_left } else { scan.previous[x - 1] }
-    let d = scan.previous[min(x + 1, scan.width - 1)]
+    let (a, b, c, d) = scan.neighbors()
     let id = scan.context_id(a, b, c, d)
     if id == 0 {
       self.run = 0
@@ -302,29 +480,36 @@ pub fn Encoder::step(
         if cur.lse_marker is Some(marker_preset) {
           self.bits.lse1(marker_preset)
         }
-        self.bits.scan_header_for(cur.component_id, cur.near)
+        let si = cur.scan_info
+        self.bits.scan_header(
+          si.component_ids,
+          si.near,
+          si.interleave,
+          si.point_transform,
+        )
         continue
       }
       if self.trailer {
         break Done
       }
-      if self.scan.x == self.frame.width {
-        self.scan.next_row()
+      if self.scan.x == self.scan.active_width {
+        let is_real = self.scan.next_line_or_finish()
         self.run = -1
-        break RowReady
+        if is_real {
+          break RowReady
+        }
+        continue
       }
-      if self.scan.rows == self.frame.height {
+      if self.scan.is_finished() {
         if self.scan_index + 1 < self.scans.length() {
           self.bits.finish_scan()
           self.scan_index += 1
           let next_cfg = self.scans[self.scan_index]
-          self.scan = Scan::new(self.frame_info.width, next_cfg.params)
-          self.frame = {
-            width: self.frame_info.width,
-            height: self.frame_info.height,
-            bits: self.frame_info.bits,
-            near: next_cfg.near,
-          }
+          self.scan = Scan::new_interleaved(
+            self.frame_info,
+            next_cfg.scan_info,
+            next_cfg.params,
+          )
           self.run = -1
           self.scan_header = false
           continue
@@ -339,18 +524,23 @@ pub fn Encoder::step(
         self.trailer = true
         continue
       }
+      if self.scan.is_padding_line() {
+        // Repeat the preceding reconstructed line using the existing prediction buffer.
+        self.sample(self.scan.previous[self.scan.x])
+        continue
+      }
       if consumed == length {
         if eof {
           raise Truncated
         }
         break NeedInput
       }
-      if produced <= out_safe {
+      if self.scan.ilv != 2 && produced <= out_safe {
         let scan = self.scan
         let p = scan.params
         let prev = scan.previous
         let curr = scan.current
-        let width = scan.width
+        let width = scan.active_width
         let width_m1 = width - 1
         let near = p.near
         let maxval = p.maxval
@@ -452,9 +642,11 @@ pub fn Encoder::step(
               }
               let rb = prev[x]
               let d_ab = a - rb
-              let (kind, predicted, sign) = if (
-                  if d_ab < 0 { -d_ab } else { d_ab }
-                ) <=
+              let (kind, predicted, sign) = if (if d_ab < 0 {
+                  -d_ab
+                } else {
+                  d_ab
+                }) <=
                 near {
                 (1, a, 1)
               } else {
@@ -463,11 +655,12 @@ pub fn Encoder::step(
               let rn = run_n[kind]
               let ra = run_a[kind]
               let k = golomb_order(
-                ra + ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
+                ra +
+                ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
                 rn,
               )
               let error = p.reduce(sign * (sample - predicted))
-              let neg_odd = k != 0 || (run_neg[kind] << 1) >= rn
+              let neg_odd = k != 0 || run_neg[kind] << 1 >= rn
               let mapped_sign = if error == 0 {
                 0
               } else if (error < 0) == neg_odd {
@@ -700,7 +893,7 @@ pub fn Encoder::step(
             } else {
               quantized
             }
-            let invert = if near == 0 && k == 0 && (cb << 1) <= -cn {
+            let invert = if near == 0 && k == 0 && cb << 1 <= -cn {
               1
             } else {
               0
@@ -877,7 +1070,11 @@ pub fn Encoder::step(
         raise InvalidArgument("sample is outside MAXVAL")
       }
       consumed += 1
-      self.sample(sample)
+      if self.scan.ilv == 2 {
+        self.sample_vector(sample)
+      } else {
+        self.sample(sample)
+      }
     } nobreak {
       NeedInput
     }

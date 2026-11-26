@@ -18,7 +18,11 @@ export interface ComponentSpec {
 }
 
 export interface ScanSpec {
-  readonly componentId: number;
+  readonly componentId?: number;
+  readonly componentIds?: readonly number[];
+  /** 0: one component per scan, 1: line-interleaved, 2: sample-interleaved. */
+  readonly interleave?: number;
+  readonly pointTransform?: number;
   readonly near?: number;
   readonly maxval?: number;
   readonly preset?: Partial<Omit<Preset, 'maxval'>>;
@@ -28,6 +32,8 @@ export interface ScanInfo {
   readonly scanIndex: number;
   readonly componentIndex: number;
   readonly componentId: number;
+  readonly componentIndices?: readonly number[];
+  readonly componentIds?: readonly number[];
   readonly near: number;
   readonly interleave: number;
   readonly pointTransform: number;
@@ -76,9 +82,13 @@ export interface RowMeta {
   readonly componentIndex: number;
   readonly componentId: number;
   readonly rowIndex: number | null;
+  readonly height?: number;
   readonly near: number;
+  readonly interleave?: number;
+  readonly pointTransform?: number;
   readonly preset: Preset | null;
   readonly layout: 'planar';
+  readonly width?: number;
   readonly stride: number;
   readonly sampleBytes: 2;
   readonly endianness: 'host-u16';
@@ -89,6 +99,8 @@ export interface Frame {
   readonly height: number;
   readonly bits: number;
   readonly near: number;
+  readonly interleave?: number;
+  readonly pointTransform?: number;
   readonly maxval?: number;
   readonly preset?: Partial<Omit<Preset, 'maxval'>>;
   readonly components?: readonly (ComponentSpec | number)[];
@@ -215,8 +227,20 @@ export function encodeStream(core: Core, options: EncodeOptions): Promise<Stream
 export function decodeStream(core: Core, options: DecodeOptions): Promise<StreamResult>;
 export function encodeImage(core: Core, frame: Frame, samples: Uint16Array,
   options?: Omit<EncodeOptions, 'frame' | 'onBytes' | 'read'>): Promise<StreamResult & { bytes: Uint8Array }>;
+export function componentDimensions(frame: Pick<Frame, 'width' | 'height' | 'components'>): {
+  maxH: number;
+  maxV: number;
+  widths: number[];
+  heights: number[];
+  offsets: number[];
+  total: number;
+};
+/**
+ * An array holds one plane per declared component. A flat array already follows scan order:
+ * full planes for ILV=0, lines for ILV=1, and one sample per SOS component at each pixel for ILV=2.
+ */
 export function encodePlanarImage(core: Core, frame: Frame, input: Uint16Array | readonly Uint16Array[],
-  options?: Omit<EncodeOptions, 'frame' | 'onBytes' | 'read'>): Promise<StreamResult & { bytes: Uint8Array }>;
+  options?: Omit<EncodeOptions, 'frame' | 'onBytes' | 'read'>): Promise<StreamResult & { bytes: Uint8Array; hostConversionBufferBytes: number }>;
 export function decodeImage(core: Core, bytes: Uint8Array,
   options?: Omit<DecodeOptions, 'onRow' | 'read'>): Promise<StreamResult & { samples: Uint16Array }>;
 export function decodePlanarImage(core: Core, bytes: Uint8Array,

@@ -98,16 +98,30 @@ pub fn Decoder::current_scan_index(self : Decoder) -> Int32 {
 
 ///|
 pub fn Decoder::current_component_index(self : Decoder) -> Int32 {
-  match self.current_scan() {
-    Some(info) => info.component_index
+  match self.scan {
+    Some(scan) => {
+      let slot = if scan.last_row_idx >= 0 {
+        scan.last_row_comp
+      } else {
+        scan.active_comp
+      }
+      scan.comp_indices[slot]
+    }
     None => -1
   }
 }
 
 ///|
 pub fn Decoder::current_component_id(self : Decoder) -> Int32 {
-  match self.current_scan() {
-    Some(info) => info.component_id
+  match self.scan {
+    Some(scan) => {
+      let slot = if scan.last_row_idx >= 0 {
+        scan.last_row_comp
+      } else {
+        scan.active_comp
+      }
+      scan.comp_ids[slot]
+    }
     None => -1
   }
 }
@@ -115,9 +129,14 @@ pub fn Decoder::current_component_id(self : Decoder) -> Int32 {
 ///|
 pub fn Decoder::current_row(self : Decoder) -> Int32 {
   match self.scan {
-    Some(scan) if scan.rows > 0 => scan.rows - 1
-    _ => -1
+    Some(scan) => scan.last_row_idx
+    None => -1
   }
+}
+
+///|
+pub fn Decoder::current_row_width(self : Decoder) -> Int32 {
+  self.row().length()
 }
 
 ///|
@@ -151,7 +170,12 @@ pub fn Decoder::preset(self : Decoder) -> Preset? {
 /// A read-only borrow by contract. Do not modify it. Copy samples needed beyond `step`.
 pub fn Decoder::row(self : Decoder) -> FixedArray[Int32] {
   match self.scan {
-    Some(scan) if scan.rows > 0 => scan.previous
+    Some(scan) if scan.last_row_idx >= 0 =>
+      if scan.comp_prev.length() == 0 {
+        scan.previous
+      } else {
+        scan.comp_prev[scan.last_row_comp]
+      }
     _ => []
   }
 }
@@ -180,33 +204,43 @@ pub fn Decoder::cancel(self : Decoder) -> Unit {
 
 ///|
 fn Decoder::start_sample(self : Decoder, scan : Scan) -> Unit {
-  let x = scan.x
-  let a = if x == 0 { scan.previous[0] } else { scan.current[x - 1] }
-  let b = scan.previous[x]
-  let c = if x == 0 { scan.previous_left } else { scan.previous[x - 1] }
-  let d = scan.previous[min(x + 1, scan.width - 1)]
+  let (a, b, c, d) = scan.neighbors()
   let id = scan.context_id(a, b, c, d)
-  if id == 0 {
+  let run = if scan.ilv == 2 { scan.joint_run_context() } else { id == 0 }
+  if run {
     self.phase = RunBits
     self.phase_pred = a
   } else {
-    let index = abs_i32(id)
-    let sign = sign_of(id)
-    let k = golomb_order(scan.ctx_a[index], scan.ctx_n[index])
-    let p = scan.params
-    self.golomb.start(k, p.limit, p.qbpp)
-    self.phase = Regular
-    self.phase_index = index
-    self.phase_sign = sign
-    self.phase_pred = scan.prediction_at(a, b, c, index, sign)
-    self.phase_flag = scan.regular_invert(index, k)
+    self.start_regular(scan, a, b, c, id)
   }
+}
+
+///|
+fn Decoder::start_regular(
+  self : Decoder,
+  scan : Scan,
+  a : Int32,
+  b : Int32,
+  c : Int32,
+  id : Int32,
+) -> Unit {
+  let index = abs_i32(id)
+  let sign = sign_of(id)
+  let k = golomb_order(scan.ctx_a[index], scan.ctx_n[index])
+  let p = scan.params
+  self.golomb.start(k, p.limit, p.qbpp)
+  self.phase = Regular
+  self.phase_index = index
+  self.phase_sign = sign
+  self.phase_pred = scan.prediction_at(a, b, c, index, sign)
+  self.phase_flag = scan.regular_invert(index, k)
 }
 
 ///|
 fn Decoder::start_interruption(self : Decoder, scan : Scan, a : Int32) -> Unit {
   let b = scan.previous[scan.x]
-  let (kind, predicted, sign) = if abs_i32(a - b) <= scan.params.near {
+  let (kind, predicted, sign) = if scan.ilv != 2 &&
+    abs_i32(a - b) <= scan.params.near {
     (1, a, 1)
   } else {
     (0, b, sign_of(b - a))
@@ -223,10 +257,20 @@ fn Decoder::start_interruption(self : Decoder, scan : Scan, a : Int32) -> Unit {
 
 ///|
 fn fill_run(scan : Scan, value : Int32, count : Int32) -> Unit {
-  let curr = scan.current
   let start = scan.x
-  for i in 0..<count {
-    curr[start + i] = value
+  if scan.ilv == 2 {
+    for slot in 0..<scan.comp_indices.length() {
+      scan.select_component(slot)
+      let a = scan.left()
+      for i in 0..<count {
+        scan.current[start + i] = a
+      }
+    }
+    scan.select_component(0)
+  } else {
+    for i in 0..<count {
+      scan.current[start + i] = value
+    }
   }
   scan.x = start + count
 }
@@ -256,7 +300,12 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
       }
       scan.update_regular(self.phase_index, error)
       scan.store(p.reconstruct(self.phase_pred, self.phase_sign * error))
-      self.phase = Sample
+      if scan.active_comp != 0 && scan.ilv == 2 {
+        let (a, b, c, d) = scan.neighbors()
+        self.start_regular(scan, a, b, c, scan.context_id(a, b, c, d))
+      } else {
+        self.phase = Sample
+      }
       1
     }
     RunBits => {
@@ -267,7 +316,7 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
       let a = self.phase_pred
       if self.bits.take(1) == 1 {
         let block = 1 << exponent
-        let count = min(block, scan.width - scan.x)
+        let count = min(block, scan.active_width - scan.x)
         fill_run(scan, a, count)
         if count == block {
           scan.run_index = min(31, scan.run_index + 1)
@@ -288,7 +337,7 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
         self.phase_prefix = value
         return 0
       }
-      if value >= scan.width - scan.x {
+      if value >= scan.active_width - scan.x {
         self.error = Some(InvalidData("run interruption outside row"))
         return -1
       }
@@ -317,8 +366,12 @@ fn Decoder::advance_scan(self : Decoder, scan : Scan) -> Int32 {
       }
       scan.update_run(kind, error, mapped)
       scan.store(p.reconstruct(self.phase_pred, self.phase_sign * error))
-      scan.run_index = max(0, scan.run_index - 1)
-      self.phase = Sample
+      if scan.active_comp != 0 && scan.ilv == 2 {
+        self.start_interruption(scan, scan.left())
+      } else {
+        scan.run_index = max(0, scan.run_index - 1)
+        self.phase = Sample
+      }
       1
     }
     _ => 0
@@ -341,7 +394,7 @@ fn Decoder::complete_current_scan(self : Decoder) -> Unit {
 fn Decoder::record_error_location(self : Decoder) -> Unit {
   if self.scan is None {
     let scan_idx = if self.header.bits > 0 {
-      self.header.scanned_count
+      self.header.scan_count
     } else {
       -1
     }
@@ -357,7 +410,11 @@ fn Decoder::record_error_location(self : Decoder) -> Unit {
       offset,
     })
   } else {
-    let comp_id = self.current_component_id()
+    // Entropy errors refer to the component being read, even after earlier row deliveries.
+    let comp_id = match self.scan {
+      Some(scan) if scan.ilv == 2 => scan.comp_ids[scan.active_comp]
+      _ => self.current_component_id()
+    }
     let marker = match self.phase {
       EndPrefix | EndCode => self.header.marker
       _ => 0xDA
@@ -442,26 +499,28 @@ pub fn Decoder::step(
       raise InvalidArgument("input byte slice")
     }
     while true {
-      match (self.frame, self.scan) {
-        (Some(frame), Some(scan)) if scan.rows < frame.height => {
-          if scan.x == scan.width {
-            scan.next_row()
+      match self.scan {
+        Some(scan) if !scan.is_finished() => {
+          if scan.x == scan.active_width {
+            let is_real = scan.next_line_or_finish()
             if self.current_scan >= 0 && self.current_scan < self.scans.length() {
               let cur = self.scans[self.current_scan]
-              self.scans[self.current_scan] = { ..cur, rows_decoded: scan.rows }
+              self.scans[self.current_scan] = {
+                ..cur,
+                rows_decoded: scan.total_rows,
+              }
             }
-            self.phase = if scan.rows == frame.height {
-              Padding
-            } else {
-              Sample
+            self.phase = if scan.is_finished() { Padding } else { Sample }
+            if is_real {
+              break RowReady
             }
-            break RowReady
+            continue
           }
-          if self.phase is Sample && consumed < length {
+          if scan.ilv != 2 && self.phase is Sample && consumed < length {
             let p = scan.params
             let prev = scan.previous
             let curr = scan.current
-            let width = scan.width
+            let width = scan.active_width
             let width_m1 = width - 1
             let near = p.near
             let maxval = p.maxval
@@ -601,7 +660,7 @@ pub fn Decoder::step(
                     r
                   }
                   let mut mapped = (zeros << k) | rem
-                  if near == 0 && k == 0 && (cb << 1) <= -cn {
+                  if near == 0 && k == 0 && cb << 1 <= -cn {
                     mapped = mapped ^ 1
                   }
                   let error = if (mapped & 1) == 0 {
@@ -679,7 +738,7 @@ pub fn Decoder::step(
                   self.phase_index = index
                   self.phase_sign = sign
                   self.phase_pred = predicted
-                  self.phase_flag = if near == 0 && k == 0 && (cb << 1) <= -cn {
+                  self.phase_flag = if near == 0 && k == 0 && cb << 1 <= -cn {
                     1
                   } else {
                     0
@@ -808,9 +867,11 @@ pub fn Decoder::step(
                     }
                     let rb = prev[x]
                     let d_ab = a - rb
-                    let (kind, predicted, sign) = if (
-                        if d_ab < 0 { -d_ab } else { d_ab }
-                      ) <=
+                    let (kind, predicted, sign) = if (if d_ab < 0 {
+                        -d_ab
+                      } else {
+                        d_ab
+                      }) <=
                       near {
                       (1, a, 1)
                     } else {
@@ -819,7 +880,8 @@ pub fn Decoder::step(
                     let rn = run_n[kind]
                     let ra = run_a[kind]
                     let k = golomb_order(
-                      ra + ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
+                      ra +
+                      ((rn >> 1) & (if kind != 0 { -1 } else { 0 })).reinterpret_as_uint(),
                       rn,
                     )
                     let r_esc = escape_limit - exponent - 1
@@ -838,7 +900,7 @@ pub fn Decoder::step(
                       let mapped = (zeros << k) | rem
                       let shifted = mapped + kind
                       let magnitude = (shifted + 1) >> 1
-                      let neg_odd = k != 0 || (run_neg[kind] << 1) >= rn
+                      let neg_odd = k != 0 || run_neg[kind] << 1 >= rn
                       let negative = ((shifted & 1) == 1) == neg_odd
                       let error = if negative { -magnitude } else { magnitude }
                       if error < min_err || error > max_err {
@@ -850,7 +912,8 @@ pub fn Decoder::step(
                       }
                       let mut rneg = run_neg[kind] +
                         (if error < 0 { 1 } else { 0 })
-                      let mut ua = ra + ((mapped + 1 - kind) >> 1).reinterpret_as_uint()
+                      let mut ua = ra +
+                        ((mapped + 1 - kind) >> 1).reinterpret_as_uint()
                       let mut un = rn
                       if un == reset {
                         ua = ua >> 1
@@ -887,7 +950,7 @@ pub fn Decoder::step(
                       self.phase_index = kind
                       self.phase_pred = predicted
                       self.phase_sign = sign
-                      self.phase_flag = if k != 0 || (run_neg[kind] << 1) >= rn {
+                      self.phase_flag = if k != 0 || run_neg[kind] << 1 >= rn {
                         1
                       } else {
                         0
@@ -941,7 +1004,7 @@ pub fn Decoder::step(
             }
           }
         }
-        (Some(_), Some(_)) if self.phase is Padding => {
+        Some(_) if self.phase is Padding => {
           guard self.bits.take(self.bits.left) == 0 else {
             raise InvalidData("nonzero entropy padding")
           }
@@ -969,13 +1032,18 @@ pub fn Decoder::step(
         None =>
           if self.header.accept(byte, self.bytes_read)
             is Some((frame, params, scan_info)) {
-            if self.frame_info is None {
-              self.frame_info = Some(self.header.frame_info())
+            let info = match self.frame_info {
+              Some(existing) => existing
+              None => {
+                let created = self.header.frame_info()
+                self.frame_info = Some(created)
+                created
+              }
             }
             self.frame = Some(frame)
             self.scans.push(scan_info)
             self.current_scan = self.scans.length() - 1
-            self.scan = Some(Scan::new(frame.width, params))
+            self.scan = Some(Scan::new_interleaved(info, scan_info, params))
           }
         Some(_) =>
           match self.phase {
@@ -986,10 +1054,16 @@ pub fn Decoder::step(
               } else if end_state < 0 {
                 if self.header.accept(byte, self.bytes_read)
                   is Some((frame, params, scan_info)) {
+                  let info = match self.frame_info {
+                    Some(existing) => existing
+                    None => self.header.frame_info()
+                  }
                   self.frame = Some(frame)
                   self.scans.push(scan_info)
                   self.current_scan = self.scans.length() - 1
-                  self.scan = Some(Scan::new(frame.width, params))
+                  self.scan = Some(
+                    Scan::new_interleaved(info, scan_info, params),
+                  )
                 }
               }
             }

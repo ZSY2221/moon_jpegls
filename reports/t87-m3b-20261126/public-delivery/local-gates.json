@@ -1,0 +1,37 @@
+{
+  "sourceRevision": "8c5882f292327393d36763450c886359bd6aa224",
+  "toolchain": "Moon 0.1.20261119, moonc 0.10.22+124d61d05, Node 24.20.0, Ubuntu 22.04 GCC 11.4",
+  "exitCodes": {
+    "toolchain": 0,
+    "core-check": 0,
+    "core-js": 0,
+    "core-wasm-gc": 0,
+    "core-native": 0,
+    "build-native": 0,
+    "build-sdk": 0,
+    "build-web": 0,
+    "worker-protocol": 0,
+    "node-tests": 0,
+    "typescript": 0,
+    "golden-m2": 0,
+    "golden-m3a": 0,
+    "native-row": 0,
+    "native-multiscan": 0,
+    "native-tail": 0,
+    "native-sampling": 0,
+    "chrome-smoke": 0
+  },
+  "checks": {
+    "core": {
+      "js": 26,
+      "wasm-gc": 26,
+      "native": 26
+    },
+    "workerProtocol": 21,
+    "node": 26
+  },
+  "historical": [
+    "../sampling-release-regressions.json",
+    "../lola-fixed-sampling-candidate.json"
+  ]
+}

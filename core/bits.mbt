@@ -97,19 +97,24 @@ fn BitWriter::lse1(self : BitWriter, preset : Preset) -> Unit {
 }
 
 ///|
-fn BitWriter::scan_header_for(
+fn BitWriter::scan_header(
   self : BitWriter,
-  component_id : Int32,
+  component_ids : Array[Int32],
   near : Int32,
+  interleave : Int32,
+  point_transform : Int32,
 ) -> Unit {
+  let count = component_ids.length()
   self.word16(0xFFDA)
-  self.word16(8)
-  self.byte(1)
-  self.byte(component_id)
-  self.byte(0)
+  self.word16(6 + 2 * count)
+  self.byte(count)
+  for comp_id in component_ids {
+    self.byte(comp_id)
+    self.byte(0)
+  }
   self.byte(near)
-  self.byte(0)
-  self.byte(0)
+  self.byte(interleave)
+  self.byte(point_transform)
 }
 
 ///|

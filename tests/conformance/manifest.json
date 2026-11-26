@@ -177,39 +177,40 @@
     },
     {
       "feature_id": "interleave",
-      "display_name": "Line and sample interleave",
+      "display_name": "Line and sample interleave (H=V=1, Pt=0)",
       "standard_clause": "Annex B; C.2.3",
-      "encode_status": "unsupported",
-      "decode_status": "unsupported",
-      "format_status": "recognized_only",
-      "reference_support": "Reference capability must be qualified per mode",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "HP 1.00 and CharLS Wasm 0.10.0 on E.2-2/3/5/6; all three backends, both directions.",
       "test_ids": [
         "E.2-2",
         "E.2-3",
         "E.2-5",
         "E.2-6"
       ],
-      "evidence_path": "docs/CONFORMANCE_RESULTS.md",
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
       "target_milestone": "M3-B",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5",
-      "evidence_ref": "main"
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224",
+      "evidence_ref": "antigravity/t87-m3b-20261125"
     },
     {
       "feature_id": "sampling",
-      "display_name": "Component subsampling and MCU boundaries",
+      "display_name": "H/V sampling and ILV=1 edge MCU clipping",
       "standard_clause": "§4.3.1; Annex B; Annex D",
-      "encode_status": "unsupported",
-      "decode_status": "unsupported",
-      "format_status": "recognized_only",
-      "reference_support": "Official subsampled streams available. Check each intended reference separately.",
+      "encode_status": "passed",
+      "decode_status": "passed",
+      "format_status": "passed",
+      "reference_support": "HP 1.00 on E.2-7/8. CharLS Wasm 0.10.0 returns reference_unsupported.",
       "test_ids": [
         "E.2-7",
         "E.2-8"
       ],
-      "evidence_path": "docs/CONFORMANCE_RESULTS.md",
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
       "target_milestone": "M3-B",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5",
-      "evidence_ref": "main"
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224",
+      "evidence_ref": "antigravity/t87-m3b-20261125",
+      "notes": "For odd dimensions, MoonJLS rounds both axes up. HP 1.00 has narrower edge compatibility. Padding literals and row-delivery tests cover additional cases."
     },
     {
       "feature_id": "point_transform",
@@ -221,7 +222,7 @@
       "reference_support": "Reference not selected",
       "test_ids": [],
       "evidence_path": "docs/T87_CONFORMANCE_PLAN.md",
-      "target_milestone": "M3-B",
+      "target_milestone": "Separate Pt milestone",
       "source_revision": null
     },
     {
@@ -356,31 +357,49 @@
       "results": {
         "js": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 102248,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 102248,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         },
         "native": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 102248,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 2,
@@ -402,36 +421,54 @@
       "scans": 1,
       "interleave": 1,
       "feature": "Three components, line interleave",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 100615,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 100615,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 100615,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 3,
@@ -450,36 +487,54 @@
       "scans": 1,
       "interleave": 2,
       "feature": "Three components, sample interleave",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 99734,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 99734,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 99734,
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 0
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 4,
@@ -506,31 +561,49 @@
       "results": {
         "js": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 63645,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 63645,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         },
         "native": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 63645,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 5,
@@ -552,36 +625,54 @@
       "scans": 1,
       "interleave": 1,
       "feature": "Three components, line interleave",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 63005,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 63005,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 63005,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 6,
@@ -600,36 +691,54 @@
       "scans": 1,
       "interleave": 2,
       "feature": "Three components, sample interleave",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 62300,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 62300,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 62300,
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 196608,
+            "maxAbsoluteError": 3
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 7,
@@ -650,36 +759,71 @@
       "scans": 1,
       "interleave": 1,
       "feature": "Three components with subsampling",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 51781,
+            "samples": 98304,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 0
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 51781,
+            "samples": 98304,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 0
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 51781,
+            "samples": 98304,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 0
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224",
+      "sampling": [
+        {
+          "h": 2,
+          "v": 4,
+          "id": 1
+        },
+        {
+          "h": 2,
+          "v": 1,
+          "id": 2
+        },
+        {
+          "h": 1,
+          "v": 2,
+          "id": 3
+        }
+      ]
     },
     {
       "id": 8,
@@ -700,36 +844,71 @@
       "scans": 1,
       "interleave": 1,
       "feature": "Three components with subsampling",
-      "expected": "unsupported",
+      "expected": "supported",
       "preset": null,
       "results": {
         "js": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 32231,
+            "samples": 98304,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 3
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 32231,
+            "samples": 98304,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 3
           }
         },
         "native": {
           "encode": {
-            "status": "not_run"
+            "status": "passed",
+            "bytes": 32231,
+            "samples": 98304,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "expected_unsupported"
+            "status": "passed",
+            "samples": 98304,
+            "maxAbsoluteError": 3
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224",
+      "sampling": [
+        {
+          "h": 2,
+          "v": 4,
+          "id": 1
+        },
+        {
+          "h": 2,
+          "v": 1,
+          "id": 2
+        },
+        {
+          "h": 1,
+          "v": 2,
+          "id": 3
+        }
+      ]
     },
     {
       "id": 9,
@@ -758,31 +937,49 @@
       "results": {
         "js": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 9421,
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 0
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 9421,
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 0
           }
         },
         "native": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 9421,
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 0
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 10,
@@ -811,31 +1008,49 @@
       "results": {
         "js": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 6111,
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 3
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 6111,
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 3
           }
         },
         "native": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 6111,
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 16384,
+            "maxAbsoluteError": 3
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 11,
@@ -859,31 +1074,49 @@
       "results": {
         "js": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 60077,
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 60077,
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0
           }
         },
         "native": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 60077,
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 0
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 12,
@@ -907,31 +1140,49 @@
       "results": {
         "js": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 42189,
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3
           }
         },
         "wasm-gc": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 42189,
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3
           }
         },
         "native": {
           "encode": {
-            "status": "passed"
+            "status": "passed",
+            "bytes": 42189,
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "byteIdenticalToOfficial": true
           },
           "decode": {
-            "status": "passed"
+            "status": "passed",
+            "samples": 65536,
+            "maxAbsoluteError": 3
           }
         }
       },
-      "evidence_path": "reports/t87-m3a-20261125/annex-e-hp.json",
-      "source_revision": "36bb9e6a77bd38db6806a0cc5047885b694276b5"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     }
   ],
   "officialReference": {

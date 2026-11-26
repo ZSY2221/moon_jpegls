@@ -13,10 +13,14 @@ let (decoded_frame, reconstructed) = @jls.decode(compressed)
 
 `encode(frame, pixels, limits?)` and `decode(bytes, limits?)` raise `CodecError` and allocate the entire result. The latter rejects input after EOI; single-component `decode` rejects multi-component streams with `UnsupportedFeature` for backward compatibility. For a row-bounded stream independent of height, call `Encoder::new(frame, limits)`, `Encoder::new_multicomponent(frame_info, scans, limits?)`, or `Decoder::new(limits)` and advance explicitly. Multi-component non-interleaved (`ILV=0`, `H=V=1`, `Pt=0`) callers use `FrameInfo`, `ComponentSpec`, `ScanSpec`, `encode_multicomponent`, `decode_multicomponent`, and `inspect(bytes, limits?)`, which expose `ScanInfo`, `StreamStructure`, and `ErrorLocation`.
 
+For ILV=1 or ILV=2 with equal-sized components, use `Encoder::new_scans` or `encode_scans` with `MultiScanSpec`. ILV=1 takes each component's complete row in SOS order. ILV=2 takes one sample per SOS component at each pixel. `Decoder::step` delivers one planar row at a time with its component ID and row index.
+
 ### Native CLI (`cmd/moonjls`)
 
 - Single-component: `encode WIDTH HEIGHT BITS NEAR INPUT OUTPUT ...`, `encode-pgm NEAR INPUT OUTPUT [CHUNK] [preset flags]`
 - Multi-component non-interleaved (`ILV=0`): `encode-planar WIDTH HEIGHT BITS COMPONENTS NEAR INPUT OUTPUT [raw-le|raw-be] [CHUNK] [--comp-ids LIST] [--scan-order LIST] [--scan-near LIST] [--maxval N] [preset flags]` (streams with `host_conversion_buffer_bytes=0`), `encode-pgms NEAR OUTPUT [--chunk N] [preset flags] IN1 [IN2 ...]`, `encode-ppm NEAR INPUT OUTPUT` (P6 RGB with explicit host planar conversion), `decode INPUT OUTPUT [raw-le|raw-be|pgm|ppm] [CHUNK]`, `decode-pgms [--chunk N] INPUT OUT1 [OUT2 ...]`, `inspect|verify INPUT [CHUNK] [--json]` (emits full `components`, `scans`, `markers`, and `eoiOffset`).
+
+- Interleaved encoding accepts `--ilv 1` or `--ilv 2` on `encode-planar`, `encode-pgms`, and `encode-ppm`. PGM and PPM input use row buffers. `encode-planar` converts the whole planar input and reports that allocation.
 
 | Operation | Input and results |
 | --- | --- |
@@ -68,4 +72,4 @@ console.log(result.frame, result.stats);
 
 Metrics expose rows, input and output units, consumed/produced totals, live and peak queue bytes, core and bridge payload, elapsed time, and first-row timing. A sink can block acknowledgements to impose backpressure. The demo's fixed preview and file download choices are host policy.
 
-Worker decode batching is optional: `maxBatchBytes` is an integer in `0..1048576`, with `0` disabling batching. The first row is immediate; wider-than-budget rows remain atomic. This is a batch-buffer budget, not a total memory ceiling. `outputQueueBytes` reports the allocated batch or the full backing buffer of an unacknowledged output; short views can therefore have a smaller `byteLength`. `outputPeakBytes` additionally counts the source row while copying into a batch, remains monotonic across progress/data/terminal records, and is retained after `done` clears the live queue. These are explicit output payloads, not JavaScript heap or browser RSS. See [SDK ownership and metrics](../sdk/README.md).
+Worker decode batching is optional: `maxBatchBytes` is an integer in `0..1048576`, with `0` disabling batching. The first row is immediate; wider-than-budget rows remain atomic. This is a batch-buffer budget, not a total memory ceiling. `outputQueueBytes` reports the allocated batch or the full backing buffer of an unacknowledged output; short views can therefore have a smaller `byteLength`. `outputPeakBytes` additionally counts the source row while copying into a batch or when the previous component batch is held for ACK, remains monotonic across progress/data/terminal records, and is retained after `done` clears the live queue. These are explicit output payloads, not JavaScript heap or browser RSS. See [SDK ownership and metrics](../sdk/README.md).

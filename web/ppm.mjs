@@ -50,7 +50,8 @@ export async function readPnmHeader(file, expectedMagic = null) {
   return { magic, components, width, height, bits, maxval, sampleBytes, count, position };
 }
 
-export async function openPpm(file, near, signal, preloadedHeader, channelRoles = ['R', 'G', 'B']) {
+export async function openPpm(file, near, signal, preloadedHeader, channelRoles = ['R', 'G', 'B'], interleave = 0) {
+  if (![0, 1, 2].includes(interleave)) throw new CodecError('InvalidArgument', 'Expected ILV 0, 1, or 2');
   const header = preloadedHeader ?? await readPnmHeader(file, 'P6');
   const { width, height, bits, maxval, sampleBytes, position } = header;
   const planePixels = width * height;
@@ -67,16 +68,18 @@ export async function openPpm(file, near, signal, preloadedHeader, channelRoles 
     near,
     ...(maxval !== 2 ** bits - 1 ? { maxval } : {}),
     components: componentSpecs,
+    ...(interleave === 0 ? {} : { interleave }),
   };
 
-  // Explicit bounded host conversion from interleaved P6 raster to planar ILV=0 order.
+  // Keep one original plane per component for reference rows and scan-order input.
   const rawBytes = new Uint8Array(await file.slice(position).arrayBuffer());
   signal?.throwIfAborted();
   if (rawBytes.byteLength !== totalSamples * sampleBytes) {
     throw invalid('PPM raster byte length differs from the frame size');
   }
   const planes = [new Uint16Array(planePixels), new Uint16Array(planePixels), new Uint16Array(planePixels)];
-  let hostConversionBufferBytes = rawBytes.byteLength + planes.reduce((acc, p) => acc + p.byteLength, 0);
+  const planeBytes = totalSamples * Uint16Array.BYTES_PER_ELEMENT;
+  let hostConversionBufferBytes = rawBytes.byteLength + planeBytes;
   if (sampleBytes === 1) {
     for (let i = 0, p = 0; i < planePixels; i++, p += 3) {
       const r = rawBytes[p];
@@ -99,7 +102,6 @@ export async function openPpm(file, near, signal, preloadedHeader, channelRoles 
     }
   }
 
-  let scanCursor = 0;
   let sampleCursor = 0;
   let closed = false;
   const closeReference = () => {
@@ -111,19 +113,33 @@ export async function openPpm(file, near, signal, preloadedHeader, channelRoles 
     frame,
     planes,
     channelRoles: Object.freeze([...channelRoles]),
-    hostConversionBufferBytes,
+    get hostConversionBufferBytes() { return hostConversionBufferBytes; },
     async read(capacity) {
       signal?.throwIfAborted();
-      if (scanCursor >= 3) return null;
-      const plane = planes[scanCursor];
-      const take = Math.min(capacity, plane.length - sampleCursor);
-      const slice = plane.subarray(sampleCursor, sampleCursor + take);
-      sampleCursor += take;
-      if (sampleCursor === plane.length) {
-        scanCursor++;
-        sampleCursor = 0;
+      if (sampleCursor === totalSamples) return null;
+      if (interleave === 2) {
+        const packed = new Uint16Array(Math.min(capacity, totalSamples - sampleCursor));
+        for (let i = 0; i < packed.length; i++) {
+          const index = sampleCursor + i;
+          packed[i] = planes[index % 3][Math.floor(index / 3)];
+        }
+        sampleCursor += packed.length;
+        hostConversionBufferBytes = Math.max(hostConversionBufferBytes, planeBytes + packed.byteLength);
+        return packed;
       }
-      return slice;
+
+      const groupWidth = interleave === 0 ? planePixels : width;
+      const group = Math.floor(sampleCursor / groupWidth);
+      const positionInGroup = sampleCursor % groupWidth;
+      const component = group % 3;
+      const firstSample = interleave === 0 ? 0 : Math.floor(group / 3) * width;
+      const take = Math.min(capacity, groupWidth - positionInGroup);
+      const start = firstSample + positionInGroup;
+      // The Worker may transfer the returned buffer. Keep the reference plane owned here.
+      const packed = planes[component].slice(start, start + take);
+      hostConversionBufferBytes = Math.max(hostConversionBufferBytes, planeBytes + packed.byteLength);
+      sampleCursor += take;
+      return packed;
     },
     async row(rowIndex, componentIndex = 0) {
       signal?.throwIfAborted();

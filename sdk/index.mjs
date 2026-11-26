@@ -49,6 +49,37 @@ function requestedPreset(frame) {
   ];
 }
 
+function ceilDiv(num, den) {
+  return Math.floor((num + den - 1) / den);
+}
+
+export function componentDimensions(frame) {
+  const comps = frame?.components ?? [{ id: 1, hSampling: 1, vSampling: 1 }];
+  let maxH = 1;
+  let maxV = 1;
+  for (const c of comps) {
+    const h = c.hSampling ?? 1;
+    const v = c.vSampling ?? 1;
+    if (h > maxH) maxH = h;
+    if (v > maxV) maxV = v;
+  }
+  const widths = comps.map((c) => {
+    const h = c.hSampling ?? 1;
+    return h === maxH ? frame.width : ceilDiv(frame.width * h, maxH);
+  });
+  const heights = comps.map((c) => {
+    const v = c.vSampling ?? 1;
+    return v === maxV ? frame.height : ceilDiv(frame.height * v, maxV);
+  });
+  const offsets = [];
+  let total = 0;
+  for (let i = 0; i < comps.length; i++) {
+    offsets.push(total);
+    total += widths[i] * heights[i];
+  }
+  return { maxH, maxV, widths, heights, offsets, total };
+}
+
 function normalizeMultiEncode(frame) {
   const rawComps = frame.components;
   const components = rawComps.map((entry, idx) => {
@@ -62,7 +93,11 @@ function normalizeMultiEncode(frame) {
     return Object.freeze({ id, hSampling, vSampling });
   });
   const baseNear = integer(frame.near ?? 0, 'near', 0, 255);
-  const rawScans = frame.scans ?? components.map((comp) => ({ componentId: comp.id }));
+  const frameIlv = integer(frame.interleave ?? 0, 'interleave', 0, 2);
+  const framePt = integer(frame.pointTransform ?? 0, 'pointTransform', 0, 15);
+  const rawScans = frame.scans ?? (frameIlv > 0
+    ? [{ componentIds: components.map((comp) => comp.id), interleave: frameIlv, near: baseNear, pointTransform: framePt }]
+    : components.map((comp) => ({ componentId: comp.id })));
   if (!Array.isArray(rawScans)) {
     throw new CodecError('InvalidArgument', 'frame.scans must be an array');
   }
@@ -71,14 +106,21 @@ function normalizeMultiEncode(frame) {
     if (!obj || typeof obj !== 'object') {
       throw new CodecError('InvalidArgument', `scans[${idx}] must be an object`);
     }
-    const componentId = integer(obj.componentId, `scans[${idx}].componentId`, 0, 255);
+    const rawIds = obj.componentIds ?? [obj.componentId];
+    if (!Array.isArray(rawIds) || rawIds.length === 0) {
+      throw new CodecError('InvalidArgument', `scans[${idx}] must specify componentIds or componentId`);
+    }
+    const componentIds = rawIds.map((cid, cIdx) => integer(cid, `scans[${idx}].componentIds[${cIdx}]`, 0, 255));
+    const defaultIlv = componentIds.length > 1 ? (frameIlv > 0 ? frameIlv : 1) : 0;
+    const interleave = integer(obj.interleave ?? defaultIlv, `scans[${idx}].interleave`, 0, 2);
+    const pointTransform = integer(obj.pointTransform ?? framePt, `scans[${idx}].pointTransform`, 0, 15);
     const near = integer(obj.near ?? baseNear, `scans[${idx}].near`, 0, 255);
     const presetSource = {
       maxval: obj.maxval ?? frame.maxval,
       preset: obj.preset ?? frame.preset,
     };
     const presetValues = requestedPreset(presetSource);
-    return { componentId, near, presetValues };
+    return { componentIds, interleave, near, pointTransform, presetValues };
   });
   return { components: Object.freeze(components), scans };
 }
@@ -96,10 +138,19 @@ function readErrorLocation(bindings, port) {
 function readScanRecord(bindings, port, scanIndex) {
   const g = (field) => bindings.decoder_scan_int(port, scanIndex, field);
   const o = (which) => bindings.decoder_scan_offset ? bindings.decoder_scan_offset(port, scanIndex, which) : -1;
+  const compCount = bindings.decoder_scan_comp_count ? bindings.decoder_scan_comp_count(port, scanIndex) : 1;
+  const componentIndices = bindings.decoder_scan_comp_field
+    ? Object.freeze(Array.from({ length: compCount }, (_, slot) => bindings.decoder_scan_comp_field(port, scanIndex, slot, 0)))
+    : Object.freeze([g(1)]);
+  const componentIds = bindings.decoder_scan_comp_field
+    ? Object.freeze(Array.from({ length: compCount }, (_, slot) => bindings.decoder_scan_comp_field(port, scanIndex, slot, 1)))
+    : Object.freeze([g(2)]);
   return Object.freeze({
     scanIndex: g(0),
     componentIndex: g(1),
     componentId: g(2),
+    componentIndices,
+    componentIds,
     near: g(3),
     interleave: g(4),
     pointTransform: g(5),
@@ -224,27 +275,46 @@ class Session {
           bindings.encoder_builder_component(builder, c.id, c.hSampling, c.vSampling);
         }
         for (const s of multi.scans) {
-          bindings.encoder_builder_scan(builder, s.componentId, s.near, ...s.presetValues);
+          if (bindings.encoder_builder_scan_begin) {
+            bindings.encoder_builder_scan_begin(builder, s.interleave, s.near, s.pointTransform, ...s.presetValues);
+            for (const cid of s.componentIds) {
+              bindings.encoder_builder_scan_component(builder, cid);
+            }
+          } else {
+            if (s.componentIds.length !== 1 || s.interleave !== 0 || s.pointTransform !== 0) {
+              throw new CodecError('UnsupportedFeature', 'Codec artifact does not support interleaved scans or point transform');
+            }
+            bindings.encoder_builder_scan(builder, s.componentIds[0], s.near, ...s.presetValues);
+          }
         }
         this.#port = bindings.encoder_builder_build(builder);
         const code = bindings.encoder_status(this.#port);
         if (code < 0) throw new CodecError(errors[-code], bindings.encoder_message(this.#port));
         this.#components = multi.components;
         this.#frameInfo = Object.freeze({ width: frameValues[0], height: frameValues[1], bits: frameValues[2], components: multi.components });
-        this.#scans = Object.freeze(multi.scans.map((s, scanIndex) => Object.freeze({
-          scanIndex,
-          componentIndex: multi.components.findIndex((c) => c.id === s.componentId),
-          componentId: s.componentId,
-          near: s.near,
-          interleave: 0,
-          pointTransform: 0,
-        })));
+        this.#scans = Object.freeze(multi.scans.map((s, scanIndex) => {
+          const componentIndices = Object.freeze(s.componentIds.map((cid) => multi.components.findIndex((c) => c.id === cid)));
+          const componentIds = Object.freeze([...s.componentIds]);
+          return Object.freeze({
+            scanIndex,
+            componentIndex: componentIndices[0],
+            componentId: componentIds[0],
+            componentIndices,
+            componentIds,
+            near: s.near,
+            interleave: s.interleave,
+            pointTransform: s.pointTransform,
+          });
+        }));
         const resolved = resolvedFrame({ width: frameValues[0], height: frameValues[1], bits: frameValues[2], near }, bindings.encoder_preset, this.#port);
         this.#frame = multi.components.length > 1
           ? Object.freeze({ ...resolved.frame, components: multi.components, scans: this.#scans })
           : resolved.frame;
         this.#preset = resolved.preset;
       } else {
+        if (frame.interleave === 2) {
+          throw new CodecError('InvalidArgument', 'Sample interleave requires multiple frame components');
+        }
         const preset = requestedPreset(frame);
         const args = [...frameValues, near, inputChunkSize, outputChunkSize, ...budget];
         if (bindings.encoder_new_with_preset) {
@@ -329,15 +399,22 @@ class Session {
         if (scanIndex >= 0) {
           this.#currentScan = st?.scans[scanIndex] ?? null;
           if (status === 'RowReady') {
+            const componentIndex = bindings.decoder_current_scan(port, 1);
+            const stride = bindings.decoder_current_row_width ? bindings.decoder_current_row_width(port) : width;
+            const compHeight = bindings.decoder_component_field ? bindings.decoder_component_field(port, componentIndex, 4) : height;
             this.#rowMeta = Object.freeze({
               scanIndex,
-              componentIndex: bindings.decoder_current_scan(port, 1),
+              componentIndex,
               componentId: bindings.decoder_current_scan(port, 2),
               rowIndex: bindings.decoder_current_scan(port, 4),
+              height: compHeight > 0 ? compHeight : height,
               near: activeNear,
+              interleave: bindings.decoder_current_scan(port, 6),
+              pointTransform: bindings.decoder_current_scan(port, 7),
               preset: this.#preset,
               layout: 'planar',
-              stride: width,
+              width: stride,
+              stride,
               sampleBytes: 2,
               endianness: 'host-u16',
             });
@@ -345,8 +422,9 @@ class Session {
         }
       } else if (status === 'RowReady') {
         this.#rowMeta = Object.freeze({
-          scanIndex: 0, componentIndex: 0, componentId: 1, rowIndex: null,
-          near: activeNear, preset: this.#preset, layout: 'planar', stride: width, sampleBytes: 2, endianness: 'host-u16',
+          scanIndex: 0, componentIndex: 0, componentId: 1, rowIndex: null, height,
+          near: activeNear, interleave: 0, pointTransform: 0,
+          preset: this.#preset, layout: 'planar', width, stride: width, sampleBytes: 2, endianness: 'host-u16',
         });
       }
     }
@@ -471,7 +549,7 @@ class Session {
       const getByte = bindings.encoder_byte;
       for (; i < produced; i++) chunk[i] = getByte(port, i);
     } else if (!this.#encoding && this.#status === 'RowReady') {
-      const width = this.#frame.width;
+      const width = this.#rowMeta?.stride ?? (bindings.decoder_current_row_width ? bindings.decoder_current_row_width(port) : this.#frame.width);
       chunk = new Uint16Array(width);
       let i = 0;
       if (bindings.decoder_pack3) {
@@ -641,37 +719,90 @@ export async function encodeImage(core, frame, samples, options = {}) {
 
 export async function encodePlanarImage(core, frame, input, options = {}) {
   let samples;
+  let hostConversionBufferBytes = 0;
   const comps = frame.components?.length ?? 1;
-  const planeSize = frame.width * frame.height;
+  const normalizedComps = (frame.components ?? [{ id: 1 }]).map((c) => (
+    typeof c === 'number'
+      ? { id: c, hSampling: 1, vSampling: 1 }
+      : { id: c.id, hSampling: c.hSampling ?? 1, vSampling: c.vSampling ?? 1 }
+  ));
+  const dims = componentDimensions({ ...frame, components: normalizedComps });
   if (input instanceof Uint16Array) {
     samples = input;
-  } else if (Array.isArray(input) && input.length === comps && input.every((p) => p instanceof Uint16Array && p.length === planeSize)) {
-    const scanOrder = frame.scans ?? (frame.components ?? [{ id: 1 }]).map((c) => ({ componentId: typeof c === 'number' ? c : c.id }));
-    const compIds = (frame.components ?? [{ id: 1 }]).map((c) => typeof c === 'number' ? c : c.id);
-    samples = new Uint16Array(planeSize * comps);
-    scanOrder.forEach((scan, scanIdx) => {
-      const compId = typeof scan === 'number' ? scan : scan.componentId;
-      const compIdx = compIds.indexOf(compId);
-      if (compIdx < 0) throw new CodecError('InvalidArgument', `Scan references undeclared component ${compId}`);
-      samples.set(input[compIdx], scanIdx * planeSize);
-    });
+  } else if (Array.isArray(input) && input.length === comps
+    && input.every((p, idx) => p instanceof Uint16Array && p.length === dims.widths[idx] * dims.heights[idx])) {
+    const compIds = normalizedComps.map((c) => c.id);
+    const frameIlv = frame.interleave ?? 0;
+    const scanSpecs = frame.scans ?? (frameIlv > 0
+      ? [{ componentIds: compIds, interleave: frameIlv }]
+      : compIds.map((id) => ({ componentIds: [id], interleave: 0 })));
+    samples = new Uint16Array(dims.total);
+    hostConversionBufferBytes = samples.byteLength;
+    let outOffset = 0;
+    for (const rawScan of scanSpecs) {
+      const scan = typeof rawScan === 'number' ? { componentIds: [rawScan], interleave: 0 } : rawScan;
+      const ids = scan.componentIds ?? [scan.componentId];
+      const ilv = scan.interleave ?? (ids.length > 1 ? (frameIlv > 0 ? frameIlv : 1) : 0);
+      const idxs = ids.map((cid) => {
+        const ci = compIds.indexOf(cid);
+        if (ci < 0) throw new CodecError('InvalidArgument', `Scan references undeclared component ${cid}`);
+        return ci;
+      });
+      if (ilv === 0) {
+        for (const ci of idxs) {
+          samples.set(input[ci], outOffset);
+          outOffset += input[ci].length;
+        }
+      } else if (ilv === 1) {
+        const mcuRows = ceilDiv(frame.height, dims.maxV);
+        for (let m = 0; m < mcuRows; m++) {
+          for (const ci of idxs) {
+            const cw = dims.widths[ci];
+            const ch = dims.heights[ci];
+            const vs = normalizedComps[ci].vSampling;
+            for (let v = 0; v < vs; v++) {
+              const y = m * vs + v;
+              if (y < ch) {
+                const start = y * cw;
+                samples.set(input[ci].subarray(start, start + cw), outOffset);
+                outOffset += cw;
+              }
+            }
+          }
+        }
+      } else if (ilv === 2) {
+        const width = dims.widths[idxs[0]];
+        const height = dims.heights[idxs[0]];
+        if (!idxs.every((ci) => dims.widths[ci] === width && dims.heights[ci] === height)) {
+          throw new CodecError('InvalidArgument', 'Sample-interleaved scan components must have equal dimensions');
+        }
+        for (let sample = 0; sample < width * height; sample++) {
+          for (const ci of idxs) samples[outOffset++] = input[ci][sample];
+        }
+      } else {
+        throw new CodecError('InvalidArgument', 'Invalid scan interleave mode');
+      }
+    }
   } else {
     throw new CodecError('InvalidArgument', 'Expected planar Uint16Array or array of per-component Uint16Array planes');
   }
-  return encodeImage(core, frame, samples, options);
+  const res = await encodeImage(core, frame, samples, options);
+  return { ...res, hostConversionBufferBytes };
 }
 
 export async function decodeImage(core, bytes, options = {}) {
   if (!(bytes instanceof Uint8Array)) throw new CodecError('InvalidArgument', 'Expected Uint8Array input');
   let samples;
+  let dims;
   const result = await decodeStream(core, {
     ...options, read: readArray(bytes), onRow: (row, index, frame, _stats, _preset, meta) => {
-      const compCount = frame.components?.length ?? 1;
+      if (!dims) {
+        dims = componentDimensions(frame);
+        samples = new Uint16Array(dims.total);
+      }
       const compIdx = meta?.componentIndex ?? 0;
       const rowIdx = meta?.rowIndex ?? index;
-      const planeSize = frame.width * frame.height;
-      samples ??= new Uint16Array(planeSize * compCount);
-      samples.set(row, compIdx * planeSize + rowIdx * frame.width);
+      samples.set(row, dims.offsets[compIdx] + rowIdx * dims.widths[compIdx]);
     },
   });
   return { ...result, samples };
@@ -679,9 +810,9 @@ export async function decodeImage(core, bytes, options = {}) {
 
 export async function decodePlanarImage(core, bytes, options = {}) {
   const result = await decodeImage(core, bytes, options);
-  const compCount = result.frame.components?.length ?? 1;
-  const planeSize = result.frame.width * result.frame.height;
-  const planes = Array.from({ length: compCount }, (_, c) => result.samples.subarray(c * planeSize, (c + 1) * planeSize));
+  const dims = componentDimensions(result.frameInfo ?? result.frame);
+  const planes = dims.widths.map((cw, c) =>
+    result.samples.subarray(dims.offsets[c], dims.offsets[c] + cw * dims.heights[c]));
   return { ...result, planes };
 }
 

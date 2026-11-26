@@ -1,0 +1,5661 @@
+{
+  "standard": "ITU-T T.87 (06/1998), Annex E Table E.2",
+  "sourceRevision": "25fadceb8de039a76e749ff368993a30926176aa",
+  "sourceDirty": false,
+  "node": "v24.20.0",
+  "command": [
+    "node",
+    "scripts/validate_annex_e.mjs",
+    "--fixtures",
+    ".tools/annex-e",
+    "--native-exe",
+    ".tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+    "--native-wsl",
+    "OpenAtom-Validation-2204-20261120",
+    "--hp-reference",
+    ".tools/annex-e-hp"
+  ],
+  "exitCode": 0,
+  "fixtureArchive": {
+    "name": "jlsimgV100.zip",
+    "sha256": "b2c250453f631248bc3744bc50c935adcc94f55784f19b2fa1fa28ee8b803b70",
+    "url": "https://www.itu.int/rec/T-REC-T.87-199806-I/en"
+  },
+  "runnerSha256": "3a9c7ccf72bd2cfceb5f54c4d2f97c9aa9ed23e7c60d9acacbfdc4618598571e",
+  "reference": {
+    "name": "HP JPEG-LS reference software",
+    "version": "1.00",
+    "officialSoftware": true,
+    "executableSha256": {
+      "locod.exe": "36516cba57c7706a76d9ae3f21c4e35f2b3bd1a7a0ef7ca0f0124f18b78015c0",
+      "nlocod.exe": "7cbc4c9506c9031a53b863793ad27c6bcb90f83c7fa257c53a90e83c5a6d5e86",
+      "loco16d.exe": "f080d7cd7722ffbbd4e8887a229cb023e2c7ca471a69f6730d2ac41a09a6e7f5",
+      "nloco16d.exe": "84682e13e6a12cd60e758cfd8d4c1c4c82d49bd415b76ae0c58a745bc71e4b00"
+    }
+  },
+  "artifactSha256": {
+    "js": "fbccf42ec39a3a984e1888222be846f89e4049291423ad6a921a30b2ca0aa0fc",
+    "wasm-gc": "cf5fd0eeaf2361d2a87253a69fd9772afbedbc50b94233ae645e53e5b25f2270",
+    "native": "6c1b90a30660c13eac8772b340b304a54a7f515fb3bea7758ace7170c3b9b1f0"
+  },
+  "cases": [
+    {
+      "id": 1,
+      "test_id": "E.2-1",
+      "file": "T8C0E0.JLS",
+      "bytes": 102248,
+      "sha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 102248,
+            "sha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33530,
+                  "codedSha256": "ea594651fa514fd34a6e3758051c0b39d474659d4cc447a2b8496eed61aaa1eb"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33947,
+                  "codedSha256": "d66948c67599691b23c44bc9b42fc3a34ca18b174e635c2668b2503d49562801"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 34718,
+                  "codedSha256": "148dc21395d67737e0f8a00d6c805e416728048584651b493d68486ca7f2a902"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33530,
+                  "codedSha256": "ea594651fa514fd34a6e3758051c0b39d474659d4cc447a2b8496eed61aaa1eb"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33947,
+                  "codedSha256": "d66948c67599691b23c44bc9b42fc3a34ca18b174e635c2668b2503d49562801"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 34718,
+                  "codedSha256": "148dc21395d67737e0f8a00d6c805e416728048584651b493d68486ca7f2a902"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 102248,
+            "sha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33530,
+                  "codedSha256": "ea594651fa514fd34a6e3758051c0b39d474659d4cc447a2b8496eed61aaa1eb"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33947,
+                  "codedSha256": "d66948c67599691b23c44bc9b42fc3a34ca18b174e635c2668b2503d49562801"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 34718,
+                  "codedSha256": "148dc21395d67737e0f8a00d6c805e416728048584651b493d68486ca7f2a902"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33530,
+                  "codedSha256": "ea594651fa514fd34a6e3758051c0b39d474659d4cc447a2b8496eed61aaa1eb"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33947,
+                  "codedSha256": "d66948c67599691b23c44bc9b42fc3a34ca18b174e635c2668b2503d49562801"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 34718,
+                  "codedSha256": "148dc21395d67737e0f8a00d6c805e416728048584651b493d68486ca7f2a902"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "256",
+                "256",
+                "8",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--ilv",
+                "0"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 102248,
+            "sha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "ppm",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33530,
+                  "codedSha256": "ea594651fa514fd34a6e3758051c0b39d474659d4cc447a2b8496eed61aaa1eb"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33947,
+                  "codedSha256": "d66948c67599691b23c44bc9b42fc3a34ca18b174e635c2668b2503d49562801"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 34718,
+                  "codedSha256": "148dc21395d67737e0f8a00d6c805e416728048584651b493d68486ca7f2a902"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "ppm",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33530,
+                  "codedSha256": "ea594651fa514fd34a6e3758051c0b39d474659d4cc447a2b8496eed61aaa1eb"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 33947,
+                  "codedSha256": "d66948c67599691b23c44bc9b42fc3a34ca18b174e635c2668b2503d49562801"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 34718,
+                  "codedSha256": "148dc21395d67737e0f8a00d6c805e416728048584651b493d68486ca7f2a902"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST8.PPM": {
+            "bytes": 196623,
+            "sha256": "a7ecaa841b8a7dc131a73007f0d6c07732e901029810e45ca3cc788fdf9e9593"
+          },
+          "TEST8R.PGM": {
+            "bytes": 65551,
+            "sha256": "9474fbec2fe54221b0943f4f43014f70469a2478654d1f4ac1de05bed3ceb182"
+          },
+          "TEST8G.PGM": {
+            "bytes": 65551,
+            "sha256": "ae607ad1b61efa340831a9b0f0c228f752908ec59b20deaa54b4c0419d0e00fd"
+          },
+          "TEST8B.PGM": {
+            "bytes": 65551,
+            "sha256": "3c4a4d24d57d26afc86ab6bc4486dc813e83a8f595b0c0ece737a1ad7402a060"
+          }
+        },
+        "samples": 196608,
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+            "stream.jls",
+            "comp0.pgm",
+            "comp1.pgm",
+            "comp2.pgm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "samples": 196608,
+        "maxAbsoluteError": 0,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 2,
+      "test_id": "E.2-2",
+      "file": "T8C1E0.JLS",
+      "bytes": 100615,
+      "sha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 100615,
+            "sha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 100578,
+                  "codedSha256": "09384aeb0dada75c1a59469007fbaf95b157e804e54cb96b51ab1ea98a4d47b8"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 100578,
+                  "codedSha256": "09384aeb0dada75c1a59469007fbaf95b157e804e54cb96b51ab1ea98a4d47b8"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 100615,
+            "sha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 100578,
+                  "codedSha256": "09384aeb0dada75c1a59469007fbaf95b157e804e54cb96b51ab1ea98a4d47b8"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 100578,
+                  "codedSha256": "09384aeb0dada75c1a59469007fbaf95b157e804e54cb96b51ab1ea98a4d47b8"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "256",
+                "256",
+                "8",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--ilv",
+                "1"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 100615,
+            "sha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "ppm",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 100578,
+                  "codedSha256": "09384aeb0dada75c1a59469007fbaf95b157e804e54cb96b51ab1ea98a4d47b8"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "ppm",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 100578,
+                  "codedSha256": "09384aeb0dada75c1a59469007fbaf95b157e804e54cb96b51ab1ea98a4d47b8"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST8.PPM": {
+            "bytes": 196623,
+            "sha256": "a7ecaa841b8a7dc131a73007f0d6c07732e901029810e45ca3cc788fdf9e9593"
+          },
+          "TEST8R.PGM": {
+            "bytes": 65551,
+            "sha256": "9474fbec2fe54221b0943f4f43014f70469a2478654d1f4ac1de05bed3ceb182"
+          },
+          "TEST8G.PGM": {
+            "bytes": 65551,
+            "sha256": "ae607ad1b61efa340831a9b0f0c228f752908ec59b20deaa54b4c0419d0e00fd"
+          },
+          "TEST8B.PGM": {
+            "bytes": 65551,
+            "sha256": "3c4a4d24d57d26afc86ab6bc4486dc813e83a8f595b0c0ece737a1ad7402a060"
+          }
+        },
+        "samples": 196608,
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+            "stream.jls",
+            "comp0.pgm",
+            "comp1.pgm",
+            "comp2.pgm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "samples": 196608,
+        "maxAbsoluteError": 0,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 3,
+      "test_id": "E.2-3",
+      "file": "T8C2E0.JLS",
+      "bytes": 99734,
+      "sha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 99734,
+            "sha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "result.ppm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 99697,
+                  "codedSha256": "258a6b5758192888e87eceb8c08063e8c5247fb8348e3e2addbd655406f82156"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 99697,
+                  "codedSha256": "258a6b5758192888e87eceb8c08063e8c5247fb8348e3e2addbd655406f82156"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 99734,
+            "sha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "result.ppm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 99697,
+                  "codedSha256": "258a6b5758192888e87eceb8c08063e8c5247fb8348e3e2addbd655406f82156"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 99697,
+                  "codedSha256": "258a6b5758192888e87eceb8c08063e8c5247fb8348e3e2addbd655406f82156"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "256",
+                "256",
+                "8",
+                "3",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--ilv",
+                "2"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 99734,
+            "sha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "result.ppm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "ppm",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 99697,
+                  "codedSha256": "258a6b5758192888e87eceb8c08063e8c5247fb8348e3e2addbd655406f82156"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "ppm",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 0,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 3,
+                    "t2": 7,
+                    "t3": 21,
+                    "reset": 64
+                  },
+                  "codedBytes": 99697,
+                  "codedSha256": "258a6b5758192888e87eceb8c08063e8c5247fb8348e3e2addbd655406f82156"
+                }
+              ]
+            },
+            "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST8.PPM": {
+            "bytes": 196623,
+            "sha256": "a7ecaa841b8a7dc131a73007f0d6c07732e901029810e45ca3cc788fdf9e9593"
+          }
+        },
+        "samples": 196608,
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+            "stream.jls",
+            "result.ppm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "samples": 196608,
+        "maxAbsoluteError": 0,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 4,
+      "test_id": "E.2-4",
+      "file": "T8C0E3.JLS",
+      "bytes": 63645,
+      "sha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 63645,
+            "sha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20677,
+                  "codedSha256": "27ca9cc9997f18e50d8a675ea4f71b5af42bb02f0d9970ad9ba449d76a713844"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20794,
+                  "codedSha256": "1fb923c17554361c1fd203960033a441d19637678ca330690d9391a906d45716"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 22121,
+                  "codedSha256": "345d56dd3db3929a8ff8494f382c1edb09c7aabf2dc5db691fcd9a780a701200"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20677,
+                  "codedSha256": "27ca9cc9997f18e50d8a675ea4f71b5af42bb02f0d9970ad9ba449d76a713844"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20794,
+                  "codedSha256": "1fb923c17554361c1fd203960033a441d19637678ca330690d9391a906d45716"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 22121,
+                  "codedSha256": "345d56dd3db3929a8ff8494f382c1edb09c7aabf2dc5db691fcd9a780a701200"
+                }
+              ]
+            },
+            "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 63645,
+            "sha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20677,
+                  "codedSha256": "27ca9cc9997f18e50d8a675ea4f71b5af42bb02f0d9970ad9ba449d76a713844"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20794,
+                  "codedSha256": "1fb923c17554361c1fd203960033a441d19637678ca330690d9391a906d45716"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 22121,
+                  "codedSha256": "345d56dd3db3929a8ff8494f382c1edb09c7aabf2dc5db691fcd9a780a701200"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20677,
+                  "codedSha256": "27ca9cc9997f18e50d8a675ea4f71b5af42bb02f0d9970ad9ba449d76a713844"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20794,
+                  "codedSha256": "1fb923c17554361c1fd203960033a441d19637678ca330690d9391a906d45716"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 22121,
+                  "codedSha256": "345d56dd3db3929a8ff8494f382c1edb09c7aabf2dc5db691fcd9a780a701200"
+                }
+              ]
+            },
+            "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "256",
+                "256",
+                "8",
+                "3",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--ilv",
+                "0"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 63645,
+            "sha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "ppm",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20677,
+                  "codedSha256": "27ca9cc9997f18e50d8a675ea4f71b5af42bb02f0d9970ad9ba449d76a713844"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20794,
+                  "codedSha256": "1fb923c17554361c1fd203960033a441d19637678ca330690d9391a906d45716"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 22121,
+                  "codedSha256": "345d56dd3db3929a8ff8494f382c1edb09c7aabf2dc5db691fcd9a780a701200"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "ppm",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20677,
+                  "codedSha256": "27ca9cc9997f18e50d8a675ea4f71b5af42bb02f0d9970ad9ba449d76a713844"
+                },
+                {
+                  "componentIds": [
+                    2
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 20794,
+                  "codedSha256": "1fb923c17554361c1fd203960033a441d19637678ca330690d9391a906d45716"
+                },
+                {
+                  "componentIds": [
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 22121,
+                  "codedSha256": "345d56dd3db3929a8ff8494f382c1edb09c7aabf2dc5db691fcd9a780a701200"
+                }
+              ]
+            },
+            "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST8.PPM": {
+            "bytes": 196623,
+            "sha256": "a7ecaa841b8a7dc131a73007f0d6c07732e901029810e45ca3cc788fdf9e9593"
+          },
+          "TEST8R.PGM": {
+            "bytes": 65551,
+            "sha256": "9474fbec2fe54221b0943f4f43014f70469a2478654d1f4ac1de05bed3ceb182"
+          },
+          "TEST8G.PGM": {
+            "bytes": 65551,
+            "sha256": "ae607ad1b61efa340831a9b0f0c228f752908ec59b20deaa54b4c0419d0e00fd"
+          },
+          "TEST8B.PGM": {
+            "bytes": 65551,
+            "sha256": "3c4a4d24d57d26afc86ab6bc4486dc813e83a8f595b0c0ece737a1ad7402a060"
+          }
+        },
+        "samples": 196608,
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+            "stream.jls",
+            "comp0.pgm",
+            "comp1.pgm",
+            "comp2.pgm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+        "samples": 196608,
+        "maxAbsoluteError": 3,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 5,
+      "test_id": "E.2-5",
+      "file": "T8C1E3.JLS",
+      "bytes": 63005,
+      "sha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 63005,
+            "sha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62968,
+                  "codedSha256": "3893c32fd754f1379275dd8ba1c2f5cb9e9fe1f9eeba7237e78911bbd4c6e68a"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62968,
+                  "codedSha256": "3893c32fd754f1379275dd8ba1c2f5cb9e9fe1f9eeba7237e78911bbd4c6e68a"
+                }
+              ]
+            },
+            "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 63005,
+            "sha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62968,
+                  "codedSha256": "3893c32fd754f1379275dd8ba1c2f5cb9e9fe1f9eeba7237e78911bbd4c6e68a"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62968,
+                  "codedSha256": "3893c32fd754f1379275dd8ba1c2f5cb9e9fe1f9eeba7237e78911bbd4c6e68a"
+                }
+              ]
+            },
+            "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "256",
+                "256",
+                "8",
+                "3",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--ilv",
+                "1"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 63005,
+            "sha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "comp0.pgm",
+                  "comp1.pgm",
+                  "comp2.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "ppm",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62968,
+                  "codedSha256": "3893c32fd754f1379275dd8ba1c2f5cb9e9fe1f9eeba7237e78911bbd4c6e68a"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "ppm",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 1,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62968,
+                  "codedSha256": "3893c32fd754f1379275dd8ba1c2f5cb9e9fe1f9eeba7237e78911bbd4c6e68a"
+                }
+              ]
+            },
+            "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST8.PPM": {
+            "bytes": 196623,
+            "sha256": "a7ecaa841b8a7dc131a73007f0d6c07732e901029810e45ca3cc788fdf9e9593"
+          },
+          "TEST8R.PGM": {
+            "bytes": 65551,
+            "sha256": "9474fbec2fe54221b0943f4f43014f70469a2478654d1f4ac1de05bed3ceb182"
+          },
+          "TEST8G.PGM": {
+            "bytes": 65551,
+            "sha256": "ae607ad1b61efa340831a9b0f0c228f752908ec59b20deaa54b4c0419d0e00fd"
+          },
+          "TEST8B.PGM": {
+            "bytes": 65551,
+            "sha256": "3c4a4d24d57d26afc86ab6bc4486dc813e83a8f595b0c0ece737a1ad7402a060"
+          }
+        },
+        "samples": 196608,
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+            "stream.jls",
+            "comp0.pgm",
+            "comp1.pgm",
+            "comp2.pgm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+        "samples": 196608,
+        "maxAbsoluteError": 3,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 6,
+      "test_id": "E.2-6",
+      "file": "T8C2E3.JLS",
+      "bytes": 62300,
+      "sha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 62300,
+            "sha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "result.ppm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62263,
+                  "codedSha256": "e7f2e1003646ee81017468d0797509f1815210358d491c98bf162b0b30a8fad7"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62263,
+                  "codedSha256": "e7f2e1003646ee81017468d0797509f1815210358d491c98bf162b0b30a8fad7"
+                }
+              ]
+            },
+            "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 62300,
+            "sha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "result.ppm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62263,
+                  "codedSha256": "e7f2e1003646ee81017468d0797509f1815210358d491c98bf162b0b30a8fad7"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62263,
+                  "codedSha256": "e7f2e1003646ee81017468d0797509f1815210358d491c98bf162b0b30a8fad7"
+                }
+              ]
+            },
+            "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode-planar",
+                "256",
+                "256",
+                "8",
+                "3",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--ilv",
+                "2"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 62300,
+            "sha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "result.ppm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "ppm",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+              "comparison": {
+                "samples": 196608,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62263,
+                  "codedSha256": "e7f2e1003646ee81017468d0797509f1815210358d491c98bf162b0b30a8fad7"
+                }
+              ]
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "ppm",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 2,
+                  "h": 1,
+                  "v": 1
+                },
+                {
+                  "id": 3,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1,
+                    2,
+                    3
+                  ],
+                  "near": 3,
+                  "interleave": 2,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 12,
+                    "t2": 22,
+                    "t3": 42,
+                    "reset": 64
+                  },
+                  "codedBytes": 62263,
+                  "codedSha256": "e7f2e1003646ee81017468d0797509f1815210358d491c98bf162b0b30a8fad7"
+                }
+              ]
+            },
+            "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+            "referenceComparison": {
+              "samples": 196608,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 196608,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST8.PPM": {
+            "bytes": 196623,
+            "sha256": "a7ecaa841b8a7dc131a73007f0d6c07732e901029810e45ca3cc788fdf9e9593"
+          }
+        },
+        "samples": 196608,
+        "planarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+            "stream.jls",
+            "result.ppm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+        "samples": 196608,
+        "maxAbsoluteError": 3,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 7,
+      "test_id": "E.2-7",
+      "file": "T8SSE0.JLS",
+      "bytes": 51781,
+      "sha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current interleave/subsampling scope"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current interleave/subsampling scope"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current interleave/subsampling scope"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 1,
+              "signal": null
+            },
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 8,
+      "test_id": "E.2-8",
+      "file": "T8SSE3.JLS",
+      "bytes": 32231,
+      "sha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+      "expected": "unsupported",
+      "backends": {
+        "js": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current interleave/subsampling scope"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current interleave/subsampling scope"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        },
+        "native": {
+          "encode": {
+            "status": "not_run",
+            "reason": "outside current interleave/subsampling scope"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 1,
+              "signal": null
+            },
+            "status": "expected_unsupported",
+            "code": "UnsupportedFeature"
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "test_id": "E.2-9",
+      "file": "T8NDE0.JLS",
+      "bytes": 9421,
+      "sha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 9421,
+            "sha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 9379,
+                  "codedSha256": "5af9cce62c507b91067519d8fa8c511819e76e0e94c9c11e56e87ecda13e25d2"
+                }
+              ]
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 9379,
+                  "codedSha256": "5af9cce62c507b91067519d8fa8c511819e76e0e94c9c11e56e87ecda13e25d2"
+                }
+              ]
+            },
+            "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+            "referenceComparison": {
+              "samples": 16384,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 9421,
+            "sha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 9379,
+                  "codedSha256": "5af9cce62c507b91067519d8fa8c511819e76e0e94c9c11e56e87ecda13e25d2"
+                }
+              ]
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 9379,
+                  "codedSha256": "5af9cce62c507b91067519d8fa8c511819e76e0e94c9c11e56e87ecda13e25d2"
+                }
+              ]
+            },
+            "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+            "referenceComparison": {
+              "samples": 16384,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "128",
+                "128",
+                "8",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--t1",
+                "9",
+                "--t2",
+                "9",
+                "--t3",
+                "9",
+                "--reset",
+                "31"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 9421,
+            "sha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "raw-le",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 9379,
+                  "codedSha256": "5af9cce62c507b91067519d8fa8c511819e76e0e94c9c11e56e87ecda13e25d2"
+                }
+              ]
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 9379,
+                  "codedSha256": "5af9cce62c507b91067519d8fa8c511819e76e0e94c9c11e56e87ecda13e25d2"
+                }
+              ]
+            },
+            "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+            "referenceComparison": {
+              "samples": 16384,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST8BS2.PGM": {
+            "bytes": 16399,
+            "sha256": "6cf4289f0afd89d0622ff0bfc04a830770b104b969ba69e8e952b1834faf69a4"
+          }
+        },
+        "samples": 16384,
+        "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\locod.exe",
+            "stream.jls",
+            "result.pgm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+        "samples": 16384,
+        "maxAbsoluteError": 0,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 10,
+      "test_id": "E.2-10",
+      "file": "T8NDE3.JLS",
+      "bytes": 6111,
+      "sha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 6111,
+            "sha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 6069,
+                  "codedSha256": "859d7c60d60cb46817fa9d74269e3443b46b4f4f6dcd6bb6575e934bd6b77645"
+                }
+              ]
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 6069,
+                  "codedSha256": "859d7c60d60cb46817fa9d74269e3443b46b4f4f6dcd6bb6575e934bd6b77645"
+                }
+              ]
+            },
+            "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+            "referenceComparison": {
+              "samples": 16384,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 6111,
+            "sha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 6069,
+                  "codedSha256": "859d7c60d60cb46817fa9d74269e3443b46b4f4f6dcd6bb6575e934bd6b77645"
+                }
+              ]
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 6069,
+                  "codedSha256": "859d7c60d60cb46817fa9d74269e3443b46b4f4f6dcd6bb6575e934bd6b77645"
+                }
+              ]
+            },
+            "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+            "referenceComparison": {
+              "samples": 16384,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "128",
+                "128",
+                "8",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096",
+                "--t1",
+                "9",
+                "--t2",
+                "9",
+                "--t3",
+                "9",
+                "--reset",
+                "31"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 6111,
+            "sha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "raw-le",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+              "comparison": {
+                "samples": 16384,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 6069,
+                  "codedSha256": "859d7c60d60cb46817fa9d74269e3443b46b4f4f6dcd6bb6575e934bd6b77645"
+                }
+              ]
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 255,
+                    "t1": 9,
+                    "t2": 9,
+                    "t3": 9,
+                    "reset": 31
+                  },
+                  "codedBytes": 6069,
+                  "codedSha256": "859d7c60d60cb46817fa9d74269e3443b46b4f4f6dcd6bb6575e934bd6b77645"
+                }
+              ]
+            },
+            "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+            "referenceComparison": {
+              "samples": 16384,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 16384,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST8BS2.PGM": {
+            "bytes": 16399,
+            "sha256": "6cf4289f0afd89d0622ff0bfc04a830770b104b969ba69e8e952b1834faf69a4"
+          }
+        },
+        "samples": 16384,
+        "planarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nlocod.exe",
+            "stream.jls",
+            "result.pgm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+        "samples": 16384,
+        "maxAbsoluteError": 3,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 11,
+      "test_id": "E.2-11",
+      "file": "T16E0.JLS",
+      "bytes": 60077,
+      "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 60077,
+            "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\loco16d.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 18,
+                    "t2": 67,
+                    "t3": 276,
+                    "reset": 64
+                  },
+                  "codedBytes": 60050,
+                  "codedSha256": "1d43cc219528a41635ce4126854b9435be9b347a674aad9e3937146ce4df76a9"
+                }
+              ]
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 18,
+                    "t2": 67,
+                    "t3": 276,
+                    "reset": 64
+                  },
+                  "codedBytes": 60050,
+                  "codedSha256": "1d43cc219528a41635ce4126854b9435be9b347a674aad9e3937146ce4df76a9"
+                }
+              ]
+            },
+            "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+            "referenceComparison": {
+              "samples": 65536,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 60077,
+            "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\loco16d.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 18,
+                    "t2": 67,
+                    "t3": 276,
+                    "reset": 64
+                  },
+                  "codedBytes": 60050,
+                  "codedSha256": "1d43cc219528a41635ce4126854b9435be9b347a674aad9e3937146ce4df76a9"
+                }
+              ]
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 18,
+                    "t2": 67,
+                    "t3": 276,
+                    "reset": 64
+                  },
+                  "codedBytes": 60050,
+                  "codedSha256": "1d43cc219528a41635ce4126854b9435be9b347a674aad9e3937146ce4df76a9"
+                }
+              ]
+            },
+            "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+            "referenceComparison": {
+              "samples": 65536,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "256",
+                "256",
+                "12",
+                "0",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 60077,
+            "sha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\loco16d.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "raw-le",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 18,
+                    "t2": 67,
+                    "t3": 276,
+                    "reset": 64
+                  },
+                  "codedBytes": 60050,
+                  "codedSha256": "1d43cc219528a41635ce4126854b9435be9b347a674aad9e3937146ce4df76a9"
+                }
+              ]
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 0,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 18,
+                    "t2": 67,
+                    "t3": 276,
+                    "reset": 64
+                  },
+                  "codedBytes": 60050,
+                  "codedSha256": "1d43cc219528a41635ce4126854b9435be9b347a674aad9e3937146ce4df76a9"
+                }
+              ]
+            },
+            "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+            "referenceComparison": {
+              "samples": 65536,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 0,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST16.PGM": {
+            "bytes": 131088,
+            "sha256": "1eb2001a0fe66c9d44776b40a35aaa3b68a4fe74cb749e6271d96523378149d2"
+          }
+        },
+        "samples": 65536,
+        "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\loco16d.exe",
+            "stream.jls",
+            "result.pgm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+        "samples": 65536,
+        "maxAbsoluteError": 0,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    },
+    {
+      "id": 12,
+      "test_id": "E.2-12",
+      "file": "T16E3.JLS",
+      "bytes": 42189,
+      "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+      "expected": "supported",
+      "backends": {
+        "js": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 42189,
+            "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nloco16d.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 27,
+                    "t2": 82,
+                    "t3": 297,
+                    "reset": 64
+                  },
+                  "codedBytes": 42162,
+                  "codedSha256": "8a8647699e5829e5a5337a5e0aa8091176a368b03044d372ce8cdac9afc34e9c"
+                }
+              ]
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 27,
+                    "t2": 82,
+                    "t3": 297,
+                    "reset": 64
+                  },
+                  "codedBytes": 42162,
+                  "codedSha256": "8a8647699e5829e5a5337a5e0aa8091176a368b03044d372ce8cdac9afc34e9c"
+                }
+              ]
+            },
+            "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+            "referenceComparison": {
+              "samples": 65536,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "wasm-gc": {
+          "encode": {
+            "encodeRun": {
+              "api": "SDK encodePlanarImage",
+              "exitCode": null
+            },
+            "bytes": 42189,
+            "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nloco16d.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "api": "SDK decodePlanarImage",
+                "exitCode": null
+              },
+              "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 27,
+                    "t2": 82,
+                    "t3": 297,
+                    "reset": 64
+                  },
+                  "codedBytes": 42162,
+                  "codedSha256": "8a8647699e5829e5a5337a5e0aa8091176a368b03044d372ce8cdac9afc34e9c"
+                }
+              ]
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "api": "SDK decodePlanarImage",
+              "exitCode": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 27,
+                    "t2": 82,
+                    "t3": 297,
+                    "reset": 64
+                  },
+                  "codedBytes": 42162,
+                  "codedSha256": "8a8647699e5829e5a5337a5e0aa8091176a368b03044d372ce8cdac9afc34e9c"
+                }
+              ]
+            },
+            "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+            "referenceComparison": {
+              "samples": 65536,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        },
+        "native": {
+          "encode": {
+            "encodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "encode",
+                "256",
+                "256",
+                "12",
+                "3",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "bytes": 42189,
+            "sha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+            "byteIdenticalToOfficial": true,
+            "reference": {
+              "run": {
+                "command": [
+                  "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nloco16d.exe",
+                  "stream.jls",
+                  "result.pgm"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "candidateDecode": {
+              "decodeRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "decode",
+                  "-",
+                  "-",
+                  "raw-le",
+                  "4096"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "inspectRun": {
+                "command": [
+                  "wsl.exe",
+                  "--distribution",
+                  "OpenAtom-Validation-2204-20261120",
+                  "--exec",
+                  "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                  "inspect",
+                  "-",
+                  "4096",
+                  "--json"
+                ],
+                "exitCode": 0,
+                "signal": null
+              },
+              "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+              "comparison": {
+                "samples": 65536,
+                "maxAbsoluteError": 0,
+                "firstDifference": null
+              }
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 27,
+                    "t2": 82,
+                    "t3": 297,
+                    "reset": 64
+                  },
+                  "codedBytes": 42162,
+                  "codedSha256": "8a8647699e5829e5a5337a5e0aa8091176a368b03044d372ce8cdac9afc34e9c"
+                }
+              ]
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          },
+          "decode": {
+            "decodeRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "decode",
+                "-",
+                "-",
+                "raw-le",
+                "4096"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "inspectRun": {
+              "command": [
+                "wsl.exe",
+                "--distribution",
+                "OpenAtom-Validation-2204-20261120",
+                "--exec",
+                "/mnt/d/Program Files/GPT_project/moon_jpegls-antigravity/.tools/wsl-build-codex-m3b/native/release/build/cmd/moonjls/moonjls.exe",
+                "inspect",
+                "-",
+                "4096",
+                "--json"
+              ],
+              "exitCode": 0,
+              "signal": null
+            },
+            "structure": {
+              "components": [
+                {
+                  "id": 1,
+                  "h": 1,
+                  "v": 1
+                }
+              ],
+              "scans": [
+                {
+                  "componentIds": [
+                    1
+                  ],
+                  "near": 3,
+                  "interleave": 0,
+                  "pointTransform": 0,
+                  "preset": {
+                    "maxval": 4095,
+                    "t1": 27,
+                    "t2": 82,
+                    "t3": 297,
+                    "reset": 64
+                  },
+                  "codedBytes": 42162,
+                  "codedSha256": "8a8647699e5829e5a5337a5e0aa8091176a368b03044d372ce8cdac9afc34e9c"
+                }
+              ]
+            },
+            "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+            "referenceComparison": {
+              "samples": 65536,
+              "maxAbsoluteError": 0,
+              "firstDifference": null
+            },
+            "samples": 65536,
+            "maxAbsoluteError": 3,
+            "firstDifference": null,
+            "status": "passed"
+          }
+        }
+      },
+      "original": {
+        "files": {
+          "TEST16.PGM": {
+            "bytes": 131088,
+            "sha256": "1eb2001a0fe66c9d44776b40a35aaa3b68a4fe74cb749e6271d96523378149d2"
+          }
+        },
+        "samples": 65536,
+        "planarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+        "status": "passed"
+      },
+      "reference": {
+        "run": {
+          "command": [
+            "D:\\Program Files\\GPT_project\\moon_jpegls-antigravity\\.tools\\annex-e-hp\\nloco16d.exe",
+            "stream.jls",
+            "result.pgm"
+          ],
+          "exitCode": 0,
+          "signal": null
+        },
+        "planarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+        "samples": 65536,
+        "maxAbsoluteError": 3,
+        "firstDifference": null,
+        "status": "passed"
+      },
+      "crossBackendByteIdentical": true
+    }
+  ]
+}

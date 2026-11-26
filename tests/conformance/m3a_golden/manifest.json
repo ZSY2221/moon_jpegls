@@ -298,13 +298,14 @@
       "id": "neg-interleaved-ilv1",
       "input": "neg-interleaved-ilv1.jls",
       "sha256": "2ce7411469dd7f8f2049150effbe22dca354a39f69ce8febefdc252cc6d9f8e3",
-      "expectedCode": "UnsupportedFeature"
+      "expectedCode": "InvalidData",
+      "notes": "M3-A expected UnsupportedFeature when ILV=1 was unimplemented; since M3-B1a supports ILV=1, this 1-byte stub stream enters entropy decoding and hits premature EOI inside an incomplete scan (InvalidData)."
     },
     {
       "id": "neg-interleaved-ilv2",
       "input": "neg-interleaved-ilv2.jls",
       "sha256": "ff46f8cefcc3dc46af57afa2e2f2a2888d17d30a485d58be36f78bbbfb739943",
-      "expectedCode": "UnsupportedFeature"
+      "expectedCode": "InvalidData"
     },
     {
       "id": "neg-invalid-inherited-lse1",

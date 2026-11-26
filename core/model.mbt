@@ -7,7 +7,6 @@ let run_exponents : FixedArray[Int32] = [
 ///|
 priv struct Scan {
   params : Parameters
-  width : Int32
   ctx_a : FixedArray[UInt32]
   ctx_b : FixedArray[Int32]
   ctx_c : FixedArray[Int32]
@@ -21,6 +20,25 @@ priv struct Scan {
   mut x : Int32
   mut rows : Int32
   mut run_index : Int32
+  comp_indices : Array[Int32]
+  comp_ids : Array[Int32]
+  comp_widths : Array[Int32]
+  comp_heights : Array[Int32]
+  comp_v_samplings : Array[Int32]
+  comp_prev : Array[FixedArray[Int32]]
+  comp_curr : Array[FixedArray[Int32]]
+  comp_prev_left : FixedArray[Int32]
+  comp_rows : FixedArray[Int32]
+  comp_run_index : FixedArray[Int32]
+  ilv : Int32
+  mcu_rows : Int32
+  mut active_comp : Int32
+  mut mcu_v_step : Int32
+  mut mcu_row : Int32
+  mut last_row_comp : Int32
+  mut last_row_idx : Int32
+  mut active_width : Int32
+  mut total_rows : Int32
 }
 
 ///|
@@ -28,7 +46,6 @@ fn Scan::new(width : Int32, params : Parameters) -> Scan {
   let a = max(2, (params.range + 32) / 64)
   {
     params,
-    width,
     ctx_a: FixedArray::make(365, a.reinterpret_as_uint()),
     ctx_b: FixedArray::make(365, 0),
     ctx_c: FixedArray::make(365, 0),
@@ -42,6 +59,106 @@ fn Scan::new(width : Int32, params : Parameters) -> Scan {
     x: 0,
     rows: 0,
     run_index: 0,
+    comp_indices: [0],
+    comp_ids: [1],
+    comp_widths: [width],
+    comp_heights: [0],
+    comp_v_samplings: [1],
+    comp_prev: [],
+    comp_curr: [],
+    comp_prev_left: [],
+    comp_rows: [],
+    comp_run_index: [],
+    ilv: 0,
+    mcu_rows: 0,
+    active_comp: 0,
+    mcu_v_step: 0,
+    mcu_row: 0,
+    last_row_comp: 0,
+    last_row_idx: -1,
+    active_width: width,
+    total_rows: 0,
+  }
+}
+
+///|
+fn Scan::new_interleaved(
+  info : FrameInfo,
+  scan_info : ScanInfo,
+  params : Parameters,
+) -> Scan {
+  let ilv = scan_info.interleave
+  let comp_indices = scan_info.component_indices.copy()
+  let comp_ids = scan_info.component_ids.copy()
+  let ns = comp_indices.length()
+  let comp_widths : Array[Int32] = []
+  let comp_heights : Array[Int32] = []
+  let comp_v_samplings : Array[Int32] = []
+  let max_v = info.max_v_sampling()
+  for ci in comp_indices {
+    comp_widths.push(info.component_width(ci))
+    comp_heights.push(info.component_height(ci))
+    comp_v_samplings.push(info.components[ci].v_sampling)
+  }
+  let mcu_rows = if ilv == 2 {
+    comp_heights[0]
+  } else {
+    ceil_div(info.height, max_v)
+  }
+  if ilv == 0 && ns == 1 {
+    let base = Scan::new(comp_widths[0], params)
+    return {
+      ..base,
+      comp_indices,
+      comp_ids,
+      comp_widths,
+      comp_heights,
+      comp_v_samplings,
+      mcu_rows: comp_heights[0],
+      active_width: comp_widths[0],
+    }
+  }
+  let a = max(2, (params.range + 32) / 64)
+  let comp_prev : Array[FixedArray[Int32]] = []
+  let comp_curr : Array[FixedArray[Int32]] = []
+  for w in comp_widths {
+    comp_prev.push(FixedArray::make(w, 0))
+    comp_curr.push(FixedArray::make(w, 0))
+  }
+  {
+    params,
+    ctx_a: FixedArray::make(365, a.reinterpret_as_uint()),
+    ctx_b: FixedArray::make(365, 0),
+    ctx_c: FixedArray::make(365, 0),
+    ctx_n: FixedArray::make(365, 1),
+    run_a: FixedArray::make(2, a.reinterpret_as_uint()),
+    run_n: FixedArray::make(2, 1),
+    run_neg: FixedArray::make(2, 0),
+    previous: comp_prev[0],
+    current: comp_curr[0],
+    previous_left: 0,
+    x: 0,
+    rows: 0,
+    run_index: 0,
+    comp_indices,
+    comp_ids,
+    comp_widths,
+    comp_heights,
+    comp_v_samplings,
+    comp_prev,
+    comp_curr,
+    comp_prev_left: FixedArray::make(ns, 0),
+    comp_rows: FixedArray::make(ns, 0),
+    comp_run_index: FixedArray::make(if ilv == 1 { ns } else { 0 }, 0),
+    ilv,
+    mcu_rows,
+    active_comp: 0,
+    mcu_v_step: 0,
+    mcu_row: 0,
+    last_row_comp: 0,
+    last_row_idx: -1,
+    active_width: comp_widths[0],
+    total_rows: 0,
   }
 }
 
@@ -49,11 +166,119 @@ fn Scan::new(width : Int32, params : Parameters) -> Scan {
 fn Scan::workspace_bytes(self : Scan) -> Int32 {
   // Owned 32-bit array payload, including the per-scan gradient lookup table.
   // Shared module tables, scalar fields, references and object overhead are excluded.
+  let line_words = if self.comp_prev.length() == 0 {
+    self.previous.length() + self.current.length()
+  } else {
+    let mut sum = self.comp_prev_left.length() +
+      self.comp_rows.length() +
+      self.comp_run_index.length()
+    for c in 0..<self.comp_prev.length() {
+      sum += self.comp_prev[c].length() + self.comp_curr[c].length()
+    }
+    sum
+  }
   4 *
-  (self.previous.length() + self.current.length() +
+  (line_words +
    self.ctx_a.length() + self.ctx_b.length() + self.ctx_c.length() +
    self.ctx_n.length() + self.run_a.length() + self.run_n.length() +
    self.run_neg.length() + self.params.q_lut.length())
+}
+
+///|
+fn Scan::is_finished(self : Scan) -> Bool {
+  if self.ilv == 0 {
+    self.rows >= self.mcu_rows
+  } else {
+    self.mcu_row >= self.mcu_rows
+  }
+}
+
+///|
+fn Scan::is_padding_line(self : Scan) -> Bool {
+  self.ilv == 1 &&
+  self.comp_rows[self.active_comp] == self.comp_heights[self.active_comp]
+}
+
+///|
+fn Scan::next_line_or_finish(self : Scan) -> Bool {
+  if self.ilv == 0 && self.comp_prev.length() == 0 {
+    self.last_row_comp = 0
+    self.last_row_idx = self.rows
+    self.total_rows += 1
+    self.next_row()
+    return true
+  }
+  let c = self.active_comp
+  let is_real = !self.is_padding_line()
+  // B.4 padding participates in prediction and entropy coding, then is removed from delivery.
+  let reusable = self.comp_prev[c]
+  self.comp_prev_left[c] = reusable[0]
+  self.comp_prev[c] = self.comp_curr[c]
+  self.comp_curr[c] = reusable
+  if is_real {
+    self.last_row_comp = c
+    self.last_row_idx = self.comp_rows[c]
+    self.comp_rows[c] += 1
+    self.total_rows += 1
+  }
+  if self.ilv == 1 {
+    self.comp_run_index[c] = self.run_index
+  }
+  self.mcu_v_step += 1
+  if self.ilv == 2 || self.mcu_v_step >= self.comp_v_samplings[c] {
+    self.mcu_v_step = 0
+    self.active_comp += 1
+    if self.active_comp >= self.comp_indices.length() {
+      self.active_comp = 0
+      self.mcu_row += 1
+    }
+  }
+  // In ILV=2 the whole row group is decoded before any component row is delivered.
+  if self.ilv != 2 || self.active_comp == 0 {
+    self.x = 0
+  }
+  if self.mcu_row < self.mcu_rows {
+    self.select_component(self.active_comp)
+    if self.ilv == 1 {
+      self.run_index = self.comp_run_index[self.active_comp]
+    }
+  }
+  is_real
+}
+
+///|
+fn Scan::select_component(self : Scan, slot : Int32) -> Unit {
+  self.active_comp = slot
+  self.previous = self.comp_prev[slot]
+  self.current = self.comp_curr[slot]
+  self.previous_left = self.comp_prev_left[slot]
+  self.active_width = self.comp_widths[slot]
+}
+
+///|
+fn Scan::neighbors(self : Scan) -> (Int32, Int32, Int32, Int32) {
+  let x = self.x
+  let a = self.left()
+  let b = self.previous[x]
+  let c = if x == 0 { self.previous_left } else { self.previous[x - 1] }
+  let d = self.previous[min(x + 1, self.active_width - 1)]
+  (a, b, c, d)
+}
+
+///|
+fn Scan::joint_run_context(self : Scan) -> Bool {
+  // Called at a vector boundary. Scan each component's independent neighborhood.
+  let mut joint = true
+  for slot in 0..<self.comp_indices.length() {
+    self.select_component(slot)
+    let (a, b, c, d) = self.neighbors()
+    if self.context_id(a, b, c, d) != 0 {
+      joint = false
+      break
+    }
+  }
+  self.select_component(0)
+  joint
 }
 
 ///|
@@ -68,6 +293,14 @@ fn Scan::left(self : Scan) -> Int32 {
 ///|
 fn Scan::store(self : Scan, value : Int32) -> Unit {
   self.current[self.x] = value
+  if self.ilv == 2 {
+    let next = self.active_comp + 1
+    if next < self.comp_indices.length() {
+      self.select_component(next)
+      return
+    }
+    self.select_component(0)
+  }
   self.x += 1
 }
 

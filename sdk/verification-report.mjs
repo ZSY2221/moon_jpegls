@@ -1,3 +1,5 @@
+import { componentDimensions } from './index.mjs';
+
 const schemaVersion = 'moonjls.verification/1';
 const stageStates = new Set(['not_run', 'incomplete', 'passed', 'failed', 'cancelled']);
 let sequence = 0;
@@ -22,15 +24,28 @@ function describeFrame(frame, preset) {
   if (!frame) return null;
   const { width, height, bits, near } = frame;
   const components = frame.componentCount ?? (Array.isArray(frame.components) ? frame.components.length : 1);
-  const scans = frame.scanCount ?? (Array.isArray(frame.scans) ? frame.scans.length : components);
+  const scanFields = Array.isArray(frame.scans) ? frame.scans : null;
+  const interleave = frame.interleave ?? scanFields?.[0]?.interleave ?? 0;
+  const scans = frame.scanCount ?? scanFields?.length ?? (interleave === 0 ? components : 1);
+  let componentGeometry;
+  if (Array.isArray(frame.components)) {
+    const normalized = frame.components.map((component) => typeof component === 'number'
+      ? { id: component, hSampling: 1, vSampling: 1 }
+      : { id: component.id, hSampling: component.hSampling ?? component.h ?? 1, vSampling: component.vSampling ?? component.v ?? 1 });
+    const dims = componentDimensions({ width, height, components: normalized });
+    componentGeometry = normalized.map((component, i) => ({
+      ...component, width: dims.widths[i], height: dims.heights[i], sampleOffset: dims.offsets[i],
+    }));
+  }
   return {
     width, height, bits, near,
     maxval: preset?.maxval ?? frame.maxval ?? (2 ** bits - 1),
     preset: preset ?? null,
     components,
     scans,
-    interleave: 0,
-    pointTransform: 0,
+    interleave,
+    pointTransform: frame.pointTransform ?? scanFields?.[0]?.pointTransform ?? 0,
+    ...(componentGeometry ? { componentGeometry } : {}),
     mapping: false,
   };
 }
@@ -43,7 +58,8 @@ export function createVerificationReport(fields) {
   }
   const frame = describeFrame(fields.frame, fields.preset);
   const samples = {
-    total: frame ? frame.width * frame.height * frame.components : null,
+    total: frame?.componentGeometry?.reduce((sum, component) => sum + component.width * component.height, 0)
+      ?? (frame ? frame.width * frame.height * frame.components : null),
     verified: fields.samples?.verified ?? null,
     maxError: fields.samples?.maxError ?? null,
     errorBound: frame?.near ?? null,

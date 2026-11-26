@@ -1,26 +1,13 @@
-# MoonJLS AI 辅助开发与责任声明（透明披露）
+# MoonJLS AI 辅助开发记录
 
-依据 2026 MoonBit 黑客松「可用 AI 辅助，但目标、路径与质量必须由参赛者理解并负责」的赛事准则，特此如实说明本项目的 AI 实际编写参与范围、参赛者承担的责任与待人工复核边界，绝不虚构人工贡献，也不把尚未逐项核验的内容代为宣称已完成。
+## 实际分工
 
-## 1. AI 编程助手的实际编写与参与范围
+- M0–M2 阶段，Codex 与早期 Antigravity 参与核心、CLI 和桥接、SDK/Worker、工作台与验证脚本开发。
+- Antigravity 实现 M3-A 多分量非交错多扫描、跨扫描 LSE1、Native planar/PGM/PPM 流式路径、SDK/Worker 多扫描协议、结构检查器与独立黄金回归。M3-A 以 HP 1.00 和 CharLS Wasm 复验了所支持的 6 条官方向量。Antigravity 随后实现首版 ILV=1 并提交 `b76a02fb520861d002b17cb017e34d806b7fea5d`。[M3-A 记录](../../reports/t87-m3a-20261125/README.md)
+- Codex 接手后保全并复验 ILV=1，完成 ILV=2、H/V 采样、边缘 MCU 和三后端的独立验收，更新既有工作台、GitHub 验证和公开交付材料。[M3-B 交接](../../docs/CODEX_M3B_HANDOFF.md) · [PR #2](https://github.com/ZSY2221/moon_jpegls/pull/2)
 
-- **早期阶段（至 M2 基线 `a7d8c39`，含 Codex 与早期 Antigravity）**：AI 助手直接参与编写了本项目M0–M2 阶段核心、CLI/桥接、SDK/Worker、工作台与验证脚本。
-- **M3-A 升级与复审交付阶段（Antigravity，2026-11-25）**：由 **Antigravity** 独立承接并完成：
-  - 纯 MoonBit M3-A 多分量非交错多扫描编解码器、跨扫描 `LSE1` 语义与结构检查（`core/*.mbt`、`core/multiscan_wbtest.mbt`）；
-  - Native planar/PGM/PPM 流式命令与 JSON 遥测、JS/Wasm GC FFI 桥接端口（`cmd/`）、SDK/Worker 多扫描协议及类型定义（`sdk/`）；
-  - 科学工作台多通道视图、P6 PPM 宿主转换与 Scan Structure Inspector（`web/`）；
-  - M3-A 独立黄金向量、Native 跨扫描行交付回归、`scripts/interop.mjs` 兼容修复、HP 1.00 / CharLS Wasm 双参考 12 项 Annex E 实跑与全仓文档同步。
+## 负责人核对项
 
-## 2. 参赛者（`ZSY2221`）权责与「承担责任」vs.「已逐项审查」的严格区分
+参赛者 `ZSY2221` 决定项目场景和完整 T.87 Part 1 目标，负责仓库治理、正式发布授权、提交赛事材料以及对外声明。代码和报告的人工复核由负责人按实际进度确认。
 
-- **参赛者主导与承担最终责任的事项**：
-  - 确定项目选题、实际应用场景、以完整 **ITU-T T.87（06/1998）/ ISO/IEC 14495-1 JPEG-LS Part 1** 为最终标准目标及 M0–M5 分阶段路线；
-  - 决定仓库治理、合入 `main`、是否执行包发布，以及对提交赛事的全部代码、文档与对外测试声明承担最终责任；
-  - **独立撰写报名表字段 11《项目申报书》**：飞书表单明确要求「请使用 markdown 格式，长度控制在一页以内，不要使用 AI 编写」。本目录下的 [`03_ONE_PAGE_PROPOSAL.md`](03_ONE_PAGE_PROPOSAL.md) 与历史 [`04_ONE_PAGE_PROPOSAL.pdf`](04_ONE_PAGE_PROPOSAL.pdf) **仅作为 M2 阶段内部参考归档**，不属于可直接上传的正式成稿；参赛者本人需依据真实核对清单独立撰写 1 页 Markdown 申报书并自行修改提交原报名表。
-- **尚未由参赛者声明已逐项完成的人工审查边界**：
-  - 「参赛者对项目最终质量与申报结果负责」**不等于**「参赛者已经对全仓每一行核心算法代码、每一份脚本与全部历史测试日志完成逐行独立人工复核」；
-  - 对参赛者尚未明确完成逐项理解、审阅与本地复跑核验的核心实现细节及独立测试收据，本文档如实标为**待参赛者按仓库事实清单与复现指南自行核验确认**，绝不代为宣称已经人工逐项审毕。
-
-## 3. 可审查性说明
-
-- 所有测试数据均严格区分 CI 自动运行项、M3-A (`36bb9e6`) 实测收据与历史 M2 (`fc43bc2`) 归档证据，真实记录 `lse-after-scan` 因多扫描语义从 `UnsupportedFeature` 到 `InvalidData` 的归类变更及历史 HP 哨兵 `0` 修复记录，绝不掩盖未完成的 M3-B–M5 项目。
+飞书表单要求负责人独立撰写一页以内的 Markdown 申报书。本目录的历史申报参考件归档在 M2 阶段。负责人可用事实清单核对当前源码、证据和未完成的标准范围，再自行撰写、提交。[事实清单](FACTS_FOR_APPLICANT.md) · [实时表单](https://bxup9uklfcb.feishu.cn/share/base/form/shrcnWUMlgpbwHaXgzV7HmNhNhg)

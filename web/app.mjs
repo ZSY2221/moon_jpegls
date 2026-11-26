@@ -1,11 +1,11 @@
-import { CodecError } from '../sdk/index.mjs';
+import { CodecError, componentDimensions } from '../sdk/index.mjs';
 import { startWorker } from '../sdk/worker-client.mjs';
 import { lunarElevationMeters, lunarErrorMeters } from '../sdk/lunar.mjs';
 import { createRunId, serializeVerificationReport } from '../sdk/verification-report.mjs';
 import { finishWorkbenchReport, lunarIdentity, workbenchReport } from './run-report.mjs';
 import { strings } from './labels.mjs';
 import { openPgm, pgmHeader, pgmRow, sampleByteWidth, sampleMaximum, samplePgm } from './pgm.mjs';
-import { encodePpmFromPlanes, openPpm, readPnmHeader, sampleMulti16Ppm, sampleRgb8Ppm } from './ppm.mjs';
+import { encodePpmFromPlanes, openPpm, readPnmHeader } from './ppm.mjs';
 import { createPreview, errorLegendStops, previewIds } from './preview.mjs';
 import { renderScanInspector } from './scan-inspector.mjs';
 import { createPipe, openSink, readBlob } from './transport.mjs';
@@ -30,7 +30,7 @@ const setHidden = (id, hidden) => {
 
 const presetFields = ['t1', 't2', 't3', 'reset'];
 const encodeControls = new Set(['near', ...presetFields.map((field) => `preset-${field}`)]);
-const controls = ['example', 'sample-rgb8', 'sample-multi16', 'file', 'backend', 'chunk', 'sink', ...encodeControls];
+const controls = ['example', 'sample-rgb8', 'sample-multi16', 'sample-sampling', 'file', 'interleave', 'backend', 'chunk', 'sink', ...encodeControls];
 const measures = ['frame', 'raw-size', 'encoded', 'ratio', 'error', 'latency', 'first-canvas', 'workspace', 'queues', 'host-conv-buffer', 'preview-buffer'];
 const isJls = (file) => /\.jls$/i.test(file?.name ?? '');
 const isPpm = (file) => /\.ppm$/i.test(file?.name ?? '');
@@ -42,6 +42,7 @@ const isNarrow = () => Boolean(narrowQuery?.matches);
 
 let locale = 'en';
 let source;
+let sourceSelection = 0;
 let sourcePgm;
 let active;
 let artifactUrl;
@@ -126,14 +127,11 @@ function setViewMode(mode, { focus = false } = {}) {
 
 function channelLabelsFor(job) {
   const count = compCountOf(job?.frame);
-  if (job?.decodeOnly) {
-    return Array.from({ length: count }, (_, idx) => `C${idx}`);
-  }
   const roles = job?.file?.moonjlsMeta?.channelRoles;
   if (Array.isArray(roles) && roles.length >= count) {
     return roles.slice(0, count);
   }
-  if (job?.inputFormat === 'ppm' && count === 3) {
+  if (!job?.decodeOnly && job?.inputFormat === 'ppm' && count === 3) {
     return ['R', 'G', 'B'];
   }
   return Array.from({ length: count }, (_, idx) => `C${idx}`);
@@ -143,6 +141,7 @@ function provenanceKeyFor(job) {
   const metaKey = job?.file?.moonjlsMeta?.labelKey;
   if (metaKey === 'sampleRgb8Desc') return 'provenanceRgb8';
   if (metaKey === 'sampleMulti16Desc') return 'provenanceMulti16';
+  if (metaKey === 'sampledLilyDesc') return 'provenanceSampledLily';
   if (job?.decodeOnly) return 'provenanceJlsUnknown';
   if (job?.inputFormat === 'ppm') return 'provenancePpm';
   return 'provenancePgm';
@@ -155,14 +154,21 @@ function renderMulticomponent(job) {
   if (!show) return;
   const labels = channelLabelsFor(job);
   setText('mc-provenance-badge', translate(provenanceKeyFor(job)));
+  setHidden('sampled-preview-note', !job.sampledGeometry);
+  if (job.sampledGeometry) {
+    const c = job.activeChannel ?? 0;
+    const { widths, heights } = job.componentGeometry;
+    setText('reconstruction-scale', `${widths[c]} × ${heights[c]} · ${job.frame.bits}-bit`);
+  }
 
   const btnWrap = get('channel-buttons');
   if (btnWrap && typeof document.createElement === 'function') {
-    const options = count === 3
+    const composite = job.canComposite;
+    const options = composite
       ? [{ id: 'composite', label: translate('channelComposite'), compAttr: 'composite' },
          ...labels.map((label, idx) => ({ id: idx, label, compAttr: String(idx) }))]
       : labels.map((label, idx) => ({ id: idx, label, compAttr: String(idx) }));
-    const activeCh = job.activeChannel ?? (count === 3 ? 'composite' : 0);
+    const activeCh = job.activeChannel ?? (composite ? 'composite' : 0);
     btnWrap.replaceChildren(...options.map((opt) => {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -181,17 +187,23 @@ function renderMulticomponent(job) {
 
   const progWrap = get('multicomponent-progress');
   if (progWrap && typeof document.createElement === 'function') {
-    const height = job.frame.height;
+    const { heights } = job.componentGeometry;
     const scans = job.structure?.scans ?? [];
     const eoiDone = job.status === 'passed';
     progWrap.replaceChildren(...labels.map((label, idx) => {
-      const scan = scans.find((entry) => entry.componentIndex === idx);
+      const scan = scans.find((entry) => (entry.componentIndices ?? [entry.componentIndex]).includes(idx));
       const delivered = job.compRows?.[idx] ?? 0;
       let statusKey = 'mcWait';
       let stateAttr = 'wait';
       if (eoiDone) {
         statusKey = 'mcVerified';
         stateAttr = 'verified';
+      } else if (job.status === 'failed' || job.status === 'cancelled') {
+        statusKey = `phase-${job.status}`;
+        stateAttr = job.status;
+      } else if (delivered === heights[idx]) {
+        statusKey = 'mcRowsProvisional';
+        stateAttr = 'provisional';
       } else if (scan?.completed || job.completedScans?.has?.(scan?.scanIndex)) {
         statusKey = 'mcScanProvisional';
         stateAttr = 'provisional';
@@ -203,7 +215,14 @@ function renderMulticomponent(job) {
       chip.className = 'mc-progress-chip';
       chip.dataset.comp = String(idx);
       chip.dataset.scanState = stateAttr;
-      chip.textContent = `${label}: ${delivered}/${height} · ${translate(statusKey)}`;
+      chip.textContent = `${label}: ${delivered}/${heights[idx]} · ${translate(statusKey)}`;
+      const stats = job.componentStats[idx];
+      const metrics = document.createElement('small');
+      metrics.className = 'mc-component-metrics';
+      metrics.textContent = translate('componentMetrics', formatInt(stats.maxError), stats.verified
+        ? (stats.absoluteError / stats.verified).toLocaleString(locale, { maximumFractionDigits: 3 })
+        : '—', formatInt(stats.verified), formatInt(stats.total - stats.verified));
+      chip.append(metrics);
       return chip;
     }));
   }
@@ -352,6 +371,8 @@ function renderIdentity() {
   ].join(' · '));
 
   const formDecodeOnly = isJls(source);
+  const formPpm = isPpm(source) || sourcePgm?.header?.magic === 'P6';
+  setHidden('interleave-setting', !formPpm);
   const formBackend = get('backend')?.value ?? 'wasm-gc';
   const formBackendLabel = formBackend === 'js' ? 'JavaScript' : 'Wasm GC';
   const formNear = Number(get('near')?.value ?? 0);
@@ -360,6 +381,7 @@ function renderIdentity() {
   const sinkText = translate(sinkValue === 'file' ? 'streamed' : sinkValue);
   setText('settings-summary-meta', [
     formDecodeOnly ? 'JLS' : `NEAR ${formNear}`,
+    ...(formPpm ? [`ILV ${get('interleave')?.value ?? 0}`] : []),
     formBackendLabel,
     sinkText,
   ].join(' · '));
@@ -387,8 +409,10 @@ function renderIdentity() {
       ? `${frame.width} × ${frame.height} · ${compCount} ch · ${frame.bits}-bit`
       : `${frame.width} × ${frame.height} · ${frame.bits}-bit`;
     setText('frame', spec);
-    setText('original-scale', decodeOnly ? '' : paneScale);
-    setText('reconstruction-scale', paneScale);
+    const displayMaxval = presented?.file?.moonjlsMeta?.displayMaxval;
+    const scale = displayMaxval === undefined ? paneScale : `${paneScale} · ${translate('displayScale', displayMaxval)}`;
+    setText('original-scale', decodeOnly ? '' : scale);
+    setText('reconstruction-scale', scale);
   } else {
     setText('original-scale', '');
     setText('reconstruction-scale', '');
@@ -459,7 +483,10 @@ function transition(phase, message = phase, ...args) {
 function lock(running) {
   for (const id of controls) {
     const control = get(id);
-    if (control) control.disabled = running || (encodeControls.has(id) && (isJls(source) || Boolean(sourcePgm?.pending)));
+    const ppm = isPpm(source) || sourcePgm?.header?.magic === 'P6';
+    if (control) control.disabled = running ||
+      (id === 'interleave' && (!ppm || Boolean(sourcePgm?.pending))) ||
+      (encodeControls.has(id) && (isJls(source) || Boolean(sourcePgm?.pending)));
   }
   const filePick = get('file')?.parentElement;
   if (filePick?.setAttribute) filePick.setAttribute('data-disabled', String(running));
@@ -474,7 +501,7 @@ function lock(running) {
 function renderProgress(job) {
   const { frame, stats } = job ?? {};
   const rows = stats?.rows ?? 0;
-  const totalRows = frame ? frame.height * compCountOf(frame) : 1;
+  const totalRows = job?.totalRows ?? 1;
   const progress = get('progress');
   if (progress) {
     progress.max = totalRows;
@@ -504,7 +531,7 @@ function renderProgress(job) {
 function renderResult(job) {
   if (!job?.result) return;
   const { frame, jlsBytes, maxError } = job.result;
-  const raw = frame.width * frame.height * compCountOf(frame) * sampleByteWidth(sampleMaximum(frame));
+  const raw = job.componentGeometry.total * sampleByteWidth(sampleMaximum(frame));
   setText('raw-size', bytes(raw));
   setText('encoded', bytes(jlsBytes));
   setText('ratio', `${(raw / jlsBytes).toFixed(2)}×`);
@@ -556,6 +583,7 @@ function clearOutput() {
 
 function setSource(file) {
   if (active) return;
+  sourceSelection++;
   source = file;
   const pgm = file && !isJls(file) ? {} : undefined;
   sourcePgm = pgm;
@@ -597,7 +625,16 @@ function setFrame(job, frame) {
   job.frame = frame;
   const count = compCountOf(frame);
   job.compRows ??= Array(count).fill(0);
-  if (job.activeChannel === undefined) job.activeChannel = count === 3 ? 'composite' : 0;
+  job.componentGeometry = componentDimensions(frame);
+  const { widths, heights } = job.componentGeometry;
+  job.totalRows = heights.reduce((total, height) => total + height, 0);
+  job.sampledGeometry = widths.some((width, i) => width !== frame.width || heights[i] !== frame.height);
+  job.canComposite = count === 3 && !job.sampledGeometry && (job.file.moonjlsMeta?.composite ?? true);
+  job.componentStats = widths.map((width, index) => ({
+    index, id: frame.components?.[index]?.id ?? 1, total: width * heights[index],
+    verified: 0, maxError: null, absoluteError: 0,
+  }));
+  if (job.activeChannel === undefined) job.activeChannel = job.canComposite ? 'composite' : 0;
   renderIdentity();
   renderPhysicalBudget(job);
 }
@@ -607,7 +644,7 @@ function recordStats(job, stats, frame, structure) {
   setFrame(job, frame);
   if (structure) job.structure = structure;
   job.stats = stats;
-  const totalRows = job.frame ? job.frame.height * compCountOf(job.frame) : 0;
+  const totalRows = job.totalRows ?? 0;
   if (totalRows > 0 && stats.rows === totalRows && !job.rowsArrived) {
     job.rowsArrived = true;
     if (!job.paused) transition('finalizing', 'finishingStream');
@@ -640,8 +677,9 @@ function draw(job, index, reconstructed, original, meta) {
   }
 }
 
-async function writeOutput(job, sink, bytes) {
-  await sink.write(bytes);
+async function writeOutput(job, sink, bytes, position = undefined) {
+  if (position === undefined) await sink.write(bytes);
+  else await sink.writeAt(bytes, position);
   requireActive(job);
   job.outputBytes += bytes.byteLength;
 }
@@ -698,6 +736,7 @@ async function decodeFile(job, file, settings, sink) {
   let configured = false;
   let planes = null;
   let componentCount = 1;
+  let planar = false;
   const baseName = file.name.replace(/\.[^.]+$/, '');
   const handleRow = async (frame, index, row, meta) => {
     if (!configured) {
@@ -707,29 +746,38 @@ async function decodeFile(job, file, settings, sink) {
       preview.configure(frame, false, {
         componentCount,
         componentLabels: channelLabelsFor(job),
-        initialChannel: componentCount === 3 ? 'composite' : 0,
+        initialChannel: job.activeChannel,
+        allowComposite: job.canComposite,
       });
       if (componentCount === 1) {
         job.outputName = `${baseName}.pgm`;
         job.outputFormat = 'pgm';
         job.hostConversionBufferBytes = 0;
         await writeOutput(job, sink, pgmHeader(frame));
-      } else if (componentCount === 3) {
+      } else if (componentCount === 3 && !job.sampledGeometry) {
         job.outputName = `${baseName}.ppm`;
         job.outputFormat = 'ppm';
         const px = frame.width * frame.height;
         planes = [new Uint16Array(px), new Uint16Array(px), new Uint16Array(px)];
         job.hostConversionBufferBytes = planes.reduce((acc, p) => acc + p.byteLength, 0);
       } else {
-        job.outputName = `${baseName}.planar.raw`;
-        job.outputFormat = 'planar-raw';
+        planar = true;
+        job.outputName = `${baseName}.planar-u16le.raw`;
+        job.outputFormat = 'planar-u16le';
         job.hostConversionBufferBytes = 0;
       }
     }
     draw(job, index, row, null, meta);
+    const compIdx = meta.componentIndex;
     if (planes) {
-      const compIdx = meta?.componentIndex ?? 0;
       planes[compIdx].set(row, index * frame.width);
+    } else if (planar) {
+      const { widths, offsets } = job.componentGeometry;
+      const samples = new Uint8Array(row.length * 2);
+      const view = new DataView(samples.buffer);
+      for (let x = 0; x < row.length; x++) view.setUint16(x * 2, row[x], true);
+      job.hostConversionBufferBytes = Math.max(job.hostConversionBufferBytes, samples.byteLength);
+      await writeOutput(job, sink, samples, (offsets[compIdx] + index * widths[compIdx]) * 2);
     } else {
       await writeOutput(job, sink, pgmRow(row, frame));
     }
@@ -749,7 +797,7 @@ async function decodeFile(job, file, settings, sink) {
       if (event.type === 'row') {
         await handleRow(event.frame, event.index, event.row, rowMeta);
       } else if (event.type === 'rows') {
-        const w = event.frame.width;
+        const w = event.stride ?? event.frame.width;
         for (let i = 0; i < event.count; i++) {
           await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w), rowMeta);
         }
@@ -770,7 +818,7 @@ async function roundTrip(job, file, near, settings, sink) {
   job.inputFormat = isPpmInput ? 'ppm' : 'pgm';
   job.outputFormat = 'jls';
   const input = isPpmInput
-    ? await openPpm(file, near, job.abort.signal, job.pgmHeader, file.moonjlsMeta?.channelRoles ?? ['R', 'G', 'B'])
+    ? await openPpm(file, near, job.abort.signal, job.pgmHeader, file.moonjlsMeta?.channelRoles, job.interleave)
     : await openPgm(file, near, job.abort.signal, job.pgmHeader);
   requireActive(job);
   job.hostConversionBufferBytes = input.hostConversionBufferBytes ?? 0;
@@ -785,7 +833,9 @@ async function roundTrip(job, file, near, settings, sink) {
       preview.configure(frame, true, {
         componentCount,
         componentLabels: channelLabelsFor(job),
-        initialChannel: componentCount === 3 ? 'composite' : 0,
+        initialChannel: job.activeChannel,
+        allowComposite: job.canComposite,
+        displayMaxval: file.moonjlsMeta?.displayMaxval,
       });
     }
     const compIdx = meta?.componentIndex ?? 0;
@@ -793,15 +843,21 @@ async function roundTrip(job, file, near, settings, sink) {
     const original = await input.row(index, compIdx);
     requireActive(job);
     job.stages.compare = 'incomplete';
+    const stats = job.componentStats[compIdx];
+    let rowMax = 0;
     for (let i = 0; i < row.length; i++) {
-      const diff = original[i] >= row[i] ? original[i] - row[i] : row[i] - original[i];
-      if (diff > maxError) maxError = diff;
+      const diff = Math.abs(original[i] - row[i]);
+      rowMax = Math.max(rowMax, diff);
+      stats.absoluteError += diff;
     }
+    stats.maxError = Math.max(stats.maxError ?? 0, rowMax);
+    stats.verified += row.length;
+    maxError = Math.max(maxError, rowMax);
     job.verifiedSamples = (job.verifiedSamples ?? 0) + row.length;
     job.observedError = maxError;
-    if (maxError > allowedNear) {
+    if (rowMax > allowedNear) {
       job.stages.compare = 'failed';
-      throw new Error(`Round-trip error ${maxError} exceeds NEAR ${allowedNear} at row ${index}`);
+      throw new Error(`Round-trip error ${rowMax} exceeds NEAR ${allowedNear} at row ${index}`);
     }
     draw(job, index, row, original, meta);
   };
@@ -820,7 +876,7 @@ async function roundTrip(job, file, near, settings, sink) {
       if (event.type === 'row') {
         await handleRow(event.frame, event.index, event.row, rowMeta);
       } else if (event.type === 'rows') {
-        const w = event.frame.width;
+        const w = event.stride ?? event.frame.width;
         for (let i = 0; i < event.count; i++) {
           await handleRow(event.frame, event.startIndex + i, event.samples.subarray(i * w, (i + 1) * w), rowMeta);
         }
@@ -833,6 +889,7 @@ async function roundTrip(job, file, near, settings, sink) {
       requireActive(job);
       job.encodeWorkspace = event.stats.coreWorkspaceBytes;
       job.encodedStats = event.stats;
+      job.hostConversionBufferBytes = input.hostConversionBufferBytes ?? 0;
       if (event.type === 'bytes') {
         await writeOutput(job, sink, event.chunk);
         await pipe.write(event.chunk);
@@ -883,12 +940,13 @@ async function run() {
   const sinkMode = get('sink').value;
   const file = source;
   const decodeOnly = isJls(file);
-  const defaultOutExt = decodeOnly ? '.pgm' : '.jls';
+  const defaultOutExt = decodeOnly ? (sinkMode === 'file' ? '.decoded' : '.pgm') : '.jls';
   const outputName = file.name.replace(/\.[^.]+$/, '') + defaultOutExt;
   const settings = { backend: get('backend').value, inputChunkSize: chunk, outputChunkSize: Math.min(chunk, 32 * 1024) };
   const requestedPreset = Object.fromEntries(presetFields.map((field) => [field, Number(get(`preset-${field}`)?.value ?? 0)]));
   const job = {
     id: ++sequence, runId: createRunId(), backend: settings.backend, near, decodeOnly, pgmHeader: pgm?.header,
+    interleave: Number(get('interleave')?.value ?? 0),
     inputFormat: decodeOnly ? 'jls' : (pgm?.header?.magic === 'P6' || isPpm(file) ? 'ppm' : 'pgm'),
     outputFormat: decodeOnly ? 'pgm' : 'jls',
     file, outputName, sinkMode, settings, pgm, rowsDelivered: 0,
@@ -927,7 +985,10 @@ async function run() {
     lock(true);
     transition('finalizing', 'closingOutput');
     renderProgress(job);
-    const artifact = await sink.close();
+    const mimeType = job.outputFormat === 'pgm' ? 'image/x-portable-graymap'
+      : job.outputFormat === 'ppm' ? 'image/x-portable-pixmap'
+      : job.outputFormat === 'jls' ? 'image/jls' : 'application/octet-stream';
+    const artifact = await sink.close(mimeType);
     requireActive(job);
     job.elapsed = performance.now() - job.started;
     job.result = result;
@@ -982,8 +1043,28 @@ get('file').addEventListener('change', (event) => {
   if (file) setSource(file);
 });
 get('example').addEventListener('click', () => { get('file').value = ''; setSource(samplePgm()); });
-get('sample-rgb8')?.addEventListener('click', () => { get('file').value = ''; setSource(sampleRgb8Ppm()); });
-get('sample-multi16')?.addEventListener('click', () => { get('file').value = ''; setSource(sampleMulti16Ppm()); });
+const builtInSamples = {
+  'sample-rgb8': { name: 'lily-8.ppm', labelKey: 'sampleRgb8Desc' },
+  'sample-multi16': { name: 'lily-16.ppm', labelKey: 'sampleMulti16Desc', displayMaxval: 4095 },
+  'sample-sampling': { name: 'lily-sampled.jls', labelKey: 'sampledLilyDesc' },
+};
+for (const [id, { name, ...meta }] of Object.entries(builtInSamples)) {
+  get(id)?.addEventListener('click', async () => {
+    const selection = ++sourceSelection;
+    try {
+      const response = await fetch(new URL(`./samples/${name}`, import.meta.url));
+      if (!response.ok) throw new Error(`Sample request failed (${response.status})`);
+      const bytes = await response.arrayBuffer();
+      if (selection !== sourceSelection || active) return;
+      const file = new File([bytes], name);
+      file.moonjlsMeta = Object.freeze({ ...meta, channelRoles: ['C0', 'C1', 'C2'], composite: false });
+      get('file').value = '';
+      setSource(file);
+    } catch {
+      if (selection === sourceSelection && !active) transition('failed', 'sampleUnavailable');
+    }
+  });
+}
 
 let dragDepth = 0;
 const setDropActive = (on) => setAttr('workspace-view', 'data-drop-active', on ? 'true' : 'false');
@@ -1061,7 +1142,7 @@ get('export-report')?.addEventListener?.('click', async () => {
   }
 });
 
-for (const id of ['near', 'backend', 'sink']) {
+for (const id of ['near', 'interleave', 'backend', 'sink']) {
   get(id)?.addEventListener?.('change', renderIdentity);
 }
 for (const tab of document.querySelectorAll?.('.view-tab') ?? []) {
