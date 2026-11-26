@@ -274,7 +274,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     const xMaps = Array.from({ length: componentCount }, (_, c) =>
       Uint16Array.from({ length: width }, (_, x) => Math.floor(x * (widths[c] ?? frame.width) / width)));
     const sampled = widths.some((w, c) => w !== frame.width || heights[c] !== frame.height);
-    const composite = componentCount >= 3 && !sampled;
+    const composite = componentCount >= 3 && !sampled && (options.allowComposite ?? true);
     const requestedChannel = options.initialChannel ?? (componentCount === 3 ? 'composite' : 0);
     const channel = requestedChannel === 'composite' && !composite ? 0 : requestedChannel;
     for (const [index, canvas] of canvases.entries()) {
@@ -285,7 +285,8 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     }
     overlaysVisible = false;
     const contexts = canvases.map((canvas) => canvas.getContext('2d'));
-    const defaultMaxval = frame.maxval ?? (2 ** frame.bits - 1);
+    const displayMaxval = options.displayMaxval;
+    const defaultMaxval = displayMaxval ?? frame.maxval ?? (2 ** frame.bits - 1);
     const componentLabels = options.componentLabels
       ?? Array.from({ length: componentCount }, (_, c) => `C${c}`);
     const errorLuts = new Map();
@@ -298,6 +299,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
       sourceHeights,
       sampled,
       composite,
+      displayMaxval,
       contexts,
       componentCount,
       channel,
@@ -318,7 +320,7 @@ export function createPreview(canvases, reportPixel, magnifiers = []) {
     const c = meta?.componentIndex ?? 0;
     if (c < 0 || c >= componentCount) return;
     if (meta?.near !== undefined) state.componentNears[c] = meta.near;
-    if (meta?.preset?.maxval !== undefined) state.componentMaxvals[c] = meta.preset.maxval;
+    if (state.displayMaxval === undefined && meta?.preset?.maxval !== undefined) state.componentMaxvals[c] = meta.preset.maxval;
     const xMap = xMaps[c];
     const recPlane = state.reconstruction[c];
     const origPlane = state.original?.[c] ?? null;

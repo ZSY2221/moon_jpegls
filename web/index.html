@@ -24,7 +24,7 @@
         <h1 id="workbench" class="brand-title" data-label="workbench">Sample-verifiable JPEG-LS Workbench</h1>
       </div>
       <div class="masthead-meta">
-        <span class="scope-pill" data-label="scopeBits">2-16-bit Grayscale &amp; ILV=0 Multi-scan</span>
+        <span class="scope-pill" data-label="scopeBits">2–16-bit · ILV=0/1/2</span>
         <span class="scope-pill" data-label="scopeNear">NEAR up to 255</span>
         <span class="local" data-label="local">Local processing</span>
         <label class="language">
@@ -70,10 +70,13 @@
           </button>
           <div class="sample-pair">
             <button type="button" id="sample-rgb8" class="sample-button sample-secondary">
-              <span data-label="sampleRgb8">Synthetic 8-bit RGB</span>
+              <span data-label="sampleRgb8">Microscopy · 8-bit</span>
             </button>
             <button type="button" id="sample-multi16" class="sample-button sample-secondary">
-              <span data-label="sampleMulti16">Synthetic 16-bit 3-Ch</span>
+              <span data-label="sampleMulti16">Microscopy · 16-bit</span>
+            </button>
+            <button type="button" id="sample-sampling" class="sample-button sample-secondary">
+              <span data-label="sampleSampling">Sampled JPEG-LS · edge MCU</span>
             </button>
           </div>
         </div>
@@ -94,6 +97,15 @@
               <option value="3">3</option>
             </select>
             <span id="near-note" class="microcopy near-note" hidden></span>
+          </label>
+
+          <label class="setting" id="interleave-setting" hidden>
+            <span class="field-label" data-label="interleave">Interleave</span>
+            <select id="interleave">
+              <option value="0" data-label="ilv0">0 · Non-interleaved</option>
+              <option value="1" data-label="ilv1">1 · Line interleave</option>
+              <option value="2" data-label="ilv2">2 · Sample interleave</option>
+            </select>
           </label>
 
           <label class="setting">

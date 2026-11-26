@@ -47,3 +47,19 @@ The Scan Structure Inspector shows the stored sampling factors, real plane sizes
 Sampled images with unequal component sizes export as planar U16LE. Planes follow SOF55 declaration order and contain their actual width × height samples, with rows in raster order. The JSON report lists plane dimensions and sample offsets. The file sink suggests the neutral `.decoded` suffix because it opens before the frame header is parsed. Buffered downloads receive the format-specific suffix. The worker delivers rows incrementally and the browser writes each raw row directly to its plane offset. The host conversion measurement includes one U16LE row, and the buffered sink's retained output is reported separately.
 
 Set `MOONJLS_ANNEX_FIXTURES` to the extracted official Annex E image directory when running `npm run smoke` to check both sampled fixtures against pinned HP 1.00 reconstruction hashes.
+
+### Workbench microscopy examples
+
+The workbench includes three planes from a 144 × 111 crop of the Lily of the Valley confocal fluorescence microscopy dataset. The 16-bit P6 fixture keeps the original uint16 counts, which occupy 0–4095 in the source. The 8-bit fixture scales counts from 0–4095 to 0–255 before coding. The channels use neutral labels. The 16-bit preview display range is 0–4095 and the inspector reports the original integer count.
+
+Select ILV 0, 1, or 2 to compare processing one plane per scan, alternating component rows, or alternating samples at every pixel. The workbench compares each reconstructed sample with its source. The report keeps independent-reference status separate from the live comparison. A bundled sampled JLS decodes to planes of 144 × 111, 144 × 28, and 72 × 56. The scan inspector shows one coded padding row for the first component. This decode-only run checks stream termination and reports the number of samples without an original comparison.
+
+The microscopy image was acquired by Genevieve Buckley at Monash Micro Imaging in 2018 and distributed under CC0 by scikit-image. [Dataset record](https://scikit-image.org/docs/0.26.0/api/skimage.data.html#skimage.data.lily) · [Pinned TIFF](https://gitlab.com/scikit-image/data/-/blob/2cdc5ce89b334d28f06a58c9f0ca21aa6992a5ba/lily-of-the-valley-fluorescence.tif)
+
+Run `node sdk/build.mjs` and `python web/samples/extract_lily.py PATH_TO_TIFF` with Pillow and NumPy to regenerate the three fixtures. The script checks the TIFF SHA-256 before cropping. Zero-based crop origin is (395,344), and components are TIFF pages 0, 1, and 2.
+
+| Fixture | SHA-256 |
+| --- | --- |
+| `lily-8.ppm` | `d0c1829a05f81a996edaf2d55f17599f0164fe9adb4c11c5c18ea58bf06f30a9` |
+| `lily-16.ppm` | `364565515c9623b242a02f92ce3dd6057fff898309c00acf6b9334cbca088239` |
+| `lily-sampled.jls` | `5d07ba5cb525ec4d89998275e562fb992102314ae4603eac477c0dc23e82224c` |

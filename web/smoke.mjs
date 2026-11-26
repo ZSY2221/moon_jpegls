@@ -4,7 +4,9 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { chromium } from 'playwright-core';
 
-const origin = process.env.MOONJLS_WEB_URL ?? 'http://127.0.0.1:8000';
+const base = new URL(process.env.MOONJLS_WEB_URL ?? 'http://127.0.0.1:8000/');
+if (!base.pathname.endsWith('/')) base.pathname += '/';
+const workbench = new URL('web/', base);
 const executablePath = process.env.MOONJLS_CHROME;
 const browser = await chromium.launch(executablePath ? { executablePath } : { channel: 'chrome' });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
@@ -18,8 +20,10 @@ const expectReferenceWindow = process.env.MOONJLS_EXPECT_REFERENCE_WINDOW === '1
 if (receiptPath) {
   page.context().on('response', (response) => {
     const url = new URL(response.url());
-    if (url.origin !== origin || !/\.(mjs|wasm|css)$/.test(url.pathname) || !response.ok() || loaded.has(url.pathname)) return;
-    loaded.set(url.pathname, response.body().then(
+    if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname) || !/\.(mjs|wasm|css|ppm|jls|json)$/.test(url.pathname) || !response.ok()) return;
+    const path = url.pathname.slice(base.pathname.length - 1);
+    if (loaded.has(path)) return;
+    loaded.set(path, response.body().then(
       (body) => ({ sha256: createHash('sha256').update(body).digest('hex'), bytes: body.byteLength }),
       (error) => ({ error: error.message }),
     ));
@@ -59,7 +63,7 @@ async function cancelRestart(kind, oldStream, oldNear = 0) {
   const oldName = kind === 'read' ? 'cancel-old.pgm' : 'cancel-old.jls';
   const nextName = `cancel-${kind}-new.pgm`;
   const nextRow = kind === 'read' ? 1 : 0;
-  await page.goto(`${origin}/web/`);
+  await page.goto(workbench.href);
   await page.evaluate(({ kind, oldName, nextName, oldStart, nextStart }) => {
     function barrier() {
       let resume;
@@ -196,7 +200,7 @@ async function cancelRestart(kind, oldStream, oldNear = 0) {
 }
 
 async function gatedEnding() {
-  await page.goto(`${origin}/web/`);
+  await page.goto(workbench.href);
   const stream = Buffer.from(await page.evaluate(async () => {
     const { loadCore, encodeImage } = await import('/sdk/index.mjs');
     const core = await loadCore({ backend: 'wasm-gc' });
@@ -237,7 +241,7 @@ async function gatedEnding() {
 }
 
 async function gatedClose(fail) {
-  await page.goto(`${origin}/web/`);
+  await page.goto(workbench.href);
   await page.evaluate(() => {
     let resolveClose;
     const held = new Promise((resolve) => { resolveClose = resolve; });
@@ -286,7 +290,7 @@ async function gatedClose(fail) {
 async function narrowSettingsSummary(jlsStream) {
   await page.setViewportSize({ width: 390, height: 844 });
   try {
-    await page.goto(`${origin}/web/`);
+    await page.goto(workbench.href);
     await click('example');
     await select('near', '0');
     await select('backend', 'wasm-gc');
@@ -360,7 +364,7 @@ async function narrowSettingsSummary(jlsStream) {
 }
 
 async function expandedNear() {
-  await page.goto(`${origin}/web/`);
+  await page.goto(workbench.href);
   const rejected = await page.evaluate(async () => {
     const { loadCore } = await import('/sdk/index.mjs');
     const invalid = [[8, 128], [12, 256], [16, 256], [16, -1], [16, 1.5], [16, '4']];
@@ -448,7 +452,7 @@ async function expandedNear() {
 }
 
 async function verifyM2Workbench() {
-  await page.goto(`${origin}/web/`);
+  await page.goto(workbench.href);
   const frame = { width: 2, height: 2, bits: 9, near: 0, maxval: 300 };
   const preset = { maxval: 300, t1: 5, t2: 9, t3: 23, reset: 42 };
   const raster = Buffer.alloc(8);
@@ -496,7 +500,7 @@ async function verifyM2Workbench() {
   const decode = JSON.parse(await getDownload('export-report'));
   assert.deepEqual(decode.frame.preset, preset);
   assert.equal(decode.stages.compare, 'not_run');
-  const manifest = await (await page.request.get(`${origin}/web/conformance-manifest.json`)).json();
+  const manifest = await (await page.request.get(new URL('conformance-manifest.json', workbench).href)).json();
   await page.locator('.scientific-nav a[href="#compatibility-view"]').click();
   assert.equal(await page.locator('#compatibility-view').evaluate((details) => details.open), true);
   await page.waitForFunction((count) => document.querySelector('#compatibility-features').rows.length === count, manifest.features.length);
@@ -523,7 +527,7 @@ async function verifyLunarDownload(sourcePath) {
     assert.equal(file.suggestedFilename(), name);
     return readFile(await file.path());
   };
-  await page.goto(`${origin}/web/`);
+  await page.goto(workbench.href);
   await upload('lola.pgm', source);
   await select('near', '3');
   await click('run');
@@ -569,7 +573,7 @@ async function verifySampledAnnexWorkbench(directory) {
   ];
   const fingerprint = (value) => createHash('sha256').update(value).digest('hex');
   for (const [fixture, backend, inputSha256, expectedSha256, secondBlue] of cases) {
-    await page.goto(`${origin}/web/`);
+    await page.goto(workbench.href);
     const input = await readFile(join(directory, `${fixture}.JLS`));
     assert.equal(fingerprint(input), inputSha256);
     await upload(`${fixture}.jls`, input);
@@ -624,127 +628,180 @@ async function verifySampledAnnexWorkbench(directory) {
 }
 
 async function verifyMulticomponentWorkbench() {
-  const downloadBytes = async (expectedName) => {
+  const downloadBytes = async (id, expectedName) => {
     const pending = page.waitForEvent('download');
-    await click('download');
+    await click(id);
     const file = await pending;
     if (expectedName) assert.equal(file.suggestedFilename(), expectedName);
     return readFile(await file.path());
   };
-
-  await page.goto(`${origin}/web/`);
-  await click('sample-rgb8');
-  await select('near', '0');
-  await select('backend', 'wasm-gc');
-  await select('sink', 'buffered');
-  await click('run');
-  await phase('complete');
-  assert.match(await text('mc-provenance-badge'), /Synthetic/i);
-  assert.equal(await text('error'), '0');
-  assert.match(await text('frame'), /256 × 192 · 3 ch · 8-bit · NEAR 0/);
-  const hostBuf = await text('host-conv-buffer');
-  const prevBuf = await text('preview-buffer');
-  assert.notEqual(hostBuf, '—');
-  assert.notEqual(prevBuf, '—');
-  assert.equal(await page.locator('#sof-components-body tr').count(), 3);
-  assert.equal(await page.locator('#scan-table-body tr').count(), 3);
-  assert.match(await text('scan-inspector-summary'), /256×192.*P=8.*EOI @/);
-  await page.locator('#channel-buttons button[data-comp="1"]').click();
-  assert.equal(await page.locator('#channel-buttons button[data-comp="1"]').getAttribute('aria-pressed'), 'true');
-  await page.locator('#channel-buttons button[data-comp="composite"]').click();
-  assert.equal(await page.locator('#channel-buttons button[data-comp="composite"]').getAttribute('aria-pressed'), 'true');
-  await capture('m3a-rgb8-near0');
-
-  await select('near', '3');
-  await click('run');
-  await phase('complete');
-  const rgbNear3Err = Number(await text('error'));
-  assert.ok(rgbNear3Err > 0 && rgbNear3Err <= 3, `Expected 1..3 error on RGB NEAR=3, got ${rgbNear3Err}`);
-  const rgbJls = await downloadBytes('synthetic-rgb-8.jls');
+  const readReport = async () => JSON.parse(await downloadBytes('export-report'));
+  const chooseExample = async (id, name) => {
+    await click(id);
+    await page.waitForFunction((expected) =>
+      document.getElementById('source-name').textContent === expected && !document.getElementById('run').disabled, name);
+  };
 
   const { createOracle } = await import('../scripts/oracle.mjs');
   const oracle = await createOracle();
+  const width = 144;
+  const height = 111;
+  const planeSize = width * height;
+  const checks = [];
+  let planarJls;
   try {
-    const decodedOracle = oracle.decode(rgbJls);
-    assert.equal(decodedOracle.frame.width, 256);
-    assert.equal(decodedOracle.frame.height, 192);
-    assert.equal(decodedOracle.frame.components, 3);
-    assert.equal(decodedOracle.frame.near, 3);
-    assert.equal(decodedOracle.pixels.length, 256 * 192 * 3);
+    for (const bits of [8, 16]) {
+      const name = `lily-${bits}`;
+      const source = await readFile(new URL(`./samples/${name}.ppm`, import.meta.url));
+      const header = Buffer.from(`P6\n${width} ${height}\n${bits === 8 ? 255 : 65535}\n`);
+      assert.deepEqual(source.subarray(0, header.length), header);
+      const raster = source.subarray(header.length);
+      const original = (i) => bits === 8 ? raster[i] : raster.readUInt16BE(2 * i);
+
+      await page.goto(workbench.href);
+      await chooseExample(bits === 8 ? 'sample-rgb8' : 'sample-multi16', `${name}.ppm`);
+      await select('sink', 'buffered');
+      const ilvSelector = page.locator('#interleave');
+      assert.equal(await ilvSelector.isVisible(), true);
+      for (const ilv of [0, 1, 2]) {
+        const near = ilv === 1 ? 3 : 0;
+        const backend = ilv === 1 ? 'js' : 'wasm-gc';
+        await select('near', String(near));
+        await select('backend', backend);
+        await select('interleave', String(ilv));
+        await click('run');
+        await phase('complete');
+        assert.match(await text('mc-provenance-badge'), /Lily of the valley microscopy/);
+        assert.match(await text('frame'), new RegExp(`144 × 111 · 3 ch · ${bits}-bit · NEAR ${near}`));
+        assert.equal(await page.locator('#channel-buttons [data-comp="composite"]').count(), 0);
+        const inspector = page.locator('#scan-table-body tr');
+        assert.equal(await inspector.count(), ilv === 0 ? 3 : 1);
+        assert.match(await inspector.first().textContent(), new RegExp(`ILV=${ilv}.*Pt=0`));
+        if (ilv === 2) assert.match(await inspector.first().textContent(), /Samples in this order.*output one row per component/);
+        assert.match(await text('scan-inspector-summary'), /144×111.*EOI @/);
+
+        const coded = await downloadBytes('download', `${name}.jls`);
+        const independent = oracle.decode(coded);
+        assert.deepEqual(independent.frame, { width, height, bits, near, components: 3 });
+        const report = await readReport();
+        assert.equal(report.frame.interleave, ilv);
+        assert.equal(report.frame.scans, ilv === 0 ? 3 : 1);
+        assert.equal(report.samples.total, 3 * planeSize);
+        assert.equal(report.samples.verified, 3 * planeSize);
+        assert.equal(report.reference.status, 'not_run');
+        assert.equal(report.stream.strictEoi, true);
+        assert.equal(report.stream.rowsDelivered, height * 3);
+        const expected = Array.from({ length: 3 }, (_, component) => {
+          let maximum = 0;
+          let total = 0;
+          for (let pixel = 0; pixel < planeSize; pixel++) {
+            const pixelIndex = pixel * 3 + component;
+            const recIndex = ilv === 0 ? component * planeSize + pixel : pixelIndex;
+            const error = Math.abs(original(pixelIndex) - independent.pixels[recIndex]);
+            maximum = Math.max(maximum, error);
+            total += error;
+          }
+          return {
+            index: component, id: component + 1, total: planeSize, verified: planeSize, maxError: maximum,
+            meanAbsoluteError: total / planeSize, unverified: 0,
+          };
+        });
+        assert.deepEqual(report.samples.components, expected);
+        const maxError = Math.max(...expected.map((component) => component.maxError));
+        assert.equal(Number(await text('error')), maxError);
+        assert.ok(maxError <= near);
+        assert.match(await text('multicomponent-progress'), /15,984 verified · 0 unverified/);
+
+        await page.locator('#channel-buttons [data-comp="1"]').click();
+        await page.locator('#reconstruction').press('Enter');
+        const independentIndex = ilv === 0 ? planeSize : 1;
+        assert.equal(await text('inspect-original'), original(1).toLocaleString('en'));
+        assert.equal(await text('inspect-reconstructed'), independent.pixels[independentIndex].toLocaleString('en'));
+        assert.equal(await text('inspect-error'), String(Math.abs(original(1) - independent.pixels[independentIndex])));
+        if (bits === 16) {
+          assert.ok(original(1) > 255);
+          assert.match(await text('reconstruction-scale'), /display range 0–4,095/);
+        }
+        if (ilv === 0 && bits === 8) planarJls = coded;
+        if (ilv === 2) await capture(`microscopy-${bits}-ilv2`);
+        checks.push({ bits, ilv, near, backend, bytes: coded.length, maxError, samples: report.samples.total });
+      }
+    }
   } finally {
     oracle.close();
   }
 
-  await upload('rgb8-near3.jls', rgbJls);
+  await upload('equal-planes.jls', planarJls);
   await select('backend', 'js');
   await click('run');
   await phase('complete');
-  assert.match(await text('mc-provenance-badge'), /C0\/C1\/C2/);
+  assert.match(await text('mc-provenance-badge'), /undeclared channel roles/);
   assert.equal(await text('error'), 'Not compared');
   await page.locator('#scan-table-body tr[data-scan-index="1"]').click();
-  assert.equal(await page.locator('#channel-buttons button[data-comp="1"]').getAttribute('aria-pressed'), 'true');
-  assert.equal(await text('precision-near'), '3');
-  await capture('m3a-jls-scan-inspector');
-  const ppmBytes = await downloadBytes('rgb8-near3.ppm');
-  const ppmHdr = Buffer.from('P6\n256 192\n255\n');
-  assert.deepEqual(ppmBytes.subarray(0, ppmHdr.length), ppmHdr);
-  assert.equal(ppmBytes.length, ppmHdr.length + 256 * 192 * 3);
+  assert.equal(await page.locator('#channel-buttons [data-comp="1"]').getAttribute('aria-pressed'), 'true');
+  assert.deepEqual(await downloadBytes('download', 'equal-planes.ppm'),
+    await readFile(new URL('./samples/lily-8.ppm', import.meta.url)));
 
-  await click('sample-multi16');
-  await select('near', '0');
-  await select('backend', 'wasm-gc');
-  await click('run');
-  await phase('complete');
-  assert.equal(await text('precision-maxval'), '65,535');
-  assert.equal(await text('error'), '0');
-  await page.locator('#reconstruction').press('Enter');
-  await page.waitForFunction(() => !document.getElementById('inspect-components').hidden);
-  const compCards = await page.locator('#inspect-components .inspect-comp-card').allTextContents();
-  assert.equal(compCards.length, 3);
-  assert.match(compCards[0], /Band 0: 65,535/);
-  assert.match(compCards[1], /Band 1: 32,768/);
-  assert.match(compCards[2], /Band 2: 1,025/);
-  await capture('m3a-multi16-inspector');
-  const multi16Jls = await downloadBytes('synthetic-3comp-16.jls');
-  const oracle16 = await createOracle();
-  try {
-    const dec16 = oracle16.decode(multi16Jls);
-    assert.equal(dec16.frame.width, 256);
-    assert.equal(dec16.frame.height, 192);
-    assert.equal(dec16.frame.components, 3);
-    assert.equal(dec16.frame.bits, 16);
-    const planePx = 256 * 192;
-    assert.equal(dec16.pixels[0], 65535);
-    assert.equal(dec16.pixels[planePx], 32768);
-    assert.equal(dec16.pixels[2 * planePx], 1025);
-    assert.equal(dec16.pixels[1], 0);
-    assert.equal(dec16.pixels[planePx + 1], 49151);
-    assert.equal(dec16.pixels[2 * planePx + 1], 65535);
-  } finally {
-    oracle16.close();
-  }
-
-  await upload('truncated-rgb.jls', rgbJls.subarray(0, rgbJls.length - 10));
+  await upload('truncated-microscopy.jls', planarJls.subarray(0, planarJls.length - 10));
   await click('run');
   await phase('failed');
   assert.equal(await page.locator('#scan-error-location').isVisible(), true);
   assert.match(await text('scan-error-location'), /Failed at/);
 
+  await chooseExample('sample-sampling', 'lily-sampled.jls');
+  assert.equal(await page.locator('#interleave').isVisible(), false);
+  await click('run');
+  await phase('complete');
+  assert.match(await text('scan-table-body'), /ILV=1.*ID 1.*×4.*\+1 padding rows.*ID 2.*×1.*ID 3.*×2/);
+  const sampled = await readReport();
+  assert.deepEqual(sampled.frame.componentGeometry.map(({ width, height }) => [width, height]), [[144,111],[144,28],[72,56]]);
+  assert.equal(sampled.samples.total, 24048);
+  assert.deepEqual(sampled.samples.components.map(({ verified, unverified, maxError }) => [verified, unverified, maxError]),
+    [[0,15984,null],[0,4032,null],[0,4032,null]]);
+  assert.equal(sampled.stream.rowsDelivered, 195);
+  const raw = await downloadBytes('download', 'lily-sampled.planar-u16le.raw');
+  const raster = (await readFile(new URL('./samples/lily-8.ppm', import.meta.url)))
+    .subarray(Buffer.from('P6\n144 111\n255\n').length);
+  const expected = [];
+  for (const [channel, xStep, yStep] of [[0,1,1],[1,1,4],[2,2,2]]) {
+    for (let y = 0; y < height; y += yStep) {
+      for (let x = 0; x < width; x += xStep) expected.push(raster[(y * width + x) * 3 + channel]);
+    }
+  }
+  assert.equal(raw.length, expected.length * 2);
+  for (const [index, value] of expected.entries()) assert.equal(raw.readUInt16LE(index * 2), value);
+  await capture('microscopy-sampled-edge');
+  await page.locator('#scan-inspector-view').scrollIntoViewIfNeeded();
+  await capture('microscopy-sampled-structure');
+
   await page.locator('.scientific-nav a[href="#compatibility-view"]').click();
   assert.equal(await page.locator('#compatibility-scope-note').isVisible(), true);
-  await capture('m3a-compatibility');
+  await page.waitForFunction(() => document.getElementById('compatibility-standard').textContent.includes('12/12'));
+  await capture('compatibility-annex-e');
 
-  console.log(JSON.stringify({
-    test: 'M3-A multicomponent workbench, PPM P6, 16-bit inspector, Scan Inspector & CharLS verification',
-    rgbNear3Err,
-    rgbJlsBytes: rgbJls.length,
-    multi16JlsBytes: multi16Jls.length,
-    compCards,
-  }));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await select('language', 'zh');
+  await chooseExample('sample-multi16', 'lily-16.ppm');
+  await page.locator('#settings-drawer').evaluate((details) => { details.open = true; });
+  await select('interleave', '2');
+  assert.match(await text('settings-summary-meta'), /ILV 2/);
+  assert.match(await page.locator('#interleave-setting').textContent(), /交错方式.*样本交错/s);
+  await click('run');
+  await phase('complete');
+  await page.locator('#channel-buttons [data-comp="1"]').click();
+  await page.locator('#reconstruction').press('Enter');
+  assert.equal(await text('inspect-original'), '2,645');
+  assert.match(await text('multicomponent-progress'), /已核验 15,984 · 未核验 0/);
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  await capture('microscopy-16-narrow-zh');
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  console.log(JSON.stringify({ test: 'Real microscopy across all three ILV modes, CharLS verification, edge MCU, and narrow Chinese UI',
+    checks, sampledRows: 195, sampledSamples: 24048 }));
 }
 
 try {
-  await page.goto(`${origin}/web/`);
+  await page.goto(workbench.href);
   await click('example');
   await select('near', '3');
   await click('run');
@@ -927,7 +984,8 @@ try {
   if (receiptPath) {
     const responses = Object.fromEntries(await Promise.all([...loaded].map(async ([path, receipt]) => [path, await receipt])));
     for (const path of ['/web/app.mjs', '/web/style.css', '/web/preview.mjs', '/web/ppm.mjs', '/web/scan-inspector.mjs', '/web/labels.mjs',
-      '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs', '/sdk/generated/core.mjs', '/sdk/generated/core.wasm']) {
+      '/sdk/worker-client.mjs', '/sdk/index.mjs', '/sdk/worker.mjs', '/sdk/generated/core.mjs', '/sdk/generated/core.wasm',
+      '/web/samples/lily-8.ppm', '/web/samples/lily-16.ppm', '/web/samples/lily-sampled.jls']) {
       assert.ok(responses[path]?.sha256, `No browser body hash for ${path}`);
     }
     await mkdir(dirname(receiptPath), { recursive: true });

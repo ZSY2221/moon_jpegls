@@ -6,4 +6,4 @@ repository = "https://github.com/ZSY2221/moon_jpegls"
 preferred_target = "wasm-gc"
 supported_targets = "+native+wasm-gc+js"
 keywords = ["jpeg-ls", "streaming", "image", "lossless", "multicomponent"]
-description = "Pure MoonBit streaming ITU-T T.87 / JPEG-LS Part 1 codec for grayscale and non-interleaved multicomponent high bit-depth images"
+description = "Pure MoonBit streaming JPEG-LS codec for high-precision grayscale and multicomponent images with interleave and sampling"

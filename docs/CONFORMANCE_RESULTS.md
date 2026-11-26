@@ -27,14 +27,11 @@
 - **`lse-after-scan` 归类说明（M2 `UnsupportedFeature` → M3-A `InvalidData`）**：M2 单扫描阶段尚未实现多扫描恢复，`tests/conformance/m2_golden` 中的 `lse-after-scan.jls`（在单分量最终扫描末尾之后附带 `LSE1` 却无后续 `SOS` 而直接 `EOI`）曾暂返 `UnsupportedFeature`。M3-A 实现真实扫描间标记与续扫后，扫描间 `LSE1` 本身合法但必须跟随另一条 `SOS`，若直接遇到 `EOI` 属非法的码流终止结构——这与 HP `nlocod.exe`（*"last marker must be EOI"*）和 CharLS Wasm（`Invalid JPEG-LS stream`）完全一致，故在 `tests/conformance/m2_golden/manifest.json` 与 `scripts/test_m2.py` 中诚实更新为 `InvalidData`（未删减用例）。
 - **保留历史初次 HP 失败记录**：M2 初测自定义 `LSE1` 时编码器曾按 `MAXVAL=0` 写出而被 HP 1.00 误解析并导致 6 次参考解码失败（[初次失败归档](../reports/t87-m2-20261125/annex-e-hp-initial.json)）；修复 [`core/bits.mbt`](../core/bits.mbt) 写出明确解析值并保留解码端零字段兼容。
 
-## 3. GitHub Actions CI vs. 本机完整复跑范围区分
+## 3. GitHub Actions CI 与本机参考
 
-- **GitHub Actions CI（[verification.yml](../.github/workflows/verification.yml)）每次运行**：
-  - 三后端核心白盒测试（`--deny-warn`）、Native 行交付与多扫描边界交付回归（[`native_multiscan_delivery_regression.py`](../REVIEW_EVIDENCE/native_multiscan_delivery_regression.py)）、Native CLI 尾部矩阵、Worker/SDK/TS 严格检查；
-  - `node scripts/validate_annex_e.mjs --check-manifest`（校验清单字段与哈希格式）；
-  - `node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY"`（12 组 M2 黄金 + 18 变体 + 7 非法 + 4 PGM）与 **`node scripts/verify_m3a_golden.mjs --native-exe "$NATIVE_BINARY"`**（7 组多分量/重排/多扫描 LSE1/间扫标记黄金正例 + 7 组负例）；
-  - `scripts/validate.py --near-matrix`（640 组满量程 NEAR 双向互操作）。
-- **本机**使用官方附件完成全部 Annex E、388 组 M2、640 组 NEAR、Chrome 工作台和固定 NASA LOLA 复跑。新增 Native 采样测试证实 47 个有效样本在 EOI 前全部交付，终结后拒绝晚到尾随。 [原始运行索引与摘要](../reports/t87-m3b-20261126/sampling-release-regressions.json)
+- GitHub Actions 校验待测 SHA，从固定 ITU-T 附件取出并核对官方输入。CI 实跑全部 12 条的三后端编解码。E.2-1–6、9–12 在 CI 即时调用 CharLS Wasm 0.10.0。E.2-7/8 比对官方码流逐字节和固定 HP 重建 SHA-256。本机独立运行 HP 1.00 参考解码全部 12 条。[`verification.yml`](../.github/workflows/verification.yml) · [官方向量获取器](../scripts/fetch_annex_e.py)
+- CI 还执行核心测试、M2/M3-A 黄金流与 M3-B 核心和 Native 采样黄金、Native 行交付和尾部、SDK/Worker、TypeScript、Web 构建、真实 Chrome 与 640 组 NEAR。`--check-manifest` 单独校验清单字段及哈希格式。
+- 388 组 M2 与固定 NASA LOLA 独立参考复验保留采样候选的结果。Native 采样黄金证实 47 个有效样本在 EOI 前全部交付，终结后拒绝晚到尾随。[采样候选原始回归](../reports/t87-m3b-20261126/sampling-release-regressions.json)
 
 ## 4. 本机复跑
 

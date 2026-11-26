@@ -1181,6 +1181,10 @@ canvas:focus-visible { outline-offset: -3px; }
   gap: 8px;
 }
 
+.sample-pair > :last-child:nth-child(3) {
+  grid-column: span 2;
+}
+
 .sample-secondary {
   font-size: 0.82rem;
   padding: 8px 10px;
@@ -1249,15 +1253,21 @@ canvas:focus-visible { outline-offset: -3px; }
 
 .mc-progress-chip {
   display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  align-items: start;
+  gap: 3px;
   padding: 4px 10px;
-  border-radius: 999px;
+  border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
   font-size: 0.78rem;
   font-variant-numeric: tabular-nums;
+}
+
+.mc-component-metrics {
+  color: var(--muted);
+  font-size: 0.74rem;
 }
 
 .mc-progress-chip[data-scan-state="verified"] {
@@ -1293,6 +1303,9 @@ canvas:focus-visible { outline-offset: -3px; }
   font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
 }
+
+#scan-inspector-view,
+#compatibility-view[open] { grid-column: 1 / -1; }
 
 .scan-inspector-grid {
   display: grid;

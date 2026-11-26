@@ -51,7 +51,7 @@ export async function workbenchReport(job) {
     errorBound: lunarErrorMeters(job.frame.near),
     maxError: job.observedError === undefined ? null : lunarErrorMeters(job.observedError),
   } : null;
-  return createVerificationReport({
+  const report = createVerificationReport({
     runId: job.runId,
     host: 'workbench',
     backend: job.backend,
@@ -96,4 +96,12 @@ export async function workbenchReport(job) {
     limits: { maxWidth: 65535, maxHeight: 65535, maxPixels: 100_000_000, maxMetadataBytes: 1_048_576,
       inputChunkSize: job.settings.inputChunkSize, outputChunkSize: job.settings.outputChunkSize },
   });
+  if (job.componentStats?.length > 1) {
+    report.samples.components = job.componentStats.map(({ absoluteError, ...component }) => ({
+      ...component,
+      meanAbsoluteError: component.verified ? absoluteError / component.verified : null,
+      unverified: component.total - component.verified,
+    }));
+  }
+  return report;
 }

@@ -4,7 +4,8 @@ import { buildIdentity } from '../sdk/report-node.mjs';
 
 const dist = new URL('./dist/', import.meta.url);
 const entries = {
-  web: ['index.html', 'style.css', 'app.mjs', 'labels.mjs', 'pgm.mjs', 'ppm.mjs', 'scan-inspector.mjs', 'preview.mjs', 'transport.mjs', 'run-report.mjs', 'compatibility.mjs'],
+  web: ['index.html', 'style.css', 'app.mjs', 'labels.mjs', 'pgm.mjs', 'ppm.mjs', 'scan-inspector.mjs', 'preview.mjs', 'transport.mjs', 'run-report.mjs', 'compatibility.mjs',
+    'samples/lily-8.ppm', 'samples/lily-16.ppm', 'samples/lily-sampled.jls'],
   sdk: ['index.mjs', 'worker-client.mjs', 'worker.mjs', 'lunar.mjs', 'verification-report.mjs', 'generated/core.mjs', 'generated/core.wasm'],
 };
 

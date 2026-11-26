@@ -106,6 +106,9 @@ export function renderScanInspector({
       return `${name} (ID ${comp.id})${group}`;
     }).join(' → ');
     const rowCount = indices.reduce((sum, idx) => sum + heights[idx], 0);
+    const delivery = el('td', '', `ILV=${scan.interleave} · ${order}`);
+    const deliveryKey = ['scanPlaneDelivery', 'scanLineDelivery', 'scanSampleDelivery'][scan.interleave];
+    delivery.append(el('small', '', translate(deliveryKey)));
     const p = scan.preset;
     const presetText = p ? `${p.maxval} · ${p.t1}/${p.t2}/${p.t3} r=${p.reset}` : '—';
     const rangeText = scan.endOffset >= 0
@@ -114,8 +117,8 @@ export function renderScanInspector({
     const stText = scan.completed ? translate('scanStateDone') : `${scan.rows ?? 0}/${rowCount}`;
     tr.append(
       el('td', 'mono', scan.scanIndex),
-      el('td', '', `ILV=${scan.interleave} · ${order}`),
-      el('td', 'mono', scan.near),
+      delivery,
+      el('td', 'mono', `${scan.near} · ${translate('scanPt', scan.pointTransform)}`),
       el('td', 'mono', presetText),
       el('td', 'mono', rangeText),
       el('td', scan.completed ? 'scan-status is-done' : 'scan-status is-active', stText),
