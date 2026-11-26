@@ -26,8 +26,6 @@ export interface ComponentSpec {
 export interface ScanSpec {
   readonly componentId?: number;
   readonly componentIds?: readonly number[];
-  /** SOS mapping selectors in component order. Zero denotes identity. */
-  readonly mappingSelectors?: readonly number[];
   /** 0: one component per scan, 1: line-interleaved, 2: sample-interleaved. */
   readonly interleave?: number;
   /** SOS Pt (0–15). Input samples remain in the original domain. */
@@ -44,6 +42,8 @@ export interface ScanInfo {
   readonly componentId: number;
   readonly componentIndices?: readonly number[];
   readonly componentIds?: readonly number[];
+  /** SOS mapping selectors in component order. Zero denotes identity. */
+  readonly mappingSelectors?: readonly number[];
   readonly near: number;
   readonly interleave: number;
   readonly pointTransform: number;

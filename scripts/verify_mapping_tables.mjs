@@ -5,7 +5,7 @@ import { closeSync, mkdtempSync, openSync, rmSync, rmdirSync, writeFileSync } fr
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
-import { decodePlanarImage, loadCore } from '../sdk/index.mjs';
+import { decodePlanarImage, encodeImage, loadCore } from '../sdk/index.mjs';
 import { createVerificationReport } from '../sdk/verification-report.mjs';
 
 const { values: options } = parseArgs({
@@ -123,6 +123,11 @@ for (const [backend, core] of cores) {
   }), { code: 'ResourceLimit' }, backend);
   const exactBudget = await decodePlanarImage(core, cases[1][1], { limits: { maxMetadataBytes: 65550 } });
   assert.deepEqual([...exactBudget.samples], highMapped, backend);
+  const mapped = await decodePlanarImage(core, cases[0][1]);
+  await assert.rejects(encodeImage(core, mapped.frame, Uint16Array.from(lowIndices)), { code: 'UnsupportedFeature' });
+  const { mappingSelectors, ...unmappedFrame } = mapped.frame;
+  assert.deepEqual(mappingSelectors, [7]);
+  await assert.rejects(encodeImage(core, { ...unmappedFrame, scans: mapped.scans }, Uint16Array.from(lowIndices)), { code: 'UnsupportedFeature' });
 }
 
 if (options['native-exe']) {

@@ -106,6 +106,9 @@ function normalizeMultiEncode(frame) {
     if (!obj || typeof obj !== 'object') {
       throw new CodecError('InvalidArgument', `scans[${idx}] must be an object`);
     }
+    if (obj.mappingSelectors !== undefined) {
+      throw new CodecError('UnsupportedFeature', 'Mapping table encoding');
+    }
     const rawIds = obj.componentIds ?? [obj.componentId];
     if (!Array.isArray(rawIds) || rawIds.length === 0) {
       throw new CodecError('InvalidArgument', `scans[${idx}] must specify componentIds or componentId`);
@@ -270,6 +273,9 @@ class Session {
     this.#outputCapacity = outputChunkSize;
     const budget = limits(options);
     if (this.#encoding) {
+      if (frame.mappingSelectors !== undefined) {
+        throw new CodecError('UnsupportedFeature', 'Mapping table encoding');
+      }
       const frameValues = ['width', 'height', 'bits'].map((key) => integer(frame[key], key, 0));
       const near = integer(frame.near ?? 0, 'near', 0, 255);
       if (frame.components !== undefined || frame.scans !== undefined || (frame.pointTransform ?? 0) !== 0) {
