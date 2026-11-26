@@ -189,9 +189,9 @@
         "E.2-5",
         "E.2-6"
       ],
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
       "target_milestone": "M3-B",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224",
       "evidence_ref": "antigravity/t87-m3b-20261125"
     },
     {
@@ -206,9 +206,9 @@
         "E.2-7",
         "E.2-8"
       ],
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
       "target_milestone": "M3-B",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224",
       "evidence_ref": "antigravity/t87-m3b-20261125",
       "notes": "For odd dimensions, MoonJLS rounds both axes up. HP 1.00 has narrower edge compatibility. Padding literals and row-delivery tests cover additional cases."
     },
@@ -398,8 +398,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 2,
@@ -467,8 +467,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 3,
@@ -533,8 +533,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 4,
@@ -602,8 +602,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 5,
@@ -671,8 +671,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 6,
@@ -737,8 +737,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 7,
@@ -805,8 +805,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224",
       "sampling": [
         {
           "h": 2,
@@ -890,8 +890,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6",
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224",
       "sampling": [
         {
           "h": 2,
@@ -978,8 +978,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 10,
@@ -1049,8 +1049,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 11,
@@ -1115,8 +1115,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     },
     {
       "id": 12,
@@ -1181,8 +1181,8 @@
           }
         }
       },
-      "evidence_path": "reports/t87-m3b-20261126/annex-e-final-hp.json",
-      "source_revision": "1b2d959015d15717b972c5a8bac35178b418d2d6"
+      "evidence_path": "reports/t87-m3b-20261126/public-delivery/annex-e-hp.json",
+      "source_revision": "8c5882f292327393d36763450c886359bd6aa224"
     }
   ],
   "officialReference": {

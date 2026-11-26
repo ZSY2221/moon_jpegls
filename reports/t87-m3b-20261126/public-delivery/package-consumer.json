@@ -1,0 +1,971 @@
+{
+  "m2": true,
+  "recordedAtSingapore": "2026-11-26T16:04:56.566661+08:00",
+  "commands": [
+    {
+      "step": "moon-version",
+      "cwd": "<temp>",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "version",
+        "--all"
+      ],
+      "exitCode": 0,
+      "stdout": "moon 0.1.20261119 (738607b 2026-11-19) ~/.moon/bin/moon\nmoonc v0.10.22+124d61d05 (2026-11-19) ~/.moon/bin/moonc\nmoonrun 0.1.20261119 (738607b 2026-11-19) ~/.moon/bin/moonrun\n",
+      "stderr": ""
+    },
+    {
+      "step": "compiler-version",
+      "cwd": "<temp>",
+      "command": [
+        "gcc",
+        "--version"
+      ],
+      "exitCode": 0,
+      "stdout": "gcc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    {
+      "step": "node-version",
+      "cwd": "<temp>",
+      "command": [
+        "node",
+        "--version"
+      ],
+      "exitCode": 0,
+      "stdout": "v24.20.0\n",
+      "stderr": ""
+    },
+    {
+      "step": "public-moon-add",
+      "cwd": "<temp>/public-probe",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "add",
+        "ZSY2221/moon_jpegls@0.1.0"
+      ],
+      "exitCode": 255,
+      "stdout": "",
+      "stderr": "Error: Module `ZSY2221/moon_jpegls` not found or access denied\n"
+    },
+    {
+      "step": "public-moon-add",
+      "cwd": "<temp>/public-probe",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "add",
+        "ZSY2221/moon_jpegls"
+      ],
+      "exitCode": 255,
+      "stdout": "",
+      "stderr": "Error: Module `ZSY2221/moon_jpegls` not found or access denied\n"
+    },
+    {
+      "step": "resolve-source",
+      "cwd": "<temp>",
+      "command": [
+        "git",
+        "-C",
+        "<git-root>",
+        "rev-parse",
+        "8c5882f292327393d36763450c886359bd6aa224^{commit}"
+      ],
+      "exitCode": 0,
+      "stdout": "8c5882f292327393d36763450c886359bd6aa224\n",
+      "stderr": ""
+    },
+    {
+      "step": "archive-source",
+      "cwd": "<temp>",
+      "command": [
+        "git",
+        "-C",
+        "<git-root>",
+        "archive",
+        "--format=zip",
+        "--output=<temp>/snapshot.zip",
+        "8c5882f292327393d36763450c886359bd6aa224"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "step": "moon-package",
+      "cwd": "<temp>/pack-sncuc9y_",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "package",
+        "--frozen"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Running moon check ...\nFinished. moon: ran 5 tasks, now up to date\nCheck passed\nPackage to <temp>/pack-sncuc9y_/_build/publish/ZSY2221-moon_jpegls-0.1.0.zip\n"
+    },
+    {
+      "step": "loopback-moon-add",
+      "cwd": "<temp>/independent-consumer",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "add",
+        "ZSY2221/moon_jpegls@0.1.0"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Downloading ZSY2221/moon_jpegls@0.1.0\n"
+    },
+    {
+      "step": "resolved-module-graph",
+      "cwd": "<temp>/independent-consumer",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "tree",
+        "--json"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"version\":1,\"status\":\"success\",\"error\":null,\"root\":1,\"modules\":[{\"name\":\"ZSY2221/moon_jpegls\",\"version\":\"0.1.0\",\"source\":{\"kind\":\"registry\"},\"workspace_member\":false},{\"name\":\"independent/moonjls_probe\",\"version\":\"0.1.0\",\"source\":{\"kind\":\"local\",\"path\":\"<temp>/independent-consumer\"},\"workspace_member\":false}],\"edges\":[{\"from\":1,\"to\":0,\"name\":\"ZSY2221/moon_jpegls\",\"kind\":\"regular\"}],\"logs\":[]}\n",
+      "stderr": ""
+    },
+    {
+      "step": "consume-js",
+      "cwd": "<temp>/independent-consumer",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "run",
+        "--release",
+        "--frozen",
+        "--target",
+        "js",
+        "."
+      ],
+      "exitCode": 0,
+      "stdout": "sample bits=12 near=0 index=0 original=0 reconstructed=0\nsample bits=12 near=0 index=1 original=1 reconstructed=1\nsample bits=12 near=0 index=2 original=2047 reconstructed=2047\nsample bits=12 near=0 index=3 original=2048 reconstructed=2048\nsample bits=12 near=0 index=4 original=4092 reconstructed=4092\nsample bits=12 near=0 index=5 original=4093 reconstructed=4093\ncase bits=12 near=0 rows=2 bytes=62 maxError=0 maxval=4093 reset=511\nsample bits=12 near=255 index=0 original=0 reconstructed=0\nsample bits=12 near=255 index=1 original=1 reconstructed=0\nsample bits=12 near=255 index=2 original=2047 reconstructed=2044\nsample bits=12 near=255 index=3 original=2048 reconstructed=2044\nsample bits=12 near=255 index=4 original=4092 reconstructed=4088\nsample bits=12 near=255 index=5 original=4093 reconstructed=4088\ncase bits=12 near=255 rows=2 bytes=45 maxError=5 maxval=4093 reset=511\nsample bits=16 near=0 index=0 original=0 reconstructed=0\nsample bits=16 near=0 index=1 original=1 reconstructed=1\nsample bits=16 near=0 index=2 original=32767 reconstructed=32767\nsample bits=16 near=0 index=3 original=32768 reconstructed=32768\nsample bits=16 near=0 index=4 original=49999 reconstructed=49999\nsample bits=16 near=0 index=5 original=50000 reconstructed=50000\ncase bits=16 near=0 rows=2 bytes=62 maxError=0 maxval=50000 reset=511\nsample bits=16 near=255 index=0 original=0 reconstructed=0\nsample bits=16 near=255 index=1 original=1 reconstructed=0\nsample bits=16 near=255 index=2 original=32767 reconstructed=32704\nsample bits=16 near=255 index=3 original=32768 reconstructed=32704\nsample bits=16 near=255 index=4 original=49999 reconstructed=50000\nsample bits=16 near=255 index=5 original=50000 reconstructed=50000\ncase bits=16 near=255 rows=2 bytes=53 maxError=64 maxval=50000 reset=511\n",
+      "stderr": ""
+    },
+    {
+      "step": "consume-wasm-gc",
+      "cwd": "<temp>/independent-consumer",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "run",
+        "--release",
+        "--frozen",
+        "--target",
+        "wasm-gc",
+        "."
+      ],
+      "exitCode": 0,
+      "stdout": "sample bits=12 near=0 index=0 original=0 reconstructed=0\nsample bits=12 near=0 index=1 original=1 reconstructed=1\nsample bits=12 near=0 index=2 original=2047 reconstructed=2047\nsample bits=12 near=0 index=3 original=2048 reconstructed=2048\nsample bits=12 near=0 index=4 original=4092 reconstructed=4092\nsample bits=12 near=0 index=5 original=4093 reconstructed=4093\ncase bits=12 near=0 rows=2 bytes=62 maxError=0 maxval=4093 reset=511\nsample bits=12 near=255 index=0 original=0 reconstructed=0\nsample bits=12 near=255 index=1 original=1 reconstructed=0\nsample bits=12 near=255 index=2 original=2047 reconstructed=2044\nsample bits=12 near=255 index=3 original=2048 reconstructed=2044\nsample bits=12 near=255 index=4 original=4092 reconstructed=4088\nsample bits=12 near=255 index=5 original=4093 reconstructed=4088\ncase bits=12 near=255 rows=2 bytes=45 maxError=5 maxval=4093 reset=511\nsample bits=16 near=0 index=0 original=0 reconstructed=0\nsample bits=16 near=0 index=1 original=1 reconstructed=1\nsample bits=16 near=0 index=2 original=32767 reconstructed=32767\nsample bits=16 near=0 index=3 original=32768 reconstructed=32768\nsample bits=16 near=0 index=4 original=49999 reconstructed=49999\nsample bits=16 near=0 index=5 original=50000 reconstructed=50000\ncase bits=16 near=0 rows=2 bytes=62 maxError=0 maxval=50000 reset=511\nsample bits=16 near=255 index=0 original=0 reconstructed=0\nsample bits=16 near=255 index=1 original=1 reconstructed=0\nsample bits=16 near=255 index=2 original=32767 reconstructed=32704\nsample bits=16 near=255 index=3 original=32768 reconstructed=32704\nsample bits=16 near=255 index=4 original=49999 reconstructed=50000\nsample bits=16 near=255 index=5 original=50000 reconstructed=50000\ncase bits=16 near=255 rows=2 bytes=53 maxError=64 maxval=50000 reset=511\n",
+      "stderr": ""
+    },
+    {
+      "step": "consume-native",
+      "cwd": "<temp>/independent-consumer",
+      "command": [
+        "<moon-toolchain>/bin/moon",
+        "run",
+        "--release",
+        "--frozen",
+        "--target",
+        "native",
+        "."
+      ],
+      "exitCode": 0,
+      "stdout": "sample bits=12 near=0 index=0 original=0 reconstructed=0\nsample bits=12 near=0 index=1 original=1 reconstructed=1\nsample bits=12 near=0 index=2 original=2047 reconstructed=2047\nsample bits=12 near=0 index=3 original=2048 reconstructed=2048\nsample bits=12 near=0 index=4 original=4092 reconstructed=4092\nsample bits=12 near=0 index=5 original=4093 reconstructed=4093\ncase bits=12 near=0 rows=2 bytes=62 maxError=0 maxval=4093 reset=511\nsample bits=12 near=255 index=0 original=0 reconstructed=0\nsample bits=12 near=255 index=1 original=1 reconstructed=0\nsample bits=12 near=255 index=2 original=2047 reconstructed=2044\nsample bits=12 near=255 index=3 original=2048 reconstructed=2044\nsample bits=12 near=255 index=4 original=4092 reconstructed=4088\nsample bits=12 near=255 index=5 original=4093 reconstructed=4088\ncase bits=12 near=255 rows=2 bytes=45 maxError=5 maxval=4093 reset=511\nsample bits=16 near=0 index=0 original=0 reconstructed=0\nsample bits=16 near=0 index=1 original=1 reconstructed=1\nsample bits=16 near=0 index=2 original=32767 reconstructed=32767\nsample bits=16 near=0 index=3 original=32768 reconstructed=32768\nsample bits=16 near=0 index=4 original=49999 reconstructed=49999\nsample bits=16 near=0 index=5 original=50000 reconstructed=50000\ncase bits=16 near=0 rows=2 bytes=62 maxError=0 maxval=50000 reset=511\nsample bits=16 near=255 index=0 original=0 reconstructed=0\nsample bits=16 near=255 index=1 original=1 reconstructed=0\nsample bits=16 near=255 index=2 original=32767 reconstructed=32704\nsample bits=16 near=255 index=3 original=32768 reconstructed=32704\nsample bits=16 near=255 index=4 original=49999 reconstructed=50000\nsample bits=16 near=255 index=5 original=50000 reconstructed=50000\ncase bits=16 near=255 rows=2 bytes=53 maxError=64 maxval=50000 reset=511\n",
+      "stderr": ""
+    }
+  ],
+  "registryHttp": [
+    {
+      "url": "https://mooncakes.io/api/v0/registry/modules/ZSY2221/moon_jpegls?version=0.1.0",
+      "command": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "12",
+        "--write-out",
+        "\n%{http_code}",
+        "https://mooncakes.io/api/v0/registry/modules/ZSY2221/moon_jpegls?version=0.1.0"
+      ],
+      "status": 404,
+      "body": {
+        "detail": "Module not found or access denied"
+      }
+    },
+    {
+      "url": "https://mooncakes.io/api/v0/registry/modules/ZSY2221/moon_jpegls",
+      "command": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "12",
+        "--write-out",
+        "\n%{http_code}",
+        "https://mooncakes.io/api/v0/registry/modules/ZSY2221/moon_jpegls"
+      ],
+      "status": 404,
+      "body": {
+        "detail": "Module not found or access denied"
+      }
+    },
+    {
+      "url": "https://mooncakes.io/api/v0/registry/modules/moonbitstack/moonimage?version=0.2.1",
+      "command": [
+        "curl",
+        "--silent",
+        "--show-error",
+        "--max-time",
+        "12",
+        "--write-out",
+        "\n%{http_code}",
+        "https://mooncakes.io/api/v0/registry/modules/moonbitstack/moonimage?version=0.2.1"
+      ],
+      "status": 200,
+      "body": {
+        "module": "moonbitstack/moonimage",
+        "visibility": "PUBLIC",
+        "version": "0.2.1",
+        "deps": {
+          "moonbitstack/moonzip": "0.4.1",
+          "moonbitstack/moonrgba": "0.2.1",
+          "moonbitstack/moonbase": "0.5.1"
+        },
+        "checksum": "08aca889285c68d50831c7fea3ee9fc6f004310ff0c2b748b6fa2071131f6d29",
+        "yanked": false,
+        "yanked_reason": null
+      }
+    }
+  ],
+  "publicInstallSucceeded": false,
+  "sourceCommit": "8c5882f292327393d36763450c886359bd6aa224",
+  "archive": {
+    "filename": "ZSY2221-moon_jpegls-0.1.0.zip",
+    "bytes": 561350,
+    "sha256": "bdb5022e5cb2b16c4edb7b801c6799582f4ccc6e0b0d80b9b2d76ef5bc08b97f",
+    "entries": 210,
+    "coreFilesSha256": {
+      "core/interleave_wbtest.mbt": "9b540ceaa54129fc639f0823c3e59e99330ca291a72911e91e6dee1ef6cc94a2",
+      "core/parameters.mbt": "699ba6399a1f380c3edb050a679efc71e7bba69483cee071d0823bff753988de",
+      "core/stream_wbtest.mbt": "f40ac87b805b06ae98a40439838748146e1a629313fe5ec8a070cb48f8bdeb79",
+      "core/multiscan_wbtest.mbt": "f2dbd7c3722cdc88720a79e242a41a43aa71f492a2f468f216ab4a5b165a804d",
+      "core/encoder.mbt": "930d182215c28ad020eea2b7c0857a112f6b07b28de72940a08e5a279dee7cf6",
+      "core/bits.mbt": "16981b7dfbfc9958fe09df948bd2a6b382c933fe90bb0e313c680e4856342ebf",
+      "core/model.mbt": "2b3569dc20120437dad75a5a4d37cacbfe1e44264360e690339c55ce2763f949",
+      "core/image.mbt": "0c838133bc1c0e423cc3797b24917054dd47318a66c7d2163892c3d369b43fe8",
+      "core/moon.pkg": "238a4021de06b0055fd9908aa81b24770b692b0a685c07e4b82fee4afed66634",
+      "core/decoder.mbt": "ee00485362a27e31ccca3f6d2da936889b9243073a969e93b2f334ce360a846c",
+      "core/markers.mbt": "b6c7331ba14da9a8bbeadba7d135111034c752a05b66a71a6ddca981101ee304",
+      "core/workspace_wbtest.mbt": "ecba57bbed9b9494027fa7b9243eae543dee8eeff411fad97f69d2cdbceab844",
+      "core/preset_wbtest.mbt": "eb125b56480a4104acc83fe58a3db8b9fd8f7858e0e0c7a9c1038ca3c5cd5826"
+    }
+  },
+  "localRegistryRequests": [
+    {
+      "path": "/api/v0/registry/modules/ZSY2221/moon_jpegls?version=0.1.0",
+      "status": 200,
+      "bytes": 169,
+      "sha256": "b6aded5bf85ab1867812c754ae36e710dffd46734c01ecbbe7520e097fcd6c63"
+    },
+    {
+      "path": "/user/ZSY2221/moon_jpegls/0.1.0.zip",
+      "status": 200,
+      "bytes": 561350,
+      "sha256": "bdb5022e5cb2b16c4edb7b801c6799582f4ccc6e0b0d80b9b2d76ef5bc08b97f"
+    }
+  ],
+  "installedCoreMatchesArchive": true,
+  "consumerManifest": "name = \"independent/moonjls_probe\"\nversion = \"0.1.0\"\n\nimport {\n  \"ZSY2221/moon_jpegls@0.1.0\",\n}\n",
+  "consumerDependencyGraph": {
+    "version": 1,
+    "status": "success",
+    "error": null,
+    "root": 1,
+    "modules": [
+      {
+        "name": "ZSY2221/moon_jpegls",
+        "version": "0.1.0",
+        "source": {
+          "kind": "registry"
+        },
+        "workspace_member": false
+      },
+      {
+        "name": "independent/moonjls_probe",
+        "version": "0.1.0",
+        "source": {
+          "kind": "local",
+          "path": "<temp>/independent-consumer"
+        },
+        "workspace_member": false
+      }
+    ],
+    "edges": [
+      {
+        "from": 1,
+        "to": 0,
+        "name": "ZSY2221/moon_jpegls",
+        "kind": "regular"
+      }
+    ],
+    "logs": []
+  },
+  "isolation": {
+    "outsideRepository": true,
+    "moonWorkUsed": false,
+    "exportedSourceRemovedBeforeConsumerCreated": true,
+    "sharedDependencyCache": false,
+    "registryStoppedBeforeBackendRuns": true
+  },
+  "backends": {
+    "js": [
+      {
+        "samples": [
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 1
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 2,
+            "original": 2047,
+            "reconstructed": 2047
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 3,
+            "original": 2048,
+            "reconstructed": 2048
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 4,
+            "original": 4092,
+            "reconstructed": 4092
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 5,
+            "original": 4093,
+            "reconstructed": 4093
+          }
+        ],
+        "bits": 12,
+        "near": 0,
+        "rows": 2,
+        "bytes": 62,
+        "maxError": 0,
+        "maxval": 4093,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 2,
+            "original": 2047,
+            "reconstructed": 2044
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 3,
+            "original": 2048,
+            "reconstructed": 2044
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 4,
+            "original": 4092,
+            "reconstructed": 4088
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 5,
+            "original": 4093,
+            "reconstructed": 4088
+          }
+        ],
+        "bits": 12,
+        "near": 255,
+        "rows": 2,
+        "bytes": 45,
+        "maxError": 5,
+        "maxval": 4093,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 1
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 2,
+            "original": 32767,
+            "reconstructed": 32767
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 3,
+            "original": 32768,
+            "reconstructed": 32768
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 4,
+            "original": 49999,
+            "reconstructed": 49999
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 5,
+            "original": 50000,
+            "reconstructed": 50000
+          }
+        ],
+        "bits": 16,
+        "near": 0,
+        "rows": 2,
+        "bytes": 62,
+        "maxError": 0,
+        "maxval": 50000,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 2,
+            "original": 32767,
+            "reconstructed": 32704
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 3,
+            "original": 32768,
+            "reconstructed": 32704
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 4,
+            "original": 49999,
+            "reconstructed": 50000
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 5,
+            "original": 50000,
+            "reconstructed": 50000
+          }
+        ],
+        "bits": 16,
+        "near": 255,
+        "rows": 2,
+        "bytes": 53,
+        "maxError": 64,
+        "maxval": 50000,
+        "reset": 511
+      }
+    ],
+    "wasm-gc": [
+      {
+        "samples": [
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 1
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 2,
+            "original": 2047,
+            "reconstructed": 2047
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 3,
+            "original": 2048,
+            "reconstructed": 2048
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 4,
+            "original": 4092,
+            "reconstructed": 4092
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 5,
+            "original": 4093,
+            "reconstructed": 4093
+          }
+        ],
+        "bits": 12,
+        "near": 0,
+        "rows": 2,
+        "bytes": 62,
+        "maxError": 0,
+        "maxval": 4093,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 2,
+            "original": 2047,
+            "reconstructed": 2044
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 3,
+            "original": 2048,
+            "reconstructed": 2044
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 4,
+            "original": 4092,
+            "reconstructed": 4088
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 5,
+            "original": 4093,
+            "reconstructed": 4088
+          }
+        ],
+        "bits": 12,
+        "near": 255,
+        "rows": 2,
+        "bytes": 45,
+        "maxError": 5,
+        "maxval": 4093,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 1
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 2,
+            "original": 32767,
+            "reconstructed": 32767
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 3,
+            "original": 32768,
+            "reconstructed": 32768
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 4,
+            "original": 49999,
+            "reconstructed": 49999
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 5,
+            "original": 50000,
+            "reconstructed": 50000
+          }
+        ],
+        "bits": 16,
+        "near": 0,
+        "rows": 2,
+        "bytes": 62,
+        "maxError": 0,
+        "maxval": 50000,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 2,
+            "original": 32767,
+            "reconstructed": 32704
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 3,
+            "original": 32768,
+            "reconstructed": 32704
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 4,
+            "original": 49999,
+            "reconstructed": 50000
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 5,
+            "original": 50000,
+            "reconstructed": 50000
+          }
+        ],
+        "bits": 16,
+        "near": 255,
+        "rows": 2,
+        "bytes": 53,
+        "maxError": 64,
+        "maxval": 50000,
+        "reset": 511
+      }
+    ],
+    "native": [
+      {
+        "samples": [
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 1
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 2,
+            "original": 2047,
+            "reconstructed": 2047
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 3,
+            "original": 2048,
+            "reconstructed": 2048
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 4,
+            "original": 4092,
+            "reconstructed": 4092
+          },
+          {
+            "bits": 12,
+            "near": 0,
+            "index": 5,
+            "original": 4093,
+            "reconstructed": 4093
+          }
+        ],
+        "bits": 12,
+        "near": 0,
+        "rows": 2,
+        "bytes": 62,
+        "maxError": 0,
+        "maxval": 4093,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 0
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 2,
+            "original": 2047,
+            "reconstructed": 2044
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 3,
+            "original": 2048,
+            "reconstructed": 2044
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 4,
+            "original": 4092,
+            "reconstructed": 4088
+          },
+          {
+            "bits": 12,
+            "near": 255,
+            "index": 5,
+            "original": 4093,
+            "reconstructed": 4088
+          }
+        ],
+        "bits": 12,
+        "near": 255,
+        "rows": 2,
+        "bytes": 45,
+        "maxError": 5,
+        "maxval": 4093,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 1
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 2,
+            "original": 32767,
+            "reconstructed": 32767
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 3,
+            "original": 32768,
+            "reconstructed": 32768
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 4,
+            "original": 49999,
+            "reconstructed": 49999
+          },
+          {
+            "bits": 16,
+            "near": 0,
+            "index": 5,
+            "original": 50000,
+            "reconstructed": 50000
+          }
+        ],
+        "bits": 16,
+        "near": 0,
+        "rows": 2,
+        "bytes": 62,
+        "maxError": 0,
+        "maxval": 50000,
+        "reset": 511
+      },
+      {
+        "samples": [
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 0,
+            "original": 0,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 1,
+            "original": 1,
+            "reconstructed": 0
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 2,
+            "original": 32767,
+            "reconstructed": 32704
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 3,
+            "original": 32768,
+            "reconstructed": 32704
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 4,
+            "original": 49999,
+            "reconstructed": 50000
+          },
+          {
+            "bits": 16,
+            "near": 255,
+            "index": 5,
+            "original": 50000,
+            "reconstructed": 50000
+          }
+        ],
+        "bits": 16,
+        "near": 255,
+        "rows": 2,
+        "bytes": 53,
+        "maxError": 64,
+        "maxval": 50000,
+        "reset": 511
+      }
+    ]
+  },
+  "verdict": "passed",
+  "archiveInspection": {
+    "entries": 210,
+    "license": "BSD-3-Clause",
+    "declaredDirectDependencies": 0
+  }
+}

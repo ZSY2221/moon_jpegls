@@ -12,7 +12,7 @@ node web/build.mjs
 python -m http.server 8000 --bind 127.0.0.1 --directory web/dist
 ~~~
 
-打开[本机工作台](http://127.0.0.1:8000/web/)，选 8 位或 16 位显微样例，设置 ILV 与 NEAR 后运行。检查扫描次序、分量尺寸、整数样本和误差，再下载码流或运行报告。原图来源、采样和显示尺度见[工作台说明](../web/README.md)。
+打开[本机工作台](http://127.0.0.1:8000/web/)，选 8 位或 16 位显微样例，设置 ILV 与 NEAR 后运行。检查扫描次序、分量尺寸、整数样本和误差，再下载码流或运行报告。原图来源、采样和显示尺度见工作台说明。选择“采样 JPEG-LS”可直接观察 H/V、三种实际分量尺寸及末组补行。[工作台说明](../web/README.md) · [16 位实跑截图](../reports/t87-m3b-20261126/public-delivery/microscopy-16-ilv2.png) · [采样结构截图](../reports/t87-m3b-20261126/public-delivery/microscopy-sampled-structure.png)
 
 ## 从初审意见到当前证据
 

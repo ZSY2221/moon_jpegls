@@ -1,0 +1,558 @@
+{
+  "build": {
+    "source": {
+      "revision": "8c5882f292327393d36763450c886359bd6aa224",
+      "dirty": false
+    },
+    "artifacts": {
+      "js": {
+        "name": "core.mjs",
+        "sha256": "67f7178198b6a1494bd3a66adb4cec196941eca174468b017b5d48d8452ebbd8"
+      },
+      "wasm-gc": {
+        "name": "core.wasm",
+        "sha256": "f7292aa28a1a40fb3ebba298cf854e6ba62caf19343e4527edf7b67c98c1ad0d"
+      }
+    }
+  },
+  "browser": {
+    "browser": "158.0.8127.37",
+    "node": "v24.20.0",
+    "responses": {
+      "/web/style.css": {
+        "sha256": "764a973c1070a1390905ab1e7277d629f59deecd176b74bc9820c2c02e8845f9",
+        "bytes": 30029
+      },
+      "/web/app.mjs": {
+        "sha256": "2d5fd86afee7bb60abc1e2bb338f38dec8a010ea5260891f5781f5d202043b8b",
+        "bytes": 51307
+      },
+      "/sdk/lunar.mjs": {
+        "sha256": "9b63d807462c0176cb9d0e38a369f688c4c7d192122c7963d20764b89b02b957",
+        "bytes": 1259
+      },
+      "/sdk/verification-report.mjs": {
+        "sha256": "316c710857034f50c09b815697d26ebc03be95887b18714db4a3f03e70836e15",
+        "bytes": 4847
+      },
+      "/sdk/worker-client.mjs": {
+        "sha256": "ea2c02a798812c267c2845c9fcb5b803154bc613ea720e1a94bd05703faab6b5",
+        "bytes": 5091
+      },
+      "/web/pgm.mjs": {
+        "sha256": "4f8fdf96bb184ee97dce809a3188bce87cb5f9ed79b4aa43878a3d8b137b27c1",
+        "bytes": 7038
+      },
+      "/web/run-report.mjs": {
+        "sha256": "90a792b567178c81bdb1e5fbe4181d6da63caf0b9917cba3e5e9d12f249fd0fc",
+        "bytes": 4697
+      },
+      "/web/labels.mjs": {
+        "sha256": "b5075b697347e2dcbbe0792750c8dfc395912c92989748eaf4cfc1b1fa5eb4f6",
+        "bytes": 22735
+      },
+      "/sdk/index.mjs": {
+        "sha256": "aa4c072d3a5151c326a78d1f913c064da02c4ce7a5de908b0289111bc1861fad",
+        "bytes": 35588
+      },
+      "/web/transport.mjs": {
+        "sha256": "61a7c555428636ea49da296ff0e647ae0e52ab94946dcec7512583744a441787",
+        "bytes": 3533
+      },
+      "/web/compatibility.mjs": {
+        "sha256": "247d9dd9b8d48cc8a39b428ab7b223a083ada49fca88ca3f97c1722fcda7b284",
+        "bytes": 3559
+      },
+      "/web/ppm.mjs": {
+        "sha256": "5ad9cefb957898d6e95bb13c270b1251f2f606c77a16c490c6fd9feddfffbb63",
+        "bytes": 11153
+      },
+      "/web/preview.mjs": {
+        "sha256": "73652362fd28e4b3a44cd257f65fd44713889ff28f396d5a92aa22b29a3c9c30",
+        "bytes": 19691
+      },
+      "/web/scan-inspector.mjs": {
+        "sha256": "dec3a84a8e63e052514c30fcbb10ef4f8d82d797314a17aa29b50185b4e86c25",
+        "bytes": 5483
+      },
+      "/web/conformance-manifest.json": {
+        "sha256": "0b3d9fb7de2aa71db5718efcb7c5dad70271b6492552649191cc766f42909d17",
+        "bytes": 34942
+      },
+      "/sdk/worker.mjs": {
+        "sha256": "891a4d08e9388bb4bb81ecbd3248caf13cab9dc47bdf22c2c7bb628e9736cf86",
+        "bytes": 7569
+      },
+      "/sdk/generated/core.wasm": {
+        "sha256": "f7292aa28a1a40fb3ebba298cf854e6ba62caf19343e4527edf7b67c98c1ad0d",
+        "bytes": 51781
+      },
+      "/sdk/generated/core.mjs": {
+        "sha256": "67f7178198b6a1494bd3a66adb4cec196941eca174468b017b5d48d8452ebbd8",
+        "bytes": 277920
+      },
+      "/web/build-info.json": {
+        "sha256": "be0865d50193631156871f70f04a076f7e38c74480b67abde08bd1dee71cddd0",
+        "bytes": 303
+      },
+      "/web/samples/lily-8.ppm": {
+        "sha256": "d0c1829a05f81a996edaf2d55f17599f0164fe9adb4c11c5c18ea58bf06f30a9",
+        "bytes": 47967
+      },
+      "/web/samples/lily-16.ppm": {
+        "sha256": "364565515c9623b242a02f92ce3dd6057fff898309c00acf6b9334cbca088239",
+        "bytes": 95921
+      },
+      "/web/samples/lily-sampled.jls": {
+        "sha256": "5d07ba5cb525ec4d89998275e562fb992102314ae4603eac477c0dc23e82224c",
+        "bytes": 18248
+      }
+    }
+  },
+  "screenshotsSha256": {
+    "microscopy-16-ilv2.png": "f4c6e44738b71ca46993e78568e9e3be1fce461bd757649511336da57650dbbb",
+    "microscopy-sampled-structure.png": "7d13eab3ad33610f22f09e6e75dc79c2f342f87ac1c93b9fcbdcb90d48da7165",
+    "microscopy-16-narrow-zh.png": "572fb860d94c97dd25b338371192c2c96c17b96b2965a84e3b07c1f1c25abadf"
+  },
+  "command": [
+    "node",
+    "web/smoke.mjs"
+  ],
+  "fixtures": "Pinned ITU Annex E and NASA LOLA test PGM enabled",
+  "exitCode": 0,
+  "observations": [
+    {
+      "test": "browser sample round-trip",
+      "backend": "wasm-gc",
+      "encodedBytes": 105655,
+      "maxError": 3
+    },
+    {
+      "test": "browser decoded PGM download",
+      "backend": "js",
+      "pgmBytes": 208017
+    },
+    {
+      "test": "browser truncated stream and invalid PGM MAXVAL",
+      "cases": 2
+    },
+    {
+      "test": "browser bounded verification, locale ARIA/title, cancel-picker guard & drag-drop",
+      "inputChunkSize": 1024
+    },
+    {
+      "test": "browser sample lossless full-range endpoints",
+      "backend": "js",
+      "maxError": 0,
+      "displayEndpoints": [
+        0,
+        0,
+        0,
+        255,
+        255,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "test": "browser UI pause, resume and cancel",
+      "inputChunkSize": 1
+    },
+    {
+      "test": "browser cancel/restart with pending host operation",
+      "blocked": "read",
+      "oldNear": 0,
+      "reads": {
+        "old": [
+          {
+            "start": 17,
+            "end": 25,
+            "bytes": 8
+          }
+        ],
+        "next": [
+          {
+            "start": 17,
+            "end": 21,
+            "bytes": 4
+          }
+        ]
+      },
+      "newPixel": 4000,
+      "reconstructed": [
+        3000,
+        3000,
+        4000,
+        4000
+      ],
+      "download": "cancel-read-new.jls"
+    },
+    {
+      "test": "browser cancel/restart with pending host operation",
+      "blocked": "read",
+      "oldNear": 255,
+      "reads": {
+        "old": [
+          {
+            "start": 17,
+            "end": 25,
+            "bytes": 8
+          }
+        ],
+        "next": [
+          {
+            "start": 17,
+            "end": 21,
+            "bytes": 4
+          }
+        ]
+      },
+      "newPixel": 4000,
+      "reconstructed": [
+        3000,
+        3000,
+        4000,
+        4000
+      ],
+      "download": "cancel-read-new.jls"
+    },
+    {
+      "test": "browser cancel/restart with pending host operation",
+      "blocked": "write",
+      "reads": {
+        "old": [],
+        "next": [
+          {
+            "start": 13,
+            "end": 17,
+            "bytes": 4
+          }
+        ]
+      },
+      "newPixel": 4000,
+      "reconstructed": [
+        3000,
+        3000,
+        4000,
+        4000
+      ],
+      "download": "cancel-write-new.jls"
+    },
+    {
+      "test": "browser cancel/restart with pending host operation",
+      "blocked": "close",
+      "reads": {
+        "old": [],
+        "next": [
+          {
+            "start": 13,
+            "end": 17,
+            "bytes": 4
+          }
+        ]
+      },
+      "newPixel": 4000,
+      "reconstructed": [
+        3000,
+        3000,
+        4000,
+        4000
+      ],
+      "download": "cancel-close-new.jls"
+    },
+    {
+      "test": "four preview rows provisional before withheld EOI",
+      "before": 4,
+      "afterRelease": "complete"
+    },
+    {
+      "test": "pending sink close gates success and page timer",
+      "fail": false,
+      "closeHeldMs": 166.20000004768372,
+      "elapsed": "293.9 ms",
+      "bytesWritten": 142176
+    },
+    {
+      "test": "pending sink close gates success and page timer",
+      "fail": true,
+      "closeHeldMs": 103.39999997615814,
+      "elapsed": "—",
+      "bytesWritten": 142176
+    },
+    {
+      "test": "narrow settings summary tracks form changes without altering completed results",
+      "viewport": [
+        390,
+        844
+      ],
+      "pgmUpdatedSummary": "NEAR 3 · JavaScript · Bounded verification",
+      "jlsUpdatedSummary": "JLS · JavaScript · Bounded verification"
+    },
+    {
+      "test": "worker ACK, manual resume and one-byte reads",
+      "before": 59,
+      "whileHeld": 59,
+      "whilePaused": 59,
+      "queue": 8,
+      "reads": 81,
+      "rows": [
+        0,
+        32767,
+        65535,
+        32768,
+        42,
+        7,
+        32,
+        0
+      ],
+      "expected": [
+        0,
+        32767,
+        65535,
+        32768,
+        42,
+        7,
+        32,
+        0
+      ],
+      "stats": {
+        "inputUnit": "bytes",
+        "outputUnit": "samples",
+        "inputConsumed": 80,
+        "outputProduced": 8,
+        "rows": 2,
+        "coreWorkspaceBytes": 8899,
+        "bridgeBufferPeakBytes": 2,
+        "inputQueueBytes": 0,
+        "outputQueueBytes": 0,
+        "inputPeakBytes": 1,
+        "outputPeakBytes": 8,
+        "firstRowInputConsumed": 59,
+        "firstRowMs": 5.100000023841858,
+        "elapsedMs": 108.5
+      }
+    },
+    {
+      "test": "browser SDK rejects invalid NEAR arguments",
+      "rejected": [
+        {
+          "backend": "js",
+          "cases": [
+            "InvalidArgument",
+            "InvalidArgument",
+            "InvalidArgument",
+            "InvalidArgument",
+            "InvalidArgument",
+            "InvalidArgument"
+          ]
+        },
+        {
+          "backend": "wasm-gc",
+          "cases": [
+            "InvalidArgument",
+            "InvalidArgument",
+            "InvalidArgument",
+            "InvalidArgument",
+            "InvalidArgument",
+            "InvalidArgument"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "browser precision-specific NEAR limits and calibrated legend",
+      "results": [
+        {
+          "bits": 16,
+          "backend": "wasm-gc",
+          "near": 4,
+          "maxError": 4,
+          "pixel": {
+            "x": 1,
+            "y": 1,
+            "original": 128,
+            "reconstructed": 132,
+            "rgba": [
+              212,
+              165,
+              98,
+              255
+            ]
+          }
+        },
+        {
+          "bits": 16,
+          "backend": "wasm-gc",
+          "near": 255,
+          "maxError": 128,
+          "pixel": {
+            "x": 1,
+            "y": 1,
+            "original": 128,
+            "reconstructed": 0,
+            "rgba": [
+              52,
+              92,
+              105,
+              255
+            ]
+          }
+        },
+        {
+          "bits": 8,
+          "backend": "js",
+          "near": 127,
+          "maxError": 127,
+          "pixel": {
+            "x": 1,
+            "y": 1,
+            "original": 128,
+            "reconstructed": 255,
+            "rgba": [
+              212,
+              165,
+              98,
+              255
+            ]
+          }
+        },
+        {
+          "bits": 12,
+          "backend": "wasm-gc",
+          "near": 255,
+          "maxError": 128,
+          "pixel": {
+            "x": 1,
+            "y": 1,
+            "original": 128,
+            "reconstructed": 0,
+            "rgba": [
+              52,
+              92,
+              105,
+              255
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "test": "M2 preset, MAXVAL, magnifier, stream accounting and compatibility views",
+      "frame": {
+        "width": 2,
+        "height": 2,
+        "bits": 9,
+        "near": 0,
+        "maxval": 300
+      },
+      "preset": {
+        "maxval": 300,
+        "t1": 5,
+        "t2": 9,
+        "t3": 23,
+        "reset": 42
+      },
+      "features": 18,
+      "annexCases": 12,
+      "acknowledgedEvents": 7
+    },
+    {
+      "test": "Real microscopy across all three ILV modes, CharLS verification, edge MCU, and narrow Chinese UI",
+      "checks": [
+        {
+          "bits": 8,
+          "ilv": 0,
+          "near": 0,
+          "backend": "wasm-gc",
+          "bytes": 34269,
+          "maxError": 0,
+          "samples": 47952
+        },
+        {
+          "bits": 8,
+          "ilv": 1,
+          "near": 3,
+          "backend": "js",
+          "bytes": 18446,
+          "maxError": 3,
+          "samples": 47952
+        },
+        {
+          "bits": 8,
+          "ilv": 2,
+          "near": 0,
+          "backend": "wasm-gc",
+          "bytes": 34018,
+          "maxError": 0,
+          "samples": 47952
+        },
+        {
+          "bits": 16,
+          "ilv": 0,
+          "near": 0,
+          "backend": "wasm-gc",
+          "bytes": 58986,
+          "maxError": 0,
+          "samples": 47952
+        },
+        {
+          "bits": 16,
+          "ilv": 1,
+          "near": 3,
+          "backend": "js",
+          "bytes": 41636,
+          "maxError": 3,
+          "samples": 47952
+        },
+        {
+          "bits": 16,
+          "ilv": 2,
+          "near": 0,
+          "backend": "wasm-gc",
+          "bytes": 58444,
+          "maxError": 0,
+          "samples": 47952
+        }
+      ],
+      "sampledRows": 195,
+      "sampledSamples": 24048
+    },
+    {
+      "test": "sampled Annex E browser decode and planar export",
+      "fixture": "T8SSE0",
+      "backend": "js",
+      "inputSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+      "outputSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec",
+      "rows": 448,
+      "samples": 98304,
+      "hostConversionBufferBytes": 512
+    },
+    {
+      "test": "sampled Annex E browser decode and planar export",
+      "fixture": "T8SSE3",
+      "backend": "wasm-gc",
+      "inputSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+      "outputSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af",
+      "rows": 448,
+      "samples": 98304,
+      "hostConversionBufferBytes": 512
+    },
+    {
+      "test": "NASA LOLA real browser downloads agree with CharLS",
+      "near": 3,
+      "maxError": 3,
+      "samples": 1036800,
+      "fixtureSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+      "jlsBytes": 999459,
+      "jlsSha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+      "pgmBytes": 2073618,
+      "pgmSha256": "0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002"
+    },
+    {
+      "status": "passed",
+      "browser": "158.0.8127.37",
+      "node": "v24.20.0"
+    }
+  ]
+}

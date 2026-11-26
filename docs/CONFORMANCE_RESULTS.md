@@ -1,6 +1,6 @@
 # T.87 Annex E 与 M2 / M3-A / M3-B 独立验证结果
 
-截至 **2026-11-26**，固定候选 [1b2d959](https://github.com/ZSY2221/moon_jpegls/commit/1b2d959015d15717b972c5a8bac35178b418d2d6) 在 Native、JS、Wasm GC 三后端完成官方 **Annex E Table E.2 12/12** 双向验收。HP 1.00 独立复验全部 12 条，CharLS Wasm 0.10.0 独立复验其中 10 条。E.2-7/8 的 CharLS 采样能力为 `reference_unsupported`。 [HP 全部用例](../reports/t87-m3b-20261126/annex-e-final-hp.json) · [CharLS 适用用例](../reports/t87-m3b-20261126/annex-e-final-charls.json) · [CharLS 采样能力](../reports/t87-m3b-20261126/annex-e-final-charls-sampling.json)
+截至 **2026-11-26**，固定候选 [8c5882f](https://github.com/ZSY2221/moon_jpegls/commit/8c5882f292327393d36763450c886359bd6aa224) 在 Native、JS、Wasm GC 三后端完成官方 **Annex E Table E.2 12/12** 双向验收。HP 1.00 独立复验全部 12 条，CharLS Wasm 0.10.0 独立复验其中 10 条。E.2-7/8 的 CharLS 采样能力为 `reference_unsupported`。 [HP 全部用例](../reports/t87-m3b-20261126/public-delivery/annex-e-hp.json) · [CharLS 适用用例](../reports/t87-m3b-20261126/public-delivery/annex-e-charls.json) · [CharLS 采样能力](../reports/t87-m3b-20261126/public-delivery/annex-e-charls-sampling.json)
 
 ## 1. 官方 Annex E Table E.2 逐项结果（全部 12 条流）
 

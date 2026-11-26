@@ -93,3 +93,24 @@ node "$out/verify_lunar_fixed.mjs" --project . --pgm '../moon_jpegls/.evidence/r
 ## GitHub
 
 产品提交 1b2d959015d15717b972c5a8bac35178b418d2d6 已正常推送。远端 main 查询为 3ebd55f09ebdb5b661ea2bd08fcab764e4f51d7c。产品和交接提交各自的运行绑定各自的 head SHA。 [产品提交 Verification](https://github.com/ZSY2221/moon_jpegls/actions/runs/45777394539) · [工作分支 Actions](https://github.com/ZSY2221/moon_jpegls/actions?query=branch%3Aantigravity%2Ft87-m3b-20261125)
+
+## 公开交付（2026-11-26）
+
+- 本轮仍在 `D:\Program Files\GPT_project\moon_jpegls-antigravity` 的 `antigravity/t87-m3b-20261125` 工作分支，开始时洁净 HEAD `6e9552c5fece553137868ce39d97c5ea6726c891`。原目录未参与写入。冻结干净产品源码 `8c5882f292327393d36763450c886359bd6aa224`，Git tree `9cd1048e8a20aef76f793ebcf0693340e744a122`。后续证据提交记录实测并更新 Web 构建读取的能力清单。核心、SDK、CLI、Web 代码与构建配置绑定产品提交，待合入 HEAD 与 main 各有自己的精确 SHA CI。 [产品提交](https://github.com/ZSY2221/moon_jpegls/commit/8c5882f292327393d36763450c886359bd6aa224) · [PR #2 和最新分支](https://github.com/ZSY2221/moon_jpegls/pull/2) · [main](https://github.com/ZSY2221/moon_jpegls/tree/main)
+- 固定候选本机重新运行三后端核心（各 26/26、deny-warn）、Native 行交付/多扫描/尾部/采样黄金、M2 与 M3-A 黄金、SDK/TS、Worker 21/21 和 Node 26/26。全部 12 项 HP 完整双向通过，36 份候选流均与官方逐字节一致。CharLS Wasm 10 项双向通过，E.2-7/8 的能力探针退出 1 且逐项是 `reference_unsupported`。388 组完整 M2 与固定 LOLA 独立三后端矩阵仍为采样候选实跑，本轮另用 Chrome 和 CharLS 核对 LOLA 下载的 1,036,800 个样本。[本机门禁](../reports/t87-m3b-20261126/public-delivery/local-gates.json) · [本机 HP](../reports/t87-m3b-20261126/public-delivery/annex-e-hp.json) · [本机 CharLS](../reports/t87-m3b-20261126/public-delivery/annex-e-charls.json) · [采样参考能力](../reports/t87-m3b-20261126/public-delivery/annex-e-charls-sampling.json)
+- CI 在验证步骤实际获取固定 ITU 附件并核验各输入哈希，三后端实际编解码 E.2-1–12。CharLS 即时核对其中 10 条。E.2-7/8 比对官方码流和来自采样候选已保留的 HP 重建哈希。全部检查通过的 main 构建经 Actions 发布 Pages。main 检查和部署的绑定 SHA 见当前 run 记录。 [PR 检查](https://github.com/ZSY2221/moon_jpegls/pull/2/checks) · [main Actions](https://github.com/ZSY2221/moon_jpegls/actions/workflows/verification.yml?query=branch%3Amain) · [部署记录](https://github.com/ZSY2221/moon_jpegls/deployments) · [工作台](https://zsy2221.github.io/moon_jpegls/web/) · [在线构建标识](https://zsy2221.github.io/moon_jpegls/web/build-info.json)
+- Chrome 158 实跑 8/16 位显微图像的 ILV=0/1/2，六次全量比对各 47,952 个整数样本和每分量误差，检查实际下载码流、报告及 16 位整数读数。末组补行样例交付 195 行和 24,048 个样本。真实工作台加载资产哈希、样本、运行命令、窄屏截图存入同一目录。页面在本次执行中显示逐样本比较，兼容视图使用固定候选的独立参考证据。 [浏览器结果](../reports/t87-m3b-20261126/public-delivery/workbench-chrome.json) · [显微图像](../reports/t87-m3b-20261126/public-delivery/microscopy-16-ilv2.png) · [边缘 MCU](../reports/t87-m3b-20261126/public-delivery/microscopy-sampled-structure.png) · [窄屏中文](../reports/t87-m3b-20261126/public-delivery/microscopy-16-narrow-zh.png)
+- Mooncakes `0.1.0` 已在固定候选洁净打包，仓库外三后端离线消费通过。匿名元数据两次 404、在线安装退出 255，线上发布待该包的正式授权。 [候选包与注册表](MOONCAKES_RELEASE.md)
+- 复审事实清单附源码和标准路线，负责人依据飞书表单独立撰写并提交申报。下一工程入口是独立 Pt 专项，继承本次品控证据，新增专属独立向量。 [事实清单](../submission/2026-11/FACTS_FOR_APPLICANT.md) · [路线](ROADMAP.md)
+
+本轮本机复跑沿用上节命令，Native 目标目录换为 `.tools/wsl-build-codex-public`。官方下载及参考附件可同时获取。
+
+~~~powershell
+python scripts/fetch_annex_e.py --fixtures .tools/annex-e-ci --hp-reference .tools/annex-e-hp
+$native = '.tools/wsl-build-codex-public/native/release/build/cmd/moonjls/moonjls.exe'
+$d = 'OpenAtom-Validation-2204-20261120'
+node scripts/validate_annex_e.mjs --fixtures .tools/annex-e-ci --native-exe $native --native-wsl $d --hp-reference .tools/annex-e-hp
+node scripts/validate_annex_e.mjs --fixtures .tools/annex-e-ci --native-exe $native --native-wsl $d --cases 1,2,3,4,5,6,9,10,11,12
+~~~
+
+浏览器证据的 `MOONJLS_ANNEX_FIXTURES` 指向 `.tools/annex-e-ci`，`MOONJLS_LOLA` 指向核验过的 PGM，按上节运行 `node web/smoke.mjs`。设置 `MOONJLS_SMOKE_RECEIPT` 和 `MOONJLS_PRESENTATION_SCREENSHOTS` 输出资产哈希和截图。不含公开发布资料的原始运行收据与 ZIP 保存于本地 `.evidence/codex-m3b-public-delivery/`。

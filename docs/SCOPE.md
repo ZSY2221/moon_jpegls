@@ -1,6 +1,6 @@
 # JPEG-LS Support Scope (M3-B Sampling vs. T.87 Part 1 Target)
 
-**Final Standard Target**: MoonJLS targets the **complete ITU-T T.87 (06/1998) / ISO/IEC 14495-1 JPEG-LS Part 1** encoding, decoding, and data-format capabilities (including both interchange format and abbreviated/table-specification formats, verified via §8 and Annex E). **The current M3-B candidate delivers interleaved scans, H/V sampling, and edge MCU handling.** [Authoritative T.87 Conformance Plan](T87_CONFORMANCE_PLAN.md) · [Compatibility Roadmap](ROADMAP.md)
+**Final Standard Target**: MoonJLS targets the **complete ITU-T T.87 (06/1998) / ISO/IEC 14495-1 JPEG-LS Part 1** encoding, decoding, and data-format capabilities (including both interchange format and abbreviated/table-specification formats, verified via §8 and Annex E). **The current M3-B delivery includes interleaved scans, H/V sampling, and edge MCU handling.** [Authoritative T.87 Conformance Plan](T87_CONFORMANCE_PLAN.md) · [Compatibility Roadmap](ROADMAP.md)
 
 | Dimension | Current M3-B Profile (2026-11-26) | Final T.87 Part 1 Target (M3-B through M5) |
 | --- | --- | --- |
@@ -25,6 +25,6 @@
 - Grayscale compatibility entrypoints (`encode`, `decode`, `decode_with_preset`, `Encoder::new`) remain intact; single-component `decode` rejects multi-component streams cleanly with `UnsupportedFeature`. Multi-component entrypoints (`Encoder::new_scans`, `encode_scans`, `decode_multicomponent`, `inspect`) expose `FrameInfo`, `ScanInfo`, `StreamStructure`, and `ErrorLocation`. [Public API](API.md)
 - Streaming decode returns `Done` strictly after `EOI`, delivers Component 1 rows immediately before Scan 2/`EOI` arrive, keeps pre-EOI rows provisional, and rejects trailing bytes by default.
 - Verification datasets are explicitly separated by scope:
-  - **Annex E Table E.2 (12/12)**. The same candidate passed encode and decode on JS, Wasm GC, and Native against HP 1.00. CharLS Wasm independently verified ten cases and returned `reference_unsupported` for E.2-7/8. [Conformance Results](CONFORMANCE_RESULTS.md)
+  - **Annex E Table E.2 (12/12)**. The same candidate passed encode and decode on JS, Wasm GC, and Native against HP 1.00. CharLS Wasm independently verified ten cases and returned `reference_unsupported` for E.2-7/8. [Conformance Results](CONFORMANCE_RESULTS.md) · [Workbench checks](../reports/t87-m3b-20261126/public-delivery/workbench-chrome.json)
   - **M3-A Golden Suite** (`scripts/verify_m3a_golden.mjs` in CI): 7 positive cases (2/3/4 components, non-contiguous IDs, reordered scans, cross-scan `LSE1`/zero-reset/per-scan `NEAR`, inter-scan `COM`/`DRI=0`) + 7 negative streams across all 3 backends & CharLS Wasm where applicable.
   - **M2 Synthetic Matrix & CI Golden** (`scripts/test_m2.py`: 388 positive + 18 variants + 7 invalid encodes + 6 Native PGM; `scripts/verify_m2_golden.mjs` in CI: 12 + 18 + 7 + 4) plus **640 full-range NEAR matrix** (`scripts/validate.py --near-matrix`). [M3-A Acceptance Summary](../reports/t87-m3a-20261125/README.md)
