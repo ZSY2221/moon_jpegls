@@ -119,7 +119,9 @@ export function renderScanInspector({
     tr.append(
       el('td', 'mono', scan.scanIndex),
       delivery,
-      el('td', 'mono', scan.pointTransform
+      el('td', 'mono', scan.mappingSelectors
+        ? translate('mappedNear', scan.near, scan.mappingSelectors.join('/'))
+        : scan.pointTransform
         ? `${translate('scanPt', scan.pointTransform)} · ${translate('transformedBound', scan.near, reconstructionErrorBound(scan.near, scan.pointTransform))}`
         : `${scan.near} · ${translate('scanPt', scan.pointTransform)}`),
       el('td', 'mono', presetText),

@@ -169,14 +169,41 @@ pub fn Decoder::preset(self : Decoder) -> Preset? {
 }
 
 ///|
-/// Borrows the last reconstructed row after inverse point transform. Copy it before another `step`.
+/// Returns the SOS mapping selector for the given component slot. Zero denotes identity and -1 denotes an invalid slot.
+pub fn Decoder::scan_mapping_selector(
+  self : Decoder,
+  scan_index : Int32,
+  slot : Int32,
+) -> Int32 {
+  guard scan_index >= 0 && scan_index < self.header.scan_selectors.length() else {
+    return -1
+  }
+  let selectors = self.header.scan_selectors[scan_index]
+  guard slot >= 0 && slot < selectors.length() else { return -1 }
+  selectors[slot]
+}
+
+///|
+/// Mapping selector of the last delivered row, or zero when unmapped or unavailable.
+pub fn Decoder::current_row_mapping_selector(self : Decoder) -> Int32 {
+  match self.scan {
+    Some(scan) if scan.last_row_idx >= 0 =>
+      self.scan_mapping_selector(self.current_scan, scan.last_row_comp).max(0)
+    _ => 0
+  }
+}
+
+///|
+/// Borrows the last reconstructed row after sample mapping or inverse point transform.
+/// Copy it before another `step`.
 pub fn Decoder::row(self : Decoder) -> FixedArray[Int32] {
   match self.scan {
     Some(scan) if scan.last_row_idx >= 0 =>
-      if scan.point_transform == 0 {
-        scan.decoded_row()
-      } else {
+      if self.restored_rows.length() > 0 &&
+        self.restored_rows[scan.last_row_comp].length() > 0 {
         self.restored_rows[scan.last_row_comp]
+      } else {
+        scan.decoded_row()
       }
     _ => []
   }
@@ -202,8 +229,14 @@ fn Decoder::start_scan(
   self.current_scan = self.scans.length() - 1
   let scan = Scan::new_interleaved(info, scan_info, params)
   let restored : Array[FixedArray[Int32]] = []
-  if scan.point_transform != 0 {
-    for width in scan.comp_widths {
+  let selectors = self.header.scan_selectors[self.current_scan]
+  if scan.point_transform != 0 || selectors.any(tid => tid != 0) {
+    for slot in 0..<scan.comp_widths.length() {
+      let width = if scan.point_transform != 0 || selectors[slot] != 0 {
+        scan.comp_widths[slot]
+      } else {
+        0
+      }
       restored.push(FixedArray::make(width, 0))
     }
   }
@@ -214,7 +247,7 @@ fn Decoder::start_scan(
 ///|
 pub fn Decoder::workspace_bytes(self : Decoder) -> Int32 {
   let mut overhead = self.header.segment.length() +
-    4 * self.header.preset.length()
+    4 * self.header.preset.length() + self.header.mapping_bytes
   for row in self.restored_rows {
     overhead += 4 * row.length()
   }
@@ -547,12 +580,22 @@ pub fn Decoder::step(
             self.phase = if scan.is_finished() { Padding } else { Sample }
             if is_real {
               let pt = scan.point_transform
+              let tid = self.current_row_mapping_selector()
+              // Prediction rows always retain the reconstructed coding-domain indices.
               if pt != 0 {
                 let coded = scan.decoded_row()
                 let restored = self.restored_rows[scan.last_row_comp]
-                // Keep the inverse transform outside the prediction rows.
                 for x in 0..<coded.length() {
                   restored[x] = coded[x] << pt
+                }
+              } else if tid != 0 && self.header.mappings.get(tid) is Some(table) {
+                let coded = scan.decoded_row()
+                let restored = self.restored_rows[scan.last_row_comp]
+                // Every non-final segment of the supported one-byte table has 65,530 entries.
+                for x in 0..<coded.length() {
+                  let index = coded[x]
+                  let chunk = table.chunks[index / mapping_payload_limit]
+                  restored[x] = chunk[index % mapping_payload_limit].to_int()
                 }
               }
               break RowReady

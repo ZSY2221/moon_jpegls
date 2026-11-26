@@ -95,6 +95,8 @@ jobs:
           node scripts/validate_annex_e.mjs --check-manifest
           node scripts/verify_m2_golden.mjs --native-exe "$NATIVE_BINARY" | tee .evidence/ci/m2-golden.json
           node scripts/verify_m3a_golden.mjs --native-exe "$NATIVE_BINARY" --with-oracle | tee .evidence/ci/m3a-golden.json
+      - name: Verify embedded mapping tables
+        run: node scripts/verify_mapping_tables.mjs --native-exe "$NATIVE_BINARY" | tee .evidence/ci/embedded-mapping.json
       - name: Verify the separate point transform vectors
         run: |
           node scripts/verify_point_transform.mjs --native-exe "$NATIVE_BINARY" | tee .evidence/ci/point-transform.json

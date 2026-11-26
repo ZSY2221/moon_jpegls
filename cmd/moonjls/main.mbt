@@ -444,8 +444,8 @@ async fn buffer_row(
 }
 
 ///|
-fn reconstruction_maxval(coded_maxval : Int32, pt : Int32) -> Int32 {
-  (coded_maxval << pt).min(65535)
+fn reconstruction_maxval(coded_maxval : Int32, pt : Int32, mapping_selector : Int32) -> Int32 {
+  if mapping_selector != 0 { 255 } else { (coded_maxval << pt).min(65535) }
 }
 
 ///|
@@ -466,6 +466,7 @@ fn preset_json(p : @jls.Preset) -> String {
 
 ///|
 fn structure_json(
+  decoder : @jls.Decoder,
   st : @jls.StreamStructure,
   frame : @jls.Frame,
   preset : @jls.Preset,
@@ -516,8 +517,21 @@ fn structure_json(
       cidxs.write_string("\{s.component_indices[ci]}")
     }
     cidxs.write_char(']')
+    let selectors = Array::makei(s.component_ids.length(), slot => decoder.scan_mapping_selector(i, slot))
+    let mapping = if selectors.any(tid => tid != 0) {
+      let values = StringBuilder()
+      values.write_string(",\"mappingSelectors\":[")
+      for slot in 0..<selectors.length() {
+        if slot > 0 { values.write_char(',') }
+        values.write_string("\{selectors[slot]}")
+      }
+      values.write_char(']')
+      values.to_string()
+    } else {
+      ""
+    }
     scans.write_string(
-      "{\"scanIndex\":\{s.scan_index},\"componentIndex\":\{s.component_index},\"componentId\":\{s.component_id},\"componentIndices\":\{cidxs.to_string()},\"componentIds\":\{cids.to_string()},\"near\":\{s.near},\"interleave\":\{s.interleave},\"pointTransform\":\{s.point_transform},\"preset\":\{preset_json(s.preset)},\"headerOffset\":\{s.header_offset},\"entropyOffset\":\{s.entropy_offset},\"endOffset\":\{s.end_offset},\"rows\":\{s.rows_decoded},\"completed\":\{comp_done}}",
+      "{\"scanIndex\":\{s.scan_index},\"componentIndex\":\{s.component_index},\"componentId\":\{s.component_id},\"componentIndices\":\{cidxs.to_string()},\"componentIds\":\{cids.to_string()},\"near\":\{s.near},\"interleave\":\{s.interleave},\"pointTransform\":\{s.point_transform}\{mapping},\"preset\":\{preset_json(s.preset)},\"headerOffset\":\{s.header_offset},\"entropyOffset\":\{s.entropy_offset},\"endOffset\":\{s.end_offset},\"rows\":\{s.rows_decoded},\"completed\":\{comp_done}}",
     )
   }
   scans.write_char(']')
@@ -608,7 +622,7 @@ async fn decode_stream(
         }
         if sink is Some(sink) {
           let pt = decoder.current_scan().map(scan => scan.point_transform).unwrap_or(0)
-          let output_maxval = reconstruction_maxval(preset.maxval, pt)
+          let output_maxval = reconstruction_maxval(preset.maxval, pt, decoder.current_row_mapping_selector())
           let row = decoder.row()
           let sample_bytes = if raw32 {
             4
@@ -740,7 +754,7 @@ async fn decode_stream(
   let workspace = decoder.workspace_bytes()
   if json {
     let report = structure_json(
-      st, frame, preset, rows, consumed, workspace, source.high_water, first_row_at,
+      decoder, st, frame, preset, rows, consumed, workspace, source.high_water, first_row_at,
     )
     @stdio.stdout.text.write(report[:])
   } else {
@@ -1523,7 +1537,7 @@ async fn dispatch(args : ArrayView[String]) -> Unit {
                 first_row_at = total_in
               }
               let pt = decoder.current_scan().map(scan => scan.point_transform).unwrap_or(0)
-              let output_maxval = reconstruction_maxval(preset.maxval, pt)
+              let output_maxval = reconstruction_maxval(preset.maxval, pt, decoder.current_row_mapping_selector())
               let row = decoder.row()
               validate_reconstruction(row, output_maxval, pt)
               let ci = decoder.current_component_index()

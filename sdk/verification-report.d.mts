@@ -30,19 +30,22 @@ export interface VerificationReport {
   input: Input | null;
   output: Output | null;
   frame: (Omit<Frame, 'maxval' | 'preset' | 'components' | 'scans'> & {
-    maxval: number; components: number; scans: number; interleave: number; pointTransform: number; mapping: false;
+    maxval: number; components: number; scans: number; interleave: number; pointTransform: number; mapping: boolean;
     componentGeometry?: readonly {
       id: number; hSampling: number; vSampling: number; width: number; height: number; sampleOffset: number;
     }[];
     preset: Preset | null;
-    scanParameters?: { scanIndex: number; near: number; pointTransform: number; reconstructionErrorBound: number }[];
+    scanParameters?: {
+      scanIndex: number; near: number; pointTransform: number;
+      reconstructionErrorBound: number | null; mappingSelectors?: readonly number[];
+    }[];
   }) | null;
   stages: Record<'encode' | 'decode' | 'compare', Stage>;
   samples: {
     total: number | null; verified: number | null;
     /** Maximum observed error and bound in original integer units. */
     maxError: number | null; errorBound: number | null; unit: 'sample';
-    /** Entropy-coded sample domain, present for a transformed frame. */
+    /** Entropy-coded sample domain, present for a transformed or mapped frame. */
     coded?: { maxError: number | null; errorBound: number };
   };
   reference: { status: Stage; name: string | null; version: string | null };

@@ -275,9 +275,11 @@ function renderPixel() {
   const scan = firstScan(presented);
   const near = selectedPixel?.near ?? scan?.near ?? presented?.near;
   const pt = selectedPixel?.pointTransform ?? scan?.pointTransform ?? 0;
-  const nearText = selectedPixel && pt
-    ? translate('transformedBound', selectedPixel.codedNear, near)
-    : near === undefined || near === null ? '—' : String(near);
+  const nearText = selectedPixel?.mappingSelector
+    ? translate('mappedNear', selectedPixel.codedNear, selectedPixel.mappingSelector)
+    : selectedPixel && pt
+      ? translate('transformedBound', selectedPixel.codedNear, near)
+      : near === undefined || near === null ? '—' : String(near);
   setText('inspect-near', selectedPixel || frame ? nearText : '—');
   const compWrap = get('inspect-components');
   if (!selectedPixel) {
@@ -313,7 +315,8 @@ function renderPixel() {
         const card = document.createElement('span');
         card.className = 'inspect-comp-card';
         card.dataset.compIndex = String(c.index);
-        const limit = c.pointTransform ? translate('transformedBound', c.codedNear, c.near) : `NEAR ${c.near ?? 0}`;
+        const limit = c.mappingSelector ? translate('mappedNear', c.codedNear, c.mappingSelector)
+          : c.pointTransform ? translate('transformedBound', c.codedNear, c.near) : `NEAR ${c.near ?? 0}`;
         card.textContent = c.original === undefined
           ? `${c.label}: ${formatInt(c.reconstructed)} (${limit})`
           : `${c.label}: ${formatInt(c.original)} -> ${formatInt(c.reconstructed)} (|e|=${formatInt(c.error)}, ${limit})`;
@@ -771,6 +774,7 @@ function launch(job, options) {
 async function decodeFile(job, file, settings, sink) {
   let configured = false;
   let planes = null;
+  let pgmFrame;
   let componentCount = 1;
   const wide = job.sampleFormat === 'u32';
   const sampleBytes = wide ? 4 : 2;
@@ -794,7 +798,8 @@ async function decodeFile(job, file, settings, sink) {
         job.outputName = `${baseName}.pgm`;
         job.outputFormat = 'pgm';
         job.hostConversionBufferBytes = 0;
-        await writeOutput(job, sink, pgmHeader(frame));
+        pgmFrame = meta.mappingSelector ? { ...frame, maxval: 255 } : frame;
+        await writeOutput(job, sink, pgmHeader(pgmFrame));
       } else if (componentCount === 3 && !job.sampledGeometry) {
         job.outputName = `${baseName}.ppm`;
         job.outputFormat = 'ppm';
@@ -807,9 +812,10 @@ async function decodeFile(job, file, settings, sink) {
         job.hostConversionBufferBytes = 0;
       }
     }
-    job.pnmOutputMaxval = Math.max(job.pnmOutputMaxval ?? 0, sampleMaximum({
+    const rowMaxval = meta.mappingSelector ? 255 : sampleMaximum({
       ...frame, pointTransform: meta.pointTransform, maxval: meta.preset?.maxval ?? frame.maxval,
-    }));
+    });
+    job.pnmOutputMaxval = Math.max(job.pnmOutputMaxval ?? 0, rowMaxval);
     draw(job, index, row, null, meta);
     const compIdx = meta.componentIndex;
     if (planes) {
@@ -826,7 +832,7 @@ async function decodeFile(job, file, settings, sink) {
       job.hostConversionBufferBytes = Math.max(job.hostConversionBufferBytes, samples.byteLength);
       await writeOutput(job, sink, samples, (offsets[compIdx] + index * widths[compIdx]) * sampleBytes);
     } else {
-      await writeOutput(job, sink, pgmRow(row, frame));
+      await writeOutput(job, sink, pgmRow(row, pgmFrame));
     }
   };
   const result = await launch(job, {
@@ -840,6 +846,7 @@ async function decodeFile(job, file, settings, sink) {
         componentId: event.componentId ?? 1,
         near: event.near ?? event.frame?.near,
         pointTransform: event.pointTransform ?? 0,
+        mappingSelector: event.mappingSelector,
         preset: event.preset,
       };
       if (event.type === 'row') {

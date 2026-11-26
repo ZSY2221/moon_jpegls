@@ -10,6 +10,16 @@ priv enum HeaderPhase {
 }
 
 ///|
+priv struct MappingTable {
+  width : Int32
+  mut entries : Int32
+  chunks : Array[FixedArray[Byte]]
+}
+
+///|
+let mapping_payload_limit : Int32 = 65530
+
+///|
 priv struct HeaderParser {
   limits : Limits
   segment : FixedArray[Byte]
@@ -33,6 +43,11 @@ priv struct HeaderParser {
   markers : Array[MarkerRecord]
   mut last_component_id : Int32
   preset : FixedArray[Int32]
+  mappings : Map[Int32, MappingTable]
+  scan_selectors : Array[Array[Int32]]
+  mut continuation_tid : Int32
+  mut mapping_chunk : FixedArray[Byte]
+  mut mapping_bytes : Int32
 }
 
 ///|
@@ -60,6 +75,11 @@ fn HeaderParser::new(limits : Limits) -> HeaderParser {
     markers: [],
     last_component_id: -1,
     preset: FixedArray::make(5, 0),
+    mappings: {},
+    scan_selectors: [],
+    continuation_tid: 0,
+    mapping_chunk: [],
+    mapping_bytes: 0,
   }
 }
 
@@ -186,16 +206,14 @@ fn HeaderParser::preset_segment(self : HeaderParser) -> Unit raise CodecError {
       self.record_marker(0xF8, self.marker_offset, self.length + 4, scan_hint, 1)
     }
     0 => raise InvalidData("LSE identifier zero")
-    2 => {
-      guard self.length >= 4 &&
-        self.at(1) > 0 &&
-        self.at(2) > 0 &&
-        (self.length - 3) % self.at(2) == 0 else {
-        raise InvalidData("mapping table fields or length")
-      }
-      raise UnsupportedFeature("mapping table")
+    2 | 3 => {
+      guard self.length >= 4 else { raise InvalidData("mapping table length") }
+      let scan_hint = if self.bits == 0 { -1 } else { self.scan_count }
+      self.record_marker(
+        0xF8, self.marker_offset, self.length + 4, scan_hint, self.at(0),
+      )
+      self.mapping_chunk = []
     }
-    3 => raise InvalidData("mapping table continuation without a specification")
     4 => {
       let bytes = self.at(1)
       guard bytes >= 2 && bytes <= 4 && self.length == 2 + 2 * bytes else {
@@ -213,6 +231,53 @@ fn HeaderParser::preset_segment(self : HeaderParser) -> Unit raise CodecError {
 }
 
 ///|
+fn HeaderParser::start_mapping(
+  self : HeaderParser,
+  width : Int32,
+) -> Unit raise CodecError {
+  let tid = self.at(1)
+  let kind = self.at(0)
+  let bytes = self.length - 3
+  guard tid > 0 && width > 0 && bytes > 0 && bytes % width == 0 else {
+    raise InvalidData("mapping table fields or length")
+  }
+  let previous = self.mappings.get(tid)
+  let capacity = mapping_payload_limit / width
+  let table = if kind == 3 {
+    guard self.continuation_tid == tid && previous is Some(table) &&
+      table.width == width && table.entries % capacity == 0 else {
+      raise InvalidData("mapping table continuation does not match its predecessor")
+    }
+    table
+  } else {
+    { width, entries: 0, chunks: [], }
+  }
+  let entries = bytes / width
+  guard entries <= 65536 - table.entries else {
+    raise InvalidData("too many mapping table entries")
+  }
+  let cost = self.length + 4
+  guard cost <= self.limits.max_metadata_bytes - self.skipped else {
+    raise ResourceLimit("metadata and mapping table budget")
+  }
+  self.skipped += cost
+  if kind == 2 {
+    if previous is Some(old) && old.width == 1 {
+      self.mapping_bytes -= old.entries
+    }
+    self.mappings[tid] = table
+  }
+  table.entries += entries
+  if width == 1 {
+    let chunk = FixedArray::make(bytes, b'\x00')
+    table.chunks.push(chunk)
+    self.mapping_chunk = chunk
+    self.mapping_bytes += bytes
+  }
+  self.continuation_tid = tid
+}
+
+///|
 fn HeaderParser::scan_segment(
   self : HeaderParser,
   entropy_offset : Int64,
@@ -225,6 +290,7 @@ fn HeaderParser::scan_segment(
   let mut any_mapping = false
   let selected : Array[Int32] = []
   let comp_ids : Array[Int32] = []
+  let selectors : Array[Int32] = []
   for i in 0..<count {
     let cs = self.at(1 + 2 * i)
     let tm = self.at(2 + 2 * i)
@@ -239,6 +305,7 @@ fn HeaderParser::scan_segment(
     }
     selected.push(comp_idx)
     comp_ids.push(cs)
+    selectors.push(tm)
     if tm != 0 {
       any_mapping = true
     }
@@ -303,13 +370,28 @@ fn HeaderParser::scan_segment(
     InvalidArgument(message) => raise InvalidData(message)
     error => raise error
   }
-  guard !any_mapping else { raise UnsupportedFeature("mapping selector") }
+  for i in 0..<selectors.length() {
+    let tid = selectors[i]
+    if tid != 0 {
+      self.last_component_id = comp_ids[i]
+      guard self.mappings.get(tid) is Some(table) else {
+        raise UnsupportedFeature("mapping selector needs an external table")
+      }
+      guard table.entries == effective.maxval + 1 else {
+        raise InvalidData("mapping table size does not match the active MAXVAL")
+      }
+      guard table.width == 1 else {
+        raise UnsupportedFeature("mapping table entries wider than one byte")
+      }
+    }
+  }
   let scan_index = self.scan_count
   for ci in selected {
     self.seen_components[ci] = true
   }
   self.scanned_count += count
   self.scan_count += 1
+  self.scan_selectors.push(selectors)
   self.record_marker(
     0xDA,
     self.marker_offset,
@@ -395,6 +477,9 @@ fn HeaderParser::accept(
         return None
       }
       self.marker_offset = stream_pos - 2L
+      if byte != 0xF8 {
+        self.continuation_tid = 0
+      }
       if !is_metadata(byte) {
         match byte {
           0xF7 | 0xF8 | 0xDA | 0xDD => ()
@@ -445,8 +530,20 @@ fn HeaderParser::accept(
       self.phase = Payload
     }
     Payload => {
-      if !is_metadata(self.marker) && self.index < self.segment.length() {
+      if self.marker == 0xF8 && self.index == 0 && byte != 2 && byte != 3 {
+        self.continuation_tid = 0
+      }
+      if self.marker == 0xF8 && self.index >= 3 &&
+        (self.at(0) == 2 || self.at(0) == 3) {
+        if self.mapping_chunk.length() > 0 {
+          self.mapping_chunk[self.index - 3] = byte.to_byte()
+        }
+      } else if !is_metadata(self.marker) && self.index < self.segment.length() {
         self.segment[self.index] = byte.to_byte()
+        if self.marker == 0xF8 && self.index == 2 &&
+          (self.at(0) == 2 || self.at(0) == 3) {
+          self.start_mapping(byte)
+        }
       }
       self.index += 1
       if self.index == self.length {

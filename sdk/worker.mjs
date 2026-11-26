@@ -125,6 +125,7 @@ async function run(message) {
         height: rowMeta?.height ?? info.height,
         interleave: rowMeta?.interleave ?? 0,
         pointTransform: rowMeta?.pointTransform ?? 0,
+        ...(rowMeta?.mappingSelector ? { mappingSelector: rowMeta.mappingSelector } : {}),
         layout: rowMeta?.layout ?? 'planar',
         width: rowMeta?.width ?? stride,
         stride,

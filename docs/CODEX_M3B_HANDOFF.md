@@ -127,3 +127,10 @@ node scripts/validate_annex_e.mjs --fixtures .tools/annex-e-ci --native-exe $nat
 - 独立 Python 参考与官方 E.2-7/8 码流及 HP 重建校准后，验证 16 条采样、交错和混合扫描向量。JS/Wasm GC 分别通过 48 次编码与 48 次解码，Native 通过 45 次编码与 48 次解码。Native CLI 混合 ILV 补充向量执行解码方向。三后端各再通过 24 次替代补行解码。[逐条参考与候选记录](../reports/t87-pt-20261126/sampled-point-transform.json)
 - Native 的 `raw32-le`/`raw32-be`、SDK/Worker 的 `sampleFormat: 'u32'` 和浏览器宽平面下载已实测。非零 Pt 采样的有效交付为 11 行、47 样本，消费 5 补行，重建整数为 65540。FFmpeg、HP 与 CharLS 的非零 Pt 参考范围见专项文档。[Pt 验收与复跑](POINT_TRANSFORM_RESULTS.md) · [Native 和浏览器证据](../reports/t87-pt-20261126/wide-release-regressions.json)
 - 全部 12 条官方 Pt=0 回归由本机 HP 实跑，复跑 12 条独立 Pt 向量、三后端核心、M2、Native 流式、Worker/SDK/TS 和 Chrome。证据提交更新 Web 的能力清单绑定，分支合并门禁和发布分别以实际 Actions SHA 核对。[PR #3](https://github.com/ZSY2221/moon_jpegls/pull/3) · [检查](https://github.com/ZSY2221/moon_jpegls/pull/3/checks) · [发布](https://github.com/ZSY2221/moon_jpegls/deployments)
+
+## 内嵌映射解码增量（2026-11-26）
+
+- 从 Pt 已合入的 `caf99016798e1e4aa23f12426df2266278401825` 在同一洁净工作树创建 `codex/t87-embedded-mapping-20261126`。产品为 `3ffdf629b9ebe3ef48d5f31d66632e28111c99b3`，Chrome 测试脚本修订为 `6f8a2ee72baaee866f6692cc498e0ab36808e811`。旧申报目录中的修改保留。
+- `HeaderParser::start_mapping` 续接 LSE2/3，`HeaderParser::scan_segment` 按当前 MAXVAL 及选择器校验。解码器只在有效行交付时取映射字节。Native、SDK、Worker 和工作台传播选择器，报告保留编码域 NEAR。分项范围为交换格式中内嵌 Wt=1 的解码，能力清单保留 `partially_supported`。
+- 三后端各通过 8 条主向量和 2 条采样定向向量。13 类边界输入的结果、HP 的官方 12 条、Chrome 和 388 组 M2 收据已绑定候选。恢复入口为 `node scripts/verify_mapping_tables.mjs --native-exe $native --native-wsl $d`。[条款与复跑](EMBEDDED_MAPPING_RESULTS.md) · [候选收据](../reports/t87-m4-mapping-20261126/embedded-mapping.json)
+- 后续映射范围是为多字节表项定义不透明字节 API，随后验证映射表编码、C.4 表规范流和 C.3 外部表简略图像。先沿用当前的标记解析、表分段与 SOS 绑定。交付 SHA 及真实检查见 [PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4) · [验证工作流](https://github.com/ZSY2221/moon_jpegls/actions/workflows/verification.yml)。
