@@ -752,7 +752,7 @@ async function verifyEmbeddedMappingWorkbench() {
   await page.goto(workbench.href);
   await upload('embedded-mapping.jls', fixture);
   await select('sink', 'buffered');
-  await chunkSize(1);
+  await chunkSize('1');
   for (const backend of ['js', 'wasm-gc']) {
     await select('backend', backend);
     await click('run');
