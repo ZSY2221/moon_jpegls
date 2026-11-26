@@ -64,6 +64,7 @@ export async function openSink(mode, name, type) {
     const handle = await globalThis.showSaveFilePicker({ suggestedName: name });
     const writer = await handle.createWritable();
     return {
+      name: handle.name || name,
       write: (bytes) => writer.write(bytes),
       writeAt: (bytes, position) => writer.write({ type: 'write', position, data: bytes }),
       close: () => writer.close(),

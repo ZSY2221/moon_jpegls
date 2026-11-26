@@ -80,10 +80,23 @@ if (!isMainThread) {
       const evidence = JSON.parse(await readFile(report, 'utf8'));
       assert.equal(evidence.status, 'passed');
       assert.equal(evidence.output.format, 'raw-u32le');
+      assert.equal(evidence.output.layout, 'delivery-order');
+      assert.equal(evidence.output.sampleBytes, 4);
+      assert.equal(evidence.output.endianness, 'little');
       assert.equal(evidence.output.bytes, 64);
       assert.equal(evidence.stream.rowsDelivered, 2);
       const { stdout } = await execute(process.execPath, [cli, 'inspect', '--input', input, '--chunk', '7']);
       assert.equal(JSON.parse(stdout).scans[0].pointTransform, 1);
+      await Promise.all([unlink(report), unlink(output)]);
+      const mapped = Buffer.from('ffd8fff7000b020001000401011100fff80009020701c9d4dfeaffda0008010107000000a780ffd9', 'hex');
+      await writeFile(input, mapped);
+      await execute(process.execPath, [cli, 'decode', '--input', input, '--output', output, '--report', report, '--chunk', '1']);
+      assert.deepEqual(await readFile(output), Buffer.of(201, 0, 234, 0, 212, 0, 223, 0));
+      const narrow = JSON.parse(await readFile(report, 'utf8'));
+      assert.equal(narrow.output.format, 'raw-u16le');
+      assert.equal(narrow.output.layout, 'delivery-order');
+      assert.equal(narrow.output.sampleBytes, 2);
+      assert.equal(narrow.output.endianness, 'little');
     } finally {
       await Promise.all([input, output, report].map(file => unlink(file).catch(error => {
         if (error.code !== 'ENOENT') throw error;

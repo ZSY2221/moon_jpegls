@@ -1,0 +1,1031 @@
+{
+  "verdict": "passed",
+  "tested_source_sha": "e32c9161b4679656aa1aba7f01374150a1a9951a",
+  "tested_source_tree": "30bedac4f12ff8e09c9b4f5e18d1780344da63cf",
+  "artifactSha256": {
+    "js": "a320b4df29697c7eed4c1ed8371438782ba54b991c8ec64d0d3895d0b568f71a",
+    "wasm-gc": "6dac1f6e05e03bfd7fbea8c208d575b96cff91d1c71b33b0e20614cd6099efa7",
+    "native": "f2d5da8e13a50600d6b874de72b505ce40977e11d0e2c646a812a6a0b35f2b93"
+  },
+  "local": {
+    "exitCodes": {
+      "annex-hp": 0,
+      "chrome": 0,
+      "core-js": 0,
+      "core-wasm": 0,
+      "m2-388": 0,
+      "mapping": 0,
+      "native-build": 0,
+      "native-core": 0,
+      "native-row": 0,
+      "native-sampling": 0,
+      "native-tail": 0,
+      "native-wide": 0,
+      "node": 0,
+      "pt": 0,
+      "pt-sampled": 0,
+      "sdk-build": 0,
+      "typescript": 0,
+      "web-build": 0,
+      "worker": 0
+    },
+    "coreTests": {
+      "js": 29,
+      "wasm-gc": 29,
+      "native": 29
+    },
+    "worker": 21,
+    "node": 33,
+    "m2": 388,
+    "officialAnnexE": {
+      "reference": "HP 1.00 live",
+      "cases": [
+        {
+          "testId": "E.2-1",
+          "file": "T8C0E0.JLS",
+          "officialSha256": "8c564fbd3a8667bd071cc8d994952fdfae3d62db5c359be4b6d6734e89acea6d",
+          "referencePlanarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-2",
+          "file": "T8C1E0.JLS",
+          "officialSha256": "fdd6fa22f94135f7c3db7932da2154aefc79085fec3b3f65da8a62d6964b8078",
+          "referencePlanarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-3",
+          "file": "T8C2E0.JLS",
+          "officialSha256": "2cbf1d38b9d186a06ea7b19cc74df6259d238c789f49ed7329a8e34afd6ba5ae",
+          "referencePlanarU16leSha256": "5661f7ab26f539dcfa25e0cfccfd0650589be78253b978c62dcb469a628d9e16",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-4",
+          "file": "T8C0E3.JLS",
+          "officialSha256": "6356737dbf5168000cebc5e4056e04eb687664cd15797de324fa0845eb407dc3",
+          "referencePlanarU16leSha256": "524df5f1b20950a5d9ddbd1ca28a6dcf2541850969f22aec1388e62a3ab361e7",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-5",
+          "file": "T8C1E3.JLS",
+          "officialSha256": "be41c9c2687542d452171ae629c76905b7af7073d9db56f9a549b6323df6ed1e",
+          "referencePlanarU16leSha256": "ffe911978643bf7cc2b22dd0b0f82501286fb84b6e35ab3a6cc9b71d2bf7276d",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-6",
+          "file": "T8C2E3.JLS",
+          "officialSha256": "df1fa8e1ac3256a2ea226996d27c8bd504a7ca08385674aedf77b6edd42be8de",
+          "referencePlanarU16leSha256": "98191a2493540d085e20aebde64314939ccf067244fcf22b9006c4b35ac8ac01",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-7",
+          "file": "T8SSE0.JLS",
+          "officialSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+          "referencePlanarU16leSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-8",
+          "file": "T8SSE3.JLS",
+          "officialSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+          "referencePlanarU16leSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-9",
+          "file": "T8NDE0.JLS",
+          "officialSha256": "c3e1244dfc035626cbdea7a89a8120fde3ae4deb22847695928cfbd5f36884ae",
+          "referencePlanarU16leSha256": "9562dc6c137faa78daeedef8e352859caf73bfb1a525031639b987e9713211e6",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-10",
+          "file": "T8NDE3.JLS",
+          "officialSha256": "0597c16d6d60d89f0aa9e71a8fd6bbf982ef1ae22d4b8afc897dafa68efd90e8",
+          "referencePlanarU16leSha256": "e56d4f4ac81c85a77290afcaaed756bf7fe1545fd09d343cf70029d568c12793",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-11",
+          "file": "T16E0.JLS",
+          "officialSha256": "0169aab6eb839925cc781016e3c3ed19d323fadee99d9747375e787b88e4d23f",
+          "referencePlanarU16leSha256": "28eb0d3072804a70bf251d77c24a3335de599a137517b9b3719847a6ddaa669d",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        },
+        {
+          "testId": "E.2-12",
+          "file": "T16E3.JLS",
+          "officialSha256": "e3b7327d232247949bd6aa4520d3a2627bb60c952ff23d700c92900a70863813",
+          "referencePlanarU16leSha256": "f9f05fc01fa659dbcb18f217266e4f03d968db3aa06980d9c687e0ab755b0adb",
+          "encodeByteIdentical": [
+            "js",
+            "wasm-gc",
+            "native"
+          ],
+          "decodeMatchedReference": [
+            "js",
+            "wasm-gc",
+            "native"
+          ]
+        }
+      ],
+      "encodeByteIdentical": 36,
+      "decodeMatchedReference": 36
+    },
+    "pt": {
+      "plainCases": 12,
+      "sampledSummary": {
+        "cases": 16,
+        "js": {
+          "encode": 48,
+          "decode": 48,
+          "alternatePadding": 24
+        },
+        "wasm-gc": {
+          "encode": 48,
+          "decode": 48,
+          "alternatePadding": 24
+        },
+        "native": {
+          "encode": 45,
+          "decode": 48,
+          "alternatePadding": 24
+        }
+      },
+      "referenceKinds": [
+        "FFmpeg direct where supported",
+        "CharLS coded-domain",
+        "hand vectors",
+        "calibrated independent Python"
+      ]
+    },
+    "mapping": {
+      "status": "passed",
+      "backends": [
+        "js",
+        "wasm-gc",
+        "native"
+      ],
+      "chunks": [
+        1,
+        7,
+        4096
+      ],
+      "cases": [
+        {
+          "name": "P2 mapped above MAXVAL",
+          "sha256": "fe78a55aece2854a06b9a28d088f6cfe8fc630e135759026e80508c887d13cfc",
+          "reconstructed": [
+            201,
+            234,
+            212,
+            223
+          ]
+        },
+        {
+          "name": "P16 continuation",
+          "sha256": "470f3b821aea0990b763f90f82599f677eb291290640c08413e90affc45a61af",
+          "reconstructed": [
+            201,
+            190,
+            132,
+            113,
+            124,
+            135,
+            146
+          ]
+        },
+        {
+          "name": "P16 continuation with fill",
+          "sha256": "ab951ad0561f928715252a85de30226bf091a8f11b18ccf1d33f476f7b5d2ffc",
+          "reconstructed": [
+            201,
+            190,
+            132,
+            113,
+            124,
+            135,
+            146
+          ]
+        },
+        {
+          "name": "reuse across scans",
+          "sha256": "d68b3d6ccce368695777fa47f29192853b03273104de830cd4729ca63ce9a377",
+          "reconstructed": [
+            201,
+            234,
+            212,
+            223,
+            201,
+            234,
+            212,
+            223
+          ]
+        },
+        {
+          "name": "replace across scans",
+          "sha256": "b9c8dae5ca1cec4ae01eeac2cfca55ad99495a04822a5142a62e24935c5a25f3",
+          "reconstructed": [
+            201,
+            234,
+            212,
+            223,
+            39,
+            6,
+            28,
+            17
+          ]
+        },
+        {
+          "name": "per-component selectors in ILV2",
+          "sha256": "e1c08ec0c778892b30ebf498b951051bf931d9ab1a70c7e6e9c57f72286ae1c0",
+          "reconstructed": [
+            201,
+            0
+          ]
+        },
+        {
+          "name": "pre-frame table with explicit MAXVAL",
+          "sha256": "36fee0613d2df848b96929a752a81c61db0b32f7ab69d8309ad0c5702ab88c39",
+          "reconstructed": [
+            241
+          ]
+        },
+        {
+          "name": "unreferenced two-byte table",
+          "sha256": "dcccc8e18e5e8c93e98def7095dc8f176079fe9cb2af1c4c750f3ced3c5b7542",
+          "reconstructed": [
+            0,
+            3,
+            1,
+            2
+          ]
+        }
+      ],
+      "malformed": [
+        {
+          "name": "external table required",
+          "sha256": "bfd64659d5dbd97bd8a02887fcaf852e37f709f693879d6c02551575e3bd10e9",
+          "code": "UnsupportedFeature"
+        },
+        {
+          "name": "unsupported opaque width",
+          "sha256": "60aaa3ce520ce2be3674eea24b955e511dc4df6c1acad6fe2ea644e9049aa1fe",
+          "code": "UnsupportedFeature"
+        },
+        {
+          "name": "nonzero Pt",
+          "sha256": "e1ea924a196deffd029f61fc610ddc574ae533672457dda38399ebd462582bcd",
+          "code": "InvalidData"
+        },
+        {
+          "name": "too few entries",
+          "sha256": "36e477daef6c78520917e7a0904895b946d6d141b74ce9553502c6cca0145b13",
+          "code": "InvalidData"
+        },
+        {
+          "name": "too many entries",
+          "sha256": "c4fe44b5a59c4fd82f9d438e5b275df7ac3ff932010c15e561e627e8ed7c3a9e",
+          "code": "InvalidData"
+        },
+        {
+          "name": "missing continuation",
+          "sha256": "1af36457da4d17301a3660300ace251cda8ebf8a1d01a1dfca0d1cdfe91148f9",
+          "code": "InvalidData"
+        },
+        {
+          "name": "orphan continuation",
+          "sha256": "1e9e722b9000b7c1a529b728e9b440b14c9ce61d908d7591f38e7144701e562e",
+          "code": "InvalidData"
+        },
+        {
+          "name": "wrong continuation TID",
+          "sha256": "ef7c52889eaf1f98b5f50e3dfd5ecad490bdabadf02dd7457e7ba795f06b857f",
+          "code": "InvalidData"
+        },
+        {
+          "name": "wrong continuation Wt",
+          "sha256": "e357c579b4bf5a004cbb7c7eed452429465ab3b9191d408b80d234bd9b249f56",
+          "code": "InvalidData"
+        },
+        {
+          "name": "interrupted continuation",
+          "sha256": "16556617c3fe64c474a1f24ff11b61db87b38c88ce964f75c2f4c6eeb699fc61",
+          "code": "InvalidData"
+        },
+        {
+          "name": "short initial segment",
+          "sha256": "021487a2d5fccf8f8d10fbb1d2f0eea83fd92203081946423feee9f5b71b19fa",
+          "code": "InvalidData"
+        },
+        {
+          "name": "truncated continuation",
+          "sha256": "98dd7ce39fdbfbaadf416af8d6e8f27f89eb5f96c6add2d4fc0f2620101a0e51",
+          "code": "Truncated"
+        },
+        {
+          "name": "late trailing byte",
+          "sha256": "f54b508ea6ab5b73e002a0ad20d2bf573812f7171c6c439350b1887f2e1b651c",
+          "code": "TrailingData"
+        }
+      ],
+      "mappingBudgetBytes": 65550
+    },
+    "gray16Example": {
+      "source": "e32c9161b4679656aa1aba7f01374150a1a9951a",
+      "passed": [
+        "js",
+        "wasm-gc",
+        "native"
+      ],
+      "testsEach": 1,
+      "wideFixture": 65540,
+      "narrowAdapter": "UnsupportedFeature",
+      "dependencyMode": "MoonImage from public registry, MoonJLS candidate via repository workspace only for this example validation"
+    },
+    "chrome": {
+      "build": {
+        "source": {
+          "revision": "e32c9161b4679656aa1aba7f01374150a1a9951a",
+          "dirty": false
+        },
+        "artifacts": {
+          "js": {
+            "name": "core.mjs",
+            "sha256": "a320b4df29697c7eed4c1ed8371438782ba54b991c8ec64d0d3895d0b568f71a"
+          },
+          "wasm-gc": {
+            "name": "core.wasm",
+            "sha256": "6dac1f6e05e03bfd7fbea8c208d575b96cff91d1c71b33b0e20614cd6099efa7"
+          }
+        }
+      },
+      "assets": {
+        "browser": "158.0.8127.37",
+        "node": "v24.20.0",
+        "responses": {
+          "/web/style.css": {
+            "sha256": "764a973c1070a1390905ab1e7277d629f59deecd176b74bc9820c2c02e8845f9",
+            "bytes": 30029
+          },
+          "/web/app.mjs": {
+            "sha256": "f9a1ed67fe2d73333d2d78a9ee21b4695a62e232cb81d36bf18b79802b716a10",
+            "bytes": 56947
+          },
+          "/sdk/verification-report.mjs": {
+            "sha256": "fe740dd57cb92a4859bce6031deb21afa33d54e794adbcb58bcaea28d1751a57",
+            "bytes": 6437
+          },
+          "/web/pgm.mjs": {
+            "sha256": "c626b11fa54711eab43e563223498faa78eab1bb4642ec3af10d8789c88189c0",
+            "bytes": 7213
+          },
+          "/sdk/lunar.mjs": {
+            "sha256": "9b63d807462c0176cb9d0e38a369f688c4c7d192122c7963d20764b89b02b957",
+            "bytes": 1259
+          },
+          "/web/run-report.mjs": {
+            "sha256": "2c6ac75326f45788be2a78f42b05294d6a950056982ed992877d673761646b4d",
+            "bytes": 5085
+          },
+          "/sdk/worker-client.mjs": {
+            "sha256": "ea2c02a798812c267c2845c9fcb5b803154bc613ea720e1a94bd05703faab6b5",
+            "bytes": 5091
+          },
+          "/web/scan-inspector.mjs": {
+            "sha256": "9363a2a4565aaa1f24f492b1826a7f84403147417fa03e333d03821224967ccd",
+            "bytes": 5859
+          },
+          "/sdk/index.mjs": {
+            "sha256": "fe859c9348adee815b610b136ba42d0771c8351a13fe61b7529858293b191323",
+            "bytes": 38619
+          },
+          "/web/labels.mjs": {
+            "sha256": "9cb9edb71a8dfdde79e49cf963a6d87cf469bbcb5ed3d2ed14b6bda9b3269d57",
+            "bytes": 24749
+          },
+          "/web/ppm.mjs": {
+            "sha256": "5ad9cefb957898d6e95bb13c270b1251f2f606c77a16c490c6fd9feddfffbb63",
+            "bytes": 11153
+          },
+          "/web/transport.mjs": {
+            "sha256": "e55d9b7cc90161b644f385245e6d253b9fdbf1aedcdfd15c9519592d4eafeec5",
+            "bytes": 3566
+          },
+          "/web/compatibility.mjs": {
+            "sha256": "2cdbfaefaaa04a3683e3e195ef99531b1201964df1c4e81c40ea70035eb43191",
+            "bytes": 4215
+          },
+          "/web/preview.mjs": {
+            "sha256": "d04a486b15c99287a9f114c0791660e6d5c9fb51a6e6b04234e1319b36d87024",
+            "bytes": 21941
+          },
+          "/web/build-info.json": {
+            "sha256": "eb3f469e17efee95f5ba537e1fa8e8e024ccdff7a90713d8561468f5ed23116a",
+            "bytes": 303
+          },
+          "/web/conformance-manifest.json": {
+            "sha256": "ce105c9859cec07ed944bb5fdd0819bdd129d6b0b66cbd09511292e53315cd44",
+            "bytes": 36185
+          },
+          "/sdk/worker.mjs": {
+            "sha256": "f31f2f3e9cb902f7c66cc57428ddb4178c9c1ad3e363a02364a712f3116917c8",
+            "bytes": 7745
+          },
+          "/sdk/generated/core.wasm": {
+            "sha256": "6dac1f6e05e03bfd7fbea8c208d575b96cff91d1c71b33b0e20614cd6099efa7",
+            "bytes": 57868
+          },
+          "/sdk/generated/core.mjs": {
+            "sha256": "a320b4df29697c7eed4c1ed8371438782ba54b991c8ec64d0d3895d0b568f71a",
+            "bytes": 304404
+          },
+          "/web/samples/lily-8.ppm": {
+            "sha256": "d0c1829a05f81a996edaf2d55f17599f0164fe9adb4c11c5c18ea58bf06f30a9",
+            "bytes": 47967
+          },
+          "/web/samples/lily-16.ppm": {
+            "sha256": "364565515c9623b242a02f92ce3dd6057fff898309c00acf6b9334cbca088239",
+            "bytes": 95921
+          },
+          "/web/samples/lily-sampled.jls": {
+            "sha256": "5d07ba5cb525ec4d89998275e562fb992102314ae4603eac477c0dc23e82224c",
+            "bytes": 18248
+          }
+        }
+      },
+      "checks": [
+        {
+          "test": "browser sample round-trip",
+          "backend": "wasm-gc",
+          "encodedBytes": 105655,
+          "maxError": 3
+        },
+        {
+          "test": "browser decoded PGM download",
+          "backend": "js",
+          "pgmBytes": 208017
+        },
+        {
+          "test": "browser truncated stream and invalid PGM MAXVAL",
+          "cases": 2
+        },
+        {
+          "test": "browser bounded verification, locale ARIA/title, cancel-picker guard & drag-drop",
+          "inputChunkSize": 1024
+        },
+        {
+          "test": "browser sample lossless full-range endpoints",
+          "backend": "js",
+          "maxError": 0,
+          "displayEndpoints": [
+            0,
+            0,
+            0,
+            255,
+            255,
+            255,
+            255,
+            255
+          ]
+        },
+        {
+          "test": "browser UI pause, resume and cancel",
+          "inputChunkSize": 1
+        },
+        {
+          "test": "browser cancel/restart with pending host operation",
+          "blocked": "read",
+          "oldNear": 0,
+          "reads": {
+            "old": [
+              {
+                "start": 17,
+                "end": 25,
+                "bytes": 8
+              }
+            ],
+            "next": [
+              {
+                "start": 17,
+                "end": 21,
+                "bytes": 4
+              }
+            ]
+          },
+          "newPixel": 4000,
+          "reconstructed": [
+            3000,
+            3000,
+            4000,
+            4000
+          ],
+          "download": "cancel-read-new.jls"
+        },
+        {
+          "test": "browser cancel/restart with pending host operation",
+          "blocked": "read",
+          "oldNear": 255,
+          "reads": {
+            "old": [
+              {
+                "start": 17,
+                "end": 25,
+                "bytes": 8
+              }
+            ],
+            "next": [
+              {
+                "start": 17,
+                "end": 21,
+                "bytes": 4
+              }
+            ]
+          },
+          "newPixel": 4000,
+          "reconstructed": [
+            3000,
+            3000,
+            4000,
+            4000
+          ],
+          "download": "cancel-read-new.jls"
+        },
+        {
+          "test": "browser cancel/restart with pending host operation",
+          "blocked": "write",
+          "reads": {
+            "old": [],
+            "next": [
+              {
+                "start": 13,
+                "end": 17,
+                "bytes": 4
+              }
+            ]
+          },
+          "newPixel": 4000,
+          "reconstructed": [
+            3000,
+            3000,
+            4000,
+            4000
+          ],
+          "download": "cancel-write-new.jls"
+        },
+        {
+          "test": "browser cancel/restart with pending host operation",
+          "blocked": "close",
+          "reads": {
+            "old": [],
+            "next": [
+              {
+                "start": 13,
+                "end": 17,
+                "bytes": 4
+              }
+            ]
+          },
+          "newPixel": 4000,
+          "reconstructed": [
+            3000,
+            3000,
+            4000,
+            4000
+          ],
+          "download": "cancel-close-new.jls"
+        },
+        {
+          "test": "four preview rows provisional before withheld EOI",
+          "before": 4,
+          "afterRelease": "complete"
+        },
+        {
+          "test": "pending sink close gates success and page timer",
+          "fail": false,
+          "closeHeldMs": 180.29999995231628,
+          "elapsed": "287.7 ms",
+          "bytesWritten": 142176
+        },
+        {
+          "test": "pending sink close gates success and page timer",
+          "fail": true,
+          "closeHeldMs": 98.59999990463257,
+          "elapsed": "—",
+          "bytesWritten": 142176
+        },
+        {
+          "test": "narrow settings summary tracks form changes without altering completed results",
+          "viewport": [
+            390,
+            844
+          ],
+          "pgmUpdatedSummary": "NEAR 3 · JavaScript · Bounded verification",
+          "jlsUpdatedSummary": "JLS · JavaScript · Bounded verification"
+        },
+        {
+          "test": "worker ACK, manual resume and one-byte reads",
+          "before": 59,
+          "whileHeld": 59,
+          "whilePaused": 59,
+          "queue": 8,
+          "reads": 81,
+          "rows": [
+            0,
+            32767,
+            65535,
+            32768,
+            42,
+            7,
+            32,
+            0
+          ],
+          "expected": [
+            0,
+            32767,
+            65535,
+            32768,
+            42,
+            7,
+            32,
+            0
+          ],
+          "stats": {
+            "inputUnit": "bytes",
+            "outputUnit": "samples",
+            "inputConsumed": 80,
+            "outputProduced": 8,
+            "rows": 2,
+            "coreWorkspaceBytes": 8899,
+            "bridgeBufferPeakBytes": 2,
+            "inputQueueBytes": 0,
+            "outputQueueBytes": 0,
+            "inputPeakBytes": 1,
+            "outputPeakBytes": 8,
+            "firstRowInputConsumed": 59,
+            "firstRowMs": 4.299999952316284,
+            "elapsedMs": 100.39999997615814
+          }
+        },
+        {
+          "test": "browser SDK rejects invalid NEAR arguments",
+          "rejected": [
+            {
+              "backend": "js",
+              "cases": [
+                "InvalidArgument",
+                "InvalidArgument",
+                "InvalidArgument",
+                "InvalidArgument",
+                "InvalidArgument",
+                "InvalidArgument"
+              ]
+            },
+            {
+              "backend": "wasm-gc",
+              "cases": [
+                "InvalidArgument",
+                "InvalidArgument",
+                "InvalidArgument",
+                "InvalidArgument",
+                "InvalidArgument",
+                "InvalidArgument"
+              ]
+            }
+          ]
+        },
+        {
+          "test": "browser precision-specific NEAR limits and calibrated legend",
+          "results": [
+            {
+              "bits": 16,
+              "backend": "wasm-gc",
+              "near": 4,
+              "maxError": 4,
+              "pixel": {
+                "x": 1,
+                "y": 1,
+                "original": 128,
+                "reconstructed": 132,
+                "rgba": [
+                  212,
+                  165,
+                  98,
+                  255
+                ]
+              }
+            },
+            {
+              "bits": 16,
+              "backend": "wasm-gc",
+              "near": 255,
+              "maxError": 128,
+              "pixel": {
+                "x": 1,
+                "y": 1,
+                "original": 128,
+                "reconstructed": 0,
+                "rgba": [
+                  52,
+                  92,
+                  105,
+                  255
+                ]
+              }
+            },
+            {
+              "bits": 8,
+              "backend": "js",
+              "near": 127,
+              "maxError": 127,
+              "pixel": {
+                "x": 1,
+                "y": 1,
+                "original": 128,
+                "reconstructed": 255,
+                "rgba": [
+                  212,
+                  165,
+                  98,
+                  255
+                ]
+              }
+            },
+            {
+              "bits": 12,
+              "backend": "wasm-gc",
+              "near": 255,
+              "maxError": 128,
+              "pixel": {
+                "x": 1,
+                "y": 1,
+                "original": 128,
+                "reconstructed": 0,
+                "rgba": [
+                  52,
+                  92,
+                  105,
+                  255
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "test": "M2 preset, MAXVAL, magnifier, stream accounting and compatibility views",
+          "frame": {
+            "width": 2,
+            "height": 2,
+            "bits": 9,
+            "near": 0,
+            "maxval": 300
+          },
+          "preset": {
+            "maxval": 300,
+            "t1": 5,
+            "t2": 9,
+            "t3": 23,
+            "reset": 42
+          },
+          "features": 18,
+          "annexCases": 12,
+          "acknowledgedEvents": 7
+        },
+        {
+          "test": "Pt=4 with zero coded NEAR retains distinct original error bound",
+          "samples": 4,
+          "maxError": 15
+        },
+        {
+          "test": "Wide point transform comparison, inspector and planar download",
+          "sample": 65540,
+          "originalError": 5,
+          "bytes": 4
+        },
+        {
+          "test": "Embedded map reaches both browser Workers, PGM and reports",
+          "reconstructed": [
+            201,
+            234,
+            212,
+            223
+          ]
+        },
+        {
+          "test": "Real microscopy across all three ILV modes, CharLS verification, edge MCU, and narrow Chinese UI",
+          "checks": [
+            {
+              "bits": 8,
+              "ilv": 0,
+              "near": 0,
+              "backend": "wasm-gc",
+              "bytes": 34269,
+              "maxError": 0,
+              "samples": 47952
+            },
+            {
+              "bits": 8,
+              "ilv": 1,
+              "near": 3,
+              "backend": "js",
+              "bytes": 18446,
+              "maxError": 3,
+              "samples": 47952
+            },
+            {
+              "bits": 8,
+              "ilv": 2,
+              "near": 0,
+              "backend": "wasm-gc",
+              "bytes": 34018,
+              "maxError": 0,
+              "samples": 47952
+            },
+            {
+              "bits": 16,
+              "ilv": 0,
+              "near": 0,
+              "backend": "wasm-gc",
+              "bytes": 58986,
+              "maxError": 0,
+              "samples": 47952
+            },
+            {
+              "bits": 16,
+              "ilv": 1,
+              "near": 3,
+              "backend": "js",
+              "bytes": 41636,
+              "maxError": 3,
+              "samples": 47952
+            },
+            {
+              "bits": 16,
+              "ilv": 2,
+              "near": 0,
+              "backend": "wasm-gc",
+              "bytes": 58444,
+              "maxError": 0,
+              "samples": 47952
+            }
+          ],
+          "sampledRows": 195,
+          "sampledSamples": 24048
+        },
+        {
+          "test": "sampled Annex E browser decode and planar export",
+          "fixture": "T8SSE0",
+          "backend": "js",
+          "inputSha256": "bee806d92fb11dcdaf4ad1dbcc695622f95fdd4d8a7d6d77f72fc1a0d98f6d26",
+          "outputSha256": "463686f0c05412f411c0c55d0a5b9e265cf2beae7a8e47e15b99a712ded1f8ec",
+          "rows": 448,
+          "samples": 98304,
+          "hostConversionBufferBytes": 512
+        },
+        {
+          "test": "Sampled Uint32 planar export matches HP-backed Uint16 samples",
+          "fixture": "T8SSE3",
+          "samples": 98304,
+          "bytes": 393216
+        },
+        {
+          "test": "sampled Annex E browser decode and planar export",
+          "fixture": "T8SSE3",
+          "backend": "wasm-gc",
+          "inputSha256": "215e3e176124749917ba9676c459709725721cc26e0851b4f97c1aa5f677fb0f",
+          "outputSha256": "e120bca2aed453a57201b8fc00cbede3f2c485fa1882ac3effd676796c71c0af",
+          "rows": 448,
+          "samples": 98304,
+          "hostConversionBufferBytes": 512
+        },
+        {
+          "test": "NASA LOLA real browser downloads agree with CharLS",
+          "near": 3,
+          "maxError": 3,
+          "samples": 1036800,
+          "fixtureSha256": "1adb4e047099b942c229a8d21d33b6227dd2b6af22984d8d9de6b128b0e858a6",
+          "jlsBytes": 999459,
+          "jlsSha256": "b612d131423892919ac2f059bca12c7afd81bbed8c29198879d71d901192bfb9",
+          "pgmBytes": 2073618,
+          "pgmSha256": "0e031169123fa3cd19023b50170eead3ae0b2375506486d5afc09a076cf93002"
+        },
+        {
+          "status": "passed",
+          "browser": "158.0.8127.37",
+          "node": "v24.20.0"
+        }
+      ]
+    }
+  },
+  "candidateCI": {
+    "runId": 45823530089,
+    "artifactId": 15120025267,
+    "artifactArchiveSha256": "78fb5aa91523043042e1307abed6e99b9a296a3e005a1c853afee5b42ff893a2",
+    "nearCases": 640,
+    "annexEReference": "Live CharLS on ten cases, pinned archived HP reconstruction SHA and official stream bytes on E.2-7/8"
+  }
+}

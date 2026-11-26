@@ -1,5 +1,7 @@
 # T.87 Annex E 与 M2 / M3-A / M3-B 独立验证结果
 
+复审前冻结产品 `e32c9161b4679656aa1aba7f01374150a1a9951a` 已再次以本机 HP 1.00 实跑 12 条官方向量，Native、JS、Wasm GC 的 36 份编码均与官方字节一致，36 次官方流解码均匹配参考重建。候选 CI 即时使用 CharLS Wasm 核对十条，E.2-7/8 使用官方字节和归档 HP 重建哈希。全部官方向量均为 Pt=0。[本轮逐条哈希与回归](../reports/november-release-20261126/release-regressions.json) · [候选 CI](https://github.com/ZSY2221/moon_jpegls/actions/runs/45823530089)
+
 截至 **2026-11-26**，固定候选 [8c5882f](https://github.com/ZSY2221/moon_jpegls/commit/8c5882f292327393d36763450c886359bd6aa224) 在 Native、JS、Wasm GC 三后端完成官方 **Annex E Table E.2 12/12** 双向验收。HP 1.00 独立复验全部 12 条，CharLS Wasm 0.10.0 独立复验其中 10 条。E.2-7/8 的 CharLS 采样能力为 `reference_unsupported`。 [HP 全部用例](../reports/t87-m3b-20261126/public-delivery/annex-e-hp.json) · [CharLS 适用用例](../reports/t87-m3b-20261126/public-delivery/annex-e-charls.json) · [CharLS 采样能力](../reports/t87-m3b-20261126/public-delivery/annex-e-charls-sampling.json)
 
 ## 1. 官方 Annex E Table E.2 逐项结果（全部 12 条流）

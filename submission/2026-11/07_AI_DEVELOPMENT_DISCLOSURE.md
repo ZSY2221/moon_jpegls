@@ -5,6 +5,7 @@
 - M0–M2 阶段，Codex 与早期 Antigravity 参与核心、CLI 和桥接、SDK/Worker、工作台与验证脚本开发。
 - Antigravity 实现 M3-A 多分量非交错多扫描、跨扫描 LSE1、Native planar/PGM/PPM 流式路径、SDK/Worker 多扫描协议、结构检查器与独立黄金回归。M3-A 以 HP 1.00 和 CharLS Wasm 复验了所支持的 6 条官方向量。Antigravity 随后实现首版 ILV=1 并提交 `b76a02fb520861d002b17cb017e34d806b7fea5d`。[M3-A 记录](../../reports/t87-m3a-20261125/README.md)
 - Codex 接手后保全并复验 ILV=1，完成 ILV=2、H/V 采样、边缘 MCU 和三后端的独立验收，更新既有工作台、GitHub 验证和公开交付材料。[M3-B 交接](../../docs/CODEX_M3B_HANDOFF.md) · [PR #2](https://github.com/ZSY2221/moon_jpegls/pull/2)
+- Codex 随后完成无映射 Pt 与精确宽输出、内嵌 Wt=1 映射解码及各自的独立验收。本轮负责构建与报告缺口修复、发布和外部消费者验证、以及事实清单更新。[Pt PR #3](https://github.com/ZSY2221/moon_jpegls/pull/3) · [映射 PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4) · [本轮交付](../../docs/MOONCAKES_RELEASE.md)
 
 ## 负责人核对项
 

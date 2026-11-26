@@ -134,3 +134,9 @@ node scripts/validate_annex_e.mjs --fixtures .tools/annex-e-ci --native-exe $nat
 - `HeaderParser::start_mapping` 续接 LSE2/3，`HeaderParser::scan_segment` 按当前 MAXVAL 及选择器校验。解码器只在有效行交付时取映射字节。Native、SDK、Worker 和工作台传播选择器，报告保留编码域 NEAR。分项范围为交换格式中内嵌 Wt=1 的解码，能力清单保留 `partially_supported`。
 - 三后端各通过 8 条主向量和 2 条采样定向向量。13 类边界输入的结果、HP 的官方 12 条、Chrome 和 388 组 M2 收据已绑定候选。恢复入口为 `node scripts/verify_mapping_tables.mjs --native-exe $native --native-wsl $d`。[条款与复跑](EMBEDDED_MAPPING_RESULTS.md) · [候选收据](../reports/t87-m4-mapping-20261126/embedded-mapping.json)
 - 后续映射范围是为多字节表项定义不透明字节 API，随后验证映射表编码、C.4 表规范流和 C.3 外部表简略图像。先沿用当前的标记解析、表分段与 SOS 绑定。交付 SHA 及真实检查见 [PR #4](https://github.com/ZSY2221/moon_jpegls/pull/4) · [验证工作流](https://github.com/ZSY2221/moon_jpegls/actions/workflows/verification.yml)。
+
+## 十一月复审前交付（2026-11-26）
+
+- 核对六个 Git 工作树，活动分支从公开的 `58c10b0fdbb0e23dec301dba06bfa943359cd3de` 开始。当前编码与解码核心已公开。原目录保留早期性能实验和本地材料，未纳入候选，二进制 Git 补丁及草稿在本机忽略目录内保全。
+- 新增已核验的构建和源码入口，修正浏览器 16 位平面、SDK CLI 原始输出及直接保存文件名的报告字段。Gray16 示例对 65,540 显式返回 `UnsupportedFeature`，公开核心仍交付精确整数。
+- 受测产品和包来源均为 `e32c9161b4679656aa1aba7f01374150a1a9951a`。正式 Mooncakes `0.1.0` 的匿名查询、归档、全新在线安装与 Native、JS、Wasm GC 消费通过。本轮证据提交更新材料和独立复跑器。交付提交及 Pages 对应由实际 PR 合并与部署核对。[PR #5](https://github.com/ZSY2221/moon_jpegls/pull/5) · [发布对应表](MOONCAKES_RELEASE.md) · [复审事实清单](../submission/2026-11/FACTS_FOR_APPLICANT.md)

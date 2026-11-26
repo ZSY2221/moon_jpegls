@@ -40,12 +40,17 @@ pub fn encode(
 ///|
 /// Materialize the decoded unsigned integers in a tightly packed Gray16 image.
 /// Keep the returned Frame to recover the effective stored precision and NEAR.
+/// Reconstructions above 65535 require an output that can store wider integers.
 pub fn decode(input : Bytes) -> (@jls.Frame, @raster.Image) raise Error {
   let (frame, samples) = @jls.decode(input)
   let pixels = FixedArray::make(samples.length() * 2, b'\x00')
   for i in 0..<samples.length() {
-    pixels[2 * i] = (samples[i] >> 8).to_byte()
-    pixels[2 * i + 1] = (samples[i] & 255).to_byte()
+    let sample = samples[i]
+    guard sample >= 0 && sample <= 65535 else {
+      raise @jls.UnsupportedFeature("reconstructed sample exceeds Gray16 storage")
+    }
+    pixels[2 * i] = (sample >> 8).to_byte()
+    pixels[2 * i + 1] = (sample & 255).to_byte()
   }
   let image = @raster.Image::of(
     frame.width,

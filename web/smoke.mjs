@@ -246,7 +246,7 @@ async function gatedClose(fail) {
     let resolveClose;
     const held = new Promise((resolve) => { resolveClose = resolve; });
     globalThis.outputGate = { bytes: 0, closeAt: null, release: resolveClose };
-    globalThis.showSaveFilePicker = async () => ({ createWritable: async () => ({
+    globalThis.showSaveFilePicker = async () => ({ name: 'selected-by-user.jls', createWritable: async () => ({
       write(bytes) { outputGate.bytes += bytes.length; },
       async close() {
         outputGate.closeAt = performance.now();
@@ -282,6 +282,10 @@ async function gatedClose(fail) {
     await capture('failed');
   } else {
     assert.ok(Number.parseFloat(elapsed) + 0.05 >= closeHeldMs, 'In-page latency should include pending close');
+    const pending = page.waitForEvent('download');
+    await click('export-report');
+    const report = JSON.parse(await readFile(await (await pending).path(), 'utf8'));
+    assert.equal(report.output.name, 'selected-by-user.jls');
   }
   console.log(JSON.stringify({ test: 'pending sink close gates success and page timer', fail, closeHeldMs, elapsed,
     bytesWritten: await page.evaluate(() => outputGate.bytes) }));
@@ -501,8 +505,14 @@ async function verifyM2Workbench() {
   assert.deepEqual(decode.frame.preset, preset);
   assert.equal(decode.stages.compare, 'not_run');
   const manifest = await (await page.request.get(new URL('conformance-manifest.json', workbench).href)).json();
+  const build = await (await page.request.get(new URL('build-info.json', workbench).href)).json();
   await page.locator('.scientific-nav a[href="#compatibility-view"]').click();
   assert.equal(await page.locator('#compatibility-view').evaluate((details) => details.open), true);
+  assert.match(build.source.revision, /^[a-f0-9]{40}$/);
+  await page.waitForFunction((short) => document.querySelector('#build-revision').textContent === short, build.source.revision.slice(0, 12));
+  assert.equal(await page.locator('#build-source').getAttribute('href'), `https://github.com/ZSY2221/moon_jpegls/commit/${build.source.revision}`);
+  assert.deepEqual(decode.source, build.source);
+  assert.deepEqual(decode.artifact, build.artifacts.js);
   await page.waitForFunction((count) => document.querySelector('#compatibility-features').rows.length === count, manifest.features.length);
   for (const feature of manifest.features) {
     const row = page.locator(`#compatibility-features tr[data-feature="${feature.feature_id}"]`);
@@ -619,6 +629,9 @@ async function verifySampledAnnexWorkbench(directory) {
     assert.equal(report.stream.rowsDelivered, 448);
     assert.equal(report.stream.strictEoi, true);
     assert.equal(report.output.format, 'planar-u16le');
+    assert.equal(report.output.layout, 'planar');
+    assert.equal(report.output.sampleBytes, 2);
+    assert.equal(report.output.endianness, 'little');
     assert.equal(report.output.sha256, expectedSha256);
     assert.equal(report.memory.host.hostConversionBufferBytes, 512);
     await capture(`sampled-${fixture}`);

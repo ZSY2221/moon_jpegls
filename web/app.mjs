@@ -9,7 +9,7 @@ import { encodePpmFromPlanes, openPpm, readPnmHeader } from './ppm.mjs';
 import { createPreview, errorLegendStops, previewIds } from './preview.mjs';
 import { renderScanInspector } from './scan-inspector.mjs';
 import { createPipe, openSink, readBlob } from './transport.mjs';
-import { mountCompatibility } from './compatibility.mjs';
+import { mountBuildIdentity, mountCompatibility } from './compatibility.mjs';
 
 const get = (id) => document.getElementById(id);
 const setText = (id, value) => {
@@ -1051,6 +1051,7 @@ async function run() {
       : decodeOnly ? 'image/x-portable-graymap' : 'image/jls';
     sink = await openSink(sinkMode, outputName, type);
     requireActive(job);
+    job.fileOutputName = sink.name;
     job.started = performance.now();
     job.outputBytes = 0;
     if (!job.paused) transition('running');
@@ -1344,3 +1345,4 @@ for (const option of document.querySelectorAll?.('.scientific-nav a') ?? []) {
   });
 }
 void mountCompatibility(() => translate('compatibilityUnavailable'));
+void mountBuildIdentity();
